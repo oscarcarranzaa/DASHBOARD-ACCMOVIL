@@ -84,7 +84,7 @@ export default function LoginForm({
       <button
         type="submit"
         disabled={loading}
-        className={`${loading ? 'cursor-not-allowed bg-blue-300 hover:bg-blue-400' : 'bg-blue-600'} w-full  text-white font-semibold text-xl p-3 rounded-2xl mt-5 hover:bg-blue-700 transition-colors flex justify-center`}
+        className={`${loading ? 'cursor-not-allowed bg-blue-300 hover:bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} w-full  text-white font-semibold text-xl p-3 rounded-2xl mt-5  transition-colors flex justify-center`}
       >
         {loading ? (
           <div className="animate-spin w-7 h-7 flex items-center justify-center">

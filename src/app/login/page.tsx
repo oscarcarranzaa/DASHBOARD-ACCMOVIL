@@ -27,7 +27,6 @@ export default function Login() {
     },
   })
   const handleForm = (formData: LoginSchema) => mutate(formData)
-  console.log(error?.message)
   return (
     <main className="flex justify-center items-center min-h-screen  md:bg-slate-200">
       <div className="z-10">

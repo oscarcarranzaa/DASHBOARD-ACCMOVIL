@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { useMutation } from '@tanstack/react-query'
 import { loginUser } from '@/api/login'
 import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/store/auth'
+import { useEffect } from 'react'
 
 export default function Login() {
   const router = useRouter()
@@ -20,12 +22,20 @@ export default function Login() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(login), defaultValues: initialValues })
 
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending, error, data } = useMutation({
     mutationFn: loginUser,
     onSuccess: () => {
-      router.push('/')
+      router.push('/dash')
     },
   })
+
+  const setToken = useAuthStore((state) => state.setToken)
+  useEffect(() => {
+    if (data) {
+      setToken(data.data.token)
+    }
+  }, [data, setToken])
+
   const handleForm = (formData: LoginSchema) => mutate(formData)
   return (
     <main className="flex justify-center items-center min-h-screen  md:bg-slate-200">

@@ -10,4 +10,5 @@ export type TSVG = {
   size: number
   fill: string
 }
+export type TAuth = {}
 export type LoginSchema = z.infer<typeof login>

@@ -1,6 +1,8 @@
-import { TSVG } from '@/types'
-
-const Spinner = ({ size, fill }: TSVG) => (
+interface ISpinner {
+  size: number
+  fill: string
+}
+const Spinner = ({ size, fill }: ISpinner) => (
   <svg
     viewBox="0 0 24 24"
     width={size}

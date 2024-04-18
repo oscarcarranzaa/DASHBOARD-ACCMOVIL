@@ -66,11 +66,7 @@ export default function LoginForm({
               type="button"
               onClick={() => setSee(!see)}
             >
-              {see ? (
-                <EyeInvisibleSVG size={24} fill="#000" />
-              ) : (
-                <EyeSVG size={24} fill="#000" />
-              )}
+              {see ? <EyeInvisibleSVG size={24} /> : <EyeSVG size={24} />}
             </button>
           </div>
         </label>

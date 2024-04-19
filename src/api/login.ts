@@ -12,3 +12,13 @@ export async function loginUser(formData: LoginSchema) {
     }
   }
 }
+export async function logout() {
+  try {
+    const { data } = await api.get('/auth/logout')
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    }
+  }
+}

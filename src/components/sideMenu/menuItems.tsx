@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 interface IProps {
   items: {
     name: string
@@ -10,9 +12,9 @@ export default function MenuItems({ items }: IProps) {
     <>
       {items.map((i, index) => {
         return (
-          <div key={index} className="mb-2">
+          <Link key={index} href={i.href} className="mt-2 mb-1">
             <p className=" text-sm hover:text-sky-600">{i.name}</p>
-          </div>
+          </Link>
         )
       })}
     </>

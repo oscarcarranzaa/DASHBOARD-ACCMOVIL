@@ -8,6 +8,7 @@ import PublishSVG from '../icons/publish'
 import TeamSVG from '../icons/team'
 import WorldSVG from '../icons/world'
 const iconSize = 20
+
 export const menuItems = [
   {
     name: 'Dashboard',
@@ -43,7 +44,7 @@ export const menuItems = [
 
       {
         name: 'Ver productos',
-        href: '/productos/',
+        href: '/dash/productos/',
       },
       {
         name: 'Papelera',

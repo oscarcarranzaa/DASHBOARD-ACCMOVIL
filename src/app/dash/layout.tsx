@@ -1,3 +1,4 @@
+import Header from '@/components/header'
 import SideMenu from '@/components/sideMenu'
 
 export default function DashLayout({
@@ -7,7 +8,8 @@ export default function DashLayout({
 }>) {
   return (
     <>
-      <div className="bg-slate-100 flex">
+      <Header />
+      <div className="bg-gray-100 flex">
         <SideMenu />
         <main>{children}</main>
       </div>

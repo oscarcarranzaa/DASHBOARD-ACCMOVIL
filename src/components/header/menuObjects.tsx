@@ -1,7 +1,6 @@
 import ClientSVG from '../icons/client'
-import OffSVG from '../icons/off'
 
-const iconSize = 20
+const iconSize = 22
 
 export const profileItems = [
   {

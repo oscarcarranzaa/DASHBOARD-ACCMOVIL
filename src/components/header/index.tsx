@@ -5,18 +5,18 @@ import { useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import ProfileMenu from './profileMenu'
 import HeaderSkeleton from './skeleton/skeletonLoader'
+import DarkModeButton from './darkMode'
 
 export default function Header() {
-  const { data, isPending, isLoading, status, isFetching } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ['user'],
     queryFn: userData,
-    retry: false,
+    refetchOnWindowFocus: false,
   })
-  console.log(isPending, 'jjjjj', data, isLoading, isFetching)
 
   return (
     <>
-      <header className="p-3 bg-white flex justify-between border-b border-gray-300">
+      <header className="p-3 bg-white dark:bg-zinc-900 flex justify-between border-b border-gray-300 dark:border-zinc-600">
         <div className="ml-5">
           <Image
             src={'/static/logo.webp'}
@@ -26,7 +26,16 @@ export default function Header() {
             priority
           />
         </div>
-        {data && !isPending ? <ProfileMenu data={data} /> : <HeaderSkeleton />}
+        <div className="flex items-center justify-between">
+          <div className="ml-3 mr-5">
+            <DarkModeButton />
+          </div>
+          {data && !isPending ? (
+            <ProfileMenu data={data} />
+          ) : (
+            <HeaderSkeleton />
+          )}
+        </div>
       </header>
     </>
   )

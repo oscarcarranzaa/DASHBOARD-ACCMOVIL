@@ -7,7 +7,7 @@ import ProductSVG from '../icons/product'
 import PublishSVG from '../icons/publish'
 import TeamSVG from '../icons/team'
 import WorldSVG from '../icons/world'
-const iconSize = 20
+const iconSize = 22
 
 export const menuItems = [
   {

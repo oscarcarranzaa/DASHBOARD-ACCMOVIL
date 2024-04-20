@@ -3,6 +3,7 @@ import OffSVG from '../icons/off'
 import { profileItems } from './menuObjects'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
 
 interface IProfileProps {
   image: string
@@ -11,16 +12,17 @@ interface IProfileProps {
 }
 
 export default function ProfileItems({ image, name, role }: IProfileProps) {
+  const { setTheme } = useTheme()
   const router = useRouter()
   const queryClient = useQueryClient()
 
   // cerrar sesion e invalidar todas las queries
   const logoutUser = async () => {
     try {
-      const q = await queryClient.invalidateQueries()
-      console.log(q)
+      await queryClient.invalidateQueries()
       await logout()
       router.push('/login')
+      setTheme('light')
     } catch (error) {
       console.error('Error al cerrar sesión:', error)
     }
@@ -38,15 +40,17 @@ export default function ProfileItems({ image, name, role }: IProfileProps) {
           </div>
         </div>
       </div>
-      <hr />
+      <hr className=" dark:opacity-40" />
       <div className="mt-5">
         {profileItems.map((item, index) => {
           return (
             <div
               key={index}
-              className="flex items-center w-60 p-2 pl-3 pr-3 text-sm font-medium rounded-md hover:bg-gray-100"
+              className="flex items-center w-60 p-2 pl-3 pr-3 text-sm font-medium rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700"
             >
-              <div className="mr-2">{item.icon}</div>
+              <div className="mr-2 dark:fill-zinc-300 dark:stroke-zinc-300">
+                {item.icon}
+              </div>
               <p>{item.name}</p>
             </div>
           )

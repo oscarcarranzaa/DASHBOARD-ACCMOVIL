@@ -15,7 +15,7 @@ export default function SideMenu() {
   }
   return (
     <>
-      <nav className="bg-white dark:bg-zinc-800 w-60 p-3 min-h-screen pt-10 border-r border-gray-200 dark:border-gray-600 ">
+      <nav className="bg-white dark:bg-zinc-800 w-60 p-3 min-h-screen pt-10 border-r border-gray-200 dark:border-gray-600 flex-none">
         <ul>
           {menuItems.map((menu, index) => {
             const link = menu.href || '#'
@@ -24,7 +24,7 @@ export default function SideMenu() {
               <li key={index}>
                 <Link
                   href={link}
-                  className={`flex justify-between cursor-pointer flex-wrap mt-2 p-3 pl-4 pr-4 rounded-md ${path === menu.href ? 'bg-sky-100 text-sky-600 fill-sky-600 dark:bg-zinc-600 dark:text-white font-medium' : 'fill-black text-gray-800 dark:text-white hover:bg-slate-100 dark:hover:bg-zinc-700'}`}
+                  className={`flex justify-between cursor-pointer flex-wrap mt-2 p-3 pl-4 pr-4 rounded-md ${path === menu.href ? 'bg-sky-100 text-sky-600 fill-sky-600 dark:bg-zinc-950 dark:text-white font-medium' : 'fill-black text-gray-800 dark:text-white hover:bg-slate-100 dark:hover:bg-zinc-700'}`}
                   onClick={() => toggleMenu(index)}
                 >
                   <div className="flex">

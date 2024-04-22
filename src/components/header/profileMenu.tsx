@@ -35,7 +35,7 @@ export default function ProfileMenu({ data }: IProps) {
           </button>
         </div>
         <div
-          className={`${openProfile ? '' : 'hidden'} absolute right-0 bg-gray-50 border border-gray-300 p-2 rounded-md dark:bg-zinc-800 dark:border-zinc-700`}
+          className={`${openProfile ? '' : 'hidden'} absolute z-50 right-0 bg-gray-50 border border-gray-300 p-2 rounded-md dark:bg-zinc-800 dark:border-zinc-700`}
         >
           <ProfileItems image={avatar} name={data.name} role={data.team.role} />
         </div>

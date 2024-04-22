@@ -29,7 +29,7 @@ export const team = z.object({
 })
 
 export const user = z.object({
-  id: z.string(),
+  _id: z.string(),
   name: z.string(),
   email: z.string().email(),
   verify: z.boolean(),
@@ -38,5 +38,14 @@ export const user = z.object({
   createdAt: z.string(),
 })
 
-//export type MediaSchema = z.infer<typeof media>
+export const getMedias = z.object({
+  data: z.array(media),
+  totalPages: z.number(),
+  limit: z.number(),
+  results: z.number(),
+  pageNumber: z.number(),
+})
+export type GetMediasSchema = z.infer<typeof getMedias>
+
+export type MediaSchema = z.infer<typeof media>
 export type UserSchema = z.infer<typeof user>

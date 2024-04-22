@@ -81,7 +81,7 @@ export const menuItems = [
   {
     name: 'Multimedia',
     icon: <MediaImageSVG size={iconSize} />,
-    href: '/multimedia',
+    href: '/dash/multimedia',
   },
   {
     name: 'Ofertas',

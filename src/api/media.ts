@@ -16,3 +16,18 @@ export async function getDataMedias(page: string, limit: string) {
     }
   }
 }
+interface IFileData {
+  file: FileList
+}
+export async function uploadMedia(file: FormData) {
+  console.log(file, 'jjj')
+  try {
+    const { data } = await axiosInstance.post(`/media/upload`, file)
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.message)
+    }
+  }
+}

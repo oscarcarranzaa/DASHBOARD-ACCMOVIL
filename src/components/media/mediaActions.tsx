@@ -3,8 +3,12 @@ import DownloadSVG from '../icons/download'
 import LinkSVG from '../icons/link'
 import OpenSVG from '../icons/open'
 import TrashSVG from '../icons/trahs'
+interface IProps {
+  url: string
+  name: string
+}
 
-export default function MediaAction() {
+export default function MediaAction({ url, name }: IProps) {
   const { isCopied, copyToClipboard } = useClipboard()
 
   const handleCopy = (string: string) => {
@@ -15,21 +19,19 @@ export default function MediaAction() {
   return (
     <>
       <div
-        className=" p-2 rounded-md min-w-52 text-white"
+        className=" p-2 rounded-md min-w-52 text-white border border-zinc-500"
         style={{ background: 'rgba(0,0,0,0.8' }}
       >
-        <p className="text-sm line-clamp-1 font-medium">
-          Supcase-15-pro-max.jpg dgbehzeshdgjnfxncx
-        </p>
+        <p className="text-sm line-clamp-1 font-medium">{name}</p>
         <hr className=" opacity-40 mt-3" />
-        <div className="mt-2 text-sm font-medium">
+        <div className="mt-2 text-xs font-medium">
           <button className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md">
             <OpenSVG size={20} />
             <p className="ml-2">Abrir</p>
           </button>
           <button
             className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
-            onClick={handleCopy('Hola')}
+            onClick={handleCopy(url)}
           >
             <LinkSVG size={20} />
             <p className="ml-2">
@@ -38,7 +40,7 @@ export default function MediaAction() {
           </button>
           <a
             className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
-            href="https://media.oscarcarranza.com/15-6-7-UB-BLACK.jpg"
+            href={url}
             download={true}
           >
             <DownloadSVG size={20} />

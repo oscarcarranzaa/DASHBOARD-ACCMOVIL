@@ -1,0 +1,6 @@
+.mediaContent {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}

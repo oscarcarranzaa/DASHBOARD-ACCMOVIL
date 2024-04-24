@@ -1,32 +1,73 @@
-import { uploadMedia } from '@/api/media'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import DragFiles from '@/components/media/upload/dragFIles'
 import { useState } from 'react'
+import axiosInstance from '@/lib/axiosClient'
+import ContentImages from '../contentImages'
 
 interface IProps {
   children: React.ReactNode
 }
+interface IMutation {
+  formFile: FormData
+  index: number
+  blob: string
+  name: string
+}
+interface IUploads {
+  imgURI: string
+  name: string
+  progress: number
+}
 export default function DragMedia({ children }: IProps) {
   const [dragOver, setDragOver] = useState(false)
+  const [upload, setUpload] = useState<IUploads[] | null>(null)
   const queryClient = useQueryClient()
+
   const {
     mutate,
     data: mediaData,
     isPending: mediaPending,
   } = useMutation({
-    mutationFn: uploadMedia,
+    mutationFn: async ({ formFile, index, blob, name }: IMutation) => {
+      const { data } = await axiosInstance.post(`/media/upload`, formFile, {
+        onUploadProgress(progressEvent) {
+          if (progressEvent.total) {
+            const progress =
+              Math.round((progressEvent.loaded / progressEvent.total) * 100) ??
+              0
+            console.log(progress)
+            handleProgress(progress, index)
+          }
+        },
+      })
+      return data
+    },
     onSuccess: async () => {
-      const q = await queryClient.invalidateQueries({ queryKey: ['medias'] })
-      console.log(q)
+      await queryClient.invalidateQueries({ queryKey: ['medias'] })
+      setUpload(null)
       console.log('succes')
     },
   })
-
+  const handleProgress = (progress: number, index: number) => {
+    setUpload((prevUpload) => {
+      if (prevUpload !== null) {
+        const newUploads = [...prevUpload]
+        newUploads[index].progress = progress
+        console.log(newUploads)
+        return newUploads
+      } else {
+        return null
+      }
+    })
+  }
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     const hasFiles = Array.from(e.dataTransfer.types).includes('Files')
     const files = e.dataTransfer.files
     if (hasFiles) {
-      uploadFile(files)
+      uploadFile(files).then((results) => {
+        setUpload(results)
+        console.log('hola')
+      })
     }
     setDragOver(false)
     e.preventDefault()
@@ -43,16 +84,27 @@ export default function DragMedia({ children }: IProps) {
   }
   // Subir los archivos
   const uploadFile = (files: FileList) => {
-    for (let i = 0; i < files.length; i++) {
-      const formData = new FormData()
-      const file = files[i]
-      console.log(file, i)
-      const { type } = files[i]
-      console.log(type)
-      formData.append('file', new File([file], file.name, { type: type }))
-      mutate(formData)
-    }
+    return Promise.all<IUploads>(
+      Array.from(files).map((file, i) => {
+        return new Promise((resolve) => {
+          const formData = new FormData()
+          const { type, name } = file
+          formData.append('file', new File([file], name, { type: type }))
+
+          const reader = new FileReader()
+          reader.onload = () => {
+            const imgURI = reader.result as string
+            mutate({ formFile: formData, index: i, blob: imgURI, name: name })
+            resolve({ imgURI, name, progress: 0 })
+          }
+          reader.readAsDataURL(file)
+        })
+      })
+    )
   }
+
+  // Llamada a la función uploadFile
+
   return (
     <div
       onDragOver={handleDragOver}
@@ -67,6 +119,10 @@ export default function DragMedia({ children }: IProps) {
       >
         <DragFiles />
       </div>
+      {upload &&
+        upload.map((e, index) => {
+          return <p key={index}>{e.progress}</p>
+        })}
       {children}
     </div>
   )

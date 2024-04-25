@@ -16,9 +16,6 @@ export async function getDataMedias(page: string, limit: string) {
     }
   }
 }
-interface IFileData {
-  file: FileList
-}
 export async function uploadMedia(file: FormData) {
   console.log(file, 'jjj')
   try {

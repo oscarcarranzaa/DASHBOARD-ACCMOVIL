@@ -2,7 +2,6 @@
 import { getDataMedias } from '@/api/media'
 import ContentImages from '@/components/media/contentImages'
 import { useQuery } from '@tanstack/react-query'
-import style from './media.module.css'
 import DragMedia from '@/components/media/upload/drag'
 
 export default function Media() {
@@ -20,23 +19,21 @@ export default function Media() {
         <h2 className="text-xl font-semibold">Multimedia</h2>
 
         <DragMedia>
-          <div className={style.mediaContent}>
-            {data &&
-              allMedia?.map((media) => {
-                if (media.images) {
-                  const mediaImage =
-                    media.images?.length > 3 ? media.images[2].src : media.url
-                  return (
-                    <ContentImages
-                      key={media._id}
-                      image={mediaImage}
-                      url={media.url}
-                      name={media.title}
-                    />
-                  )
-                }
-              })}
-          </div>
+          {data &&
+            allMedia?.map((media) => {
+              if (media.images) {
+                const mediaImage =
+                  media.images?.length > 3 ? media.images[2].src : media.url
+                return (
+                  <ContentImages
+                    key={media._id}
+                    image={mediaImage}
+                    url={media.url}
+                    name={media.title}
+                  />
+                )
+              }
+            })}
         </DragMedia>
       </div>
     </>

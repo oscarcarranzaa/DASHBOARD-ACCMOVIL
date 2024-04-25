@@ -17,14 +17,11 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (req: InternalAxiosRequestConfig) => {
     // Verificamos si el token no ha expirado
-    if (token) {
-      const user = decodeJwt(token)
-      const isExpired = user.exp
-        ? dayjs.unix(user?.exp).diff(dayjs()) < 1
-        : true
-      if (!isExpired) return req
-    }
 
+    const user = token ? decodeJwt(token) : ''
+    const isExpired = user.exp ? dayjs.unix(user?.exp).diff(dayjs()) < 1 : true
+    console.log(!isExpired, 'hhhh')
+    if (token && !isExpired) return req
     try {
       const newTokenResponse = await api.get('/auth/update_token')
       useAuthStore.getState().updateToken(newTokenResponse.data.data.token)
@@ -33,6 +30,7 @@ axiosInstance.interceptors.request.use(
     } catch (error) {
       console.error('Error al solicitar un nuevo token:', error)
     }
+
     return req
   }
 )

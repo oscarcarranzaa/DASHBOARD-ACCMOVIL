@@ -3,6 +3,7 @@ import DragFiles from '@/components/media/upload/dragFIles'
 import { useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
 import ContentImages from '../contentImages'
+import style from './style.module.css'
 
 interface IProps {
   children: React.ReactNode
@@ -12,11 +13,13 @@ interface IMutation {
   index: number
   blob: string
   name: string
+  id: string
 }
 interface IUploads {
   imgURI: string
   name: string
   progress: number
+  id: string
 }
 export default function DragMedia({ children }: IProps) {
   const [dragOver, setDragOver] = useState(false)
@@ -28,7 +31,7 @@ export default function DragMedia({ children }: IProps) {
     data: mediaData,
     isPending: mediaPending,
   } = useMutation({
-    mutationFn: async ({ formFile, index, blob, name }: IMutation) => {
+    mutationFn: async ({ formFile, index, blob, name, id }: IMutation) => {
       const { data } = await axiosInstance.post(`/media/upload`, formFile, {
         onUploadProgress(progressEvent) {
           if (progressEvent.total) {
@@ -43,14 +46,14 @@ export default function DragMedia({ children }: IProps) {
       return data
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['medias'] })
-      setUpload(null)
+      // await queryClient.invalidateQueries({ queryKey: ['medias'] })
+      // setUpload(null)
       console.log('succes')
     },
   })
   const handleProgress = (progress: number, index: number) => {
     setUpload((prevUpload) => {
-      if (prevUpload !== null) {
+      if (prevUpload && prevUpload !== null) {
         const newUploads = [...prevUpload]
         newUploads[index].progress = progress
         console.log(newUploads)
@@ -65,8 +68,8 @@ export default function DragMedia({ children }: IProps) {
     const files = e.dataTransfer.files
     if (hasFiles) {
       uploadFile(files).then((results) => {
-        setUpload(results)
-        console.log('hola')
+        const upValue = !upload ? results : results.concat(upload)
+        setUpload(upValue)
       })
     }
     setDragOver(false)
@@ -86,16 +89,24 @@ export default function DragMedia({ children }: IProps) {
   const uploadFile = (files: FileList) => {
     return Promise.all<IUploads>(
       Array.from(files).map((file, i) => {
+        const indexData = upload ? upload.length + i + 1 : i
         return new Promise((resolve) => {
           const formData = new FormData()
           const { type, name } = file
           formData.append('file', new File([file], name, { type: type }))
 
           const reader = new FileReader()
+          const id = 'cargando' + indexData
           reader.onload = () => {
             const imgURI = reader.result as string
-            mutate({ formFile: formData, index: i, blob: imgURI, name: name })
-            resolve({ imgURI, name, progress: 0 })
+            mutate({
+              formFile: formData,
+              index: i,
+              blob: imgURI,
+              name: name,
+              id: id,
+            })
+            resolve({ imgURI, name, progress: 0, id })
           }
           reader.readAsDataURL(file)
         })
@@ -104,7 +115,7 @@ export default function DragMedia({ children }: IProps) {
   }
 
   // Llamada a la función uploadFile
-
+  console.log(upload)
   return (
     <div
       onDragOver={handleDragOver}
@@ -119,11 +130,24 @@ export default function DragMedia({ children }: IProps) {
       >
         <DragFiles />
       </div>
-      {upload &&
-        upload.map((e, index) => {
-          return <p key={index}>{e.progress}</p>
-        })}
-      {children}
+
+      <div className={style.mediaContent}>
+        {upload
+          ? upload.map((e, index) => {
+              return (
+                <ContentImages
+                  key={e.name}
+                  image={e.imgURI}
+                  url={e.imgURI}
+                  name={e.name}
+                  load={e.progress}
+                />
+              )
+            })
+          : null}
+
+        {children}
+      </div>
     </div>
   )
 }

@@ -8,8 +8,9 @@ interface IProps {
   image: string
   url: string
   name: string
+  load?: number
 }
-export default function ContentImages({ image, url, name }: IProps) {
+export default function ContentImages({ image, url, name, load }: IProps) {
   const ref = useRef<HTMLElement>(null)
   const [openActions, setOpenActions] = useState(false)
   useOutsideClick(ref, () => setOpenActions(false))
@@ -52,6 +53,7 @@ export default function ContentImages({ image, url, name }: IProps) {
             </div>
           </div>
           <p className="text-xs line-clamp-1 mt-1 hover:underline">{name}</p>
+          <p>{load}</p>
         </div>
       </div>
     </>

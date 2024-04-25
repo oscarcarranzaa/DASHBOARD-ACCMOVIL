@@ -25,6 +25,7 @@ export default function Login() {
   const { mutate, isPending, error, data } = useMutation({
     mutationFn: loginUser,
     onSuccess: () => {
+      console.log('redirecting...')
       router.push('/dash')
     },
   })

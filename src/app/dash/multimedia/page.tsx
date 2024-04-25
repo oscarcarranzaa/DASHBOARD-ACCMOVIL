@@ -26,6 +26,7 @@ export default function Media() {
                   media.images?.length > 3 ? media.images[2].src : media.url
                 return (
                   <ContentImages
+                    mediaID={media.mediaId}
                     key={media._id}
                     image={mediaImage}
                     url={media.url}

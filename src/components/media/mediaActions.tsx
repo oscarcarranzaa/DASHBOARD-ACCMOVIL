@@ -3,18 +3,45 @@ import DownloadSVG from '../icons/download'
 import LinkSVG from '../icons/link'
 import OpenSVG from '../icons/open'
 import TrashSVG from '../icons/trahs'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteMedia } from '@/api/media'
+import { SetStateAction, useState } from 'react'
 interface IProps {
   url: string
   name: string
+  mediaID: string
+  setIsDeletingChild: React.Dispatch<SetStateAction<boolean>>
 }
 
-export default function MediaAction({ url, name }: IProps) {
+export default function MediaAction({
+  url,
+  name,
+  mediaID,
+  setIsDeletingChild,
+}: IProps) {
   const { isCopied, copyToClipboard } = useClipboard()
+  const [isDeleting, setIsDeleting] = useState(false)
 
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: deleteMedia,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['medias'] })
+      console.log(data)
+    },
+    onSettled: () => {
+      setIsDeletingChild(true)
+      setIsDeleting(false)
+    },
+  })
   const handleCopy = (string: string) => {
     return () => {
       copyToClipboard(string)
     }
+  }
+  const handleDelete = () => {
+    setIsDeleting(true)
+    mutate(mediaID)
   }
   return (
     <>
@@ -46,9 +73,15 @@ export default function MediaAction({ url, name }: IProps) {
             <DownloadSVG size={20} />
             <p className="ml-2">Descargar</p>
           </a>
-          <button className="stroke-red-500 flex text-red-500 w-full p-2 rounded-md hover:bg-red-500 hover:text-white hover:stroke-white">
+          <button
+            className="stroke-red-500 flex text-red-500 w-full p-2 rounded-md hover:bg-red-500 hover:text-white hover:stroke-white disabled:cursor-not-allowed disabled:bg-red-700"
+            onClick={() => handleDelete()}
+            disabled={isDeleting}
+          >
             <TrashSVG size={20} />
-            <p className="ml-2">Mover a papelera</p>
+            <p className="ml-2">
+              {isDeleting ? 'Eliminando' : 'Eliminar medio'}
+            </p>
           </button>
         </div>
       </div>

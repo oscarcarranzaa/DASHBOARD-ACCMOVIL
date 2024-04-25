@@ -152,6 +152,7 @@ export default function DragMedia({ children }: IProps) {
           ? upload.map((e, index) => {
               return (
                 <ContentImages
+                  mediaID={e.id}
                   key={e.id}
                   image={e.imgURI}
                   url={e.imgURI}

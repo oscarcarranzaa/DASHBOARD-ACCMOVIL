@@ -11,14 +11,24 @@ interface IProps {
   url: string
   name: string
   load?: number
+  mediaID: string
 }
-export default function ContentImages({ image, url, name, load }: IProps) {
+export default function ContentImages({
+  image,
+  url,
+  name,
+  load,
+  mediaID,
+}: IProps) {
+  const [isDeletingChild, setIsDeletingChild] = useState(false)
+  console.log(isDeletingChild)
+
   const ref = useRef<HTMLElement>(null)
   const [openActions, setOpenActions] = useState(false)
   useOutsideClick(ref, () => setOpenActions(false))
   return (
     <>
-      <div className=" max-w-80  max-h-80">
+      <div className={`max-w-80  max-h-80 ${isDeletingChild ? 'hidden' : ''}`}>
         <div className="p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-800  rounded-md relative">
           <div ref={ref as React.MutableRefObject<HTMLDivElement>}>
             <button
@@ -30,7 +40,12 @@ export default function ContentImages({ image, url, name, load }: IProps) {
             <div
               className={`absolute right-5 z-20 top-12 ${openActions ? '' : 'hidden'}`}
             >
-              <MediaAction url={url} name={name} />
+              <MediaAction
+                url={url}
+                name={name}
+                mediaID={mediaID}
+                setIsDeletingChild={setIsDeletingChild}
+              />
             </div>
           </div>
           <div
@@ -56,7 +71,7 @@ export default function ContentImages({ image, url, name, load }: IProps) {
 
             {load && load <= 100 ? (
               <div
-                className="absolute z-50 top-0 bottom-0 right-0 left-0 flex justify-center items-center"
+                className="absolute z-50 top-0 bottom-0 right-0 left-0 flex justify-center items-center text-white"
                 style={{ background: 'rgba(0,0,0,0.7)' }}
               >
                 <div>

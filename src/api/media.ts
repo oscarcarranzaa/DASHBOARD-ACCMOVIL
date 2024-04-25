@@ -28,3 +28,15 @@ export async function uploadMedia(file: FormData) {
     }
   }
 }
+
+export async function deleteMedia(mediaId: string) {
+  try {
+    const { data } = await axiosInstance.delete(`/media/${mediaId}`)
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.message)
+    }
+  }
+}

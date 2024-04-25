@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
 import ContentImages from '../contentImages'
 import style from './style.module.css'
+import { MediaSchema } from '@/types/schemas'
 
 interface IProps {
   children: React.ReactNode
@@ -24,7 +25,6 @@ interface IUploads {
 export default function DragMedia({ children }: IProps) {
   const [dragOver, setDragOver] = useState(false)
   const [upload, setUpload] = useState<IUploads[] | null>(null)
-  const queryClient = useQueryClient()
 
   const {
     mutate,
@@ -32,28 +32,43 @@ export default function DragMedia({ children }: IProps) {
     isPending: mediaPending,
   } = useMutation({
     mutationFn: async ({ formFile, index, blob, name, id }: IMutation) => {
-      const { data } = await axiosInstance.post(`/media/upload`, formFile, {
-        onUploadProgress(progressEvent) {
-          if (progressEvent.total) {
-            const progress =
-              Math.round((progressEvent.loaded / progressEvent.total) * 100) ??
-              0
-            console.log(progress)
-            handleProgress(progress, index)
-          }
-        },
-      })
-      return data
+      const { data } = await axiosInstance.post<MediaSchema>(
+        `/media/upload`,
+        formFile,
+        {
+          onUploadProgress(progressEvent) {
+            if (progressEvent.total) {
+              const progress =
+                Math.round(
+                  (progressEvent.loaded / progressEvent.total) * 100
+                ) ?? 0
+              handleProgress(progress, index)
+            }
+          },
+        }
+      )
+      return { data, index }
     },
-    onSuccess: async () => {
-      // await queryClient.invalidateQueries({ queryKey: ['medias'] })
-      // setUpload(null)
-      console.log('succes')
+    onSuccess: async (res) => {
+      setUpload((prevUpload) => {
+        if (prevUpload && prevUpload !== null) {
+          const newUploads = [...prevUpload]
+          newUploads[res.index] = {
+            id: res.data.mediaId,
+            imgURI: res.data.url,
+            name: res.data.title,
+            progress: 101,
+          }
+          console.log('success')
+          return newUploads
+        }
+        return null
+      })
     },
   })
   const handleProgress = (progress: number, index: number) => {
     setUpload((prevUpload) => {
-      if (prevUpload && prevUpload !== null) {
+      if (prevUpload && prevUpload !== null && progress) {
         const newUploads = [...prevUpload]
         newUploads[index].progress = progress
         console.log(newUploads)
@@ -63,6 +78,7 @@ export default function DragMedia({ children }: IProps) {
       }
     })
   }
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     const hasFiles = Array.from(e.dataTransfer.types).includes('Files')
     const files = e.dataTransfer.files
@@ -106,7 +122,7 @@ export default function DragMedia({ children }: IProps) {
               name: name,
               id: id,
             })
-            resolve({ imgURI, name, progress: 0, id })
+            resolve({ imgURI, name, progress: 1, id })
           }
           reader.readAsDataURL(file)
         })
@@ -136,7 +152,7 @@ export default function DragMedia({ children }: IProps) {
           ? upload.map((e, index) => {
               return (
                 <ContentImages
-                  key={e.name}
+                  key={e.id}
                   image={e.imgURI}
                   url={e.imgURI}
                   name={e.name}

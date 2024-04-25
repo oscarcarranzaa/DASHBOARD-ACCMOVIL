@@ -2,14 +2,15 @@
 
 import { create } from 'zustand'
 
-interface AuthStore {
+type State = {
   token: string | null
-  setToken: (token: string | null) => void
-  updateToken: (updateToken: string) => void
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+type Action = {
+  setToken: (token: State['token']) => void
+}
+
+export const useAuthStore = create<State & Action>((set) => ({
   token: null,
-  setToken: (newToken) => set({ token: newToken }),
-  updateToken: (updatedToken) => set({ token: updatedToken }),
+  setToken: (newToken) => set(() => ({ token: newToken })),
 }))

@@ -4,6 +4,8 @@ import MenuDotsSVG from '../icons/menuDots'
 import MediaAction from './mediaActions'
 import useOutsideClick from '@/hooks/useOutSideClick'
 
+import { CircularProgress } from '@nextui-org/progress'
+
 interface IProps {
   image: string
   url: string
@@ -51,9 +53,25 @@ export default function ContentImages({ image, url, name, load }: IProps) {
                 className="  rounded-md w-full  h-full object-contain m-auto"
               />
             </div>
+
+            {load && load <= 100 ? (
+              <div
+                className="absolute z-50 top-0 bottom-0 right-0 left-0 flex justify-center items-center"
+                style={{ background: 'rgba(0,0,0,0.7)' }}
+              >
+                <div>
+                  <CircularProgress
+                    value={load}
+                    aria-label="Loading..."
+                    size="lg"
+                    color="success"
+                    showValueLabel={true}
+                  />
+                </div>
+              </div>
+            ) : null}
           </div>
           <p className="text-xs line-clamp-1 mt-1 hover:underline">{name}</p>
-          <p>{load}</p>
         </div>
       </div>
     </>

@@ -5,6 +5,7 @@ import MediaAction from './mediaActions'
 import useOutsideClick from '@/hooks/useOutSideClick'
 
 import { CircularProgress } from '@nextui-org/progress'
+import Link from 'next/link'
 
 interface IProps {
   image: string
@@ -86,7 +87,12 @@ export default function ContentImages({
               </div>
             ) : null}
           </div>
-          <p className="text-xs line-clamp-1 mt-1 hover:underline">{name}</p>
+          <Link
+            href={`/dash/multimedia/${mediaID}`}
+            className="text-xs line-clamp-1 mt-1 hover:underline"
+          >
+            {name}
+          </Link>
         </div>
       </div>
     </>

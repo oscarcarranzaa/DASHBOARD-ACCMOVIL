@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+///// MEDIOS
 export const images = z.object({
   _id: z.string(),
   key: z.string(),
@@ -20,10 +21,10 @@ export const media = z.object({
   key: z.string(),
   user: z.string(),
   images: z.array(images).optional(),
+  createdAt: z.string(),
 })
-
 export const team = z.object({
-  id: z.string(),
+  _id: z.string(),
   role: z.string(),
   job: z.string().optional(),
 })
@@ -45,7 +46,16 @@ export const getMedias = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
-export type GetMediasSchema = z.infer<typeof getMedias>
+const mediaUserAvatar = media.pick({ _id: true, mediaId: true, images: true })
+const mediaUser = user
+  .omit({ avatar: true })
+  .extend({ avatar: mediaUserAvatar })
+const oneMediaTypes = media.omit({ user: true }).extend({ user: mediaUser })
 
+export const getOneMediaData = oneMediaTypes
+/////// USUARIOS
+
+export type GetMediasSchema = z.infer<typeof getMedias>
+export type GetOneMediaSchema = z.infer<typeof getOneMediaData>
 export type MediaSchema = z.infer<typeof media>
 export type UserSchema = z.infer<typeof user>

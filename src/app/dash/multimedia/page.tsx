@@ -15,7 +15,7 @@ export default function Media() {
 
   return (
     <>
-      <div className=" p-5">
+      <div>
         <h2 className="text-xl font-semibold">Multimedia</h2>
 
         <DragMedia>

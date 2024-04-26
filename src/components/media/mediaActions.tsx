@@ -6,6 +6,7 @@ import TrashSVG from '../icons/trahs'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteMedia } from '@/api/media'
 import { SetStateAction, useState } from 'react'
+import Link from 'next/link'
 interface IProps {
   url: string
   name: string
@@ -52,10 +53,13 @@ export default function MediaAction({
         <p className="text-sm line-clamp-1 font-medium">{name}</p>
         <hr className=" opacity-40 mt-3" />
         <div className="mt-2 text-xs font-medium">
-          <button className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md">
+          <Link
+            href={`/dash/multimedia/${mediaID}`}
+            className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
+          >
             <OpenSVG size={20} />
             <p className="ml-2">Abrir</p>
-          </button>
+          </Link>
           <button
             className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
             onClick={handleCopy(url)}

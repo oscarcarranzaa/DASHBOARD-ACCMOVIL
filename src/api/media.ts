@@ -1,6 +1,11 @@
 import axiosInstance from '@/lib/axiosClient'
 import { isAxiosError } from 'axios'
-import { GetMediasSchema, getMedias } from '@/types/schemas'
+import {
+  GetMediasSchema,
+  GetOneMediaSchema,
+  getMedias,
+  getOneMediaData,
+} from '@/types/schemas'
 
 export async function getDataMedias(page: string, limit: string) {
   try {
@@ -16,11 +21,14 @@ export async function getDataMedias(page: string, limit: string) {
     }
   }
 }
-export async function uploadMedia(file: FormData) {
-  console.log(file, 'jjj')
+export async function getOneMedia(mediaID: string) {
   try {
-    const { data } = await axiosInstance.post(`/media/upload`, file)
-    return data
+    const { data } = await axiosInstance.get<GetOneMediaSchema>(
+      `/media/${mediaID}`
+    )
+    const validData = getOneMediaData.parse(data)
+    console.log(validData)
+    return validData
   } catch (error) {
     console.log(error)
     if (isAxiosError(error) && error.response) {

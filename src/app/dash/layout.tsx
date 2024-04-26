@@ -16,7 +16,7 @@ export default function DashLayout({
           <Header />
           <div className="bg-gray-100 dark:bg-zinc-900 flex">
             <SideMenu />
-            <main className=" container">{children}</main>
+            <main className="container p-5">{children}</main>
           </div>
         </ThemeProvider>
       </NextUIProvider>

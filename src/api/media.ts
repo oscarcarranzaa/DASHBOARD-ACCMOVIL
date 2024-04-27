@@ -36,7 +36,24 @@ export async function getOneMedia(mediaID: string) {
     }
   }
 }
-
+type IEditMedia = {
+  mediaID: string
+  title: string
+}
+export async function editOneMedia(dataMedia: IEditMedia) {
+  try {
+    const { data } = await axiosInstance.put<string>(
+      `/media/${dataMedia.mediaID}`,
+      { title: dataMedia.title }
+    )
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.message)
+    }
+  }
+}
 export async function deleteMedia(mediaId: string) {
   try {
     const { data } = await axiosInstance.delete(`/media/${mediaId}`)

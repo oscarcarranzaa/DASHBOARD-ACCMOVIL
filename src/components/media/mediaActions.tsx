@@ -27,7 +27,7 @@ export default function MediaAction({
   const { mutate } = useMutation({
     mutationFn: deleteMedia,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['medias'] })
+      // queryClient.invalidateQueries({ queryKey: ['medias'] })
       console.log(data)
     },
     onSettled: () => {

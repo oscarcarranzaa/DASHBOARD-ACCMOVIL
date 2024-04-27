@@ -12,7 +12,6 @@ export default function Media() {
   })
 
   const allMedia = data?.data
-
   return (
     <>
       <div>

@@ -1,5 +1,6 @@
 'use client'
-import { deleteMedia, getOneMedia } from '@/api/media'
+import { deleteMedia, editOneMedia, getOneMedia } from '@/api/media'
+import ButtonBack from '@/components/buttonBack/button'
 import CardImageDetails from '@/components/cards/cardImageDetails'
 import DownloadSVG from '@/components/icons/download'
 import FireSVG from '@/components/icons/fire'
@@ -7,7 +8,14 @@ import LinkSVG from '@/components/icons/link'
 import useClipboard from '@/hooks/useClipBoard'
 import { Button, Image, Input } from '@nextui-org/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+interface IEditMedia {
+  title: string
+}
 
 export default function MediaID() {
   const { isCopied, copyToClipboard } = useClipboard()
@@ -15,7 +23,7 @@ export default function MediaID() {
   const router = useRouter()
   const param = useParams()
   const id = String(param.mediaID)
-  const { data, isLoading } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['oneMedia'],
     queryFn: () => getOneMedia(id),
     refetchOnWindowFocus: false,
@@ -28,8 +36,29 @@ export default function MediaID() {
       console.log(data)
     },
   })
+  const { mutate: editMutate, data: editData } = useMutation({
+    mutationFn: editOneMedia,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['medias'] })
+    },
+  })
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      title: '',
+    },
+  })
+
+  useEffect(() => {
+    setValue('title', data ? data.title : '')
+  }, [data])
+
   const fileName = data?.key.split('/').pop() ?? 'Cargando'
-  if (!data) return 'Cargando...'
+  // si no hay datos retornamos que no hay datos
+  if (isFetching) return 'Cargando...'
+  if (!data) {
+    router.push('/dash/multimedia')
+    return 'No hay datos'
+  }
   const getAvatar = data.user.avatar
   const avatar = getAvatar.images
     ? getAvatar.images[0].src
@@ -39,9 +68,19 @@ export default function MediaID() {
       copyToClipboard(string)
     }
   }
+  const handleForm = (formData: IEditMedia) => {
+    const dataMedia = {
+      mediaID: data.mediaId,
+      title: formData.title,
+    }
+    editMutate(dataMedia)
+  }
   return (
     <>
-      <h1 className="text-2xl font-semibold">Previsualizar medio</h1>
+      <div className="flex items-center">
+        <ButtonBack />
+        <h1 className="text-2xl font-semibold ml-3">Previsualizar medio</h1>
+      </div>
       <div className="">
         <h2 className="text-xl mt-5 font-semibold pl-5">{fileName}</h2>
       </div>
@@ -51,12 +90,24 @@ export default function MediaID() {
         </section>
         <section className="col-span-2 pt-5">
           <h3 className="text-xl font-semibold mb-3">Editar</h3>
-          <Input
-            value={data?.title}
-            size="md"
-            label={'Nombre'}
-            variant="bordered"
-          />
+
+          <form onSubmit={handleSubmit(handleForm)}>
+            <div className="flex flex-col justify-end items-end">
+              <Input
+                size="md"
+                label={'Nombre'}
+                variant="bordered"
+                {...register('title')}
+              />
+              <div className="mt-2 flex justify-between items-center w-full">
+                <p className="text-xs text-green-600">{editData}</p>
+                <Button size="sm" color="primary" type="submit">
+                  Guardar
+                </Button>
+              </div>
+            </div>
+          </form>
+
           <h3 className="text-xl font-semibold mb-2 mt-8">Información</h3>
           <ul className="text-sm">
             <li className="pb-1">
@@ -84,8 +135,10 @@ export default function MediaID() {
               {data?.type}
             </li>
             <li className="pb-1">
-              <span className="font-semibold">Creado: </span>
-              {data?.createdAt ? data.createdAt : ''}
+              <span className="font-semibold">Subido: </span>
+              {data?.createdAt
+                ? dayjs(data.createdAt).format('DD/MM/YYYY hh:mm a')
+                : ''}
             </li>
           </ul>
 

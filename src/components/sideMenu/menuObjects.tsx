@@ -21,15 +21,15 @@ export const menuItems = [
     items: [
       {
         name: 'Ver pedidos',
-        href: '/pedidos/',
+        href: '/dash/pedidos/',
       },
       {
         name: 'Historial',
-        href: '/Pedidos/historial',
+        href: '/dash/Pedidos/historial',
       },
       {
         name: 'Devoluciones',
-        href: '/pedidos/devoluciones',
+        href: '/dash/pedidos/devoluciones',
       },
     ],
   },
@@ -39,7 +39,7 @@ export const menuItems = [
     items: [
       {
         name: 'Agregar nuevos',
-        href: '/productos/nuevo',
+        href: '/dash/productos/nuevo',
       },
 
       {
@@ -48,7 +48,7 @@ export const menuItems = [
       },
       {
         name: 'Papelera',
-        href: '/productos/papelera',
+        href: '/dash/productos/papelera',
       },
     ],
   },
@@ -58,23 +58,23 @@ export const menuItems = [
     items: [
       {
         name: 'Agregar nuevos',
-        href: '/publicaciones/nuevo',
+        href: '/dash/publicaciones/nuevo',
       },
       {
         name: 'Ver publicaciones',
-        href: '/publicaciones/',
+        href: '/dash/publicaciones/',
       },
       {
         name: 'Categorías',
-        href: '/publicaciones/categorias',
+        href: '/dash/publicaciones/categorias',
       },
       {
         name: 'Atributos',
-        href: '/publicaciones/atributos',
+        href: '/dash/publicaciones/atributos',
       },
       {
         name: 'Papelera',
-        href: '/publicaciones/papelera',
+        href: '/dash/publicaciones/papelera',
       },
     ],
   },
@@ -89,31 +89,31 @@ export const menuItems = [
     items: [
       {
         name: 'Ofertas',
-        href: '/ofertas/',
+        href: '/dash/ofertas/',
       },
       {
         name: 'Cupones',
-        href: '/ofertas/cupones',
+        href: '/dash/ofertas/cupones',
       },
       {
         name: 'Descuentos',
-        href: '/ofertas/descuentos',
+        href: '/dash/ofertas/descuentos',
       },
       {
         name: 'Puntos',
-        href: '/ofertas/puntos',
+        href: '/dash/ofertas/puntos',
       },
     ],
   },
   {
     name: 'Equipo',
     icon: <TeamSVG size={iconSize} />,
-    href: '/equipo',
+    href: '/dash/equipo',
   },
   {
     name: 'Clientes',
     icon: <ClientSVG size={iconSize} />,
-    href: '/clientes',
+    href: '/dash/clientes',
   },
   {
     name: 'Sitio',
@@ -121,15 +121,15 @@ export const menuItems = [
     items: [
       {
         name: 'Análisis',
-        href: '/sitio/analisis',
+        href: '/dash/sitio/analisis',
       },
       {
         name: 'Personalización',
-        href: '/sitio/personalizacion',
+        href: '/dash/sitio/personalizacion',
       },
       {
         name: 'Configuración',
-        href: '/sitio/configuracion',
+        href: '/dash/sitio/configuracion',
       },
     ],
   },

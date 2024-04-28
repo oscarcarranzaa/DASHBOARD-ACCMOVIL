@@ -10,7 +10,7 @@ import { Button, Image, Input } from '@nextui-org/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface IEditMedia {
@@ -50,7 +50,7 @@ export default function MediaID() {
 
   useEffect(() => {
     setValue('title', data ? data.title : '')
-  }, [data])
+  }, [data, setValue])
 
   const fileName = data?.key.split('/').pop() ?? 'Cargando'
   // si no hay datos retornamos que no hay datos
@@ -77,16 +77,13 @@ export default function MediaID() {
   }
   return (
     <>
-      <div className="flex items-center">
-        <ButtonBack />
-        <h1 className="text-2xl font-semibold ml-3">Previsualizar medio</h1>
-      </div>
-      <div className="">
-        <h2 className="text-xl mt-5 font-semibold pl-5">{fileName}</h2>
-      </div>
+      <ButtonBack text="Previsualizar medio" />
+      <h2 className="text-xl mt-5 font-semibold pl-5">{fileName}</h2>
       <div className="grid grid-cols-6 mt-2 gap-8">
         <section className="w-full col-span-3 p-5 flex justify-center">
-          {data && <Image src={data.url} className="w-full" />}
+          {data && (
+            <Image src={data.url} className="w-full" alt="Imagen del medio" />
+          )}
         </section>
         <section className="col-span-2 pt-5">
           <h3 className="text-xl font-semibold mb-3">Editar</h3>

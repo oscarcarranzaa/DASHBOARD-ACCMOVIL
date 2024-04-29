@@ -129,9 +129,6 @@ export default function DragMedia({ children }: IProps) {
       })
     )
   }
-
-  // Llamada a la función uploadFile
-  console.log(upload)
   return (
     <div
       onDragOver={handleDragOver}

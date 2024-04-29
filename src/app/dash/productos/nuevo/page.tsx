@@ -1,8 +1,14 @@
 'use client'
 import ButtonBack from '@/components/buttonBack/button'
 import { Button, Image, Input } from '@nextui-org/react'
+import dynamic from 'next/dynamic'
+import { useState } from 'react'
 
 export default function NewProduct() {
+  const [isModalMedia, setIsModalMedia] = useState(false)
+  const DinamicMedia = dynamic(() => import('@/components/media/'), {
+    ssr: false,
+  })
   return (
     <>
       <ButtonBack text="Agregar un nuevo producto" />
@@ -18,11 +24,16 @@ export default function NewProduct() {
             <Input label="Precio oferta" variant="bordered" />
           </div>
         </div>
-        <div>
+        <div onClick={() => setIsModalMedia(!isModalMedia)}>
           <div className="bg-black w-full h-80 col-span-1">
             <p>Imagen del producto</p>
           </div>
         </div>
+      </div>
+      <div
+        className={`fixed min-h-screen min-w-full top-0 z-50 left-0 right-0 ${isModalMedia ? 'block' : 'hidden'}`}
+      >
+        {isModalMedia && <DinamicMedia />}
       </div>
     </>
   )

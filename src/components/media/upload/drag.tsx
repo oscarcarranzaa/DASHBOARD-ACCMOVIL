@@ -1,14 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import DragFiles from '@/components/media/upload/dragFIles'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
 import ContentImages from '../contentImages'
 import style from './style.module.css'
 import { MediaSchema } from '@/types/schemas'
+import { TSelectMedia } from '../index'
 
-interface IProps {
-  children: React.ReactNode
-}
 interface IMutation {
   formFile: FormData
   index: number
@@ -16,15 +14,25 @@ interface IMutation {
   name: string
   id: string
 }
-interface IUploads {
+export interface IUploads {
   imgURI: string
   name: string
-  progress: number
+  progress?: number
   id: string
 }
-export default function DragMedia({ children }: IProps) {
+interface IProps extends TSelectMedia {
+  children?: React.ReactNode
+  dataMedia: IUploads[] | null
+}
+export default function DragMedia({ select, dataMedia }: IProps) {
   const [dragOver, setDragOver] = useState(false)
   const [upload, setUpload] = useState<IUploads[] | null>(null)
+  const [selected, setSelected] = useState<IUploads[]>([])
+  console.log(selected)
+
+  useEffect(() => {
+    setUpload(dataMedia)
+  }, [dataMedia])
 
   const {
     mutate,
@@ -129,6 +137,7 @@ export default function DragMedia({ children }: IProps) {
       })
     )
   }
+  const isSelect = select ? true : false
   return (
     <div
       onDragOver={handleDragOver}
@@ -147,21 +156,40 @@ export default function DragMedia({ children }: IProps) {
       <div className={style.mediaContent}>
         {upload
           ? upload.map((e, index) => {
-              return (
-                <ContentImages
-                  mediaID={e.id}
-                  key={e.id}
-                  image={e.imgURI}
-                  url={e.imgURI}
-                  name={e.name}
-                  load={e.progress}
-                />
-              )
+              if (e.imgURI) {
+                return (
+                  <ContentImages
+                    mediaID={e.id}
+                    isSelect={isSelect}
+                    key={e.id}
+                    image={e.imgURI}
+                    url={e.imgURI}
+                    name={e.name}
+                    load={e.progress}
+                    selectItem={setSelected}
+                  />
+                )
+              }
             })
           : null}
-
-        {children}
       </div>
+      {select ? (
+        <div className="absolute bottom-0 left-6 right-16 bg-zinc-800 z-20 flex gap-2 min-h-14 p-2">
+          {selected.map((slt) => {
+            return (
+              <>
+                <picture>
+                  <img
+                    src={slt.imgURI}
+                    className="w-10 h-10 rounded object-cover"
+                    alt={slt.name}
+                  />
+                </picture>
+              </>
+            )
+          })}
+        </div>
+      ) : null}
     </div>
   )
 }

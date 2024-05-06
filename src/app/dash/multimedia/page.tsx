@@ -1,11 +1,12 @@
 'use client'
 import Media from '@/components/media'
+import NavegationPages from '@/components/navegationPages'
 
 export default function Multimedia() {
   return (
     <>
       <div>
-        <h2 className="text-xl font-semibold">Multimedia</h2>
+        <NavegationPages text="Multimedia" />
         <Media />
       </div>
     </>

@@ -1,11 +1,13 @@
 'use client'
-import { useRef, useState } from 'react'
+import { SetStateAction, useRef, useState } from 'react'
 import MenuDotsSVG from '../icons/menuDots'
 import MediaAction from './mediaActions'
 import useOutsideClick from '@/hooks/useOutSideClick'
 
 import { CircularProgress } from '@nextui-org/progress'
 import Link from 'next/link'
+import { Checkbox, cn } from '@nextui-org/react'
+import { IUploads } from './upload/drag'
 
 interface IProps {
   image: string
@@ -13,6 +15,8 @@ interface IProps {
   name: string
   load?: number
   mediaID: string
+  isSelect?: boolean
+  selectItem?: React.Dispatch<SetStateAction<IUploads[]>>
 }
 export default function ContentImages({
   image,
@@ -20,24 +24,52 @@ export default function ContentImages({
   name,
   load,
   mediaID,
+  isSelect,
+  selectItem,
 }: IProps) {
   const [isDeletingChild, setIsDeletingChild] = useState(false)
-  console.log(isDeletingChild)
+  const [select, setSelect] = useState(false)
 
   const ref = useRef<HTMLElement>(null)
   const [openActions, setOpenActions] = useState(false)
   useOutsideClick(ref, () => setOpenActions(false))
+  const handleSelect = () => {
+    setSelect(!select)
+    const mediaInfo: IUploads = {
+      id: mediaID,
+      imgURI: image,
+      name: name,
+    }
+    if (selectItem) {
+      if (!select) {
+        selectItem((prev) => [...prev, mediaInfo])
+      } else {
+        selectItem((prev) => prev.filter((idMedia) => idMedia.id !== mediaID))
+      }
+    }
+  }
   return (
     <>
-      <div className={`max-w-80  max-h-80 ${isDeletingChild ? 'hidden' : ''}`}>
-        <div className="p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-800  rounded-md relative">
+      <div
+        className={`max-w-80  max-h-80 ${isDeletingChild ? 'hidden' : ''} ${isSelect ? ' cursor-pointer' : ''}`}
+        onClick={handleSelect}
+      >
+        <div
+          className={`p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-800  rounded-md relative border border-transparent ${select && 'border-sky-600'}`}
+        >
           <div ref={ref as React.MutableRefObject<HTMLDivElement>}>
-            <button
-              className="stroke-white fill-white absolute bg-slate-400 right-5 top-4 p-1 rounded-md hover:bg-violet-400 z-10"
-              onClick={() => setOpenActions(!openActions)}
-            >
-              <MenuDotsSVG size={20} />
-            </button>
+            {isSelect ? (
+              <div className="absolute z-10 right-0 top-0  p-1 rounded-md">
+                <Checkbox isSelected={select} onChange={handleSelect} />
+              </div>
+            ) : (
+              <button
+                className="stroke-white fill-white absolute bg-slate-400 right-5 top-4 p-1 rounded-md hover:bg-violet-400 z-10"
+                onClick={() => setOpenActions(!openActions)}
+              >
+                <MenuDotsSVG size={20} />
+              </button>
+            )}
             <div
               className={`absolute right-5 z-20 top-12 ${openActions ? '' : 'hidden'}`}
             >
@@ -87,12 +119,17 @@ export default function ContentImages({
               </div>
             ) : null}
           </div>
-          <Link
-            href={`/dash/multimedia/${mediaID}`}
-            className="text-xs line-clamp-1 mt-1 hover:underline"
-          >
-            {name}
-          </Link>
+          {isSelect ? (
+            <p className="text-xs line-clamp-1 mt-1">{name}</p>
+          ) : (
+            <Link
+              href={`/dash/multimedia/${mediaID}`}
+              target="_blank"
+              className="text-xs line-clamp-1 mt-1 hover:underline"
+            >
+              {name}
+            </Link>
+          )}
         </div>
       </div>
     </>

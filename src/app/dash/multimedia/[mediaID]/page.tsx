@@ -1,6 +1,5 @@
 'use client'
 import { deleteMedia, editOneMedia, getOneMedia } from '@/api/media'
-import ButtonBack from '@/components/buttonBack/button'
 import CardImageDetails from '@/components/cards/cardImageDetails'
 import DownloadSVG from '@/components/icons/download'
 import FireSVG from '@/components/icons/fire'
@@ -12,6 +11,7 @@ import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import NavegationPages from '@/components/navegationPages'
 
 interface IEditMedia {
   title: string
@@ -77,7 +77,7 @@ export default function MediaID() {
   }
   return (
     <>
-      <ButtonBack text="Previsualizar medio" />
+      <NavegationPages text="Previsualizar medio" />
       <h2 className="text-xl mt-5 font-semibold pl-5">{fileName}</h2>
       <div className="grid grid-cols-6 mt-2 gap-8">
         <section className="w-full col-span-3 p-5 flex justify-center">

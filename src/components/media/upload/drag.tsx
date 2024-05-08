@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import DragFiles from '@/components/media/upload/dragFIles'
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
 import ContentImages from '../contentImages'
 import style from './style.module.css'
 import { MediaSchema } from '@/types/schemas'
 import { TSelectMedia } from '../index'
+import getMedia from '@/utils/getMedia'
 
 interface IMutation {
   formFile: FormData
@@ -19,19 +20,30 @@ export interface IUploads {
   name: string
   progress?: number
   id: string
+  mediaIDItem: string
 }
 interface IProps extends TSelectMedia {
   children?: React.ReactNode
   dataMedia: IUploads[] | null
+  mediaSelect?: IUploads[] | null
+  setMediasSelect?: React.Dispatch<SetStateAction<IUploads[] | []>>
 }
-export default function DragMedia({ select, dataMedia }: IProps) {
+export default function DragMedia({
+  select,
+  dataMedia,
+  mediaSelect,
+  setMediasSelect,
+}: IProps) {
   const [dragOver, setDragOver] = useState(false)
   const [upload, setUpload] = useState<IUploads[] | null>(null)
-  const [selected, setSelected] = useState<IUploads[]>([])
-  console.log(selected)
+  const [totalUp, setTotalUp] = useState(0)
+  const query = useQueryClient()
 
   useEffect(() => {
-    setUpload(dataMedia)
+    console.log(totalUp)
+    if (totalUp < 1) {
+      setUpload(dataMedia)
+    }
   }, [dataMedia])
 
   const {
@@ -40,6 +52,7 @@ export default function DragMedia({ select, dataMedia }: IProps) {
     isPending: mediaPending,
   } = useMutation({
     mutationFn: async ({ formFile, index, blob, name, id }: IMutation) => {
+      setTotalUp((prev) => prev + 1)
       const { data } = await axiosInstance.post<MediaSchema>(
         `/media/upload`,
         formFile,
@@ -62,12 +75,13 @@ export default function DragMedia({ select, dataMedia }: IProps) {
         if (prevUpload && prevUpload !== null) {
           const newUploads = [...prevUpload]
           newUploads[res.index] = {
+            mediaIDItem: res.data.mediaId,
             id: res.data.mediaId,
             imgURI: res.data.url,
             name: res.data.title,
             progress: 101,
           }
-          console.log('success')
+
           return newUploads
         }
         return null
@@ -79,7 +93,6 @@ export default function DragMedia({ select, dataMedia }: IProps) {
       if (prevUpload && prevUpload !== null && progress) {
         const newUploads = [...prevUpload]
         newUploads[index].progress = progress
-        console.log(newUploads)
         return newUploads
       } else {
         return null
@@ -130,14 +143,13 @@ export default function DragMedia({ select, dataMedia }: IProps) {
               name: name,
               id: id,
             })
-            resolve({ imgURI, name, progress: 1, id })
+            resolve({ imgURI, name, progress: 1, id, mediaIDItem: '#' })
           }
           reader.readAsDataURL(file)
         })
       })
     )
   }
-  const isSelect = select ? true : false
   return (
     <div
       onDragOver={handleDragOver}
@@ -156,40 +168,28 @@ export default function DragMedia({ select, dataMedia }: IProps) {
       <div className={style.mediaContent}>
         {upload
           ? upload.map((e, index) => {
+              const checkSelect = mediaSelect?.find((s) => s.id == e.id)
+                ? true
+                : false
               if (e.imgURI) {
                 return (
                   <ContentImages
+                    check={checkSelect}
+                    id={e.mediaIDItem}
                     mediaID={e.id}
-                    isSelect={isSelect}
+                    isSelect={select}
                     key={e.id}
                     image={e.imgURI}
                     url={e.imgURI}
                     name={e.name}
                     load={e.progress}
-                    selectItem={setSelected}
+                    selectItem={setMediasSelect}
                   />
                 )
               }
             })
           : null}
       </div>
-      {select ? (
-        <div className="absolute bottom-0 left-6 right-16 bg-zinc-800 z-20 flex gap-2 min-h-14 p-2">
-          {selected.map((slt) => {
-            return (
-              <>
-                <picture>
-                  <img
-                    src={slt.imgURI}
-                    className="w-10 h-10 rounded object-cover"
-                    alt={slt.name}
-                  />
-                </picture>
-              </>
-            )
-          })}
-        </div>
-      ) : null}
     </div>
   )
 }

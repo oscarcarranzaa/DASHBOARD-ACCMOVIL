@@ -1,5 +1,5 @@
 'use client'
-import { SetStateAction, useRef, useState } from 'react'
+import { SetStateAction, useEffect, useRef, useState } from 'react'
 import MenuDotsSVG from '../icons/menuDots'
 import MediaAction from './mediaActions'
 import useOutsideClick from '@/hooks/useOutSideClick'
@@ -10,12 +10,14 @@ import { Checkbox, cn } from '@nextui-org/react'
 import { IUploads } from './upload/drag'
 
 interface IProps {
+  id: string
   image: string
   url: string
   name: string
   load?: number
   mediaID: string
-  isSelect?: boolean
+  isSelect?: 'only' | 'multiple'
+  check: boolean
   selectItem?: React.Dispatch<SetStateAction<IUploads[]>>
 }
 export default function ContentImages({
@@ -24,38 +26,50 @@ export default function ContentImages({
   name,
   load,
   mediaID,
+  id,
   isSelect,
+  check,
   selectItem,
 }: IProps) {
   const [isDeletingChild, setIsDeletingChild] = useState(false)
-  const [select, setSelect] = useState(false)
+  const [select, setSelect] = useState(check)
 
   const ref = useRef<HTMLElement>(null)
   const [openActions, setOpenActions] = useState(false)
   useOutsideClick(ref, () => setOpenActions(false))
+  useEffect(() => {
+    setSelect(check)
+  }, [check])
+  const isLoading = load ? load > 100 : true
   const handleSelect = () => {
+    if (!isLoading) return
     setSelect(!select)
     const mediaInfo: IUploads = {
+      mediaIDItem: id,
       id: mediaID,
       imgURI: image,
       name: name,
     }
     if (selectItem) {
-      if (!select) {
+      if (!select && isSelect === 'multiple') {
         selectItem((prev) => [...prev, mediaInfo])
-      } else {
-        selectItem((prev) => prev.filter((idMedia) => idMedia.id !== mediaID))
+        return
       }
+      if (!select && isSelect === 'only') {
+        selectItem([mediaInfo])
+        return
+      }
+      selectItem((prev) => prev.filter((idMedia) => idMedia.id !== mediaID))
     }
   }
   return (
     <>
       <div
-        className={`max-w-80  max-h-80 ${isDeletingChild ? 'hidden' : ''} ${isSelect ? ' cursor-pointer' : ''}`}
+        className={`max-w-80  max-h-80 ${isDeletingChild ? 'hidden' : ''} ${isSelect && isLoading ? ' cursor-pointer' : ''}`}
         onClick={handleSelect}
       >
         <div
-          className={`p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-800  rounded-md relative border border-transparent ${select && 'border-sky-600'}`}
+          className={`p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-700  rounded-md relative border ${select && isSelect ? 'border-sky-600' : 'border-transparent '}`}
         >
           <div ref={ref as React.MutableRefObject<HTMLDivElement>}>
             {isSelect ? (
@@ -123,7 +137,7 @@ export default function ContentImages({
             <p className="text-xs line-clamp-1 mt-1">{name}</p>
           ) : (
             <Link
-              href={`/dash/multimedia/${mediaID}`}
+              href={`/dash/multimedia/${id}`}
               target="_blank"
               className="text-xs line-clamp-1 mt-1 hover:underline"
             >

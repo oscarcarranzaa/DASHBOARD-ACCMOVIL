@@ -14,8 +14,7 @@ export async function middleware(request: NextRequest) {
       const secretKey = process.env.JWT_REFRESH_KEY || ''
       const secret = new TextEncoder().encode(secretKey)
 
-      const { payload } = await jwtVerify(tokenValue, secret)
-      console.log(payload)
+      await jwtVerify(tokenValue, secret)
       return NextResponse.next()
     }
   } catch (error) {

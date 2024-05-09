@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import DragFiles from '@/components/media/upload/dragFIles'
 import { SetStateAction, useEffect, useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
@@ -6,8 +6,6 @@ import ContentImages from '../contentImages'
 import style from './style.module.css'
 import { MediaSchema } from '@/types/schemas'
 import { TSelectMedia } from '../index'
-import getMedia from '@/utils/getMedia'
-
 interface IMutation {
   formFile: FormData
   index: number
@@ -37,10 +35,8 @@ export default function DragMedia({
   const [dragOver, setDragOver] = useState(false)
   const [upload, setUpload] = useState<IUploads[] | null>(null)
   const [totalUp, setTotalUp] = useState(0)
-  const query = useQueryClient()
 
   useEffect(() => {
-    console.log(totalUp)
     if (totalUp < 1) {
       setUpload(dataMedia)
     }

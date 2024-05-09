@@ -5,8 +5,13 @@ import DragMedia, { IUploads } from './upload/drag'
 import getMedia from '@/utils/getMedia'
 import { Button } from '@nextui-org/button'
 import GallerySVG from '../icons/gallery'
+import { UseFormRegister, UseFormSetValue } from 'react-hook-form'
+import { newProduct } from '@/types/poducts'
 
-export default function SelectMedia({ select }: TSelectMedia) {
+interface IProps extends TSelectMedia {
+  setValue: UseFormSetValue<newProduct>
+}
+export default function SelectMedia({ select, setValue }: IProps) {
   const [isModalMedia, setIsModalMedia] = useState(false)
   const [mediaSelect, setMediaSelect] = useState<IUploads[] | []>([])
   const dataItem = getMedia()
@@ -14,6 +19,7 @@ export default function SelectMedia({ select }: TSelectMedia) {
     setIsModalMedia(!isModalMedia)
   }
   const selectId = mediaSelect.map((id) => id.id).toString()
+  setValue('image', selectId)
   return (
     <div>
       <div
@@ -122,7 +128,6 @@ export default function SelectMedia({ select }: TSelectMedia) {
           </div>
         </div>
       </div>
-      <input type="hidden" value={selectId} />
     </div>
   )
 }

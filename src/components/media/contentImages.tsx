@@ -3,7 +3,6 @@ import { SetStateAction, useEffect, useRef, useState } from 'react'
 import MenuDotsSVG from '../icons/menuDots'
 import MediaAction from './mediaActions'
 import useOutsideClick from '@/hooks/useOutSideClick'
-
 import { CircularProgress } from '@nextui-org/progress'
 import Link from 'next/link'
 import { Checkbox, cn } from '@nextui-org/react'

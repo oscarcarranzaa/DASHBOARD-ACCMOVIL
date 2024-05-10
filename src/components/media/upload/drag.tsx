@@ -71,7 +71,7 @@ export default function DragMedia({
         if (prevUpload && prevUpload !== null) {
           const newUploads = [...prevUpload]
           newUploads[res.index] = {
-            mediaIDItem: res.data.mediaId,
+            mediaIDItem: res.data._id,
             id: res.data.mediaId,
             imgURI: res.data.url,
             name: res.data.title,

@@ -1,4 +1,7 @@
 'use client'
+import { createProduct } from '@/api/products'
+import Spinner from '@/components/icons/spinner'
+import WarningInfo from '@/components/icons/warningInfo'
 import SelectMedia from '@/components/media/selectMedia'
 import NavegationPages from '@/components/navegationPages'
 import { newProduct, product } from '@/types/poducts'
@@ -12,26 +15,48 @@ import {
   Switch,
   Textarea,
 } from '@nextui-org/react'
+import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-
-import { Validate, useForm } from 'react-hook-form'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useForm } from 'react-hook-form'
+import CheckSVG from '@/components/icons/check'
+import ToastInfo from '@/components/toast'
 
 export default function NewProduct() {
   const [selectDate, setSelectDate] = useState(false)
   const [visibleSite, setVisibleSite] = useState(true)
   const [date, setDate] = useState<RangeValue<DateValue> | null>(null)
+  const [discount, setDiscount] = useState<number>(0)
   const {
     register,
     handleSubmit,
     setValue,
     unregister,
-    setError,
-    formState: { errors },
+    reset,
+    getValues,
+    formState: { isSubmitSuccessful },
   } = useForm<newProduct>({ resolver: zodResolver(product) })
+  const { mutate, isPending, error, data } = useMutation({
+    mutationFn: createProduct,
+    onSuccess: (success) => {
+      toast(
+        <ToastInfo
+          text="Guardado Correctamente"
+          url="/"
+          label="Ver Producto"
+        />,
+        {
+          icon: <CheckSVG size={20} />,
+        }
+      )
+      reset()
+    },
+  })
   const handleForm = (formData: newProduct) => {
-    formData.visible = visibleSite
-    console.log(formData)
+    formData.active = visibleSite
+    mutate(formData)
   }
   const getRangeDate = (e: RangeValue<DateValue>) => {
     const { start } = e
@@ -41,16 +66,15 @@ export default function NewProduct() {
     ).toISOString()
     const endDate = dayjs(`${end.year}-${end.month}-${end.day}`).toISOString()
     if (selectDate) {
-      setValue('startDiscount', startDate)
-      setValue('endDiscount', endDate)
+      setValue('priceDiscount.start', startDate)
+      setValue('priceDiscount.end', endDate)
     }
   }
-
   useEffect(() => {
     if (!selectDate) {
       setDate(null)
-      unregister('startDiscount')
-      unregister('endDiscount')
+      unregister('priceDiscount.start')
+      unregister('priceDiscount.end')
       return
     }
     if (date) {
@@ -58,7 +82,7 @@ export default function NewProduct() {
       return
     }
   }, [selectDate, date])
-  console.log(errors)
+
   return (
     <>
       <NavegationPages text="Agregar un nuevo producto" />
@@ -156,13 +180,15 @@ export default function NewProduct() {
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
+                isInvalid={getValues('price') <= discount}
+                errorMessage={'No puede ser mayor o igual al precio'}
                 {...(register('priceDiscount'),
                 {
                   onChange: (e) => {
                     const value = e.target.valueAsNumber
                     const valueNumber = Number.isNaN(value) ? undefined : value
-
-                    setValue('priceDiscount', valueNumber)
+                    setDiscount(Number(e.target.value))
+                    setValue('priceDiscount.price', valueNumber)
                   },
                 })}
               />
@@ -173,9 +199,8 @@ export default function NewProduct() {
                 <Switch
                   color="success"
                   size="sm"
-                  //disabled={formSta}
                   isSelected={visibleSite}
-                  {...register('visible', { value: visibleSite })}
+                  {...register('active', { value: visibleSite })}
                   onChange={() => setVisibleSite(!visibleSite)}
                 />
                 <p className="ml-1">Mostrar en el sitio</p>
@@ -204,14 +229,30 @@ export default function NewProduct() {
           </div>
           <div className="pt-10">
             <Button
-              className="w-full font-semibold mb-8 "
+              className="w-full font-semibold  "
               color="primary"
               type="submit"
+              isDisabled={isPending}
             >
-              Guardar
+              {isPending ? (
+                <span className=" animate-spin">
+                  <Spinner size={24} fill="#fff" />{' '}
+                </span>
+              ) : (
+                'Guardar'
+              )}
             </Button>
-            <p className="text-lg font-medium mb-5">Imagen del producto</p>
-            <SelectMedia select="only" setValue={setValue} />
+            <p
+              className={` text-xs text-red-500 font-bold mt-2 fill-red-500 stroke-red-500 ${error?.message ? 'flex' : 'hidden'} items-center gap-1`}
+            >
+              <WarningInfo size={20} /> {error?.message}
+            </p>
+            <p className="text-lg font-medium mb-5 mt-8">Imagen del producto</p>
+            <SelectMedia
+              select="only"
+              setValue={setValue}
+              reset={isSubmitSuccessful}
+            />
 
             <div className="mt-5">
               <p className="text-lg font-medium mb-5">Notas</p>
@@ -224,6 +265,21 @@ export default function NewProduct() {
           </div>
         </div>
       </form>
+      <span className="stroke-green-600 fill-green-600">
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          stacked
+          //theme="dark"
+        />
+      </span>
     </>
   )
 }

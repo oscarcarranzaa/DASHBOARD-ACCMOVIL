@@ -8,21 +8,24 @@ export const product = z
     code: z.string(),
     barCode: z.string().optional(),
     price: z.number(),
-    priceDiscount: z.number().optional(),
-    startDiscount: z.string().optional(),
-    endDiscount: z.string().optional(),
+    priceDiscount: z
+      .object({
+        price: z.number().optional(),
+        start: z.string().optional(),
+        end: z.string().optional(),
+      })
+      .optional(),
     image: z.string().optional(),
     stock: z.number(),
-    visible: z.boolean(),
+    active: z.boolean(),
     note: z.string().optional(),
     minStock: z.number().optional(),
   })
   .refine(
     (data) => {
-      if (data.priceDiscount) {
-        const discount = data.price > data.priceDiscount
-        return discount
-      }
+      if (!data.priceDiscount?.price) return true
+      const discount = data.price > data.priceDiscount.price
+      return discount
     },
     {
       message: 'No puede ser mayor al precio',

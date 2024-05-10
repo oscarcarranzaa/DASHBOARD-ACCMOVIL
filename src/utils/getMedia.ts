@@ -16,8 +16,8 @@ export default function getMedia() {
         return {
           imgURI: mediaImage,
           name: i.title,
-          id: i._id,
-          mediaIDItem: i.mediaId,
+          id: i.mediaId,
+          mediaIDItem: i._id,
         }
       })
     : null

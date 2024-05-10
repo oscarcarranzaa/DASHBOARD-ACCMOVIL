@@ -1,6 +1,6 @@
 import CloseSVG from '@/components/icons/close'
 import Media, { TSelectMedia } from '@/components/media/'
-import { SetStateAction, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import DragMedia, { IUploads } from './upload/drag'
 import getMedia from '@/utils/getMedia'
 import { Button } from '@nextui-org/button'
@@ -10,16 +10,23 @@ import { newProduct } from '@/types/poducts'
 
 interface IProps extends TSelectMedia {
   setValue: UseFormSetValue<newProduct>
+  reset?: boolean
 }
-export default function SelectMedia({ select, setValue }: IProps) {
+export default function SelectMedia({ select, setValue, reset }: IProps) {
   const [isModalMedia, setIsModalMedia] = useState(false)
   const [mediaSelect, setMediaSelect] = useState<IUploads[] | []>([])
+  useEffect(() => {
+    if (reset) {
+      setMediaSelect([])
+    }
+  }, [reset])
   const dataItem = getMedia()
   const handleSelect = () => {
     setIsModalMedia(!isModalMedia)
   }
-  const selectId = mediaSelect.map((id) => id.id).toString()
-  setValue('image', selectId)
+  const selectId = mediaSelect.map((id) => id.mediaIDItem).toString()
+  console.log(selectId)
+  setValue('image', selectId?.length > 0 ? selectId : undefined)
   return (
     <div>
       <div
@@ -64,7 +71,7 @@ export default function SelectMedia({ select, setValue }: IProps) {
         <div className="bg-zinc-100 dark:bg-zinc-800 p-5  dark:fill-white">
           <div className="mb-10 flex justify-between">
             <p>Selector de medios</p>
-            <button onClick={() => setIsModalMedia(false)}>
+            <button onClick={() => setIsModalMedia(false)} type="button">
               <CloseSVG size={20} />
             </button>
           </div>
@@ -113,6 +120,7 @@ export default function SelectMedia({ select, setValue }: IProps) {
                       disabled={mediaSelect.length < 1}
                       onClick={handleSelect}
                       color="primary"
+                      type="button"
                       className={
                         mediaSelect.length > 0
                           ? ''

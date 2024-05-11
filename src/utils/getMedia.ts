@@ -8,7 +8,6 @@ export default function getMedia() {
     queryFn: () => getDataMedias('1', '50'),
     refetchOnWindowFocus: false,
   })
-
   const allMedia = data?.data
   const dataItem = allMedia
     ? allMedia.map((i) => {

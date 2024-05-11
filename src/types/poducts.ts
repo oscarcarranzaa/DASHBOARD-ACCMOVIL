@@ -1,36 +1,37 @@
 import { z } from 'zod'
+import { media } from './schemas'
 
 /** Productos */
 
-export const product = z
-  .object({
-    name: z.string(),
-    code: z.string(),
-    barCode: z.string().optional(),
-    price: z.number(),
-    priceDiscount: z
-      .object({
-        price: z.number().optional(),
-        start: z.string().optional(),
-        end: z.string().optional(),
-      })
-      .optional(),
-    image: z.string().optional(),
-    stock: z.number(),
-    active: z.boolean(),
-    note: z.string().optional(),
-    minStock: z.number().optional(),
-  })
-  .refine(
-    (data) => {
-      if (!data.priceDiscount?.price) return true
-      const discount = data.price > data.priceDiscount.price
-      return discount
-    },
-    {
-      message: 'No puede ser mayor al precio',
-      path: ['priceDiscount'],
-    }
-  )
+export const product = z.object({
+  name: z.string(),
+  code: z.string(),
+  barCode: z.string().optional(),
+  price: z.number(),
+  priceDiscount: z
+    .object({
+      price: z.number().optional(),
+      start: z.string().optional(),
+      end: z.string().optional(),
+    })
+    .optional(),
+  image: z.string().optional(),
+  stock: z.number(),
+  active: z.boolean().optional(),
+  note: z.string().optional(),
+  minStock: z.number().optional(),
+})
 
+const getProductImage = product
+  .omit({ image: true })
+  .extend({ _id: z.string(), image: media.optional() })
+
+export const getProduct = z.object({
+  data: z.array(getProductImage),
+  totalPages: z.number(),
+  limit: z.number(),
+  results: z.number(),
+  pageNumber: z.number(),
+})
+export type getProductSchema = z.infer<typeof getProduct>
 export type newProduct = z.infer<typeof product>

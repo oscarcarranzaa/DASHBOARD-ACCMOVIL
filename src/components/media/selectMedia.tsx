@@ -46,13 +46,15 @@ export default function SelectMedia({ select, setValue, reset }: IProps) {
             }}
           >
             {mediaSelect && mediaSelect.length > 0 ? (
-              <img
-                src={mediaSelect[0].imgURI}
-                loading="lazy"
-                decoding="async"
-                alt="Imagen de covertor"
-                className="  rounded-md w-full  h-full object-contain m-auto"
-              />
+              <picture>
+                <img
+                  src={mediaSelect[0].imgURI}
+                  loading="lazy"
+                  decoding="async"
+                  alt="Imagen de covertor"
+                  className="  rounded-md w-full  h-full object-contain m-auto"
+                />
+              </picture>
             ) : (
               <div className="flex justify-center flex-col">
                 <div className="flex justify-center">

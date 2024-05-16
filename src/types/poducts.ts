@@ -33,5 +33,6 @@ export const getProduct = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
+export type getProductImageSchema = z.infer<typeof getProductImage>
 export type getProductSchema = z.infer<typeof getProduct>
 export type newProduct = z.infer<typeof product>

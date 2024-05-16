@@ -4,6 +4,7 @@ import ArrowAngleSVG from '../icons/arrowAngle'
 import { menuItems } from './menuObjects'
 import MenuItems from './menuItems'
 import { useState } from 'react'
+import style from './sideMenu.module.css'
 import Link from 'next/link'
 
 export default function SideMenu() {
@@ -15,7 +16,9 @@ export default function SideMenu() {
   }
   return (
     <>
-      <nav className="bg-white dark:bg-zinc-800 w-60 p-3 min-h-screen pt-10 border-r border-gray-200 dark:border-gray-600 flex-none">
+      <nav
+        className={`bg-white dark:bg-zinc-800 w-60 p-3 sticky top-0 h-screen pt-10 border-r border-gray-200 dark:border-gray-600 flex-none overflow-y-scroll ${style.menuContent}`}
+      >
         <ul>
           {menuItems.map((menu, index) => {
             const link = menu.href || '#'

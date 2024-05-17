@@ -12,10 +12,14 @@ export async function createProduct(formData: newProduct) {
     }
   }
 }
-export async function getAllProducts(page: string, limit: string) {
+export async function getAllProducts(
+  page: string,
+  limit: string,
+  query?: string
+) {
   try {
     const { data } = await axiosInstance.get<getProductSchema>(
-      `/product?page=${page}&limit=${limit}`
+      `/product?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
     )
 
     const validProduct = getProduct.parse(data)

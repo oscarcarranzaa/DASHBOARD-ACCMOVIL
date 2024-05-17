@@ -17,7 +17,7 @@ export default function SideMenu() {
   return (
     <>
       <nav
-        className={`bg-white dark:bg-zinc-800 w-60 p-3 sticky top-0 h-screen pt-10 border-r border-gray-200 dark:border-gray-600 flex-none overflow-y-scroll ${style.menuContent}`}
+        className={`bg-zinc-50 dark:bg-zinc-800 w-60 p-3 sticky top-0 h-screen pt-10 border-r border-gray-200 dark:border-gray-600 flex-none overflow-y-scroll ${style.menuContent}`}
       >
         <ul>
           {menuItems.map((menu, index) => {

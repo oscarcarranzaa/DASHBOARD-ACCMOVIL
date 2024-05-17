@@ -31,6 +31,7 @@ export const getProduct = z.object({
   totalPages: z.number(),
   limit: z.number(),
   results: z.number(),
+  totalProducts: z.number(),
   pageNumber: z.number(),
 })
 export type getProductImageSchema = z.infer<typeof getProductImage>

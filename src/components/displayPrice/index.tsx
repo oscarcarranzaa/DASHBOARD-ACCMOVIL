@@ -23,7 +23,7 @@ export default function DisplayPrice({
     <>
       <div>
         <p
-          className={`font-medium ${discountPrice && validDiscount ? ' line-through text-xs' : ''} ${discountPrice && !startDate && !endDate ? ' line-through text-xs' : ''}`}
+          className={`font-medium ${discountPrice && validDiscount ? ' line-through text-xs text-zinc-600' : ''} ${discountPrice && !startDate && !endDate ? ' line-through text-xs text-zinc-600' : ''}`}
         >
           {price.toLocaleString('es-HN', {
             style: 'currency',

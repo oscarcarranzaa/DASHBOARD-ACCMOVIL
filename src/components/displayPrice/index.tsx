@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import ClockSVG from '../icons/clock'
+import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 
 type TProps = {
   price: number
@@ -13,12 +14,10 @@ export default function DisplayPrice({
   startDate,
   endDate,
 }: TProps) {
-  const currentDate = dayjs().toISOString()
-  const start = dayjs(startDate)
-  const end = dayjs(endDate)
-  const isInit = start.isBefore(currentDate)
-  const isNotFinish = end.isAfter(currentDate)
-  const validDiscount = isInit && isNotFinish
+  const { isInit, isNotFinish, validDiscount } = validDiscountPrice(
+    startDate,
+    endDate
+  )
   return (
     <>
       <div>

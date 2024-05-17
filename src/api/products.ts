@@ -1,5 +1,11 @@
 import axiosInstance from '@/lib/axiosClient'
-import { getProduct, getProductSchema, newProduct } from '@/types/poducts'
+import {
+  getProduct,
+  getProductSchema,
+  newProduct,
+  getProductImageSchema,
+  getProductImage,
+} from '@/types/poducts'
 import { isAxiosError } from 'axios'
 
 export async function createProduct(formData: newProduct) {
@@ -28,6 +34,19 @@ export async function getAllProducts(
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
+    }
+  }
+}
+export async function getOneProduct(id: string) {
+  try {
+    const { data } = await axiosInstance.get<getProductImageSchema>(
+      `/product/${id}`
+    )
+    const validProduct = getProductImage.parse(data)
+    return validProduct
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data)
     }
   }
 }

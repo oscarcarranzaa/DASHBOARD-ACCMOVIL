@@ -16,7 +16,11 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
+body {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
 * {
   margin: 0;
   padding: 0;

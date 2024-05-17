@@ -1,3 +1,4 @@
+'use client'
 import ButtonBack from './button'
 interface IProps {
   text: string

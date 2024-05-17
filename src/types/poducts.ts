@@ -22,7 +22,7 @@ export const product = z.object({
   minStock: z.number().optional(),
 })
 
-const getProductImage = product
+export const getProductImage = product
   .omit({ image: true })
   .extend({ _id: z.string(), image: media.optional() })
 

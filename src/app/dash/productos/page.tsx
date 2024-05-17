@@ -15,6 +15,10 @@ import {
   TableRow,
   TableCell,
   Spinner,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
   Pagination,
   Input,
   Button,
@@ -22,13 +26,13 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useDebounce, useDebouncedCallback } from 'use-debounce'
+import { useDebouncedCallback } from 'use-debounce'
 
 export default function Dash() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [totalPages, setTotalPages] = useState(0)
-  const rows = 20
+  const rows = '20'
   const { data, isPending } = useQuery({
     queryKey: ['products', page, search],
     queryFn: () => getAllProducts(page.toString(), rows, search),
@@ -70,7 +74,29 @@ export default function Dash() {
         case 'actions':
           return (
             <div className="relative flex justify-end items-center gap-2">
-              ...
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <MenuDotsSVG size={20} />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Example with disabled actions">
+                  <DropdownItem key="new">
+                    <Button as={Link} href={`/dash/productos/${user._id}`}>
+                      Ver producto
+                    </Button>
+                  </DropdownItem>
+                  <DropdownItem key="copy">Copy link</DropdownItem>
+                  <DropdownItem key="edit">Edit file</DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    className="text-danger"
+                    color="danger"
+                  >
+                    Delete file
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           )
         default:

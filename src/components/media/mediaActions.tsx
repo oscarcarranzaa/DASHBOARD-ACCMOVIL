@@ -46,49 +46,38 @@ export default function MediaAction({
   }
   return (
     <>
-      <div
-        className=" p-2 rounded-md min-w-52 text-white border border-zinc-500"
-        style={{ background: 'rgba(0,0,0,0.8' }}
+      <Link
+        href={`/dash/multimedia/${mediaID}`}
+        className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
       >
-        <p className="text-sm line-clamp-1 font-medium">{name}</p>
-        <hr className=" opacity-40 mt-3" />
-        <div className="mt-2 text-xs font-medium">
-          <Link
-            href={`/dash/multimedia/${mediaID}`}
-            className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
-          >
-            <OpenSVG size={20} />
-            <p className="ml-2">Abrir</p>
-          </Link>
-          <button
-            className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
-            onClick={handleCopy(url)}
-          >
-            <LinkSVG size={20} />
-            <p className="ml-2">
-              {isCopied ? '¡Enlace copiado!' : 'Copiar enlace'}
-            </p>
-          </button>
-          <a
-            className="stroke-white flex p-2 hover:bg-gray-700 w-full rounded-md"
-            href={url}
-            download={true}
-          >
-            <DownloadSVG size={20} />
-            <p className="ml-2">Descargar</p>
-          </a>
-          <button
-            className="stroke-red-500 flex text-red-500 w-full p-2 rounded-md hover:bg-red-500 hover:text-white hover:stroke-white disabled:cursor-not-allowed disabled:bg-red-700"
-            onClick={() => handleDelete()}
-            disabled={isDeleting}
-          >
-            <TrashSVG size={20} />
-            <p className="ml-2">
-              {isDeleting ? 'Eliminando' : 'Eliminar medio'}
-            </p>
-          </button>
-        </div>
-      </div>
+        <OpenSVG size={20} />
+        <p className="ml-2">Abrir</p>
+      </Link>
+      <button
+        className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
+        onClick={handleCopy(url)}
+      >
+        <LinkSVG size={20} />
+        <p className="ml-2">
+          {isCopied ? '¡Enlace copiado!' : 'Copiar enlace'}
+        </p>
+      </button>
+      <a
+        className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
+        href={url}
+        download={true}
+      >
+        <DownloadSVG size={20} />
+        <p className="ml-2">Descargar</p>
+      </a>
+      <button
+        className=" stroke-red-500 flex items-center  text-red-500 w-full p-2 rounded-md hover:bg-red-500 hover:text-white hover:stroke-white disabled:cursor-not-allowed disabled:bg-red-700"
+        onClick={() => handleDelete()}
+        disabled={isDeleting}
+      >
+        <TrashSVG size={20} />
+        <p className="ml-2">{isDeleting ? 'Eliminando' : 'Eliminar medio'}</p>
+      </button>
     </>
   )
 }

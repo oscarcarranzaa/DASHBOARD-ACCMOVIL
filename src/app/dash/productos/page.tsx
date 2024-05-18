@@ -1,7 +1,9 @@
 'use client'
 import { getAllProducts } from '@/api/products'
+import DropDown from '@/components/UI/dropDown/dropDown'
 import DisplayPrice from '@/components/displayPrice'
-import MenuDotsSVG from '@/components/icons/menuDots'
+import Edit from '@/components/icons/edit'
+import OpenSVG from '@/components/icons/open'
 import PlusSVG from '@/components/icons/plus'
 import SearchSVG from '@/components/icons/search'
 import NavegationPages from '@/components/navegationPages'
@@ -15,10 +17,6 @@ import {
   TableRow,
   TableCell,
   Spinner,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Pagination,
   Input,
   Button,
@@ -62,6 +60,15 @@ export default function Dash() {
               <SquareImage src={image} />
             </div>
           )
+        case 'name':
+          return (
+            <Link
+              className="hover:underline"
+              href={`/dash/productos/${user._id}`}
+            >
+              {user.name}
+            </Link>
+          )
         case 'price':
           return (
             <DisplayPrice
@@ -74,29 +81,22 @@ export default function Dash() {
         case 'actions':
           return (
             <div className="relative flex justify-end items-center gap-2 stroke-white">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button isIconOnly size="sm" variant="light">
-                    <MenuDotsSVG size={20} />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Example with disabled actions">
-                  <DropdownItem key="new">
-                    <Button as={Link} href={`/dash/productos/${user._id}`}>
-                      Ver producto
-                    </Button>
-                  </DropdownItem>
-                  <DropdownItem key="copy">Copy link</DropdownItem>
-                  <DropdownItem key="edit">Edit file</DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    className="text-danger"
-                    color="danger"
-                  >
-                    Delete file
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <DropDown label="Acciones">
+                <Link
+                  href={`/dash/productos/${user._id}`}
+                  className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
+                >
+                  <OpenSVG size={20} />
+                  <p className="ml-2">Abrir</p>
+                </Link>
+                <Link
+                  href={`/dash/productos/${user._id}/editar`}
+                  className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
+                >
+                  <Edit size={20} />
+                  <p className="ml-2">Editar</p>
+                </Link>
+              </DropDown>
             </div>
           )
         default:

@@ -5,8 +5,9 @@ import MediaAction from './mediaActions'
 import useOutsideClick from '@/hooks/useOutSideClick'
 import { CircularProgress } from '@nextui-org/progress'
 import Link from 'next/link'
-import { Checkbox, cn } from '@nextui-org/react'
+import { Checkbox } from '@nextui-org/react'
 import { IUploads } from './upload/drag'
+import DropDown from '../UI/dropDown/dropDown'
 
 interface IProps {
   id: string
@@ -70,30 +71,22 @@ export default function ContentImages({
         <div
           className={`p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-700  rounded-md relative border ${select && isSelect ? 'border-sky-600' : 'border-transparent '}`}
         >
-          <div ref={ref as React.MutableRefObject<HTMLDivElement>}>
-            {isSelect ? (
-              <div className="absolute z-10 right-0 top-0  p-1 rounded-md">
-                <Checkbox isSelected={select} onChange={handleSelect} />
-              </div>
-            ) : (
-              <button
-                className="stroke-white fill-white absolute bg-slate-400 right-5 top-4 p-1 rounded-md hover:bg-violet-400 z-10"
-                onClick={() => setOpenActions(!openActions)}
-              >
-                <MenuDotsSVG size={20} />
-              </button>
-            )}
-            <div
-              className={`absolute right-5 z-20 top-12 ${openActions ? '' : 'hidden'}`}
-            >
-              <MediaAction
-                url={url}
-                name={name}
-                mediaID={mediaID}
-                setIsDeletingChild={setIsDeletingChild}
-              />
+          {isSelect ? (
+            <div className="absolute z-10 right-0 top-0  p-1 rounded-md">
+              <Checkbox isSelected={select} onChange={handleSelect} />
             </div>
-          </div>
+          ) : (
+            <div className="absolute z-10 right-4 top-3  p-1 rounded-md">
+              <DropDown label={name}>
+                <MediaAction
+                  url={url}
+                  name={name}
+                  mediaID={mediaID}
+                  setIsDeletingChild={setIsDeletingChild}
+                />
+              </DropDown>
+            </div>
+          )}
           <div
             className=" rounded-md  overflow-hidden relative"
             style={{ paddingTop: 'calc(100% + 4px)' }}

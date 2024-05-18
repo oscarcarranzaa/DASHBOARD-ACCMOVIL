@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 import useCountDownTimer from '@/hooks/useCountDownTimer'
 import { memo } from 'react'
-import CountDownTimer from '../UI/coutDownTimer'
+import CountDownTimer from '../UI/countDown/coutDownTimer'
 type TProps = {
   data: getProductImageSchema
 }
@@ -46,7 +46,7 @@ function ViewProduct({ data }: TProps) {
             ) : null}
           </div>
         </div>
-        <div className="">
+        <div className="w-full">
           <h2 className="text-xl font-semibold dark:text-zinc-200">
             {data.name}
           </h2>

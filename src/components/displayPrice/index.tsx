@@ -22,7 +22,7 @@ export default function DisplayPrice({
     <>
       <div>
         <p
-          className={`font-medium ${discountPrice && validDiscount ? ' line-through text-xs text-zinc-600' : ''} ${discountPrice && !startDate && !endDate ? ' line-through text-xs text-zinc-600' : ''}`}
+          className={`font-medium text-center ${discountPrice && validDiscount ? ' line-through text-xs text-zinc-600' : ''} ${discountPrice && !startDate && !endDate ? ' line-through text-xs text-zinc-600' : ''}`}
         >
           {price.toLocaleString('es-HN', {
             style: 'currency',
@@ -30,8 +30,13 @@ export default function DisplayPrice({
           })}
         </p>
         <div
-          className={`flex stroke-red-500 ${discountPrice ? 'flex' : 'hidden'}`}
+          className={`flex items-center stroke-red-500 ${discountPrice ? 'flex' : 'hidden'}`}
         >
+          <span
+            className={`mr-1 ${endDate && isNotFinish ? 'block' : 'hidden'}`}
+          >
+            <ClockSVG size={18} />
+          </span>
           <p
             className={`${validDiscount || (discountPrice && !startDate && !endDate) ? ' font-bold' : ''} ${!isNotFinish && endDate ? 'hidden' : 'text-red-500'} ${!isInit && startDate ? 'line-through text-zinc-600' : ''}`}
           >
@@ -40,9 +45,6 @@ export default function DisplayPrice({
               currency: 'HNL',
             })}
           </p>
-          <span className={`${endDate && isNotFinish ? 'block' : 'hidden'}`}>
-            <ClockSVG size={18} />
-          </span>
         </div>
       </div>
     </>

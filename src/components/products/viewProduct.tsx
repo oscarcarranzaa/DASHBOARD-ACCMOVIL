@@ -7,18 +7,21 @@ import InformationSVG from '../icons/information'
 import DollarSVG from '../icons/dollar'
 import dayjs from 'dayjs'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
+import useCountDownTimer from '@/hooks/useCountDownTimer'
+import { memo } from 'react'
+import CountDownTimer from '../UI/coutDownTimer'
 type TProps = {
   data: getProductImageSchema
 }
 
-export default function ViewProduct({ data }: TProps) {
+function ViewProduct({ data }: TProps) {
   const image = data.image?.images
     ? data.image.images[5].src
     : '/static/product.webp'
   const differentPrice = data.priceDiscount?.price
     ? data.price - data.priceDiscount.price
     : 0
-  const totalDiscount = (differentPrice / data.price) * 100
+  const totalDiscount = Math.round((differentPrice / data.price) * 100)
   const { validDiscount } = validDiscountPrice(
     data.priceDiscount?.start,
     data.priceDiscount?.end
@@ -26,26 +29,28 @@ export default function ViewProduct({ data }: TProps) {
   // Chekear
   const end = data.priceDiscount?.end
   const start = data.priceDiscount?.start
-  const startDate = start ? dayjs(start).format('DD-MM-YYYY') : '----'
-  const endDate = end ? dayjs(end).format('DD-MM-YYYY') : '----'
+  const startDate = start ? dayjs(start).format('DD-MM-YYYY hh:mm:ss') : '----'
+  const endDate = end ? dayjs(end).format('DD-MM-YYYY hh:mm:ss') : '----'
+  const timeLeft = useCountDownTimer(end)
 
   return (
     <>
-      <div className="flex mt-8">
+      <div className="lg:flex mt-5">
         <div className="">
-          <div className=" min-w-80 mr-8 relative">
+          <div className=" md:min-w-[200px] lg:min-w-[380px] mr-8 relative">
             <SquareImage src={image} />
             {totalDiscount > 0 && validDiscount ? (
               <p className="absolute top-10 text-white right-0 translate-x-4 bg-red-600 text-sm font-semibold py-1 px-2 rounded-lg">
-                -{totalDiscount.toFixed(0)}% DTO
+                -{totalDiscount}% DTO
               </p>
             ) : null}
           </div>
         </div>
-
-        <div className=" ">
-          <h2 className="text-xl font-semibold">{data.name}</h2>
-          <div className="flex gap-x-32 mt-5">
+        <div className="">
+          <h2 className="text-xl font-semibold dark:text-zinc-200">
+            {data.name}
+          </h2>
+          <div className="md:flex justify-between max-w-[700px] min-w-[450px] mt-5 ">
             <div>
               <div className="fill-sky-600 flex items-center mb-2 text-sky-600">
                 <InformationSVG size={20} />
@@ -118,17 +123,22 @@ export default function ViewProduct({ data }: TProps) {
               </ul>
             </div>
           </div>
+          <div className="flex justify-center flex-col items-center w-full mt-10 max-w-[700px] border border-zinc-400 rounded-xl p-3">
+            <p>Precio Actual:</p>
+            <div className=" scale-150 p-2 mb-2">
+              <DisplayPrice
+                price={data.price}
+                discountPrice={data.priceDiscount?.price}
+                startDate={data.priceDiscount?.start}
+                endDate={data.priceDiscount?.end}
+              />
+            </div>
+            {validDiscount && <CountDownTimer date={timeLeft} />}
+          </div>
         </div>
       </div>
-      <div className="flex mt-2">
-        <p>Precio Actual:</p>
-        <DisplayPrice
-          price={data.price}
-          discountPrice={data.priceDiscount?.price}
-          startDate={data.priceDiscount?.start}
-          endDate={data.priceDiscount?.end}
-        />
-      </div>
+      <div className="flex mt-2"></div>
     </>
   )
 }
+export default memo(ViewProduct)

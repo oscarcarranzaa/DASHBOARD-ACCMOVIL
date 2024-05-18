@@ -106,13 +106,15 @@ export default function ContentImages({
                 left: '50%',
               }}
             >
-              <img
-                src={image}
-                loading="lazy"
-                decoding="async"
-                alt="Imagen de covertor"
-                className="  rounded-md w-full  h-full object-contain m-auto"
-              />
+              <picture>
+                <img
+                  src={image}
+                  loading="lazy"
+                  decoding="async"
+                  alt="Imagen de covertor"
+                  className="  rounded-md w-full  h-full object-contain m-auto"
+                />
+              </picture>
             </div>
 
             {load && load <= 100 ? (
@@ -136,8 +138,7 @@ export default function ContentImages({
             <p className="text-xs line-clamp-1 mt-1">{name}</p>
           ) : (
             <Link
-              href={`/dash/multimedia/${id}`}
-              target="_blank"
+              href={`/dash/multimedia/${mediaID}`}
               className="text-xs line-clamp-1 mt-1 hover:underline"
             >
               {name}

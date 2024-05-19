@@ -24,7 +24,7 @@ export const product = z.object({
 
 export const getProductImage = product
   .omit({ image: true })
-  .extend({ _id: z.string(), image: media.optional() })
+  .extend({ _id: z.string(), image: media.optional() || null })
 
 export const getProduct = z.object({
   data: z.array(getProductImage),

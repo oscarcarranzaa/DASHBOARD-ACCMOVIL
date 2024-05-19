@@ -1,5 +1,4 @@
 'use client'
-import { createProduct } from '@/api/products'
 import Spinner from '@/components/icons/spinner'
 import WarningInfo from '@/components/icons/warningInfo'
 import SelectMedia from '@/components/media/selectMedia'
@@ -12,20 +11,25 @@ import {
   Switch,
   Textarea,
 } from '@nextui-org/react'
-import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { useCallback, useEffect, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import CheckSVG from '@/components/icons/check'
-import ToastInfo from '@/components/toast'
 import { parseAbsoluteToLocal } from '@internationalized/date'
 
 type TProps = {
   productValues?: getProductImageSchema
+  handleForm: (formData: newProduct) => void
+  isPending: boolean
+  error?: {
+    message: string
+  } | null
 }
-export default function ProductEditor({ productValues }: TProps) {
+export default function ProductEditor({
+  productValues,
+  handleForm,
+  isPending,
+  error,
+}: TProps) {
   const startDate = productValues?.priceDiscount?.start
   const endDate = productValues?.priceDiscount?.end
   const isDate = startDate && endDate ? true : false
@@ -38,13 +42,13 @@ export default function ProductEditor({ productValues }: TProps) {
           start: parseAbsoluteToLocal(starCalendarDate),
           end: parseAbsoluteToLocal(endCalendarDate),
         }
-      : undefined
-
+      : null
+  const discountDefault = productValues?.priceDiscount?.price ?? 0
   // states
   const [calendarDate, setCalendarDate] = useState(defaultDateCalendar)
   const [selectDate, setSelectDate] = useState(isDate)
-  const [visibleSite, setVisibleSite] = useState(true)
-  const [discount, setDiscount] = useState<number>(0)
+  const [discount, setDiscount] = useState<number>(discountDefault)
+  const [visibleSite, setVisibleSite] = useState(productValues?.active ?? true)
 
   const initialValues = {
     name: productValues?.name,
@@ -69,39 +73,23 @@ export default function ProductEditor({ productValues }: TProps) {
     reset,
     unregister,
     getValues,
-    formState: { isSubmitSuccessful },
+    formState: { isSubmitSuccessful, errors },
   } = useForm<newProduct>({
     resolver: zodResolver(product),
     defaultValues: initialValues,
   })
-  const { mutate, isPending, error, data } = useMutation({
-    mutationFn: createProduct,
-    onSuccess: (success) => {
-      toast(
-        <ToastInfo
-          text="Guardado Correctamente"
-          url="/"
-          label="Ver Producto"
-        />,
-        {
-          icon: <CheckSVG size={20} />,
-        }
-      )
-      reset()
-    },
-  })
-  const handleForm = (formData: newProduct) => {
-    formData.active = visibleSite
-    console.log(formData)
-  }
+  console.log(errors)
+
   const setDate = useCallback(() => {
-    const intDate = calendarDate?.start.toAbsoluteString()
-    const finallyDate = calendarDate?.end.toAbsoluteString()
-    if (selectDate && intDate && finallyDate) {
-      setValue('priceDiscount.start', intDate)
-      setValue('priceDiscount.end', finallyDate)
+    const intDate = calendarDate?.start ? calendarDate.start.toDate() : false
+    const finallyDate = calendarDate?.end ? calendarDate.end.toDate() : false
+
+    console.log(intDate, finallyDate)
+    if (intDate && finallyDate) {
+      setValue('priceDiscount.start', dayjs(intDate).toISOString())
+      setValue('priceDiscount.end', dayjs(finallyDate).toISOString())
     }
-  }, [selectDate, calendarDate?.end, calendarDate?.start, setValue])
+  }, [calendarDate, setValue])
   useEffect(() => {
     if (!selectDate) {
       unregister('priceDiscount.start')
@@ -114,7 +102,7 @@ export default function ProductEditor({ productValues }: TProps) {
   const defaultMediaValues = productValues?.image?.images
     ? [
         {
-          mediaIDItem: productValues?.image?.mediaId,
+          mediaIDItem: productValues?.image._id,
           id: productValues?.image?.mediaId,
           imgURI: productValues.image.images[3].src,
           name: productValues?.image?.title,
@@ -186,10 +174,12 @@ export default function ProductEditor({ productValues }: TProps) {
                 autoCorrect="off"
                 autoCapitalize="off"
                 {...register('minStock', {
-                  onChange: (e) => {
-                    const value = e.target.valueAsNumber
-                    const valueNumber = Number.isNaN(value) ? undefined : value
-                    setValue('minStock', valueNumber)
+                  setValueAs: (value) => {
+                    if (value === '') {
+                      return undefined
+                    }
+                    const numberValue = Number(value)
+                    return isNaN(numberValue) ? undefined : numberValue
                   },
                 })}
               />
@@ -219,11 +209,15 @@ export default function ProductEditor({ productValues }: TProps) {
                 isInvalid={getValues('price') <= discount}
                 errorMessage={'No puede ser mayor o igual al precio'}
                 {...register('priceDiscount.price', {
-                  onChange: (e) => {
-                    const value = e.target.valueAsNumber
-                    const valueNumber = Number.isNaN(value) ? undefined : value
+                  setValueAs: (value) => {
+                    if (value === '') {
+                      return undefined
+                    }
+                    const numberValue = Number(value)
+                    return isNaN(numberValue) ? undefined : numberValue
+                  },
+                  onChange: (e: ChangeEvent<HTMLInputElement>) => {
                     setDiscount(Number(e.target.value))
-                    setValue('priceDiscount.price', valueNumber)
                   },
                 })}
               />
@@ -235,8 +229,10 @@ export default function ProductEditor({ productValues }: TProps) {
                   color="success"
                   size="sm"
                   isSelected={visibleSite}
-                  {...register('active', { value: visibleSite })}
-                  onChange={() => setVisibleSite(!visibleSite)}
+                  onValueChange={(s) => {
+                    setVisibleSite(s)
+                    setValue('active', s)
+                  }}
                 />
                 <p className="ml-1">Mostrar en el sitio</p>
               </div>
@@ -304,21 +300,6 @@ export default function ProductEditor({ productValues }: TProps) {
           </div>
         </div>
       </form>
-      <span className="stroke-green-600 fill-green-600">
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover={false}
-          stacked
-          //theme="dark"
-        />
-      </span>
     </>
   )
 }

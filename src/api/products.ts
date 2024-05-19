@@ -14,7 +14,9 @@ export async function createProduct(formData: newProduct) {
     return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      throw new Error(error.response.data)
+    } else {
+      throw new Error('An unexpected error occurred while get the product.')
     }
   }
 }
@@ -44,6 +46,23 @@ export async function getOneProduct(id: string) {
     )
     const validProduct = getProductImage.parse(data)
     return validProduct
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data)
+    }
+  }
+}
+type TUpdateProduct = {
+  formData: newProduct
+  id: string
+}
+export async function updateOneProduct({ formData, id }: TUpdateProduct) {
+  try {
+    const { data } = await axiosInstance.put<getProductImageSchema>(
+      `/product/${id}`,
+      formData
+    )
+    return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data)

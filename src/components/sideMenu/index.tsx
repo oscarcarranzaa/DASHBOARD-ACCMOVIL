@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 import ArrowAngleSVG from '../icons/arrowAngle'
 import { menuItems } from './menuObjects'
 import MenuItems from './menuItems'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import style from './sideMenu.module.css'
 import Link from 'next/link'
 
@@ -11,9 +11,9 @@ export default function SideMenu() {
   const path = usePathname()
 
   const [openMenu, setOpenMenu] = useState<number | null>(null)
-  const toggleMenu = (index: number) => {
+  const toggleMenu = useCallback((index: number) => {
     setOpenMenu((prevIndex) => (prevIndex === index ? null : index))
-  }
+  }, [])
   return (
     <>
       <nav

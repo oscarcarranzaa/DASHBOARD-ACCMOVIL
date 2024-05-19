@@ -11,10 +11,19 @@ import { newProduct } from '@/types/poducts'
 interface IProps extends TSelectMedia {
   setValue: UseFormSetValue<newProduct>
   reset?: boolean
+  defaultMedias?: IUploads[]
 }
-export default function SelectMedia({ select, setValue, reset }: IProps) {
+export default function SelectMedia({
+  select,
+  setValue,
+  reset,
+  defaultMedias,
+}: IProps) {
+  const defaulMediaSelect = defaultMedias ?? []
   const [isModalMedia, setIsModalMedia] = useState(false)
-  const [mediaSelect, setMediaSelect] = useState<IUploads[] | []>([])
+  const [mediaSelect, setMediaSelect] = useState<IUploads[] | []>(
+    defaulMediaSelect
+  )
   useEffect(() => {
     if (reset) {
       setMediaSelect([])
@@ -25,7 +34,6 @@ export default function SelectMedia({ select, setValue, reset }: IProps) {
     setIsModalMedia(!isModalMedia)
   }
   const selectId = mediaSelect.map((id) => id.mediaIDItem).toString()
-  console.log(selectId)
   setValue('image', selectId?.length > 0 ? selectId : undefined)
   return (
     <div>

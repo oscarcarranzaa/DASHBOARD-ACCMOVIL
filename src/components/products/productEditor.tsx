@@ -3,41 +3,77 @@ import { createProduct } from '@/api/products'
 import Spinner from '@/components/icons/spinner'
 import WarningInfo from '@/components/icons/warningInfo'
 import SelectMedia from '@/components/media/selectMedia'
-import NavegationPages from '@/components/navegationPages'
-import { newProduct, product } from '@/types/poducts'
+import { getProductImageSchema, newProduct, product } from '@/types/poducts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
   DateRangePicker,
-  DateValue,
   Input,
-  RangeValue,
   Switch,
   Textarea,
 } from '@nextui-org/react'
 import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useForm } from 'react-hook-form'
 import CheckSVG from '@/components/icons/check'
 import ToastInfo from '@/components/toast'
+import { parseAbsoluteToLocal } from '@internationalized/date'
 
-export default function NewProduct() {
-  const [selectDate, setSelectDate] = useState(false)
+type TProps = {
+  productValues?: getProductImageSchema
+}
+export default function ProductEditor({ productValues }: TProps) {
+  const startDate = productValues?.priceDiscount?.start
+  const endDate = productValues?.priceDiscount?.end
+  const isDate = startDate && endDate ? true : false
+  // Verifica si hay una fecha
+  const starCalendarDate = isDate ? dayjs(startDate).toISOString() : undefined
+  const endCalendarDate = isDate ? dayjs(endDate).toISOString() : undefined
+  const defaultDateCalendar =
+    starCalendarDate && endCalendarDate
+      ? {
+          start: parseAbsoluteToLocal(starCalendarDate),
+          end: parseAbsoluteToLocal(endCalendarDate),
+        }
+      : undefined
+
+  // states
+  const [calendarDate, setCalendarDate] = useState(defaultDateCalendar)
+  const [selectDate, setSelectDate] = useState(isDate)
   const [visibleSite, setVisibleSite] = useState(true)
-  const [date, setDate] = useState<RangeValue<DateValue> | null>(null)
   const [discount, setDiscount] = useState<number>(0)
+
+  const initialValues = {
+    name: productValues?.name,
+    active: productValues?.active,
+    code: productValues?.code,
+    barCode: productValues?.barCode,
+    stock: productValues?.stock,
+    minStock: productValues?.minStock,
+    price: productValues?.price,
+    image: productValues?.image?._id,
+    priceDiscount: {
+      price: productValues?.priceDiscount?.price,
+      start: productValues?.priceDiscount?.start,
+      end: productValues?.priceDiscount?.end,
+    },
+    note: productValues?.note,
+  }
   const {
     register,
     handleSubmit,
     setValue,
-    unregister,
     reset,
+    unregister,
     getValues,
     formState: { isSubmitSuccessful },
-  } = useForm<newProduct>({ resolver: zodResolver(product) })
+  } = useForm<newProduct>({
+    resolver: zodResolver(product),
+    defaultValues: initialValues,
+  })
   const { mutate, isPending, error, data } = useMutation({
     mutationFn: createProduct,
     onSuccess: (success) => {
@@ -56,36 +92,37 @@ export default function NewProduct() {
   })
   const handleForm = (formData: newProduct) => {
     formData.active = visibleSite
-    mutate(formData)
+    console.log(formData)
   }
-  const getRangeDate = (e: RangeValue<DateValue>) => {
-    const { start } = e
-    const { end } = e
-    const startDate = dayjs(
-      `${start.year}-${start.month}-${start.day}`
-    ).toISOString()
-    const endDate = dayjs(`${end.year}-${end.month}-${end.day}`).toISOString()
-    if (selectDate) {
-      setValue('priceDiscount.start', startDate)
-      setValue('priceDiscount.end', endDate)
+  const setDate = useCallback(() => {
+    const intDate = calendarDate?.start.toAbsoluteString()
+    const finallyDate = calendarDate?.end.toAbsoluteString()
+    if (selectDate && intDate && finallyDate) {
+      setValue('priceDiscount.start', intDate)
+      setValue('priceDiscount.end', finallyDate)
     }
-  }
+  }, [selectDate, calendarDate?.end, calendarDate?.start, setValue])
   useEffect(() => {
     if (!selectDate) {
-      setDate(null)
       unregister('priceDiscount.start')
       unregister('priceDiscount.end')
       return
     }
-    if (date) {
-      getRangeDate(date)
-      return
-    }
-  }, [selectDate, date])
+    setDate()
+  }, [selectDate, unregister, setDate])
 
+  const defaultMediaValues = productValues?.image?.images
+    ? [
+        {
+          mediaIDItem: productValues?.image?.mediaId,
+          id: productValues?.image?.mediaId,
+          imgURI: productValues.image.images[3].src,
+          name: productValues?.image?.title,
+        },
+      ]
+    : []
   return (
     <>
-      <NavegationPages text="Agregar un nuevo producto" />
       <form onSubmit={handleSubmit(handleForm)}>
         <div className="mt-10 grid grid-cols-3 gap-10 max-w-[1200px] m-auto ">
           <div className="col-span-2 p-8 ">
@@ -148,8 +185,7 @@ export default function NewProduct() {
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
-                {...(register('minStock'),
-                {
+                {...register('minStock', {
                   onChange: (e) => {
                     const value = e.target.valueAsNumber
                     const valueNumber = Number.isNaN(value) ? undefined : value
@@ -182,8 +218,7 @@ export default function NewProduct() {
                 autoCapitalize="off"
                 isInvalid={getValues('price') <= discount}
                 errorMessage={'No puede ser mayor o igual al precio'}
-                {...(register('priceDiscount'),
-                {
+                {...register('priceDiscount.price', {
                   onChange: (e) => {
                     const value = e.target.valueAsNumber
                     const valueNumber = Number.isNaN(value) ? undefined : value
@@ -214,15 +249,19 @@ export default function NewProduct() {
                 />
                 <p className="ml-1">Programar fecha de la oferta</p>
               </div>
-              <div className="mb-8">
+              <div className="mb-8 flex w-full max-w-96">
                 <DateRangePicker
                   isRequired
+                  labelPlacement="outside"
+                  hideTimeZone
+                  calendarWidth={320}
+                  granularity="minute"
                   isDisabled={!selectDate}
-                  className={`max-w-[284px] ${selectDate ? '' : 'hidden'}`}
-                  value={date}
+                  className={` ${selectDate ? '' : 'hidden'}`}
                   label="Fecha"
                   variant="underlined"
-                  onChange={setDate}
+                  value={calendarDate}
+                  onChange={setCalendarDate}
                 />
               </div>
             </div>
@@ -252,8 +291,8 @@ export default function NewProduct() {
               select="only"
               setValue={setValue}
               reset={isSubmitSuccessful}
+              defaultMedias={defaultMediaValues}
             />
-
             <div className="mt-5">
               <p className="text-lg font-medium mb-5">Notas</p>
               <Textarea

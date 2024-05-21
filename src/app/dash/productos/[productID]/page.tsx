@@ -3,13 +3,14 @@ import { getOneProduct } from '@/api/products'
 import NotFound from '@/components/errorsPages/notFound'
 import NavegationPages from '@/components/navegationPages'
 import ViewProduct from '@/components/products/viewProduct/'
+import ViewProductSkeleton from '@/components/products/viewProduct/skeleton'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 
 export default function ProductDetails() {
   const params = useParams()
   const { productID } = params as { productID: string }
-  const { data, error } = useQuery({
+  const { data, error, isPending } = useQuery({
     queryKey: [productID],
     queryFn: () => getOneProduct(productID),
     retry: false,
@@ -20,6 +21,7 @@ export default function ProductDetails() {
   return (
     <>
       <NavegationPages text="Detalles del producto" />
+      {isPending && <ViewProductSkeleton />}
       {data && <ViewProduct data={data} />}
     </>
   )

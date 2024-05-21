@@ -38,7 +38,7 @@ function ViewProduct({ data }: TProps) {
     <>
       <div className="lg:flex mt-5">
         <div className="">
-          <div className=" md:min-w-[200px] lg:min-w-[380px] mr-8 relative">
+          <div className=" md:min-w-[200px] lg:min-w-[280px] xl:min-w-[380px]  mr-8 relative">
             <SquareImage src={image} />
             {totalDiscount > 0 && validDiscount ? (
               <p className="absolute top-10 text-white right-0 translate-x-4 bg-red-600 text-sm font-semibold py-1 px-2 rounded-lg">

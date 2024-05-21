@@ -1,125 +1,32 @@
 'use client'
 import { getAllProducts } from '@/api/products'
-import DropDown from '@/components/UI/dropDown/dropDown'
-import DisplayPrice from '@/components/displayPrice'
-import Edit from '@/components/icons/edit'
-import OpenSVG from '@/components/icons/open'
+import Search from '@/components/UI/search'
 import PlusSVG from '@/components/icons/plus'
-import SearchSVG from '@/components/icons/search'
 import NavegationPages from '@/components/navegationPages'
-import SquareImage from '@/components/squareImage'
-import { getProductImageSchema } from '@/types/poducts'
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Spinner,
-  Pagination,
-  Input,
-  Button,
-} from '@nextui-org/react'
+import ProductList from '@/components/products/productList/'
+import { Button } from '@nextui-org/button'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 export default function Dash() {
-  const [page, setPage] = useState(1)
-  const [search, setSearch] = useState('')
-  const [totalPages, setTotalPages] = useState(0)
-  const rows = '20'
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('p')) || 1
+  const search = searchParams.get('search') || ''
+
+  const rows = 20
   const { data, isPending } = useQuery({
-    queryKey: ['products', page, search],
-    queryFn: () => getAllProducts(page.toString(), rows, search),
+    queryKey: ['products', currentPage.toString(), search],
+    queryFn: () =>
+      getAllProducts(currentPage.toString(), rows.toString(), search),
     refetchOnWindowFocus: false,
   })
-  useEffect(() => {
-    if (data) setTotalPages(data?.totalPages)
-  }, [data])
-  const debounce = useDebouncedCallback((value: string) => {
-    if (value.length > 2) {
-      setSearch(value)
-      setPage(1)
-    }
-  }, 1000)
-
-  const getData = data ? data.data : []
-  const renderCell = useCallback(
-    (user: getProductImageSchema, columnKey: React.Key) => {
-      const cellValue = user[columnKey]
-      const image = user.image?.images
-        ? user.image.images[0].src
-        : '/static/product.webp'
-      switch (columnKey) {
-        case 'image':
-          return (
-            <div className="w-14">
-              <SquareImage src={image} />
-            </div>
-          )
-        case 'name':
-          return (
-            <Link
-              className="hover:underline"
-              href={`/dash/productos/${user._id}`}
-            >
-              {user.name}
-            </Link>
-          )
-        case 'price':
-          return (
-            <DisplayPrice
-              price={user.price}
-              discountPrice={user.priceDiscount?.price}
-              startDate={user.priceDiscount?.start}
-              endDate={user.priceDiscount?.end}
-            />
-          )
-        case 'actions':
-          return (
-            <div className="relative flex justify-end items-center gap-2 stroke-white">
-              <DropDown label="Acciones">
-                <Link
-                  href={`/dash/productos/${user._id}`}
-                  className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
-                >
-                  <OpenSVG size={20} />
-                  <p className="ml-2">Abrir</p>
-                </Link>
-                <Link
-                  href={`/dash/productos/${user._id}/editar`}
-                  className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
-                >
-                  <Edit size={20} />
-                  <p className="ml-2">Editar</p>
-                </Link>
-              </DropDown>
-            </div>
-          )
-        default:
-          return cellValue
-      }
-    },
-    []
-  )
-  const loadingState = isPending ? 'loading' : 'idle'
   return (
     <>
       <NavegationPages text="Ver productos" />
       <div className="dark:fill-white flex justify-between items-center mb-3">
-        <Input
-          className="w-full sm:max-w-[35%]"
-          size="lg"
-          onChange={(e) => debounce(e.target.value)}
-          startContent={<SearchSVG size={24} />}
-          placeholder="Buscar producto..."
-          isClearable
-          onClear={() => setSearch('')}
-          variant="bordered"
-        />
+        <Search />
         <Button
           color="primary"
           className="fill-white"
@@ -129,72 +36,7 @@ export default function Dash() {
           Agregar Nuevo <PlusSVG size={20} />
         </Button>
       </div>
-      <p className="text-sm text-zinc-500 ">
-        {data?.totalProducts
-          ? `Mostrando ${rows} de ${data.totalProducts} productos`
-          : ''}
-        {isPending && 'Cargando...'}
-        {!isPending && data?.data.length === 0 && search ? (
-          <>
-            No se encontraron resultados de <b>{search}</b>
-          </>
-        ) : (
-          ''
-        )}
-      </p>
-      <Table
-        isHeaderSticky
-        removeWrapper
-        aria-label="Mostrar los productos"
-        bottomContent={
-          totalPages > 0 && (
-            <div className="flex w-full justify-center">
-              <Pagination
-                onChange={(n) => setPage(n)}
-                showControls
-                variant="bordered"
-                total={totalPages}
-                page={page}
-                initialPage={page}
-              />
-            </div>
-          )
-        }
-      >
-        <TableHeader>
-          <TableColumn key={'image'}>Imagen</TableColumn>
-          <TableColumn key={'name'}>Nombre</TableColumn>
-          <TableColumn key={'code'}>Código </TableColumn>
-          <TableColumn key={'stock'}>Cantidad</TableColumn>
-          <TableColumn key={'price'}>Precio</TableColumn>
-          <TableColumn key={'actions'}>Acciones</TableColumn>
-        </TableHeader>
-        <TableBody
-          emptyContent={
-            !data
-              ? 'No se encontraron datos...'
-              : data.data.length === 0
-                ? 'No hay resultados de búsqueda.'
-                : 'Algo salió mal :('
-          }
-          items={getData}
-          loadingContent={<Spinner label="Cargando..." />}
-          loadingState={loadingState}
-        >
-          {(item) => (
-            <TableRow
-              key={item._id}
-              className="hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            >
-              {(columnKey) => (
-                <TableCell align="center">
-                  {renderCell(item, columnKey)}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      <ProductList data={data} rows={rows} isPending={isPending} />
     </>
   )
 }

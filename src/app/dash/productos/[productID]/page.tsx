@@ -2,8 +2,7 @@
 import { getOneProduct } from '@/api/products'
 import NotFound from '@/components/errorsPages/notFound'
 import NavegationPages from '@/components/navegationPages'
-import ViewProduct from '@/components/products/viewProduct'
-import SquareImage from '@/components/squareImage'
+import ViewProduct from '@/components/products/viewProduct/'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 

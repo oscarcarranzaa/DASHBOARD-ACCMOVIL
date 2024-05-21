@@ -29,9 +29,7 @@ export async function getAllProducts(
     const { data } = await axiosInstance.get<getProductSchema>(
       `/product?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
     )
-
     const validProduct = getProduct.parse(data)
-
     return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {

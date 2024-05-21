@@ -1,29 +1,13 @@
 'use client'
 import { createProduct } from '@/api/products'
-import Spinner from '@/components/icons/spinner'
-import WarningInfo from '@/components/icons/warningInfo'
-import SelectMedia from '@/components/media/selectMedia'
 import NavegationPages from '@/components/navegationPages'
-import { newProduct, product } from '@/types/poducts'
-import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Button,
-  DateRangePicker,
-  DateValue,
-  Input,
-  RangeValue,
-  Switch,
-  Textarea,
-} from '@nextui-org/react'
+import { newProduct } from '@/types/poducts'
 import { useMutation } from '@tanstack/react-query'
-import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useForm } from 'react-hook-form'
 import CheckSVG from '@/components/icons/check'
 import ToastInfo from '@/components/toast'
-import ProductEditor from '@/components/products/productEditor'
+import ProductEditor from '@/components/products/productEditor/'
 
 export default function NewProduct() {
   const { mutate, isPending, error, data } = useMutation({

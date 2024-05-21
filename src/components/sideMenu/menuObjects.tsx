@@ -46,10 +46,6 @@ export const menuItems = [
         name: 'Ver productos',
         href: '/dash/productos/',
       },
-      {
-        name: 'Papelera',
-        href: '/dash/productos/papelera',
-      },
     ],
   },
   {

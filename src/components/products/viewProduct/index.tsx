@@ -1,15 +1,16 @@
 'use client'
 
 import { getProductImageSchema } from '@/types/poducts'
-import SquareImage from '../squareImage'
-import DisplayPrice from '../displayPrice'
-import InformationSVG from '../icons/information'
-import DollarSVG from '../icons/dollar'
-import dayjs from 'dayjs'
+import SquareImage from '@/components/squareImage'
+import DisplayPrice from '@/components/displayPrice'
+import InformationSVG from '@/components/icons/information'
+import DollarSVG from '@/components/icons/dollar'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 import useCountDownTimer from '@/hooks/useCountDownTimer'
+import CountDownTimer from '@/components/UI/countDown/coutDownTimer'
 import { memo } from 'react'
-import CountDownTimer from '../UI/countDown/coutDownTimer'
+import dayjs from 'dayjs'
+
 type TProps = {
   data: getProductImageSchema
 }

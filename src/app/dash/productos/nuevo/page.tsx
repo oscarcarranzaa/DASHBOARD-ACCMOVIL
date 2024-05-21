@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import CheckSVG from '@/components/icons/check'
-import ToastInfo from '@/components/toast'
+import ToastInfo from '@/components/UI/toast'
 import ProductEditor from '@/components/products/productEditor/'
 
 export default function NewProduct() {

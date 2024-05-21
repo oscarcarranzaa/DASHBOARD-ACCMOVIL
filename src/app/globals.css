@@ -10,10 +10,10 @@
   --heading-color: #292922;
 }
 .light {
-  --box-opacity: rgba(245, 245, 245, 1);
+  --box-opacity: rgba(245, 245, 245, 0.7);
 }
 .dark {
-  --box-opacity: rgba(20, 20, 20, 1);
+  --box-opacity: rgba(20, 20, 20, 0.7);
 }
 
 @media (prefers-color-scheme: dark) {

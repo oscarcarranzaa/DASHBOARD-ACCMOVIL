@@ -8,7 +8,6 @@ import { Button } from '@nextui-org/button'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useState } from 'react'
 
 export default function Dash() {
   const searchParams = useSearchParams()
@@ -36,7 +35,9 @@ export default function Dash() {
           Agregar Nuevo <PlusSVG size={20} />
         </Button>
       </div>
-      <ProductList data={data} rows={rows} isPending={isPending} />
+      <div className="mb-16">
+        <ProductList data={data} rows={rows} isPending={isPending} />
+      </div>
     </>
   )
 }

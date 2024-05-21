@@ -1,14 +1,21 @@
 import SearchSVG from '@/components/icons/search'
 import { Input } from '@nextui-org/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 export default function Search() {
+  const [value, setValue] = useState('')
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
   const searchFromURL = searchParams.get('search') || ''
+
+  useEffect(() => {
+    if (searchFromURL === '') {
+      setValue('')
+    }
+  }, [searchFromURL])
 
   const params = useMemo(
     () => new URLSearchParams(searchParams),
@@ -44,7 +51,11 @@ export default function Search() {
       <div className="dark:fill-white w-full sm:max-w-[35%]">
         <Input
           size="lg"
-          onChange={(e) => debounce(e.target.value)}
+          onChange={(e) => {
+            debounce(e.target.value)
+            setValue(e.target.value)
+          }}
+          value={value}
           startContent={<SearchSVG size={24} />}
           placeholder="Buscar producto..."
           isClearable

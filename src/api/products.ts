@@ -34,6 +34,8 @@ export async function getAllProducts(
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('An unexpected error occurred while get the product.')
     }
   }
 }
@@ -47,6 +49,8 @@ export async function getOneProduct(id: string) {
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data)
+    } else {
+      throw new Error('An unexpected error occurred while get the product.')
     }
   }
 }
@@ -64,6 +68,20 @@ export async function updateOneProduct({ formData, id }: TUpdateProduct) {
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data)
+    } else {
+      throw new Error('An unexpected error occurred while update the product.')
+    }
+  }
+}
+export async function deleteOneProduct(id: string) {
+  try {
+    const { data } = await axiosInstance.delete(`/product/${id}`)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data)
+    } else {
+      throw new Error('An unexpected error occurred while delete the product.')
     }
   }
 }

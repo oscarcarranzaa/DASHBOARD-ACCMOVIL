@@ -1,10 +1,6 @@
 'use client'
-import DropDown from '@/components/UI/dropDown/dropDown'
 import PaginationPage from '@/components/UI/pagination'
 import DisplayPrice from '@/components/displayPrice'
-import Edit from '@/components/icons/edit'
-import OpenSVG from '@/components/icons/open'
-import TrashSVG from '@/components/icons/trahs'
 import SquareImage from '@/components/squareImage'
 import { getProductImageSchema, getProductSchema } from '@/types/poducts'
 import {
@@ -20,6 +16,10 @@ import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ProductsRows } from './rows'
 import { useSearchParams } from 'next/navigation'
+import ProductActions from './actions'
+import Alert from '@/components/UI/alert'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteOneProduct } from '@/api/products'
 
 interface IProps {
   data?: getProductSchema
@@ -29,9 +29,21 @@ interface IProps {
 
 export default function ProductList({ data, rows, isPending }: IProps) {
   const [totalPages, setTotalPages] = useState(0)
+  const [deletedModal, setDeletedModal] = useState<string | null>(null)
   const params = useSearchParams()
   const search = params.get('search') || ''
+  const currentPage = params.get('p') || 1
+  const queryClient = useQueryClient()
 
+  const { mutate, isPending: pendingDelete } = useMutation({
+    mutationFn: deleteOneProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['products', currentPage.toString(), search],
+      })
+      setDeletedModal(null)
+    },
+  })
   useEffect(() => {
     if (data) setTotalPages(data?.totalPages)
   }, [data])
@@ -70,30 +82,7 @@ export default function ProductList({ data, rows, isPending }: IProps) {
             />
           )
         case 'actions':
-          return (
-            <div className="relative flex justify-end items-center gap-2 stroke-white">
-              <DropDown label="Acciones">
-                <Link
-                  href={`/dash/productos/${user._id}`}
-                  className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
-                >
-                  <OpenSVG size={20} />
-                  <p className="ml-2">Abrir</p>
-                </Link>
-                <Link
-                  href={`/dash/productos/${user._id}/editar`}
-                  className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
-                >
-                  <Edit size={20} />
-                  <p className="ml-2">Editar</p>
-                </Link>
-                <button className=" stroke-red-500 flex items-center  text-red-500 w-full p-2 rounded-md hover:bg-red-500 hover:text-white hover:stroke-white disabled:cursor-not-allowed disabled:bg-red-700">
-                  <TrashSVG size={20} />
-                  <p className="ml-2">Mover a papelera</p>
-                </button>
-              </DropDown>
-            </div>
-          )
+          return <ProductActions id={user._id} modal={setDeletedModal} />
         case 'stock':
           return user.stock
         case 'code':
@@ -111,6 +100,16 @@ export default function ProductList({ data, rows, isPending }: IProps) {
 
   return (
     <>
+      {deletedModal && (
+        <Alert
+          modalClosed={setDeletedModal}
+          actionFn={mutate}
+          id={deletedModal}
+          pending={pendingDelete}
+          title="Eliminar este producto"
+          description="¿Está seguro de querer eliminar este producto de forma permanente?"
+        />
+      )}
       <p className="text-sm text-zinc-500 ">
         {data?.totalProducts
           ? `Mostrando ${rows >= data.totalProducts ? data.totalProducts : rows} de ${data.totalProducts} productos`

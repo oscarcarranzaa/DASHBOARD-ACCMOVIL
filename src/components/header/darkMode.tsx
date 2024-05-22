@@ -3,7 +3,6 @@
 import { useTheme } from 'next-themes'
 import MoonSVG from '../icons/moon'
 import LightSVG from '../icons/light'
-import WorldSVG from '../icons/world'
 import { useEffect, useState } from 'react'
 import Spinner from '../icons/spinner'
 

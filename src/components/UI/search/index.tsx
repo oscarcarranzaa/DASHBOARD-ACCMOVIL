@@ -5,11 +5,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 export default function Search() {
-  const [value, setValue] = useState('')
-  const pathname = usePathname()
   const searchParams = useSearchParams()
-  const router = useRouter()
   const searchFromURL = searchParams.get('search') || ''
+  const [value, setValue] = useState(searchFromURL)
+  const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     if (searchFromURL === '') {

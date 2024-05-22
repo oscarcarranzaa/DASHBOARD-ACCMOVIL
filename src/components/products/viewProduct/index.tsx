@@ -51,11 +51,13 @@ function ViewProduct({ data }: TProps) {
           <h2 className="text-xl font-semibold dark:text-zinc-200">
             {data.name}
           </h2>
-          <div className="md:flex justify-between max-w-[700px] min-w-[450px] mt-5 ">
+          <div className="md:flex justify-between max-w-[700px] min-w-[450px] mt-5 text-sm xl:text-base">
             <div>
-              <div className="fill-sky-600 flex items-center mb-2 text-sky-600">
+              <div className="fill-sky-600 flex items-center mb-2 text-sky-600 ">
                 <InformationSVG size={20} />
-                <h4 className=" text-lg font-semibold ml-1 ">Información</h4>
+                <h4 className=" text-base xl:text-lg font-semibold ml-1 ">
+                  Información
+                </h4>
               </div>
               <ul>
                 <li>
@@ -86,7 +88,7 @@ function ViewProduct({ data }: TProps) {
             <div>
               <div className="text-green-600 fill-green-600 dark:fill-green-500 flex items-center mb-2 dark:text-green-500">
                 <DollarSVG size={20} />
-                <h4 className=" text-lg font-semibold ml-1 ">
+                <h4 className="font-semibold ml-1 text-base xl:text-lg">
                   Precios y descuentos
                 </h4>
               </div>

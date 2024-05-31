@@ -32,11 +32,47 @@ export default function NewProduct() {
   return (
     <>
       <NavegationPages text="Agregar un nuevo producto" />
+      <div>weijgo3hg</div>
       <ProductEditor
         handleForm={handleForm}
         error={error}
         isPending={isPending}
       />
+      <ProductEditor
+        handleForm={handleForm}
+        error={error}
+        isPending={isPending}
+      />
+      <div>
+        <ProductEditor
+          handleForm={handleForm}
+          error={error}
+          isPending={isPending}
+        />
+      </div>
+      <div>
+        <ProductEditor
+          handleForm={handleForm}
+          error={error}
+          isPending={isPending}
+        />
+      </div>
+      <div>
+        <ProductEditor
+          handleForm={handleForm}
+          error={error}
+          isPending={isPending}
+        />
+      </div>
+      <div>
+        <ProductEditor
+          handleForm={handleForm}
+          error={error}
+          isPending={isPending}
+        />
+      </div>
+      <div>tjrti56</div>
+      <div>rehyerj</div>
       <span className="stroke-green-600 fill-green-600">
         <ToastContainer
           position="bottom-right"

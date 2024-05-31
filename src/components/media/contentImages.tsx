@@ -1,8 +1,6 @@
 'use client'
-import { SetStateAction, useEffect, useRef, useState } from 'react'
-import MenuDotsSVG from '../icons/menuDots'
+import { SetStateAction, useEffect, useState } from 'react'
 import MediaAction from './mediaActions'
-import useOutsideClick from '@/hooks/useOutSideClick'
 import { CircularProgress } from '@nextui-org/progress'
 import Link from 'next/link'
 import { Checkbox } from '@nextui-org/react'
@@ -34,9 +32,6 @@ export default function ContentImages({
   const [isDeletingChild, setIsDeletingChild] = useState(false)
   const [select, setSelect] = useState(check)
 
-  const ref = useRef<HTMLElement>(null)
-  const [openActions, setOpenActions] = useState(false)
-  useOutsideClick(ref, () => setOpenActions(false))
   useEffect(() => {
     setSelect(check)
   }, [check])
@@ -46,6 +41,7 @@ export default function ContentImages({
     setSelect(!select)
     const mediaInfo: IUploads = {
       mediaIDItem: id,
+      urlMedia: url,
       id: mediaID,
       imgURI: image,
       name: name,

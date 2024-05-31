@@ -5,8 +5,8 @@ import NavegationPages from '@/components/navegationPages'
 export default function Multimedia() {
   return (
     <>
-      <div>
-        <NavegationPages text="Multimedia" />
+      <NavegationPages text="Multimedia" />
+      <div className="mt-10">
         <Media />
       </div>
     </>

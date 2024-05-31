@@ -15,6 +15,7 @@ interface IMutation {
 }
 export interface IUploads {
   imgURI: string
+  urlMedia: string
   name: string
   progress?: number
   id: string
@@ -69,11 +70,18 @@ export default function DragMedia({
     onSuccess: async (res) => {
       setUpload((prevUpload) => {
         if (prevUpload && prevUpload !== null) {
+          const mediaImage = res.data.images
+            ? res.data.images[2].src
+            : res.data.url
+          const urlImage = res.data.images
+            ? res.data.images[6].src
+            : res.data.url
           const newUploads = [...prevUpload]
           newUploads[res.index] = {
             mediaIDItem: res.data._id,
             id: res.data.mediaId,
-            imgURI: res.data.url,
+            urlMedia: urlImage,
+            imgURI: mediaImage,
             name: res.data.title,
             progress: 101,
           }
@@ -139,7 +147,14 @@ export default function DragMedia({
               name: name,
               id: id,
             })
-            resolve({ imgURI, name, progress: 1, id, mediaIDItem: '#' })
+            resolve({
+              imgURI,
+              name,
+              progress: 1,
+              id,
+              mediaIDItem: '#',
+              urlMedia: '#',
+            })
           }
           reader.readAsDataURL(file)
         })
@@ -176,7 +191,7 @@ export default function DragMedia({
                     isSelect={select}
                     key={e.id}
                     image={e.imgURI}
-                    url={e.imgURI}
+                    url={e.urlMedia}
                     name={e.name}
                     load={e.progress}
                     selectItem={setMediasSelect}

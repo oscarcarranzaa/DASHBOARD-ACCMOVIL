@@ -16,18 +16,15 @@ interface IProps {
 
 export default function MediaAction({
   url,
-  name,
   mediaID,
   setIsDeletingChild,
 }: IProps) {
   const { isCopied, copyToClipboard } = useClipboard()
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: deleteMedia,
     onSuccess: (data) => {
-      // queryClient.invalidateQueries({ queryKey: ['medias'] })
       console.log(data)
     },
     onSettled: () => {
@@ -66,6 +63,7 @@ export default function MediaAction({
         className="flex p-2 items-center dark:hover:bg-gray-700 hover:bg-gray-200 w-full rounded-md"
         href={url}
         download={true}
+        target="_blank"
       >
         <DownloadSVG size={20} />
         <p className="ml-2">Descargar</p>

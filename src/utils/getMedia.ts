@@ -12,8 +12,10 @@ export default function getMedia() {
   const dataItem = allMedia
     ? allMedia.map((i) => {
         const mediaImage = i.images ? i.images[2].src : i.url
+        const urlImage = i.images ? i.images[6].src : i.url
         return {
           imgURI: mediaImage,
+          urlMedia: urlImage,
           name: i.title,
           id: i.mediaId,
           mediaIDItem: i._id,

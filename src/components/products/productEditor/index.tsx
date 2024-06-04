@@ -15,6 +15,7 @@ import dayjs from 'dayjs'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { parseAbsoluteToLocal } from '@internationalized/date'
+import { IUploads } from '@/types'
 
 type TProps = {
   productValues?: getProductImageSchema
@@ -31,6 +32,7 @@ export default function ProductEditor({
   error,
 }: TProps) {
   const [getImages, setGetImages] = useState<string[] | undefined>()
+  const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
   const startDate = productValues?.priceDiscount?.start
   const endDate = productValues?.priceDiscount?.end
   const isDate = startDate && endDate ? true : false
@@ -98,17 +100,20 @@ export default function ProductEditor({
     setDate()
   }, [selectDate, unregister, setDate])
 
-  const defaultMediaValues = productValues?.image?.images
-    ? [
-        {
-          mediaIDItem: productValues?.image._id,
-          id: productValues?.image?.mediaId,
-          imgURI: productValues.image.images[3].src,
-          name: productValues?.image?.title,
-          urlMedia: productValues.image.images[6].src,
-        },
-      ]
-    : []
+  useEffect(() => {
+    const defaultMediaValues = productValues?.image?.images
+      ? [
+          {
+            mediaIDItem: productValues?.image._id,
+            id: productValues?.image?.mediaId,
+            imgURI: productValues.image.images[3].src,
+            name: productValues?.image?.title,
+            urlMedia: productValues.image.images[6].src,
+          },
+        ]
+      : []
+    setDefaultImage(defaultMediaValues)
+  }, [productValues])
   console.log(getImages)
   return (
     <>
@@ -285,9 +290,10 @@ export default function ProductEditor({
             </p>
             <p className="text-lg font-medium mb-5 mt-8">Imagen del producto</p>
             <SelectMedia
+              iconSize={128}
               select="only"
               setValue={setGetImages}
-              defaultMedias={defaultMediaValues}
+              defaultMedias={defaultImage}
             />
             <div className="mt-5">
               <p className="text-lg font-medium mb-5">Notas</p>

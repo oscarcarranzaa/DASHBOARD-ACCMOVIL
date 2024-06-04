@@ -8,12 +8,14 @@ import GallerySVG from '../icons/gallery'
 import { IUploads } from '@/types'
 
 interface IProps extends TSelectMedia {
+  iconSize: number
   setValue: Dispatch<SetStateAction<string[] | undefined>>
   defaultMedias?: IUploads[]
 }
 export default function SelectMedia({
   select,
   setValue,
+  iconSize,
   defaultMedias,
 }: IProps) {
   const defaulMediaSelect = defaultMedias ?? []
@@ -21,11 +23,15 @@ export default function SelectMedia({
   const [mediaSelect, setMediaSelect] = useState<IUploads[] | []>(
     defaulMediaSelect
   )
+  useEffect(() => {
+    setMediaSelect(defaulMediaSelect)
+  }, [defaulMediaSelect])
 
   const dataItem = getMedia()
   const handleSelect = () => {
     setIsModalMedia(!isModalMedia)
   }
+
   useEffect(() => {
     const selectId = mediaSelect.map((id) => id.mediaIDItem)
     setValue(selectId?.length > 0 ? selectId : undefined)
@@ -61,9 +67,8 @@ export default function SelectMedia({
             ) : (
               <div className="flex justify-center flex-col">
                 <div className="flex justify-center">
-                  <GallerySVG size={120} />
+                  <GallerySVG size={iconSize} />
                 </div>
-                <p className="text-center">Selecciona una imagen...</p>
               </div>
             )}
           </div>

@@ -3,7 +3,7 @@ import SearchSVG from '@/components/icons/search'
 import SelectMedia from '@/components/media/selectMedia'
 import SquareImage from '@/components/squareImage'
 import { getProductImageSchema } from '@/types/poducts'
-import { Input } from '@nextui-org/react'
+import { Button, Input } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -43,7 +43,7 @@ export default function SearchProductLabel() {
           variant="bordered"
         />
         <div
-          className={`absolute top-10 left-0 right-0 bg-zinc-800 max-h-60 overflow-y-scroll p-2  ${search.length === 0 ? 'hidden' : 'block'}`}
+          className={`absolute top-10 left-0 right-0 bg-zinc-800 max-h-60 z-20 overflow-y-scroll p-2  ${search.length === 0 ? 'hidden' : 'block'}`}
         >
           {data &&
             data.data.map((item) => {
@@ -54,7 +54,10 @@ export default function SearchProductLabel() {
                 <button
                   key={item._id}
                   className="  p-2 hover:bg-zinc-950 rounded-lg cursor-pointer w-full"
-                  onClick={() => setSelect(item)}
+                  onClick={() => {
+                    setSelect(item)
+                    setSearch('')
+                  }}
                 >
                   <div className="flex items-center">
                     <div className="w-10 flex-none mr-2">
@@ -76,6 +79,13 @@ export default function SearchProductLabel() {
         </div>
       </div>
       {select && <DisplayProduct select={select} />}
+      {select && (
+        <div className=" flex justify-end mt-5">
+          <Button color="danger" onClick={() => setSelect(null)}>
+            Eliminar
+          </Button>
+        </div>
+      )}
     </>
   )
 }

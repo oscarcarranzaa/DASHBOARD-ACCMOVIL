@@ -106,6 +106,7 @@ export default function ProductEditor({
           id: productValues?.image?.mediaId,
           imgURI: productValues.image.images[3].src,
           name: productValues?.image?.title,
+          urlMedia: productValues.image.images[6].src,
         },
       ]
     : []

@@ -1,16 +1,19 @@
 import { getAllProducts } from '@/api/products'
 import SearchSVG from '@/components/icons/search'
+import SelectMedia from '@/components/media/selectMedia'
 import SquareImage from '@/components/squareImage'
 import { getProductImageSchema } from '@/types/poducts'
 import { Input } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
+import DisplayProduct from './displayProduct'
 
 export default function SearchProductLabel() {
   const [search, setSearch] = useState('')
   const [searchValue, setSearchValue] = useState('')
   const [select, setSelect] = useState<getProductImageSchema | null>(null)
+
   const { data, isPending } = useQuery({
     queryKey: ['products', '1', searchValue],
     queryFn: () => getAllProducts('1', '30', searchValue),
@@ -40,7 +43,7 @@ export default function SearchProductLabel() {
           variant="bordered"
         />
         <div
-          className={`absolute z-20 top-10 left-0 right-0 bg-zinc-800 max-h-60 overflow-y-scroll p-2  ${search.length === 0 ? 'hidden' : 'block'}`}
+          className={`absolute top-10 left-0 right-0 bg-zinc-800 max-h-60 overflow-y-scroll p-2  ${search.length === 0 ? 'hidden' : 'block'}`}
         >
           {data &&
             data.data.map((item) => {
@@ -49,6 +52,7 @@ export default function SearchProductLabel() {
                 : '/static/product.webp'
               return (
                 <button
+                  key={item._id}
                   className="  p-2 hover:bg-zinc-950 rounded-lg cursor-pointer w-full"
                   onClick={() => setSelect(item)}
                 >
@@ -71,27 +75,7 @@ export default function SearchProductLabel() {
             })}
         </div>
       </div>
-      <div className="mt-5 w-full bg-zinc-950 rounded-md px-5 py-2">
-        {select && (
-          <div>
-            <div className="flex">
-              <div className="w-12 mr-2">
-                <SquareImage
-                  src={
-                    select.image?.images
-                      ? select.image.images[0].src
-                      : '/static/product.webp'
-                  }
-                />
-              </div>
-              <div>
-                <p>{select.name}</p>
-                <p className="text-sm">{select.code}</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      {select && <DisplayProduct select={select} />}
     </>
   )
 }

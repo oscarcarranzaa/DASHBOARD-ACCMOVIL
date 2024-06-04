@@ -73,6 +73,27 @@ export async function updateOneProduct({ formData, id }: TUpdateProduct) {
     }
   }
 }
+type TUpdateProductImage = {
+  image: string
+  id: string
+}
+export async function updateOneProductImage({
+  image,
+  id,
+}: TUpdateProductImage) {
+  try {
+    const { data } = await axiosInstance.put(`/product/${id}/image`, {
+      imageID: image,
+    })
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data)
+    } else {
+      throw new Error('An unexpected error occurred while update the product.')
+    }
+  }
+}
 export async function deleteOneProduct(id: string) {
   try {
     const { data } = await axiosInstance.delete(`/product/${id}`)

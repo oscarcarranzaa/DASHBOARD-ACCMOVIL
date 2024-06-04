@@ -6,26 +6,17 @@ import ContentImages from '../contentImages'
 import style from './style.module.css'
 import { MediaSchema } from '@/types/schemas'
 import { TSelectMedia } from '../index'
+import { IUploads } from '@/types'
+
 interface IMutation {
   formFile: FormData
   index: number
-  blob: string
-  name: string
-  id: string
-}
-export interface IUploads {
-  imgURI: string
-  urlMedia: string
-  name: string
-  progress?: number
-  id: string
-  mediaIDItem: string
 }
 interface IProps extends TSelectMedia {
   children?: React.ReactNode
   dataMedia: IUploads[] | null
-  mediaSelect?: IUploads[] | null
-  setMediasSelect?: React.Dispatch<SetStateAction<IUploads[] | []>>
+  mediaSelect: IUploads[] | []
+  setMediasSelect: React.Dispatch<SetStateAction<IUploads[] | []>>
 }
 export default function DragMedia({
   select,
@@ -34,21 +25,17 @@ export default function DragMedia({
   setMediasSelect,
 }: IProps) {
   const [dragOver, setDragOver] = useState(false)
-  const [upload, setUpload] = useState<IUploads[] | null>(null)
+  const [upload, setUpload] = useState<IUploads[] | null>(dataMedia)
   const [totalUp, setTotalUp] = useState(0)
 
   useEffect(() => {
-    if (totalUp < 1) {
+    if (totalUp < 1 && dataMedia !== upload) {
       setUpload(dataMedia)
     }
   }, [dataMedia])
 
-  const {
-    mutate,
-    data: mediaData,
-    isPending: mediaPending,
-  } = useMutation({
-    mutationFn: async ({ formFile, index, blob, name, id }: IMutation) => {
+  const { mutate } = useMutation({
+    mutationFn: async ({ formFile, index }: IMutation) => {
       setTotalUp((prev) => prev + 1)
       const { data } = await axiosInstance.post<MediaSchema>(
         `/media/upload`,
@@ -143,9 +130,6 @@ export default function DragMedia({
             mutate({
               formFile: formData,
               index: i,
-              blob: imgURI,
-              name: name,
-              id: id,
             })
             resolve({
               imgURI,
@@ -178,7 +162,7 @@ export default function DragMedia({
 
       <div className={style.mediaContent}>
         {upload
-          ? upload.map((e, index) => {
+          ? upload.map((e) => {
               const checkSelect = mediaSelect?.find((s) => s.id == e.id)
                 ? true
                 : false

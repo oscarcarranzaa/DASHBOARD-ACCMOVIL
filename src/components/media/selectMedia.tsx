@@ -1,22 +1,19 @@
 import CloseSVG from '@/components/icons/close'
 import { TSelectMedia } from '@/components/media/'
-import { useEffect, useState } from 'react'
-import DragMedia, { IUploads } from './upload/drag'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import DragMedia from './upload/drag'
 import getMedia from '@/utils/getMedia'
 import { Button } from '@nextui-org/button'
 import GallerySVG from '../icons/gallery'
-import { UseFormSetValue } from 'react-hook-form'
-import { newProduct } from '@/types/poducts'
+import { IUploads } from '@/types'
 
 interface IProps extends TSelectMedia {
-  setValue: UseFormSetValue<newProduct>
-  reset?: boolean
+  setValue: Dispatch<SetStateAction<string[] | undefined>>
   defaultMedias?: IUploads[]
 }
 export default function SelectMedia({
   select,
   setValue,
-  reset,
   defaultMedias,
 }: IProps) {
   const defaulMediaSelect = defaultMedias ?? []
@@ -24,17 +21,15 @@ export default function SelectMedia({
   const [mediaSelect, setMediaSelect] = useState<IUploads[] | []>(
     defaulMediaSelect
   )
-  useEffect(() => {
-    if (reset) {
-      setMediaSelect([])
-    }
-  }, [reset])
+
   const dataItem = getMedia()
   const handleSelect = () => {
     setIsModalMedia(!isModalMedia)
   }
-  const selectId = mediaSelect.map((id) => id.mediaIDItem).toString()
-  setValue('image', selectId?.length > 0 ? selectId : undefined)
+  useEffect(() => {
+    const selectId = mediaSelect.map((id) => id.mediaIDItem)
+    setValue(selectId?.length > 0 ? selectId : undefined)
+  }, [mediaSelect])
   return (
     <div>
       <div
@@ -98,30 +93,26 @@ export default function SelectMedia({
                   <div className="flex gap-2 ml-5">
                     {mediaSelect?.map((slt) => {
                       return (
-                        <>
-                          <div className="relative">
-                            <div
-                              onClick={() =>
-                                setMediaSelect((prev) =>
-                                  prev.filter(
-                                    (idMedia) => idMedia.id !== slt.id
-                                  )
-                                )
-                              }
-                              className=" absolute top-0 left-0 bottom-0 right-0 w-full h-full flex justify-center items-center opacity-0  hover:opacity-100 cursor-pointer fill-white rounded"
-                              style={{ background: 'rgba(0,0,0,0.5)' }}
-                            >
-                              <CloseSVG size={20} />
-                            </div>
-                            <picture>
-                              <img
-                                src={slt.imgURI}
-                                className="w-14 h-14 object-cover select-none rounded"
-                                alt={slt.name}
-                              />
-                            </picture>
+                        <div className="relative" key={slt.id}>
+                          <div
+                            onClick={() =>
+                              setMediaSelect((prev) =>
+                                prev.filter((idMedia) => idMedia.id !== slt.id)
+                              )
+                            }
+                            className=" absolute top-0 left-0 bottom-0 right-0 w-full h-full flex justify-center items-center opacity-0  hover:opacity-100 cursor-pointer fill-white rounded"
+                            style={{ background: 'rgba(0,0,0,0.5)' }}
+                          >
+                            <CloseSVG size={20} />
                           </div>
-                        </>
+                          <picture>
+                            <img
+                              src={slt.imgURI}
+                              className="w-14 h-14 object-cover select-none rounded"
+                              alt={slt.name}
+                            />
+                          </picture>
+                        </div>
                       )
                     })}
                   </div>

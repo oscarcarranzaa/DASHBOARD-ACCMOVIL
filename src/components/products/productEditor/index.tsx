@@ -30,6 +30,7 @@ export default function ProductEditor({
   isPending,
   error,
 }: TProps) {
+  const [getImages, setGetImages] = useState<string[] | undefined>()
   const startDate = productValues?.priceDiscount?.start
   const endDate = productValues?.priceDiscount?.end
   const isDate = startDate && endDate ? true : false
@@ -66,25 +67,23 @@ export default function ProductEditor({
     },
     note: productValues?.note,
   }
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    unregister,
-    getValues,
-    formState: { isSubmitSuccessful, errors },
-  } = useForm<newProduct>({
-    resolver: zodResolver(product),
-    defaultValues: initialValues,
-  })
-  console.log(errors)
+  const { register, handleSubmit, setValue, unregister, getValues } =
+    useForm<newProduct>({
+      resolver: zodResolver(product),
+      defaultValues: initialValues,
+    })
+
+  useEffect(() => {
+    if (getImages) {
+      setValue('image', getImages[0])
+    } else {
+      unregister('image')
+    }
+  }, [getImages])
 
   const setDate = useCallback(() => {
     const intDate = calendarDate?.start ? calendarDate.start.toDate() : false
     const finallyDate = calendarDate?.end ? calendarDate.end.toDate() : false
-
-    console.log(intDate, finallyDate)
     if (intDate && finallyDate) {
       setValue('priceDiscount.start', dayjs(intDate).toISOString())
       setValue('priceDiscount.end', dayjs(finallyDate).toISOString())
@@ -110,6 +109,7 @@ export default function ProductEditor({
         },
       ]
     : []
+  console.log(getImages)
   return (
     <>
       <form onSubmit={handleSubmit(handleForm)}>
@@ -286,8 +286,7 @@ export default function ProductEditor({
             <p className="text-lg font-medium mb-5 mt-8">Imagen del producto</p>
             <SelectMedia
               select="only"
-              setValue={setValue}
-              reset={isSubmitSuccessful}
+              setValue={setGetImages}
               defaultMedias={defaultMediaValues}
             />
             <div className="mt-5">

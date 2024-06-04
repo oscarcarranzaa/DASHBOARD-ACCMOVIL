@@ -13,8 +13,8 @@ export default function PublishEditor() {
             <p className="text-sm mb-1">Descripción</p>
             <TextEditor />
           </div>
-          <div>
-            <p className="text-sm mb-1">Agregar productos</p>
+          <div className="mt-10 w-full">
+            <p className="text-sm mb-2">Agregar productos</p>
             <Variations />
           </div>
         </div>

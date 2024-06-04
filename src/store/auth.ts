@@ -1,11 +1,9 @@
 'use client'
-
 import { create } from 'zustand'
 
 type State = {
   token: string | null
 }
-
 type Action = {
   setToken: (token: State['token']) => void
 }

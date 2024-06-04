@@ -1,11 +1,11 @@
 import CloseSVG from '@/components/icons/close'
-import Media, { TSelectMedia } from '@/components/media/'
-import { SetStateAction, useEffect, useState } from 'react'
+import { TSelectMedia } from '@/components/media/'
+import { useEffect, useState } from 'react'
 import DragMedia, { IUploads } from './upload/drag'
 import getMedia from '@/utils/getMedia'
 import { Button } from '@nextui-org/button'
 import GallerySVG from '../icons/gallery'
-import { UseFormRegister, UseFormSetValue } from 'react-hook-form'
+import { UseFormSetValue } from 'react-hook-form'
 import { newProduct } from '@/types/poducts'
 
 interface IProps extends TSelectMedia {

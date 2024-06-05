@@ -1,6 +1,7 @@
 import { Card, CardBody, Tab, Tabs } from '@nextui-org/react'
 import { Key, useState } from 'react'
 import SearchProductLabel from './searchProductLabel'
+import ManagerAttributes from './managerAttributes'
 
 export default function Variations() {
   const [selected, setSelected] = useState<Key>('single')
@@ -23,7 +24,7 @@ export default function Variations() {
                 </div>
               </Tab>
               <Tab key="variation" title="Variable">
-                <p>Y aca el producto variable</p>
+                <ManagerAttributes />
               </Tab>
             </Tabs>
           </div>

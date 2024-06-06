@@ -23,10 +23,9 @@ export default function Variations() {
                   <SearchProductLabel />
                 </div>
               </Tab>
-              <Tab key="variation" title="Variable">
-                <ManagerAttributes />
-              </Tab>
+              <Tab key="variation" title="Variable"></Tab>
             </Tabs>
+            <ManagerAttributes />
           </div>
         </div>
       </div>

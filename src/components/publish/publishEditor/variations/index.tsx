@@ -23,9 +23,12 @@ export default function Variations() {
                   <SearchProductLabel />
                 </div>
               </Tab>
-              <Tab key="variation" title="Variable"></Tab>
+              <Tab key="variation" title="Variable">
+                <div className="w-full">
+                  <ManagerAttributes />
+                </div>
+              </Tab>
             </Tabs>
-            <ManagerAttributes />
           </div>
         </div>
       </div>

@@ -49,10 +49,10 @@ export default function ChipItems({
     }
   }, [])
   return (
-    <div className="flex-none dark:bg-zinc-800 px-3 py-2 rounded-xl mr-2">
+    <div className="flex-none dark:bg-zinc-800 px-2 py-1 rounded-xl mr-2">
       <div className="flex items-center ">
         {renderIcon()}
-        <p className="text-sm ml-2">{name}</p>
+        <p className="text-xs ml-2">{name}</p>
         <div className="ml-2">
           <button
             className="dark:fill-white p-1 rounded-full dark:hover:bg-zinc-700"

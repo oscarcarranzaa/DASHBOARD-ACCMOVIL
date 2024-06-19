@@ -7,6 +7,7 @@ import { SetStateAction, useState } from 'react'
 import { Key } from '@react-types/shared'
 import { useSortable } from '@dnd-kit/sortable'
 import ChipItems from '@/components/UI/chip'
+import { usePublishStore } from '@/store/publish'
 
 type AttributeValuesProps = {
   name: string
@@ -20,16 +21,23 @@ export default function AttributeValues({
   id,
   deleteAtt,
 }: AttributeValuesProps) {
+  const getAtt = usePublishStore((state) => state.attributes)
+
+  const initialSelected =
+    getAtt?.find((att) => att.id === id)?.terms.map((att) => att.id) ?? []
+
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Key | null | undefined>(null)
-  const [valueSelected, setValueSelected] = useState<Key[]>([])
-
-  /******* Store **********/
+  const [valueSelected, setValueSelected] = useState<Key[]>(initialSelected)
 
   const { data, isPending } = useQuery({
     queryKey: ['oneAtt', id],
     queryFn: () => getOneAttribute(id),
     refetchOnWindowFocus: false,
+  })
+
+  const valueItems = valueSelected.map((att) => {
+    return data?.terms.find((a) => a._id === att)
   })
   const options =
     data?.terms.map((attribute) => ({
@@ -38,14 +46,40 @@ export default function AttributeValues({
     })) ?? []
 
   const handleAddAttribute = () => {
-    if (selected) {
+    if (selected && !valueSelected.includes(selected)) {
+      console.log([...valueSelected, selected], 'ouiuog')
       setValueSelected([...valueSelected, selected])
       setSelected(null)
     }
   }
-  const valueItems = valueSelected.map((att) => {
-    return data?.terms.find((a) => a._id === att)
-  })
+  /******* Store **********/
+  const setAtt = usePublishStore((state) => state.setAttributes)
+  const selectSucces = () => {
+    if (!data || getAtt === null) return
+
+    const values = valueSelected.map((att) => {
+      return data.terms.find((a) => a._id === att)
+    })
+    const attStoreValue = values.map((att) => {
+      return {
+        id: att?._id ?? '',
+        name: att?.name ?? '',
+      }
+    })
+    const addTerms = getAtt.map((att) => {
+      if (att.id === id) {
+        return {
+          id: att.id,
+          name: att.name,
+          terms: attStoreValue,
+        }
+      }
+      return att
+    })
+    setAtt(addTerms)
+    setOpen(!open)
+  }
+
   // Sortable Drag
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id })
@@ -56,13 +90,15 @@ export default function AttributeValues({
   return (
     <>
       <div
-        className="w-full p-2 px-5 mb-2 dark:bg-zinc-950 bg-white rounded-md"
+        className="w-full mt-1 dark:bg-zinc-950 bg-white rounded-md"
         style={style}
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}
       >
-        <div className="flex justify-between items-center">
+        <div
+          className="flex justify-between items-center dark:bg-black p-3 px-5  rounded-xl cursor-move"
+          ref={setNodeRef}
+          {...attributes}
+          {...listeners}
+        >
           <div>
             <p>{name}:</p>
             <div className={open ? 'hidden' : 'flex text-xs gap-1 mt-1'}>
@@ -88,7 +124,10 @@ export default function AttributeValues({
             Editar
           </Button>
         </div>
-        <div className={`${!open ? 'hidden' : 'block'}`}>
+
+        <div
+          className={`${!open ? 'hidden ' : 'block p-2 px-5 border-t dark:border-zinc-700 border-zinc-300'}`}
+        >
           <div className="mt-3">
             <Autocomplete
               size="sm"
@@ -135,7 +174,7 @@ export default function AttributeValues({
               Elminar
             </Button>
             <Button
-              onClick={() => setOpen(!open)}
+              onClick={selectSucces}
               size="sm"
               className=""
               color="primary"

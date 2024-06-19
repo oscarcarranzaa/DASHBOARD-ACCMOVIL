@@ -2,29 +2,57 @@
 import { getAllAttributes } from '@/api/attributes'
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Key } from '@react-types/shared'
 import AttributeValues from './attributeValues'
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { usePublishStore } from '@/store/publish'
+import VariationsValues from './variationsValues'
 
 export default function ManagerAttributes() {
+  const getAttribute = usePublishStore((state) => state.attributes)
+  const initialSelected = getAttribute?.map((att) => att.id) ?? []
+
   const [selected, setSelected] = useState<Key | null | undefined>(null)
-  const [selectedAttributes, setSelectedAttributes] = useState<Key[]>([])
+  const [selectedAttributes, setSelectedAttributes] =
+    useState<Key[]>(initialSelected)
+
+  //// Query
   const { data, isPending } = useQuery({
     queryKey: ['Attributes'],
     queryFn: getAllAttributes,
     refetchOnWindowFocus: false,
   })
+  const attribute = selectedAttributes.map((att) => {
+    return data?.find((a) => a._id === att)
+  })
+
   const options =
     data?.map((attribute) => ({
       id: attribute._id,
       label: attribute.name,
     })) ?? []
 
+  //// Store
+  const setAttribute = usePublishStore((state) => state.setAttributes)
+  //// Agregar un atributo
   const handleAddAttribute = () => {
-    if (selected) {
-      setSelectedAttributes([...selectedAttributes, selected])
+    if (selected && !selectedAttributes.includes(selected)) {
+      const updateValues = [...selectedAttributes, selected]
+      const attributeFind = updateValues.map((att) => {
+        return data?.find((a) => a._id === att)
+      })
+      setSelectedAttributes(updateValues)
+      const attStoreValue = attributeFind.map((att) => {
+        return {
+          id: att?._id ?? '',
+          name: att?.name ?? '',
+          terms: [],
+        }
+      })
+
+      setAttribute(attStoreValue)
       setSelected(null)
     }
   }
@@ -40,12 +68,13 @@ export default function ManagerAttributes() {
     setSelectedAttributes(newAttributes)
   }
   return (
-    <div>
+    <div className=" mt-5">
       <div className="flex items-center">
         <Autocomplete
           label="Selecciona un atributo"
           disabledKeys={selectedAttributes.map((att) => att.toString())}
           className="max-w-xs"
+          size="sm"
           isLoading={isPending}
           selectedKey={selected}
           onSelectionChange={setSelected}
@@ -75,21 +104,22 @@ export default function ManagerAttributes() {
             items={selectedAttributes}
             strategy={verticalListSortingStrategy}
           >
-            {selectedAttributes.map((att) => {
-              const attribute = data?.find((a) => a._id === att)
+            {attribute.map((att) => {
+              if (!att) return null
               return (
                 <AttributeValues
-                  key={att}
+                  key={att._id}
                   deleteAtt={setSelectedAttributes}
-                  id={att.toString()}
-                  name={attribute?.name ?? ''}
-                  type={attribute?.type ?? ''}
+                  id={att._id.toString()}
+                  name={att.name}
+                  type={att.type}
                 />
               )
             })}
           </SortableContext>
         </DndContext>
       </div>
+      <VariationsValues />
     </div>
   )
 }

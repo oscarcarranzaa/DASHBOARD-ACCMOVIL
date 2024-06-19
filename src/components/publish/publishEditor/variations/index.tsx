@@ -1,4 +1,4 @@
-import { Card, CardBody, Tab, Tabs } from '@nextui-org/react'
+import { Tab, Tabs } from '@nextui-org/react'
 import { Key, useState } from 'react'
 import SearchProductLabel from './searchProductLabel'
 import ManagerAttributes from './managerAttributes'

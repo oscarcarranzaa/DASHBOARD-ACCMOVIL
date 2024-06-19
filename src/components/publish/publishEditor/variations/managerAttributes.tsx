@@ -51,7 +51,7 @@ export default function ManagerAttributes() {
           terms: [],
         }
       })
-
+      console.log(attStoreValue, attributeFind, 'attStoreValue')
       setAttribute(attStoreValue)
       setSelected(null)
     }

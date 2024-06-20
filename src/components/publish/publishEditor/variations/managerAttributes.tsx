@@ -45,13 +45,16 @@ export default function ManagerAttributes() {
       })
       setSelectedAttributes(updateValues)
       const attStoreValue = attributeFind.map((att) => {
+        const isExists = getAttribute?.find((a) => a.id === att?._id)
+        if (isExists) return isExists
+
         return {
           id: att?._id ?? '',
           name: att?.name ?? '',
           terms: [],
         }
       })
-      console.log(attStoreValue, attributeFind, 'attStoreValue')
+      console.log(attStoreValue, attributeFind, 'attStoreValue', getAttribute)
       setAttribute(attStoreValue)
       setSelected(null)
     }

@@ -47,7 +47,6 @@ export default function AttributeValues({
 
   const handleAddAttribute = () => {
     if (selected && !valueSelected.includes(selected)) {
-      console.log([...valueSelected, selected], 'ouiuog')
       setValueSelected([...valueSelected, selected])
       setSelected(null)
     }

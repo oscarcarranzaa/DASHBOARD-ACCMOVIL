@@ -4,9 +4,8 @@ import { create } from 'zustand'
 type State = {
   variations:
     | {
-        id: string
         productID: string
-        attribute: {
+        attributes: {
           id: string
           name: string
         }[]

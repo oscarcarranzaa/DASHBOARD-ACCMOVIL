@@ -13,7 +13,7 @@ type AttributeValuesProps = {
   name: string
   type: string
   id: string
-  deleteAtt: React.Dispatch<SetStateAction<Key[]>>
+  deleteAtt: (id: string) => void
 }
 export default function AttributeValues({
   name,
@@ -167,7 +167,7 @@ export default function AttributeValues({
               size="sm"
               color="danger"
               onClick={() => {
-                deleteAtt((prev) => prev.filter((att) => att !== id))
+                deleteAtt(id)
               }}
             >
               Elminar

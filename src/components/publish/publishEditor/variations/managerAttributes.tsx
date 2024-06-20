@@ -54,7 +54,7 @@ export default function ManagerAttributes() {
           terms: [],
         }
       })
-      console.log(attStoreValue, attributeFind, 'attStoreValue', getAttribute)
+      console.log('pasa')
       setAttribute(attStoreValue)
       setSelected(null)
     }
@@ -68,7 +68,41 @@ export default function ManagerAttributes() {
     const newAttributes = [...selectedAttributes]
     newAttributes.splice(oldIndex, 1)
     newAttributes.splice(newIndex, 0, active.id)
+
+    //// Cambio de posición en el store
+    const attributeFind = newAttributes.map((att) => {
+      return data?.find((a) => a._id === att)
+    })
+
+    const attStoreValue = attributeFind.map((att) => {
+      const isExists = getAttribute?.find((a) => a.id === att?._id)
+      if (isExists) return isExists
+      return {
+        id: att?._id ?? '',
+        name: att?.name ?? '',
+        terms: [],
+      }
+    })
+    setAttribute(attStoreValue)
+    ////
     setSelectedAttributes(newAttributes)
+  }
+  const deleteAtt = (id: string) => {
+    const newAttributes = selectedAttributes.filter((att) => att !== id)
+    setSelectedAttributes(newAttributes)
+    const attributeFind = newAttributes.map((att) => {
+      return data?.find((a) => a._id === att)
+    })
+    const attStoreValue = attributeFind.map((att) => {
+      const isExists = getAttribute?.find((a) => a.id === att?._id)
+      if (isExists) return isExists
+      return {
+        id: att?._id ?? '',
+        name: att?.name ?? '',
+        terms: [],
+      }
+    })
+    setAttribute(attStoreValue)
   }
   return (
     <div className=" mt-5">
@@ -112,7 +146,7 @@ export default function ManagerAttributes() {
               return (
                 <AttributeValues
                   key={att._id}
-                  deleteAtt={setSelectedAttributes}
+                  deleteAtt={deleteAtt}
                   id={att._id.toString()}
                   name={att.name}
                   type={att.type}

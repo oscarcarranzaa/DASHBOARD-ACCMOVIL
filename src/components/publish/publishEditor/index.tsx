@@ -18,7 +18,6 @@ export default function PublishEditor() {
             <Variations />
           </div>
         </div>
-        <div></div>
       </div>
     </>
   )

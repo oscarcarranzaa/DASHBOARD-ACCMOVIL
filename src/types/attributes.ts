@@ -1,4 +1,3 @@
-import { image } from '@nextui-org/theme'
 import { z } from 'zod'
 import { media } from './schemas'
 

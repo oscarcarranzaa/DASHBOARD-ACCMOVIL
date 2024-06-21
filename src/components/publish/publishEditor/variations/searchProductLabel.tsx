@@ -1,18 +1,25 @@
 import { getAllProducts } from '@/api/products'
 import SearchSVG from '@/components/icons/search'
-import SelectMedia from '@/components/media/selectMedia'
 import SquareImage from '@/components/squareImage'
 import { getProductImageSchema } from '@/types/poducts'
-import { Button, Input } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import DisplayProduct from './displayProduct'
+import CloseSVG from '@/components/icons/close'
 
-export default function SearchProductLabel() {
+type TProps = {
+  seleted?: getProductImageSchema
+  onSelect?: (value: getProductImageSchema) => void
+}
+export default function SearchProductLabel({ seleted, onSelect }: TProps) {
+  const initialSelect = seleted ? seleted : null
   const [search, setSearch] = useState('')
   const [searchValue, setSearchValue] = useState('')
-  const [select, setSelect] = useState<getProductImageSchema | null>(null)
+  const [select, setSelect] = useState<getProductImageSchema | null>(
+    initialSelect
+  )
 
   const { data, isPending } = useQuery({
     queryKey: ['products', '1', searchValue],
@@ -27,9 +34,10 @@ export default function SearchProductLabel() {
       setSearchValue('')
     }
   }, 800)
+
   return (
     <>
-      <div className="dark:fill-white w-full sm:max-w-[60%] relative">
+      <div className="dark:fill-white w-full  relative">
         <Input
           onChange={(e) => {
             setSearch(e.target.value)
@@ -56,6 +64,7 @@ export default function SearchProductLabel() {
                   className="  p-2 hover:bg-zinc-950 rounded-lg cursor-pointer w-full"
                   onClick={() => {
                     setSelect(item)
+                    onSelect && onSelect(item)
                     setSearch('')
                   }}
                 >
@@ -78,14 +87,19 @@ export default function SearchProductLabel() {
             })}
         </div>
       </div>
-      {select && <DisplayProduct select={select} />}
-      {select && (
-        <div className=" flex justify-end mt-5">
-          <Button color="danger" onClick={() => setSelect(null)}>
-            Eliminar
-          </Button>
-        </div>
-      )}
+      <div className="relative">
+        {select && <DisplayProduct select={select} />}
+        {select && (
+          <div className=" flex justify-end  absolute -right-2 -top-2">
+            <button
+              className=" bg-zinc-200 rounded-full p-1"
+              onClick={() => setSelect(null)}
+            >
+              <CloseSVG size={16} />
+            </button>
+          </div>
+        )}
+      </div>
     </>
   )
 }

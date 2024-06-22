@@ -21,7 +21,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
     initialSelect
   )
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery({
     queryKey: ['products', '1', searchValue],
     queryFn: () => getAllProducts('1', '30', searchValue),
     refetchOnWindowFocus: false,

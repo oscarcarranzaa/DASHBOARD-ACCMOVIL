@@ -1,11 +1,12 @@
 'use client'
+import { getProductImageSchema } from '@/types/poducts'
 import { create } from 'zustand'
 // Este Store se encarga de manejar los estados de las variaciones y atributos
 type State = {
   variations:
     | {
-        productID: string
-        attributes: {
+        product: getProductImageSchema | null
+        attributesTerms: {
           id: string
           name: string
         }[]

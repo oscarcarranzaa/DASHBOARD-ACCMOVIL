@@ -101,10 +101,10 @@ export default function AttributeValues({
           <div>
             <p>{name}:</p>
             <div className={open ? 'hidden' : 'flex text-xs gap-1 mt-1'}>
-              {valueItems.map((att) => {
+              {valueItems.map((att, index) => {
                 return (
                   <Chip
-                    key={att?._id}
+                    key={index}
                     size="sm"
                     variant="bordered"
                     className="  border-zinc-600"

@@ -1,7 +1,7 @@
 import SearchSVG from '@/components/icons/search'
 import { Input } from '@nextui-org/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 export default function Search() {

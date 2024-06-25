@@ -24,7 +24,7 @@ export default function AttributeValues({
   const getAtt = usePublishStore((state) => state.attributes)
 
   const initialSelected =
-    getAtt?.find((att) => att.id === id)?.terms.map((att) => att.id) ?? []
+    getAtt?.find((att) => att.id === id)?.terms?.map((att) => att.id) ?? []
 
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Key | null | undefined>(null)
@@ -89,11 +89,11 @@ export default function AttributeValues({
   return (
     <>
       <div
-        className="w-full mt-1 dark:bg-zinc-950 bg-white rounded-md"
+        className="w-full mt-1 dark:bg-zinc-950 bg-zinc-100 rounded-md"
         style={style}
       >
         <div
-          className="flex justify-between items-center dark:bg-black p-3 px-5  rounded-xl cursor-move"
+          className="flex justify-between items-center dark:bg-zinc-900 p-3 px-5  rounded-xl cursor-move"
           ref={setNodeRef}
           {...attributes}
           {...listeners}

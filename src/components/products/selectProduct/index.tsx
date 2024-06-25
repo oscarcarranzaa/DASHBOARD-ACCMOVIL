@@ -8,11 +8,13 @@ type TProps = {
   open: React.Dispatch<SetStateAction<boolean>>
   onSelectProduct?: (value: getProductImageSchema) => void
   selectedProduct?: getProductImageSchema
+  title?: string
 }
 export default function SelectProduct({
   open,
   onSelectProduct,
   selectedProduct,
+  title,
 }: TProps) {
   const initialSelect = selectedProduct ? selectedProduct : null
   const [productSelected, setProductSelected] =
@@ -33,6 +35,7 @@ export default function SelectProduct({
             <h3 className=" font-semibold text-xl mt-4">
               Selecciona un producto
             </h3>
+            {title && <p className="text-sm text-zinc-500 mt-2">{title}</p>}
             <div className="w-full mt-5 ">
               <SearchProductLabel
                 onSelect={(value) => setProductSelected(value)}
@@ -44,7 +47,6 @@ export default function SelectProduct({
             <div className="mb-2">
               <Button
                 className="w-full"
-                disabled={!productSelected}
                 onClick={() => {
                   open(false)
                   if (onSelectProduct) {
@@ -53,7 +55,7 @@ export default function SelectProduct({
                 }}
                 color="primary"
               >
-                Seleccionar
+                {!productSelected ? 'Aceptar' : 'Seleccionar'}
               </Button>
             </div>
             <Button className="w-full" onClick={() => open(false)}>

@@ -8,11 +8,11 @@ export default function Variations() {
 
   return (
     <>
-      <div className=" p-2 py-5 rounded-lg border border-zinc-500">
+      <section className=" p-2 py-5 rounded-lg border border-zinc-500 bg-white dark:bg-black">
         <div className="w-full ">
           <div className="flex w-full flex-col">
             <Tabs
-              variant="bordered"
+              variant="solid"
               size="md"
               aria-label="Options"
               selectedKey={selected.toString()}
@@ -31,7 +31,7 @@ export default function Variations() {
             </Tabs>
           </div>
         </div>
-      </div>
+      </section>
     </>
   )
 }

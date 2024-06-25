@@ -1,5 +1,5 @@
 .light {
-  --ql-primary: rgba(245, 245, 245);
+  --ql-primary: rgb(255, 255, 255);
   --ql-secondary: rgba(20, 20, 20);
   --ql-opacity: rgba(20, 20, 20, 0.4);
 }

@@ -2,9 +2,10 @@
 import { getProductImageSchema } from '@/types/poducts'
 import { create } from 'zustand'
 // Este Store se encarga de manejar los estados de las variaciones y atributos
-type State = {
+export type StatePublish = {
   variations:
     | {
+        id: string
         product: getProductImageSchema | null
         attributesTerms: {
           id: string
@@ -24,11 +25,11 @@ type State = {
     | null
 }
 type Action = {
-  setVariation: (variations: State['variations']) => void
-  setAttributes: (attributes: State['attributes']) => void
+  setVariation: (variations: StatePublish['variations']) => void
+  setAttributes: (attributes: StatePublish['attributes']) => void
 }
 
-export const usePublishStore = create<State & Action>((set) => ({
+export const usePublishStore = create<StatePublish & Action>((set) => ({
   variations: null,
   attributes: null,
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),

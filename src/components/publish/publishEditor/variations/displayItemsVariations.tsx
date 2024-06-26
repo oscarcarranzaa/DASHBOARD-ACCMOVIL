@@ -1,6 +1,6 @@
 import SelectProduct from '@/components/products/selectProduct'
 import SquareImage from '@/components/squareImage'
-import { usePublishStore } from '@/store/publish'
+import { VariationStatus, usePublishStore } from '@/store/publish'
 import { getProductImageSchema } from '@/types/poducts'
 import { useEffect, useState, useCallback } from 'react'
 
@@ -41,7 +41,12 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
             .sort()
           const termsAtt = terms.map((term) => term.id).sort()
           if (variationsAtt.every((att, index) => att === termsAtt[index])) {
-            return { product: value, attributesTerms: terms, id: variation.id }
+            return {
+              product: value,
+              attributesTerms: terms,
+              id: variation.id,
+              status: variation.status,
+            }
           }
           return variation
         }) ?? []
@@ -49,17 +54,25 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
     },
     [product, getVariations, setVariations, terms]
   )
-
-  const deleteVariation = useCallback(() => {
-    console.log('click')
-    const newVariation =
-      getVariations?.filter((variation) => {
-        const variationsAtt = variation.attributesTerms.map((s) => s.id).sort()
-        const termsAtt = terms.map((term) => term.id).sort()
-        return !variationsAtt.every((att, index) => att === termsAtt[index])
+  const handleDeleteVariation = useCallback(() => {
+    const changeStatus =
+      getVariations?.map((variation) => {
+        const variationsAtt = variation.attributesTerms
+          .map((s) => s.id)
+          .sort()
+          .toString()
+        const termsAtt = terms
+          .map((term) => term.id)
+          .sort()
+          .toString()
+        if (variationsAtt === termsAtt) {
+          return { ...variation, status: VariationStatus.DRAFT }
+        }
+        return variation
       }) ?? []
-    setVariations(newVariation)
-  }, [getVariations, setVariations, terms])
+    setVariations(changeStatus)
+  }, [terms, getVariations])
+
   return (
     <>
       {openSelect && (
@@ -114,7 +127,7 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
         </div>
         <button
           className="text-sm text-red-500 hover:cursor-pointer hover:underline p-2"
-          onClick={() => deleteVariation()}
+          onClick={() => handleDeleteVariation()}
         >
           Eliminar
         </button>

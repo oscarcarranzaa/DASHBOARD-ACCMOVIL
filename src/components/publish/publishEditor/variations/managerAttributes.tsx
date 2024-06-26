@@ -2,7 +2,7 @@
 import { getAllAttributes } from '@/api/attributes'
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Key } from '@react-types/shared'
 import AttributeValues from './attributeValues'
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
@@ -11,6 +11,8 @@ import { usePublishStore } from '@/store/publish'
 import VariationsValues from './variationsValues'
 
 export default function ManagerAttributes() {
+  //// Store
+  const setAttribute = usePublishStore((state) => state.setAttributes)
   const getAttribute = usePublishStore((state) => state.attributes)
   const initialSelected = getAttribute?.map((att) => att.id) ?? []
 
@@ -34,8 +36,6 @@ export default function ManagerAttributes() {
       label: attribute.name,
     })) ?? []
 
-  //// Store
-  const setAttribute = usePublishStore((state) => state.setAttributes)
   //// Agregar un atributo
   const handleAddAttribute = () => {
     if (selected && !selectedAttributes.includes(selected)) {
@@ -54,12 +54,12 @@ export default function ManagerAttributes() {
           terms: [],
         }
       })
-      console.log('pasa')
+
       setAttribute(attStoreValue)
       setSelected(null)
     }
   }
-  // Sortable Drag
+
   const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e
     const oldIndex = selectedAttributes.findIndex((att) => att === active.id)
@@ -83,8 +83,9 @@ export default function ManagerAttributes() {
         terms: [],
       }
     })
+
     setAttribute(attStoreValue)
-    ////
+
     setSelectedAttributes(newAttributes)
   }
   const deleteAtt = (id: string) => {
@@ -104,6 +105,7 @@ export default function ManagerAttributes() {
     })
     setAttribute(attStoreValue)
   }
+
   return (
     <div className=" mt-5">
       <div className="flex items-center">

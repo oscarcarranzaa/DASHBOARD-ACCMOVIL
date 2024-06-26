@@ -3,7 +3,7 @@ import { getOneAttribute } from '@/api/attributes'
 import { Button } from '@nextui-org/button'
 import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import { Key } from '@react-types/shared'
 import { useSortable } from '@dnd-kit/sortable'
 import ChipItems from '@/components/UI/chip'
@@ -100,7 +100,9 @@ export default function AttributeValues({
         >
           <div>
             <p>{name}:</p>
-            <div className={open ? 'hidden' : 'flex text-xs gap-1 mt-1'}>
+            <div
+              className={open ? 'hidden' : 'flex text-xs gap-1 mt-1 flex-wrap'}
+            >
               {valueItems.map((att, index) => {
                 return (
                   <Chip

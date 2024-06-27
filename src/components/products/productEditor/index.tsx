@@ -1,9 +1,9 @@
 'use client'
 import Spinner from '@/components/icons/spinner'
 import WarningInfo from '@/components/icons/warningInfo'
-import SelectMedia from '@/components/media/selectMedia'
 import { getProductImageSchema, newProduct, product } from '@/types/poducts'
 import { zodResolver } from '@hookform/resolvers/zod'
+
 import {
   Button,
   DateRangePicker,
@@ -16,6 +16,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { parseAbsoluteToLocal } from '@internationalized/date'
 import { IUploads } from '@/types'
+import SelectImage from '@/components/media/selectImage'
 
 type TProps = {
   productValues?: getProductImageSchema
@@ -31,7 +32,7 @@ export default function ProductEditor({
   isPending,
   error,
 }: TProps) {
-  const [getImages, setGetImages] = useState<string[] | undefined>()
+  const [getImages, setGetImages] = useState<IUploads[] | undefined>()
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
   const startDate = productValues?.priceDiscount?.start
   const endDate = productValues?.priceDiscount?.end
@@ -76,12 +77,13 @@ export default function ProductEditor({
     })
 
   useEffect(() => {
-    if (getImages) {
-      setValue('image', getImages[0])
+    if (getImages && getImages.length > 0) {
+      setValue('image', getImages[0].mediaIDItem)
     } else {
-      unregister('image')
+      console.log('pasa')
+      setValue('image', undefined)
     }
-  }, [getImages])
+  }, [getImages, setValue])
 
   const setDate = useCallback(() => {
     const intDate = calendarDate?.start ? calendarDate.start.toDate() : false
@@ -114,7 +116,7 @@ export default function ProductEditor({
       : []
     setDefaultImage(defaultMediaValues)
   }, [productValues])
-  console.log(getImages)
+
   return (
     <>
       <form onSubmit={handleSubmit(handleForm)}>
@@ -289,7 +291,7 @@ export default function ProductEditor({
               <WarningInfo size={20} /> {error?.message}
             </p>
             <p className="text-lg font-medium mb-5 mt-8">Imagen del producto</p>
-            <SelectMedia
+            <SelectImage
               iconSize={128}
               select="only"
               setValue={setGetImages}

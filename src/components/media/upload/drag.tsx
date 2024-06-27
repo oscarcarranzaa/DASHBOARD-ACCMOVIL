@@ -15,8 +15,8 @@ interface IMutation {
 interface IProps extends TSelectMedia {
   children?: React.ReactNode
   dataMedia: IUploads[] | null
-  mediaSelect: IUploads[] | []
-  setMediasSelect: React.Dispatch<SetStateAction<IUploads[] | []>>
+  mediaSelect: IUploads[] | undefined
+  setMediasSelect: React.Dispatch<SetStateAction<IUploads[] | undefined>>
 }
 export default function DragMedia({
   select,
@@ -149,7 +149,7 @@ export default function DragMedia({
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="min-h-screen"
+      // className="min-h-screen"
     >
       <div
         onDragLeave={handleDragLeave}

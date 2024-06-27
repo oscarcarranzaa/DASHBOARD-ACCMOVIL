@@ -1,6 +1,7 @@
 import { updateOneProductImage } from '@/api/products'
 import DisplayPrice from '@/components/displayPrice'
-import SelectMedia from '@/components/media/selectMedia'
+import ModalMedia from '@/components/media/modalMedia'
+import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { getProductImageSchema } from '@/types/poducts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -43,10 +44,9 @@ export default function DisplayProduct({ select }: TProps) {
       <div>
         <div className="flex w-full items-center">
           <div className="w-16 mr-2 flex-none">
-            <SelectMedia
+            <SelectImage
               select="only"
               setValue={setGetImage}
-              iconSize={42}
               defaultMedias={defaultImage}
             />
           </div>

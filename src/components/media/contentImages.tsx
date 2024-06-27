@@ -22,7 +22,7 @@ interface IProps {
   mediaID: string
   isSelect?: 'only' | 'multiple'
   check: boolean
-  selectItem?: React.Dispatch<SetStateAction<IUploads[] | []>>
+  selectItem?: React.Dispatch<SetStateAction<IUploads[] | undefined>>
 }
 
 export default function ContentImages({
@@ -59,11 +59,13 @@ export default function ContentImages({
 
     if (selectItem) {
       if (!select && isSelect === 'multiple') {
-        selectItem((prev) => [...prev, mediaInfo])
+        selectItem((prev) => (prev ? [...prev, mediaInfo] : [mediaInfo]))
       } else if (!select && isSelect === 'only') {
         selectItem([mediaInfo])
       } else {
-        selectItem((prev) => prev.filter((idMedia) => idMedia.id !== mediaID))
+        selectItem((prev) =>
+          prev ? prev.filter((item) => item.id !== mediaID) : undefined
+        )
       }
     }
   }, [isLoading, select, id, url, mediaID, image, name, isSelect, selectItem])
@@ -74,7 +76,7 @@ export default function ContentImages({
       onClick={handleSelect}
     >
       <div
-        className={`p-3 pl-4 pr-4 bg-zinc-200 dark:bg-zinc-700 rounded-md relative border ${select && isSelect ? 'border-sky-600' : 'border-transparent'}`}
+        className={`p-3 pl-4 pr-4  rounded-md relative border ${select && isSelect ? ' bg-zinc-200 dark:bg-zinc-700' : 'border-transparent'}`}
       >
         {isSelect ? (
           <div className="absolute z-10 right-0 top-0 p-1 rounded-md">

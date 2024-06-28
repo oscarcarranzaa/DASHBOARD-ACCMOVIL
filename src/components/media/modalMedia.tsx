@@ -25,7 +25,6 @@ export default function ModalMedia({
   const [selectedMedia, setSelectedMedia] = useState<IUploads[] | undefined>(
     defaultMedias
   )
-  console.log(selectedMedia, mediaSelect)
   const dataItem = getMedia()
 
   useEffect(() => {
@@ -35,14 +34,15 @@ export default function ModalMedia({
   }, [defaultMedias])
 
   const handleSelect = () => {
-    console.log(mediaSelect)
-
     setSelectedMedia(mediaSelect?.length ? mediaSelect : undefined)
     closeModal()
   }
   const cancelSelect = () => {
     setMediaSelect(selectedMedia)
     closeModal()
+  }
+  const clearSelect = () => {
+    setMediaSelect(undefined)
   }
 
   useEffect(() => {
@@ -78,7 +78,12 @@ export default function ModalMedia({
           </div>
           <div className=" flex justify-between items-center bg-white border-t border-zinc-300 p-8 py-3 absolute bottom-0 right-0 left-0 z-20">
             <div>
-              <button className=" text-sky-600 hover:underline">Limpiar</button>
+              <button
+                className=" text-sky-600 hover:underline"
+                onClick={clearSelect}
+              >
+                Limpiar
+              </button>
             </div>
             <div className="flex gap-3">
               <Button onClick={handleSelect} color="primary">

@@ -7,6 +7,7 @@ import style from './style.module.css'
 import { MediaSchema } from '@/types/schemas'
 import { TSelectMedia } from '../index'
 import { IUploads } from '@/types'
+import SkeletonImage from '../skeletonImage'
 
 interface IMutation {
   formFile: FormData
@@ -183,7 +184,7 @@ export default function DragMedia({
                 )
               }
             })
-          : null}
+          : Array.from({ length: 30 }).map((_, i) => <SkeletonImage key={i} />)}
       </div>
     </div>
   )

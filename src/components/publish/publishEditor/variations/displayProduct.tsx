@@ -11,7 +11,7 @@ type TProps = {
   select: getProductImageSchema
 }
 export default function DisplayProduct({ select }: TProps) {
-  const [getImage, setGetImage] = useState<string[] | undefined>()
+  const [getImage, setGetImage] = useState<IUploads[] | undefined>()
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
   const queryClient = useQueryClient()
   const { mutate, isPending } = useMutation({
@@ -46,6 +46,7 @@ export default function DisplayProduct({ select }: TProps) {
           <div className="w-16 mr-2 flex-none">
             <SelectImage
               select="only"
+              iconSize={40}
               setValue={setGetImage}
               defaultMedias={defaultImage}
             />

@@ -5,16 +5,22 @@ import {
   newProduct,
   getProductImageSchema,
   getProductImage,
+  getOneProductSchema,
+  getOneProductType,
 } from '@/types/poducts'
 import { isAxiosError } from 'axios'
 
 export async function createProduct(formData: newProduct) {
   try {
-    const { data } = await axiosInstance.post('/product', formData)
-    return data
+    const { data } = await axiosInstance.post<getOneProductSchema>(
+      '/product',
+      formData
+    )
+    const validProduct = getOneProductType.parse(data)
+    return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data)
+      throw new Error(error.response.data.response.msg)
     } else {
       throw new Error('An unexpected error occurred while get the product.')
     }

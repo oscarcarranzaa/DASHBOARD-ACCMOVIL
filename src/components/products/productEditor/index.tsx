@@ -80,7 +80,6 @@ export default function ProductEditor({
     if (getImages && getImages.length > 0) {
       setValue('image', getImages[0].mediaIDItem)
     } else {
-      console.log('pasa')
       setValue('image', undefined)
     }
   }, [getImages, setValue])

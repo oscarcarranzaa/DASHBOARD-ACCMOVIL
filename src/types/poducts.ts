@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { media } from './schemas'
+import { media, user } from './schemas'
 
 /** Productos */
 
@@ -21,7 +21,7 @@ export const product = z.object({
   note: z.string().optional(),
   minStock: z.number().optional(),
 })
-
+export const getOneProductType = product.extend({ _id: z.string() })
 export const getProductImage = product
   .omit({ image: true })
   .extend({ _id: z.string(), image: media.optional() || null })
@@ -35,5 +35,6 @@ export const getProduct = z.object({
   pageNumber: z.number(),
 })
 export type getProductImageSchema = z.infer<typeof getProductImage>
+export type getOneProductSchema = z.infer<typeof getOneProductType>
 export type getProductSchema = z.infer<typeof getProduct>
 export type newProduct = z.infer<typeof product>

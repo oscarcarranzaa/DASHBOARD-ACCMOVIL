@@ -12,11 +12,11 @@ import ProductEditor from '@/components/products/productEditor/'
 export default function NewProduct() {
   const { mutate, isPending, error, data } = useMutation({
     mutationFn: createProduct,
-    onSuccess: () => {
+    onSuccess: (response) => {
       toast(
         <ToastInfo
           text="Guardado Correctamente"
-          url="/"
+          url={`/dash/productos/${response._id}`}
           label="Ver Producto"
         />,
         {

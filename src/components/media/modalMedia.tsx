@@ -55,12 +55,12 @@ export default function ModalMedia({
         style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
       >
         <div className="bg-zinc-100 dark:bg-zinc-800 overflow-hidden  dark:fill-white w-11/12 rounded-2xl relative">
-          <div className="mb-10 flex justify-between items-center bg-zinc-200 p-5 py-3">
+          <div className="mb-10 flex justify-between items-center bg-zinc-200 dark:bg-black p-5 py-3">
             <p className=" font-semibold">Selector de medios</p>
             <button
               onClick={() => closeModal()}
               type="button"
-              className="fill-zinc-700 rounded-full p-2 hover:bg-zinc-300 dark:hover:bg-zinc-700"
+              className="fill-zinc-700 dark:fill-zinc-300 rounded-full p-2 hover:bg-zinc-300 dark:hover:bg-zinc-700"
               title="Cerrar"
             >
               <CloseSVG size={20} />
@@ -76,7 +76,7 @@ export default function ModalMedia({
               />
             </div>
           </div>
-          <div className=" flex justify-between items-center bg-white border-t border-zinc-300 p-8 py-3 absolute bottom-0 right-0 left-0 z-20">
+          <div className=" flex justify-between items-center bg-white dark:bg-black border-t border-zinc-300 p-8 py-3 absolute bottom-0 right-0 left-0 z-20">
             <div>
               <button
                 className=" text-sky-600 hover:underline"

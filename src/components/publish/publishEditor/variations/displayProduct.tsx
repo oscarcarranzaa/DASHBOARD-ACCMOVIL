@@ -40,7 +40,7 @@ export default function DisplayProduct({ select }: TProps) {
     setDefaultImage(defaultMediaValues)
   }, [select])
   return (
-    <div className="mt-5 w-full bg-zinc-950 border border-zinc-700 rounded-md px-5 py-2">
+    <div className="mt-8 w-full dark:bg-zinc-950 ">
       <div>
         <div className="flex w-full items-center">
           <div className="w-16 mr-2 flex-none">
@@ -53,13 +53,15 @@ export default function DisplayProduct({ select }: TProps) {
           </div>
           <div className="flex justify-between w-full text-left">
             <div>
-              <p className=" line-clamp-2">{select.name}</p>
+              <p className=" line-clamp-2 text-sm">{select.name}</p>
               <div className="flex">
-                <p className="text-xs text-green-500 line-clamp-1">
+                <p className="text-xs dark:text-green-500 text-green-600 line-clamp-1 font-bold">
                   {select.code}
                 </p>
                 <p className="text-xs text-zinc-500 ml-5">
-                  <span className=" text-yellow-500">{select.stock} und</span>{' '}
+                  <span className=" dark:text-yellow-500 text-yellow-600 font-semibold">
+                    {select.stock} und
+                  </span>{' '}
                 </p>
               </div>
             </div>

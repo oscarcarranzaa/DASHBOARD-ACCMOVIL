@@ -60,7 +60,7 @@ export default function MediaID() {
     return 'No hay datos'
   }
   const getAvatar = data.user.avatar
-  const avatar = getAvatar.images
+  const avatar = getAvatar?.images
     ? getAvatar.images[0].src
     : '/static/default-profile.png'
   const handleCopy = (string: string) => {

@@ -46,7 +46,9 @@ export const getMedias = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
-const mediaUserAvatar = media.pick({ _id: true, mediaId: true, images: true })
+const mediaUserAvatar = media
+  .pick({ _id: true, mediaId: true, images: true })
+  .optional()
 const mediaUser = user
   .omit({ avatar: true })
   .extend({ avatar: mediaUserAvatar })

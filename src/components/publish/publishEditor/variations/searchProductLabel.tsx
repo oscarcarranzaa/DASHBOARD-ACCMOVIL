@@ -83,7 +83,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
           variant="bordered"
         />
         <div
-          className={`absolute top-10 left-0 right-0 bg-zinc-800 max-h-60 z-20 overflow-y-scroll p-2  ${value.length === 0 ? 'hidden' : 'block'}`}
+          className={`absolute top-10 left-0 right-0 bg-zinc-100 dark:bg-zinc-800 max-h-60 z-20 overflow-y-scroll p-2  ${value.length === 0 ? 'hidden' : 'block'}`}
         >
           {data &&
             data.data.map((item) => {
@@ -93,7 +93,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
               return (
                 <button
                   key={item._id}
-                  className="  p-2 hover:bg-zinc-950 rounded-lg cursor-pointer w-full"
+                  className="  p-2 hover:bg-zinc-200 dark:hover:bg-zinc-950 rounded-lg cursor-pointer w-full"
                   onClick={() => {
                     setSelect(item)
                     onSelect && onSelect(item)
@@ -122,7 +122,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
       <div className="relative">
         {select && <DisplayProduct select={select} />}
         {select && (
-          <div className=" flex justify-end  absolute -right-2 -top-2">
+          <div className=" flex justify-end  absolute -right-2 -top-5">
             <button
               className=" bg-zinc-200 rounded-full p-1"
               onClick={() => {

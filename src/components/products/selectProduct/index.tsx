@@ -29,7 +29,7 @@ export default function SelectProduct({
       >
         <div
           ref={ref as React.MutableRefObject<HTMLDivElement>}
-          className="bg-zinc-200 border border-zinc-400 dark:bg-zinc-950 min-w-96 min-h-40 max-w-80 rounded-xl px-5 "
+          className="bg-zinc-50 border border-zinc-400 dark:bg-zinc-950 min-w-96 min-h-40 max-w-96 rounded-xl px-5 "
         >
           <div className=" flex flex-col justify-center items-center text-center p-1 pt-5">
             <h3 className=" font-semibold text-xl mt-4">

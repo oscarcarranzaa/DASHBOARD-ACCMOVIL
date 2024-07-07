@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { media, user } from './schemas'
+import { media } from './schemas'
 
 /** Productos */
 

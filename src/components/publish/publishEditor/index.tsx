@@ -3,8 +3,17 @@ import TextEditor from '@/components/textEditor'
 import { Input } from '@nextui-org/react'
 import Variations from './variations'
 import Gallery from './gallery'
+import DisplayCategory from '@/components/category/displayCategory'
+import { useQuery } from '@tanstack/react-query'
+import { getCategories } from '@/api/category'
 
 export default function PublishEditor() {
+  const { data, isPending } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => getCategories(),
+    refetchOnWindowFocus: false,
+  })
+  console.log(data)
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto">
@@ -27,7 +36,9 @@ export default function PublishEditor() {
             <TextEditor />
           </div>
         </div>
-        <div className=" col-span-3"></div>
+        <div className=" col-span-3">
+          <DisplayCategory />
+        </div>
       </div>
     </>
   )

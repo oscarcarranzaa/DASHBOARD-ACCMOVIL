@@ -4,20 +4,12 @@ import { Input } from '@nextui-org/react'
 import Variations from './variations'
 import Gallery from './gallery'
 import DisplayCategory from '@/components/category/displayCategory'
-import { useQuery } from '@tanstack/react-query'
-import { getCategories } from '@/api/category'
 
 export default function PublishEditor() {
-  const { data, isPending } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => getCategories(),
-    refetchOnWindowFocus: false,
-  })
-  console.log(data)
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto">
-        <div className=" col-span-8 mb-24">
+        <div className=" col-span-7 mb-24">
           <Input variant="bordered" isRequired label="Titulo" />
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción corta</p>
@@ -36,7 +28,7 @@ export default function PublishEditor() {
             <TextEditor />
           </div>
         </div>
-        <div className=" col-span-3">
+        <div className=" col-span-4">
           <DisplayCategory />
         </div>
       </div>

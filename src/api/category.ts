@@ -1,11 +1,15 @@
 import axiosInstance from '@/lib/axiosClient'
 import { isAxiosError } from 'axios'
-import { CategorySchema, ZCategory } from '@/types/category'
+import { ZCategories, ZCategorySchema } from '@/types/category'
 
-export async function getCategories() {
+export async function getCategories(id: string) {
   try {
-    const { data } = await axiosInstance.get<CategorySchema>(`/posts/category`)
-    const validCategory = ZCategory.parse(data)
+    const { data } = await axiosInstance.get<ZCategorySchema>(
+      `/posts/category?parentID=${id}`
+    )
+
+    const validCategory = ZCategories.parse(data)
+
     return validCategory
   } catch (error) {
     if (isAxiosError(error) && error.response) {

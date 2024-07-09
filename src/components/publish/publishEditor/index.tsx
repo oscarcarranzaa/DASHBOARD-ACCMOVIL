@@ -1,9 +1,11 @@
 'use client'
 import TextEditor from '@/components/textEditor'
-import { Input } from '@nextui-org/react'
+import { Button, Input } from '@nextui-org/react'
 import Variations from './variations'
 import Gallery from './gallery'
 import DisplayCategory from '@/components/category/displayCategory'
+import EmbedVideo from './embedVideo'
+import ControlsPost from './controls'
 
 export default function PublishEditor() {
   return (
@@ -29,7 +31,14 @@ export default function PublishEditor() {
           </div>
         </div>
         <div className=" col-span-4">
+          <p className="mb-1">Guardar</p>
+          <div className=" grid grid-cols-2 gap-x-2 mb-5">
+            <Button color="primary">Publicar</Button>
+            <Button>Borrador</Button>
+          </div>
+
           <DisplayCategory />
+          <EmbedVideo />
         </div>
       </div>
     </>

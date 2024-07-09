@@ -1,69 +1,54 @@
-import { useEffect, useRef } from 'react'
-import { CategorySchema } from '@/types/category'
 import { getCategories } from '@/api/category'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import ArrowSVG from '../icons/arrow'
 import ArrowAngleSVG from '../icons/arrowAngle'
-import { Input } from '@nextui-org/react'
 import CategorySkeleton from './categorySkeleton'
+import CloseSVG from '../icons/close'
 
+type selectCategory = {
+  _id: string
+  name: string
+  parent: string | undefined
+}
 export default function DisplayCategory() {
   const [openID, setOpenID] = useState<string>('')
-  const [openBox, setOpenBox] = useState<boolean>(false)
-  const { data, isPending } = useQuery({
+  const [selected, setSelected] = useState<selectCategory[] | null>(null)
+
+  const { data } = useQuery({
     queryKey: ['categories', openID],
     queryFn: () => getCategories(openID),
     refetchOnWindowFocus: false,
   })
-
-  const inputRef = useRef<HTMLDivElement>(null)
-  const boxRef = useRef<HTMLDivElement>(null)
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      inputRef.current &&
-      boxRef.current &&
-      !(
-        inputRef.current.contains(event.target as Node) ||
-        boxRef.current.contains(event.target as Node)
-      )
-    ) {
-      setOpenBox(false)
+  const handleSelect = (category: selectCategory) => {
+    if (selected) {
+      const find = selected.find((item) => item._id === category._id)
+      if (find) {
+        setSelected(selected.filter((item) => item._id !== category._id))
+      } else {
+        setSelected([...selected, category])
+      }
+    } else {
+      setSelected([category])
     }
   }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
   return (
     <>
+      <p>Categorías</p>
       <div className=" dark:border border-zinc-500 dark:bg-zinc-900 bg-white py-5 px-2 rounded-lg">
-        <div ref={inputRef}>
-          <label className="text-sm mt-2">Categorías</label>
-          <Input onFocus={() => setOpenBox(true)} />
-        </div>
-        <div
-          ref={boxRef}
-          className={`${
-            openBox ? 'block relative ' : 'hidden'
-          } dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg`}
-        >
-          <div className="absolute  top-0 right-0 left-0  dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg ">
+        <p className="text-sm">Seleccione las categorías</p>
+        <div className="dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg">
+          <div className=" dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg ">
             {data && data.parent && (
               <button
                 onClick={() => setOpenID(data.parent?.parent ?? '')}
                 className="flex w-full bg-zinc-200 dark:bg-zinc-700 py-2 px-1 rounded-md items-center mt-1"
               >
-                <ArrowSVG size={24} />{' '}
+                <ArrowSVG size={24} />
                 <p className="ml-2 text-left">{data.parent?.name}</p>
               </button>
             )}
-            <div className="h-96 w-full mt-1 menu-content  p-1 ">
+            <div className="h-80 w-full mt-1 menu-content  p-1 ">
               <ul>
                 {data ? (
                   data.categories.map((category) => (
@@ -75,7 +60,20 @@ export default function DisplayCategory() {
                           : ''
                       } select-none rounded-md`}
                     >
-                      <button className="dark:hover:bg-zinc-950 hover:bg-zinc-300 p-2 rounded-md px-3">
+                      <button
+                        className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 p-2 rounded-md px-3 ${
+                          selected?.find((item) => item._id === category._id)
+                            ? 'bg-zinc-300 dark:bg-zinc-950'
+                            : ''
+                        }`}
+                        onClick={() => {
+                          handleSelect({
+                            _id: category._id,
+                            name: category.name,
+                            parent: category.parent,
+                          })
+                        }}
+                      >
                         <p className="text-sm text-left">{category.name}</p>
                       </button>
                       <div
@@ -102,6 +100,38 @@ export default function DisplayCategory() {
               </ul>
             </div>
           </div>
+        </div>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 dark:fill-white items-center mt-2">
+          {selected &&
+            selected.map((item) => (
+              <div
+                key={item._id}
+                className="flex  justify-between items-center p-2 bg-zinc-200 dark:bg-zinc-700 rounded-md mt-1 text-xs"
+              >
+                <p
+                  className=" hover:underline cursor-pointer"
+                  onClick={() => {
+                    if (item.parent) {
+                      setOpenID(item.parent)
+                      return
+                    }
+                    setOpenID('')
+                  }}
+                >
+                  {item.name}
+                </p>
+                <button
+                  className="ml-5"
+                  onClick={() =>
+                    setSelected(
+                      selected.filter((select) => select._id !== item._id)
+                    )
+                  }
+                >
+                  <CloseSVG size={12} />
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     </>

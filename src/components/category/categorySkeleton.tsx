@@ -9,6 +9,18 @@ export default function CategorySkeleton() {
         <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
         <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
         <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
+        <Skeleton className="w-full h-6 mt-1 px-3 rounded-lg" />
       </div>
     </>
   )

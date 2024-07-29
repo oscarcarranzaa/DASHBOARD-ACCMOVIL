@@ -11,10 +11,12 @@
 .ql-container {
   background-color: var(--ql-primary);
   color: #c8c8c8;
+  min-height: 163px;
 }
 .ql-editor {
   background-color: var(--ql-primary);
   color: var(--ql-secondary);
+  max-height: 300px;
 }
 .ql-editor.ql-blank::before {
   color: var(--ql-opacity);

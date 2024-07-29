@@ -21,16 +21,18 @@ export default function DisplayPrice({
   return (
     <>
       <div>
-        <p
-          className={`font-medium text-center ${discountPrice && validDiscount ? ' line-through text-xs text-zinc-600' : ''} ${discountPrice && !startDate && !endDate ? ' line-through text-xs text-zinc-600' : ''}`}
-        >
-          {price.toLocaleString('es-HN', {
-            style: 'currency',
-            currency: 'HNL',
-          })}
-        </p>
+        <div className="flex items-center justify-start">
+          <p
+            className={`font-medium text-center ${discountPrice && validDiscount ? ' line-through text-xs text-zinc-500' : ''} ${discountPrice && !startDate && !endDate ? ' line-through text-xs text-zinc-500' : ''}`}
+          >
+            {price.toLocaleString('es-HN', {
+              style: 'currency',
+              currency: 'HNL',
+            })}
+          </p>
+        </div>
         <div
-          className={`flex items-center stroke-red-500 ${discountPrice ? 'flex' : 'hidden'}`}
+          className={` items-center justify-start stroke-red-500 ${discountPrice ? 'flex' : 'hidden'}`}
         >
           <span
             className={`mr-1 ${endDate && isNotFinish ? 'block' : 'hidden'}`}

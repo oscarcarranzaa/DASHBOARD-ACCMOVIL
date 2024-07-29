@@ -95,7 +95,14 @@ export default function DragMedia({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     const hasFiles = Array.from(e.dataTransfer.types).includes('Files')
     const files = e.dataTransfer.files
-    if (hasFiles) {
+    let isImage = true
+    Array.from(files).map((file, i) => {
+      if (file.type.startsWith('image/') === false) {
+        isImage = false
+        return
+      }
+    })
+    if (hasFiles && isImage) {
       uploadFile(files).then((results) => {
         const upValue = !upload ? results : results.concat(upload)
         setUpload(upValue)

@@ -13,9 +13,7 @@ export default function DragFiles() {
         <h4 className="text center  text-lg font-semibold mt-5">
           Suelte los archivos para subir
         </h4>
-        <p className="text-sm text-zinc-300">
-          Solo se aceptan imágenes y videos :)
-        </p>
+        <p className="text-sm text-zinc-300">Solo se aceptan imágenes :)</p>
       </div>
     </>
   )

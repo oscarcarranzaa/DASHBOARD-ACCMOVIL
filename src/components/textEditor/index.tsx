@@ -26,7 +26,7 @@ export default function TextEditor() {
   const { quillRef } = useQuill({ theme, modules, formats, placeholder })
   return (
     <>
-      <div className="border border-zinc-500 rounded-lg w-full h-60 overflow-hidden">
+      <div className="border border-zinc-500 rounded-lg w-full min-h-52">
         <div ref={quillRef} />
       </div>
     </>

@@ -49,28 +49,24 @@ export const menuItems = [
     ],
   },
   {
-    name: 'Publicaciones',
+    name: 'Posts',
     icon: <PublishSVG size={iconSize} />,
     items: [
       {
-        name: 'Agregar nuevos',
-        href: '/dash/publicaciones/nuevo',
+        name: 'Ver posts',
+        href: '/dash/posts/',
       },
       {
-        name: 'Ver publicaciones',
-        href: '/dash/publicaciones/',
+        name: 'Nuevo',
+        href: '/dash/posts/nuevo',
       },
       {
         name: 'Categorías',
-        href: '/dash/publicaciones/categorias',
+        href: '/dash/posts/categorias',
       },
       {
         name: 'Atributos',
-        href: '/dash/publicaciones/atributos',
-      },
-      {
-        name: 'Papelera',
-        href: '/dash/publicaciones/papelera',
+        href: '/dash/posts/atributos',
       },
     ],
   },

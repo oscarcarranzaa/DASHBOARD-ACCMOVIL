@@ -1,4 +1,4 @@
-import { StatePublish, VariationStatus, usePublishStore } from '@/store/publish'
+import { StatePublish, usePublishStore } from '@/store/publish'
 import DisplayGroupVariations from './displayGroupVariations'
 import { useEffect, useState } from 'react'
 import DisplayItemsVariations from './displayItemsVariations'
@@ -8,6 +8,11 @@ type TCartesianProduct = {
   name: string
   id: string
 }[][]
+
+const VariationStatus = {
+  NEW: 'new',
+  DRAFT: 'draft',
+} as const
 
 export default function VariationsValues() {
   const attributes = usePublishStore((state) => state.attributes)
@@ -66,7 +71,7 @@ export default function VariationsValues() {
 
     setVariation(varItems)
   }, [attributes])
-  console.log(getVariations)
+
   return (
     <div className="mt-5">
       <p>Variaciones:</p>
@@ -77,10 +82,6 @@ export default function VariationsValues() {
         {groupAtt?.terms &&
           isChildTerms &&
           groupAtt.terms.map((termGroup, index) => {
-            const totalVariations =
-              getVariations?.filter((att) => {
-                return att.attributesTerms[0].id === termGroup.id
-              }) ?? []
             return (
               <DisplayGroupVariations
                 termGroup={termGroup}

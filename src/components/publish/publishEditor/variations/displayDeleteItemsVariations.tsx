@@ -1,5 +1,5 @@
 import SquareImage from '@/components/squareImage'
-import { VariationStatus, usePublishStore } from '@/store/publish'
+import { usePublishStore } from '@/store/publish'
 
 type TProps = {
   terms: {
@@ -8,6 +8,10 @@ type TProps = {
   }[]
   termGroupID: string
 }
+const VariationStatus = {
+  NEW: 'new',
+  DRAFT: 'draft',
+} as const
 
 export default function DisplayDeleteItemsVariations({
   terms,

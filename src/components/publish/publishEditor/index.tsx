@@ -1,21 +1,31 @@
 'use client'
-import TextEditor from '@/components/textEditor'
+
 import { Button, Input } from '@nextui-org/react'
 import Variations from './variations'
 import Gallery from './gallery'
 import DisplayCategory from '@/components/category/displayCategory'
 import EmbedVideo from './embedVideo'
-import ControlsPost from './controls'
+import { usePublishStore } from '@/store/publish'
+import ShortDescriptionPost from './textEditor/shortDescription'
+import DescriptionPost from './textEditor/description'
 
 export default function PublishEditor() {
+  const { title } = usePublishStore((state) => state.postData)
+  const setTitle = usePublishStore((state) => state.setTitle)
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto">
         <div className=" col-span-7 mb-24">
-          <Input variant="bordered" isRequired label="Titulo" />
+          <Input
+            variant="bordered"
+            isRequired
+            label="Titulo"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción corta</p>
-            <TextEditor />
+            <ShortDescriptionPost />
           </div>
           <div className="mt-5">
             <p className="text-sm mb-1">Galería</p>
@@ -27,7 +37,7 @@ export default function PublishEditor() {
           </div>
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción</p>
-            <TextEditor />
+            <DescriptionPost />
           </div>
         </div>
         <div className=" col-span-4">

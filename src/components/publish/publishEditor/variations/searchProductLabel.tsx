@@ -105,7 +105,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
                       <SquareImage src={image} />
                     </div>
                     <div>
-                      <p className="line-clamp-2 text-sm text-left">
+                      <p className="line-clamp-2 text-xs text-left">
                         {item.name}
                       </p>
                       <div className="text-xs flex">

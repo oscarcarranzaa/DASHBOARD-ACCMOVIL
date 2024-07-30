@@ -2,9 +2,12 @@ import { Tab, Tabs } from '@nextui-org/react'
 import { Key, useState } from 'react'
 import SearchProductLabel from './searchProductLabel'
 import ManagerAttributes from './managerAttributes'
+import { usePublishStore } from '@/store/publish'
 
 export default function Variations() {
-  const [selected, setSelected] = useState<Key>('single')
+  const postData = usePublishStore((state) => state.postData)
+  const setType = usePublishStore((state) => state.setType)
+
 
   return (
     <>
@@ -15,15 +18,22 @@ export default function Variations() {
               variant="solid"
               size="md"
               aria-label="Options"
-              selectedKey={selected.toString()}
-              onSelectionChange={setSelected}
+              selectedKey={postData.type}
+              onSelectionChange={(e) => {
+                const typeSimple = e === 'simple'
+                if (typeSimple) {
+                  setType('simple')
+                } else {
+                  setType('variable')
+                }
+              }}
             >
-              <Tab key="single" title="Simple">
+              <Tab key="simple" title="Simple">
                 <div className="w-full ">
                   <SearchProductLabel />
                 </div>
               </Tab>
-              <Tab key="variation" title="Variable">
+              <Tab key="variable" title="Variable">
                 <div className="w-full">
                   <ManagerAttributes />
                 </div>

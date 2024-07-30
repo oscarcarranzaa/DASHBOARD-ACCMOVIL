@@ -7,7 +7,7 @@ import { Button } from '@nextui-org/button'
 import { IUploads } from '@/types'
 
 interface IProps extends TSelectMedia {
-  setValue: Dispatch<SetStateAction<IUploads[] | undefined>>
+  setValue: (media: IUploads[] | undefined) => void
   closeModal: () => void
   defaultMedias?: IUploads[]
   openModal: boolean

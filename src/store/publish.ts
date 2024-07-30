@@ -1,28 +1,39 @@
 'use client'
+import { selectCategory } from '@/components/category/displayCategory'
+import { IUploads } from '@/types'
 import { getProductImageSchema } from '@/types/poducts'
 import { create } from 'zustand'
-// Este Store se encarga de manejar los estados de las variaciones y atributos
-export const VariationStatus = {
-  NEW: 'new',
-  DRAFT: 'draft',
-} as const
 
+export type TPostData = {
+  id: string
+  title: string
+  description?: string
+  status: 'publish' | 'draft'
+  type: 'simple' | 'variable'
+  gallery?: IUploads[]
+  video?: string
+  categories?: selectCategory
+  shortDescription?: string
+  desription?: string
+  productID?: getProductImageSchema
+  specifications?: string
+}
+const postInitialValue: TPostData = {
+  id: 'new',
+  title: '',
+  type: 'simple',
+  status: 'draft',
+}
 export type TVariations = {
   id: string
   product: getProductImageSchema | null
-  status: (typeof VariationStatus)[keyof typeof VariationStatus]
+  status: 'new' | 'draft'
   attributesTerms: {
     id: string
     name: string
   }[]
 }
 
-export type TPublishData = {
-  title: string
-  description: string
-  image: string
-  gallery: string[]
-}
 export type StatePublish = {
   variations: TVariations[] | null
   attributes:
@@ -35,22 +46,37 @@ export type StatePublish = {
         }[]
       }[]
     | null
-  publishData: TPublishData | null
+  postData: TPostData
 }
+
 type Action = {
   setVariation: (variations: StatePublish['variations']) => void
   setAttributes: (attributes: StatePublish['attributes']) => void
-  setPublishData: (publishData: StatePublish['publishData']) => void
+  setPostData: (postData: StatePublish['postData']) => void
+  setType: (type: 'simple' | 'variable') => void
+  setGallery: (gallery: IUploads[] | undefined) => void
+  setTitle: (title: string) => void
+  setDescription: (description: string) => void
+  setShortDescription: (description: string) => void
 }
 
 export const usePublishStore = create<StatePublish & Action>((set) => ({
   variations: null,
   attributes: null,
   deletedVariations: [],
-  publishData: null,
+  postData: postInitialValue,
 
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),
   setAttributes: (newAttributes) => set(() => ({ attributes: newAttributes })),
-  setPublishData: (newPublishData) =>
-    set(() => ({ publishData: newPublishData })),
+  setPostData: (newPostData) => set(() => ({ postData: newPostData })),
+  setType: (type) =>
+    set((state) => ({ postData: { ...state.postData, type } })),
+  setGallery: (gallery) =>
+    set((state) => ({ postData: { ...state.postData, gallery } })),
+  setTitle: (title) =>
+    set((state) => ({ postData: { ...state.postData, title } })),
+  setShortDescription: (shortDescription) =>
+    set((state) => ({ postData: { ...state.postData, shortDescription } })),
+  setDescription: (description) =>
+    set((state) => ({ postData: { ...state.postData, description } })),
 }))

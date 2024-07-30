@@ -6,7 +6,7 @@ import ArrowAngleSVG from '../icons/arrowAngle'
 import CategorySkeleton from './categorySkeleton'
 import CloseSVG from '../icons/close'
 
-type selectCategory = {
+export type selectCategory = {
   _id: string
   name: string
   parent: string | undefined

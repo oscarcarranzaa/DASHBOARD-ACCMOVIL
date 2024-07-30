@@ -1,6 +1,6 @@
 import SelectProduct from '@/components/products/selectProduct'
 import SquareImage from '@/components/squareImage'
-import { VariationStatus, usePublishStore } from '@/store/publish'
+import { usePublishStore } from '@/store/publish'
 import { getProductImageSchema } from '@/types/poducts'
 import { useEffect, useState, useCallback } from 'react'
 
@@ -11,6 +11,10 @@ type TProps = {
   }[]
   termGroupID: string
 }
+const VariationStatus = {
+  NEW: 'new',
+  DRAFT: 'draft',
+} as const
 
 export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
   const getVariations = usePublishStore((state) => state.variations)

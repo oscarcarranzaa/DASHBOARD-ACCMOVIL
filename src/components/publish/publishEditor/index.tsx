@@ -10,8 +10,10 @@ import ShortDescriptionPost from './textEditor/shortDescription'
 import DescriptionPost from './textEditor/description'
 
 export default function PublishEditor() {
-  const { title } = usePublishStore((state) => state.postData)
+  const { title, categories } = usePublishStore((state) => state.postData)
   const setTitle = usePublishStore((state) => state.setTitle)
+  const setCategory = usePublishStore((state) => state.setCagories)
+
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto">
@@ -47,7 +49,10 @@ export default function PublishEditor() {
             <Button>Borrador</Button>
           </div>
 
-          <DisplayCategory />
+          <DisplayCategory
+            value={categories}
+            onSelectCategory={(select) => setCategory(select)}
+          />
           <EmbedVideo />
         </div>
       </div>

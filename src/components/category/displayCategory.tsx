@@ -11,9 +11,13 @@ export type selectCategory = {
   name: string
   parent: string | undefined
 }
-export default function DisplayCategory() {
+type TProps = {
+  value?: selectCategory[]
+  onSelectCategory?: (select: selectCategory[]) => void
+}
+export default function DisplayCategory({ value, onSelectCategory }: TProps) {
   const [openID, setOpenID] = useState<string>('')
-  const [selected, setSelected] = useState<selectCategory[] | null>(null)
+  const [selected, setSelected] = useState<selectCategory[] | undefined>(value)
 
   const { data } = useQuery({
     queryKey: ['categories', openID],
@@ -24,11 +28,20 @@ export default function DisplayCategory() {
     if (selected) {
       const find = selected.find((item) => item._id === category._id)
       if (find) {
+        if (onSelectCategory) {
+          onSelectCategory(selected.filter((item) => item._id !== category._id))
+        }
         setSelected(selected.filter((item) => item._id !== category._id))
       } else {
+        if (onSelectCategory) {
+          onSelectCategory([...selected, category])
+        }
         setSelected([...selected, category])
       }
     } else {
+      if (onSelectCategory) {
+        onSelectCategory([category])
+      }
       setSelected([category])
     }
   }
@@ -122,11 +135,16 @@ export default function DisplayCategory() {
                 </p>
                 <button
                   className="ml-5"
-                  onClick={() =>
+                  onClick={() => {
                     setSelected(
                       selected.filter((select) => select._id !== item._id)
                     )
-                  }
+                    if (onSelectCategory) {
+                      onSelectCategory(
+                        selected.filter((select) => select._id !== item._id)
+                      )
+                    }
+                  }}
                 >
                   <CloseSVG size={12} />
                 </button>

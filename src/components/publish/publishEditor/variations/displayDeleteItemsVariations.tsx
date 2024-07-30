@@ -1,12 +1,9 @@
 import SquareImage from '@/components/squareImage'
-import { usePublishStore } from '@/store/publish'
+import { ItemsVariations, usePublishStore } from '@/store/publish'
 
 type TProps = {
-  terms: {
-    id: string
-    name: string
-  }[]
   termGroupID: string
+  variation: ItemsVariations
 }
 const VariationStatus = {
   NEW: 'new',
@@ -14,28 +11,25 @@ const VariationStatus = {
 } as const
 
 export default function DisplayDeleteItemsVariations({
-  terms,
   termGroupID,
+  variation,
 }: TProps) {
   const getVariations = usePublishStore((state) => state.variations)
   const setVariations = usePublishStore((state) => state.setVariation)
 
+  const termsValue = variation.attributesTerms.map((term) => {
+    return {
+      id: term.id,
+      name: term.name,
+    }
+  })
+
   const restoreVariation = () => {
-    const restoreStatus =
-      getVariations?.map((variation) => {
-        const variationsAtt = variation.attributesTerms.map((s) => s.id).sort()
-        const termsAtt = terms.map((term) => term.id).sort()
-        if (variationsAtt.every((att, index) => att === termsAtt[index])) {
-          return {
-            product: variation.product,
-            attributesTerms: terms,
-            id: variation.id,
-            status: VariationStatus.NEW,
-          }
-        }
-        return variation
-      }) ?? []
-    setVariations(restoreStatus)
+    const { status, ...getDelete } = variation
+
+    if (getVariations) {
+      setVariations([...getVariations, getDelete])
+    }
   }
 
   return (
@@ -47,7 +41,7 @@ export default function DisplayDeleteItemsVariations({
           </div>
           <div>
             <div className="ml-2 flex items-center">
-              {terms.map((term, index) => {
+              {termsValue.map((term, index) => {
                 const isGroupTerm = term.id === termGroupID
                 if (isGroupTerm) {
                   return null
@@ -55,7 +49,7 @@ export default function DisplayDeleteItemsVariations({
                 return (
                   <div key={term.id} className="flex line-through text-sm">
                     <p>{term.name}</p>
-                    {index === terms.length - 1 ? null : (
+                    {index === termsValue.length - 1 ? null : (
                       <span className="px-2"> • </span>
                     )}
                   </div>

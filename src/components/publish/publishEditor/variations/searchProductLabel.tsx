@@ -12,7 +12,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type TProps = {
   seleted?: getProductImageSchema
-  onSelect?: (value: getProductImageSchema | null) => void
+  onSelect?: (value: getProductImageSchema | undefined) => void
 }
 export default function SearchProductLabel({ seleted, onSelect }: TProps) {
   const initialSelect = seleted ? seleted : null
@@ -127,7 +127,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
               className=" bg-zinc-200 rounded-full p-1"
               onClick={() => {
                 setSelect(null)
-                onSelect && onSelect(null)
+                onSelect && onSelect(undefined)
               }}
             >
               <CloseSVG size={16} />

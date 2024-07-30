@@ -11,10 +11,6 @@ type TProps = {
   }[]
   termGroupID: string
 }
-const VariationStatus = {
-  NEW: 'new',
-  DRAFT: 'draft',
-} as const
 
 export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
   const getVariations = usePublishStore((state) => state.variations)
@@ -49,7 +45,6 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
               product: value,
               attributesTerms: terms,
               id: variation.id,
-              status: variation.status,
             }
           }
           return variation
@@ -60,7 +55,7 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
   )
   const handleDeleteVariation = useCallback(() => {
     const changeStatus =
-      getVariations?.map((variation) => {
+      getVariations?.filter((variation) => {
         const variationsAtt = variation.attributesTerms
           .map((s) => s.id)
           .sort()
@@ -70,9 +65,9 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
           .sort()
           .toString()
         if (variationsAtt === termsAtt) {
-          return { ...variation, status: VariationStatus.DRAFT }
+          return false
         }
-        return variation
+        return true
       }) ?? []
     setVariations(changeStatus)
   }, [terms, getVariations])

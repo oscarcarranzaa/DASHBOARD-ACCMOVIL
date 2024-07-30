@@ -1,11 +1,11 @@
-import { TVariations, usePublishStore } from '@/store/publish'
+import { ItemsVariations, TVariations, usePublishStore } from '@/store/publish'
 import { useState } from 'react'
 import DisplayItemsVariations from './displayItemsVariations'
 import DisplayDeleteItemsVariations from './displayDeleteItemsVariations'
 import ArrowAngleSVG from '@/components/icons/arrowAngle'
 
 type TProps = {
-  variations: TVariations[] | null
+  variations?: ItemsVariations[]
   termGroup: {
     id: string
     name: string
@@ -64,7 +64,7 @@ export default function DisplayGroupVariations({
             return (
               <DisplayDeleteItemsVariations
                 key={index}
-                terms={termsValue}
+                variation={att}
                 termGroupID={termGroup.id}
               />
             )

@@ -5,9 +5,9 @@ import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
 
 export default function Variations() {
-  const postData = usePublishStore((state) => state.postData)
+  const { type, productID } = usePublishStore((state) => state.postData)
   const setType = usePublishStore((state) => state.setType)
-
+  const setProduct = usePublishStore((state) => state.setProductID)
 
   return (
     <>
@@ -18,7 +18,7 @@ export default function Variations() {
               variant="solid"
               size="md"
               aria-label="Options"
-              selectedKey={postData.type}
+              selectedKey={type}
               onSelectionChange={(e) => {
                 const typeSimple = e === 'simple'
                 if (typeSimple) {
@@ -30,7 +30,10 @@ export default function Variations() {
             >
               <Tab key="simple" title="Simple">
                 <div className="w-full ">
-                  <SearchProductLabel />
+                  <SearchProductLabel
+                    seleted={productID}
+                    onSelect={(value) => setProduct(value)}
+                  />
                 </div>
               </Tab>
               <Tab key="variable" title="Variable">

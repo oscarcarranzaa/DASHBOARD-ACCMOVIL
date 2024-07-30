@@ -1,22 +1,23 @@
 import CheckSVG from '@/components/icons/check'
+import { usePublishStore } from '@/store/publish'
 import { Button, Input } from '@nextui-org/react'
 import { useState } from 'react'
 
 export default function EmbedVideo() {
-  const [url, setUrl] = useState<string>('')
+  const { video } = usePublishStore((store) => store.postData)
+  const setVideo = usePublishStore((store) => store.setVideo)
+  const defaultUrl = video ? 'https://www.youtube.com/watch?v=' + video : ''
+  const [url, setUrl] = useState<string>(defaultUrl)
+
   const [error, setError] = useState<string>('')
-  const [video, setVideo] = useState<string>('')
-  const [videoType, setVideoType] = useState<string>('')
 
   const handleVideo = async () => {
     if (url === '') {
       setError('Debes ingresar un enlace')
       return
     }
-    if (video.length > 1) {
-      setVideo('')
-      setVideoType('')
-      setVideo('')
+    if (video && video.length > 1) {
+      setVideo(undefined)
       setUrl('')
       return
     }
@@ -24,7 +25,6 @@ export default function EmbedVideo() {
     const videoId = getVideoId(url)
     if (videoId) {
       setVideo(videoId.split('&')[0])
-      setVideoType('youtube')
       setError('')
     } else {
       setError('El enlace no es válido')
@@ -35,7 +35,7 @@ export default function EmbedVideo() {
     const youtube =
       /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(.+)/
     const youtubeMatch = url.match(youtube)
-    console.log(youtubeMatch)
+
     if (youtubeMatch) {
       return youtubeMatch[1]
     }
@@ -44,7 +44,7 @@ export default function EmbedVideo() {
   return (
     <>
       <p className="mt-5">Video gallery</p>
-      <div className="p-2 dark:bg-zinc-800 bg-white mt-1 rounded-md">
+      <div className="p-2 dark:bg-zinc-800 bg-white mt-1 rounded-xl">
         <div className="w-full ">
           <Input
             variant="bordered"
@@ -61,24 +61,26 @@ export default function EmbedVideo() {
             onClick={handleVideo}
             className="w-full mt-2 rounded-md"
             color={
-              video.length > 1 ? 'danger' : url === '' ? 'default' : 'primary'
+              video && video.length > 1
+                ? 'danger'
+                : url === ''
+                  ? 'default'
+                  : 'primary'
             }
             disabled={url === ''}
           >
-            {video.length > 1 ? 'Eliminar' : 'Cargar video'}
+            {video && video.length > 1 ? 'Eliminar' : 'Cargar video'}
           </Button>
         </div>
         <div className={video ? 'block mt-3' : 'hidden  '}>
           <div className="w-full aspect-video">
-            {videoType === 'youtube' && (
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${video}`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="YouTube video player"
-              ></iframe>
-            )}
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${video}`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="YouTube video player"
+            ></iframe>
           </div>
           <div className="flex items-center dark:stroke-zinc-400 stroke-zinc-600 dark:text-zinc-400 text-zinc-600">
             <CheckSVG size={16} />

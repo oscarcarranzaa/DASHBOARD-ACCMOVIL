@@ -16,9 +16,10 @@ export default function SelectProduct({
   selectedProduct,
   title,
 }: TProps) {
-  const initialSelect = selectedProduct ? selectedProduct : null
-  const [productSelected, setProductSelected] =
-    useState<getProductImageSchema | null>(initialSelect)
+  const initialSelect = selectedProduct ? selectedProduct : undefined
+  const [productSelected, setProductSelected] = useState<
+    getProductImageSchema | undefined
+  >(initialSelect)
   const ref = useRef<HTMLElement>(null)
   useOutsideClick(ref, () => open(false))
   return (

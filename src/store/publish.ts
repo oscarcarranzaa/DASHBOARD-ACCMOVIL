@@ -12,9 +12,8 @@ export type TPostData = {
   type: 'simple' | 'variable'
   gallery?: IUploads[]
   video?: string
-  categories?: selectCategory
+  categories?: selectCategory[]
   shortDescription?: string
-  desription?: string
   productID?: getProductImageSchema
   specifications?: string
 }
@@ -27,15 +26,19 @@ const postInitialValue: TPostData = {
 export type TVariations = {
   id: string
   product: getProductImageSchema | null
-  status: 'new' | 'draft'
   attributesTerms: {
     id: string
     name: string
   }[]
 }
+export interface ItemsVariations extends TVariations {
+  status: 'draft' | 'new'
+}
+;[]
 
 export type StatePublish = {
-  variations: TVariations[] | null
+  variations?: TVariations[]
+  deletedVariations?: ItemsVariations[]
   attributes:
     | {
         id: string
@@ -51,6 +54,7 @@ export type StatePublish = {
 
 type Action = {
   setVariation: (variations: StatePublish['variations']) => void
+  setDeleteVariations: (deletedVariations?: ItemsVariations[]) => void
   setAttributes: (attributes: StatePublish['attributes']) => void
   setPostData: (postData: StatePublish['postData']) => void
   setType: (type: 'simple' | 'variable') => void
@@ -58,15 +62,19 @@ type Action = {
   setTitle: (title: string) => void
   setDescription: (description: string) => void
   setShortDescription: (description: string) => void
+  setCagories: (categories: selectCategory[]) => void
+  setVideo: (video?: string) => void
+  setProductID: (productID?: getProductImageSchema) => void
 }
 
 export const usePublishStore = create<StatePublish & Action>((set) => ({
-  variations: null,
   attributes: null,
-  deletedVariations: [],
   postData: postInitialValue,
-
+  setProductID: (productID) =>
+    set((state) => ({ postData: { ...state.postData, productID } })),
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),
+  setDeleteVariations: (deletedVariations) =>
+    set(() => ({ deletedVariations: deletedVariations })),
   setAttributes: (newAttributes) => set(() => ({ attributes: newAttributes })),
   setPostData: (newPostData) => set(() => ({ postData: newPostData })),
   setType: (type) =>
@@ -79,4 +87,8 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
     set((state) => ({ postData: { ...state.postData, shortDescription } })),
   setDescription: (description) =>
     set((state) => ({ postData: { ...state.postData, description } })),
+  setCagories: (categories) =>
+    set((state) => ({ postData: { ...state.postData, categories } })),
+  setVideo: (video) =>
+    set((state) => ({ postData: { ...state.postData, video } })),
 }))

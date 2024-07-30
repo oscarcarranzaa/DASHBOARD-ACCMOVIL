@@ -1,4 +1,4 @@
-import { StatePublish, usePublishStore } from '@/store/publish'
+import { ItemsVariations, TVariations, usePublishStore } from '@/store/publish'
 import DisplayGroupVariations from './displayGroupVariations'
 import { useEffect, useState } from 'react'
 import DisplayItemsVariations from './displayItemsVariations'
@@ -16,9 +16,16 @@ const VariationStatus = {
 
 export default function VariationsValues() {
   const attributes = usePublishStore((state) => state.attributes)
+  const deletedVariations = usePublishStore((state) => state.deletedVariations)
+  const setDeletedVariations = usePublishStore(
+    (state) => state.setDeleteVariations
+  )
   const getVariations = usePublishStore((state) => state.variations)
   const setVariation = usePublishStore((state) => state.setVariation)
 
+  const [variationsItems, setVariationsItems] = useState<ItemsVariations[]>()
+
+  console.log(getVariations, deletedVariations)
   const groupAtt = attributes ? attributes[0] : null
   const childAtt = attributes ? attributes[1] : null
   const isChildTerms = childAtt ? childAtt?.terms.length > 0 : false
@@ -29,6 +36,27 @@ export default function VariationsValues() {
       .map((attribute) => attribute.terms) ?? null
 
   useEffect(() => {
+    const getCartesianVariations = cartesianVariations()
+    const filterDeleted = getCartesianVariations?.filter(
+      (varia) => !getVariations?.some((v) => v.id === varia.id)
+    )
+    const variationsStore = getVariations?.map((vs) => {
+      return { ...vs, status: VariationStatus.NEW }
+    })
+    const variationsDraft = filterDeleted?.map((f) => {
+      return { ...f, status: VariationStatus.DRAFT }
+    })
+
+    const allVariations =
+      variationsStore && variationsDraft
+        ? [...variationsStore, ...variationsDraft]
+        : variationsDraft ?? variationsStore
+
+    setVariationsItems(allVariations)
+    setDeletedVariations(variationsDraft)
+  }, [getVariations, attributes])
+
+  const cartesianVariations = () => {
     if (!terms) return
     if (terms.length === 0) return
     let result = [[]] as TCartesianProduct
@@ -60,16 +88,25 @@ export default function VariationsValues() {
           existingVariation.attributesTerms = terms
           return existingVariation
         }
-
+        const id = terms.map((t) => t.id).join()
         return {
-          id: Math.random().toString(),
-          status: VariationStatus.NEW,
+          id,
           product: null,
           attributesTerms: terms,
         }
       }) ?? getVariations
 
-    setVariation(varItems)
+    return varItems
+  }
+
+  useEffect(() => {
+    const variations = cartesianVariations()
+    if (variations) {
+      const findDeleted = variations.filter(
+        (args) => !deletedVariations?.some((d) => d.id === args.id)
+      )
+      setVariation(findDeleted)
+    }
   }, [attributes])
 
   return (
@@ -86,20 +123,21 @@ export default function VariationsValues() {
               <DisplayGroupVariations
                 termGroup={termGroup}
                 key={index}
-                variations={getVariations}
+                variations={variationsItems}
               />
             )
           })}
         {!isChildTerms &&
           groupAtt &&
-          getVariations?.map((att, index) => {
+          variationsItems?.map((att, index) => {
             const termsValue = att.attributesTerms.map((term) => {
               return {
                 id: term.id,
                 name: term.name,
               }
             })
-            if (att.status === VariationStatus.NEW) {
+
+            if (att.status === 'new') {
               return (
                 <DisplayItemsVariations
                   key={index}
@@ -111,7 +149,7 @@ export default function VariationsValues() {
             return (
               <DisplayDeleteItemsVariations
                 key={index}
-                terms={termsValue}
+                variation={att}
                 termGroupID={groupAtt.id}
               />
             )

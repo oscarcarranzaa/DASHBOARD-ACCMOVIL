@@ -11,7 +11,7 @@ import CloseSVG from '@/components/icons/close'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type TProps = {
-  seleted?: getProductImageSchema
+  seleted?: getProductImageSchema | null
   onSelect?: (value: getProductImageSchema | undefined) => void
 }
 export default function SearchProductLabel({ seleted, onSelect }: TProps) {
@@ -20,6 +20,9 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
   const [select, setSelect] = useState<getProductImageSchema | null>(
     initialSelect
   )
+  useEffect(() => {
+    setSelect(initialSelect)
+  }, [seleted])
 
   const searchParams = useSearchParams()
   const searchFromURL = searchParams.get('search') || ''

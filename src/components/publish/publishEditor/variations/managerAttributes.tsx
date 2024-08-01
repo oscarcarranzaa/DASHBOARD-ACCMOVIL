@@ -2,7 +2,7 @@
 import { getAllAttributes } from '@/api/attributes'
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Key } from '@react-types/shared'
 import AttributeValues from './attributeValues'
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
@@ -19,13 +19,16 @@ export default function ManagerAttributes() {
   const [selected, setSelected] = useState<Key | null | undefined>(null)
   const [selectedAttributes, setSelectedAttributes] =
     useState<Key[]>(initialSelected)
-
   //// Query
   const { data, isPending } = useQuery({
     queryKey: ['Attributes'],
     queryFn: getAllAttributes,
     refetchOnWindowFocus: false,
   })
+  useEffect(() => {
+    setSelectedAttributes(initialSelected)
+  }, [getAttribute])
+
   const attribute = selectedAttributes.map((att) => {
     return data?.find((a) => a._id === att)
   })

@@ -53,12 +53,12 @@ export const menuItems = [
     icon: <PublishSVG size={iconSize} />,
     items: [
       {
-        name: 'Ver posts',
-        href: '/dash/posts/',
-      },
-      {
         name: 'Nuevo',
         href: '/dash/posts/nuevo',
+      },
+      {
+        name: 'Ver posts',
+        href: '/dash/posts/',
       },
       {
         name: 'Categorías',

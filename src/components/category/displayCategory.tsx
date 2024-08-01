@@ -1,6 +1,6 @@
 import { getCategories } from '@/api/category'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ArrowSVG from '../icons/arrow'
 import ArrowAngleSVG from '../icons/arrowAngle'
 import CategorySkeleton from './categorySkeleton'
@@ -18,7 +18,9 @@ type TProps = {
 export default function DisplayCategory({ value, onSelectCategory }: TProps) {
   const [openID, setOpenID] = useState<string>('')
   const [selected, setSelected] = useState<selectCategory[] | undefined>(value)
-
+  useEffect(() => {
+    setSelected(value)
+  }, [value])
   const { data } = useQuery({
     queryKey: ['categories', openID],
     queryFn: () => getCategories(openID),
@@ -55,6 +57,7 @@ export default function DisplayCategory({ value, onSelectCategory }: TProps) {
             {data && data.parent && (
               <button
                 onClick={() => setOpenID(data.parent?.parent ?? '')}
+                type="button"
                 className="flex w-full bg-zinc-200 dark:bg-zinc-700 py-2 px-1 rounded-md items-center mt-1"
               >
                 <ArrowSVG size={24} />
@@ -74,11 +77,12 @@ export default function DisplayCategory({ value, onSelectCategory }: TProps) {
                       } select-none rounded-md`}
                     >
                       <button
-                        className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 p-2 rounded-md px-3 ${
+                        className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 p-2 rounded-md px-3  ${
                           selected?.find((item) => item._id === category._id)
                             ? 'bg-zinc-300 dark:bg-zinc-950'
                             : ''
                         }`}
+                        type="button"
                         onClick={() => {
                           handleSelect({
                             _id: category._id,

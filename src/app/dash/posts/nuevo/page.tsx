@@ -1,4 +1,3 @@
-'use client'
 import NavegationPages from '@/components/navegationPages'
 import PublishEditor from '@/components/publish/publishEditor/'
 

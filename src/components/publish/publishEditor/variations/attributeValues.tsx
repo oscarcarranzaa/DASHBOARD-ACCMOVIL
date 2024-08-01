@@ -3,7 +3,7 @@ import { getOneAttribute } from '@/api/attributes'
 import { Button } from '@nextui-org/button'
 import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Key } from '@react-types/shared'
 import { useSortable } from '@dnd-kit/sortable'
 import ChipItems from '@/components/UI/chip'
@@ -29,6 +29,10 @@ export default function AttributeValues({
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Key | null | undefined>(null)
   const [valueSelected, setValueSelected] = useState<Key[]>(initialSelected)
+
+  useEffect(() => {
+    setValueSelected(initialSelected)
+  }, [getAtt])
 
   const { data, isPending } = useQuery({
     queryKey: ['oneAtt', id],
@@ -147,21 +151,22 @@ export default function AttributeValues({
               ))}
             </Autocomplete>
             <div className="mt-3 flex flex-wrap gap-y-2">
-              {valueSelected.map((att) => {
-                const attribute = data?.terms.find((a) => a._id === att)
-                const img = attribute?.image?.images
-                return (
-                  <ChipItems
-                    key={att}
-                    Close={setValueSelected}
-                    colors={attribute?.colors}
-                    name={attribute?.name ?? ''}
-                    id={attribute?._id ?? ''}
-                    type={type}
-                    image={img ? img[0].src : ''}
-                  />
-                )
-              })}
+              {data &&
+                valueSelected.map((att) => {
+                  const attribute = data?.terms.find((a) => a._id === att)
+                  const img = attribute?.image?.images
+                  return (
+                    <ChipItems
+                      key={att}
+                      Close={setValueSelected}
+                      colors={attribute?.colors}
+                      name={attribute?.name ?? ''}
+                      id={attribute?._id ?? ''}
+                      type={type}
+                      image={img ? img[0].src : ''}
+                    />
+                  )
+                })}
             </div>
           </div>
           <div className="flex justify-between mt-8">

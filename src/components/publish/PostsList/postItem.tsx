@@ -2,8 +2,10 @@ import DisplayPrice from '@/components/displayPrice'
 import style from './posts.module.css'
 import SquareImage from '@/components/squareImage'
 import { Button } from '@nextui-org/button'
+import Link from 'next/link'
 
 type TProps = {
+  id: string
   outStock?: boolean
   image: string
   name: string
@@ -19,6 +21,7 @@ export default function PostItem({
   price,
   discount,
   porcentDiscount,
+  id,
 }: TProps) {
   return (
     <>
@@ -46,7 +49,12 @@ export default function PostItem({
             )}
           </div>
           <div className={`flex justify-between mt-1 mb-1 ${style.actions}`}>
-            <Button color="primary" size="sm">
+            <Button
+              color="primary"
+              size="sm"
+              href={`/dash/posts/${id}`}
+              as={Link}
+            >
               Editar
             </Button>
             <Button variant="bordered" className=" rounded-full" size="sm">

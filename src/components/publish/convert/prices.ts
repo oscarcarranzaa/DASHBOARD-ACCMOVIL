@@ -3,8 +3,8 @@ import { variationsPost } from '@/types/posts'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 
 type TProps = {
-  product: getOneProductSchema | null
-  variations: variationsPost[]
+  product?: getOneProductSchema | null
+  variations?: variationsPost[]
   type: 'simple' | 'variable'
 }
 
@@ -13,7 +13,7 @@ export default function ConvertPricePost({
   variations,
   type,
 }: TProps) {
-  const priceVariations = variations.map((varia) => {
+  const priceVariations = variations?.map((varia) => {
     if (varia.product) {
       const { product: productVar } = varia
       return {
@@ -42,7 +42,7 @@ export default function ConvertPricePost({
   }
   return type === 'variable' ? priceVariations : priceProduct
 }
-const porcentDiscount = (product: getOneProductSchema | null) => {
+const porcentDiscount = (product?: getOneProductSchema | null) => {
   if (product) {
     const differentPrice = product?.priceDiscount?.price
       ? product.price - product.priceDiscount.price

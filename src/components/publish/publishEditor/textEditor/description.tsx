@@ -19,7 +19,7 @@ export default function DescriptionPost() {
       [{ indent: '-1' }, { indent: '+1' }],
     ],
   }
-  const placeholder = 'Agrega una descripción más detallada'
+  const PLACEHOLDER = 'Agrega una descripción más detallada'
   const formats = [
     'bold',
     'italic',
@@ -38,8 +38,8 @@ export default function DescriptionPost() {
           theme={theme}
           modules={modules}
           formats={formats}
-          placeholder={placeholder}
-          defaultValue={description}
+          placeholder={PLACEHOLDER}
+          value={description}
           onChange={(text) => setDescription(text)}
         />
       </div>

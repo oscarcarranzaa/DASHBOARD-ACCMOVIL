@@ -3,6 +3,8 @@ import 'react-quill/dist/quill.snow.css'
 import './theme.css'
 import { usePublishStore } from '@/store/publish'
 import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
+import cleanText from './cleanText'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -11,11 +13,12 @@ export default function ShortDescriptionPost() {
   const setShortDescription = usePublishStore(
     (state) => state.setShortDescription
   )
-
+  const [text, setText] = useState(() => cleanText(shortDescription || ''))
   const theme = 'snow'
   const modules = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
+      [{ color: [] }, { background: [] }],
       ['link'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
@@ -30,8 +33,20 @@ export default function ShortDescriptionPost() {
     'align',
     'list',
     'indent',
+    'background',
+    'color',
     'link',
   ]
+  useEffect(() => {
+    const cleanedText = cleanText(shortDescription || '')
+    if (cleanedText !== text) {
+      setText(cleanedText)
+    }
+  }, [shortDescription])
+  const handleChange = (value: string) => {
+    setText(value)
+    setShortDescription(value)
+  }
 
   return (
     <>
@@ -41,8 +56,8 @@ export default function ShortDescriptionPost() {
           modules={modules}
           formats={formats}
           placeholder={placeholder}
-          defaultValue={shortDescription}
-          onChange={(text) => setShortDescription(text)}
+          value={text}
+          onChange={handleChange}
         />
       </div>
     </>

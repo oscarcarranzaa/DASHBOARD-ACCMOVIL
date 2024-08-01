@@ -8,12 +8,28 @@ import EmbedVideo from './embedVideo'
 import { usePublishStore } from '@/store/publish'
 import ShortDescriptionPost from './textEditor/shortDescription'
 import DescriptionPost from './textEditor/description'
+import { PostSchema } from '@/types/posts'
+import { useEffect } from 'react'
 
-export default function PublishEditor() {
-  const { title, categories } = usePublishStore((state) => state.postData)
-  const setTitle = usePublishStore((state) => state.setTitle)
-  const setCategory = usePublishStore((state) => state.setCagories)
+export default function PublishEditor({ data }: { data?: PostSchema }) {
+  const { title, categories, id } = usePublishStore((state) => state.postData)
 
+  const { setTitle, setCagories, reset, setData } = usePublishStore()
+
+  useEffect(() => {
+    if (data) {
+      setData(data)
+    }
+    if (!data && id !== 'new') {
+      reset()
+    }
+  }, [data, setData])
+  const isNew = id === 'new'
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+    }
+  }
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto">
@@ -44,14 +60,14 @@ export default function PublishEditor() {
         </div>
         <div className=" col-span-4">
           <p className="mb-1">Guardar</p>
-          <div className=" grid grid-cols-2 gap-x-2 mb-5">
-            <Button color="primary">Publicar</Button>
-            <Button>Borrador</Button>
+          <div className={`grid  gap-x-2 mb-5 ${isNew && 'grid-cols-2'}`}>
+            <Button color="primary">{isNew ? 'Publicar' : 'Actualizar'}</Button>
+            {isNew && <Button>Guardar</Button>}
           </div>
 
           <DisplayCategory
             value={categories}
-            onSelectCategory={(select) => setCategory(select)}
+            onSelectCategory={(select) => setCagories(select)}
           />
           <EmbedVideo />
         </div>

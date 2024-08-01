@@ -93,9 +93,12 @@ export default function PostsList() {
                 })
                 return (
                   <PostItem
-                    price={prices.price}
-                    discount={prices.discount}
-                    porcentDiscount={prices.porcentDiscount}
+                    id={_id}
+                    price={prices ? prices.price : 0}
+                    discount={prices ? prices.discount : undefined}
+                    porcentDiscount={
+                      prices ? prices.porcentDiscount : undefined
+                    }
                     name={title}
                     image={gallery[0]}
                     outStock={outStock}

@@ -15,6 +15,7 @@ const VariationStatus = {
 } as const
 
 export default function VariationsValues() {
+  const { id } = usePublishStore((state) => state.postData)
   const attributes = usePublishStore((state) => state.attributes)
   const deletedVariations = usePublishStore((state) => state.deletedVariations)
   const setDeletedVariations = usePublishStore(
@@ -25,11 +26,10 @@ export default function VariationsValues() {
 
   const [variationsItems, setVariationsItems] = useState<ItemsVariations[]>()
 
-  console.log(getVariations, deletedVariations)
   const groupAtt = attributes ? attributes[0] : null
   const childAtt = attributes ? attributes[1] : null
   const isChildTerms = childAtt ? childAtt?.terms.length > 0 : false
-
+  console.log(getVariations, deletedVariations)
   const terms =
     attributes
       ?.filter((attribute) => attribute.terms && attribute.terms.length > 0)
@@ -101,7 +101,8 @@ export default function VariationsValues() {
 
   useEffect(() => {
     const variations = cartesianVariations()
-    if (variations) {
+    console.log(getVariations)
+    if (variations && id === 'new') {
       const findDeleted = variations.filter(
         (args) => !deletedVariations?.some((d) => d.id === args.id)
       )

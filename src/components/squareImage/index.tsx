@@ -5,7 +5,7 @@ type TProps = {
 export default function SquareImage({ src }: TProps) {
   return (
     <div
-      className=" rounded-md  overflow-hidden relative bg-zinc-200 dark:bg-zinc-800"
+      className=" rounded-md  overflow-hidden relative "
       style={{ paddingTop: '100%' }}
     >
       <div

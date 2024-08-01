@@ -15,12 +15,14 @@ axiosInstance.interceptors.request.use(async (req) => {
   // Verificamos si el token no ha expirado
   try {
     const token = useAuthStore.getState().token
-    const { exp } = token ? decodeJwt(token) : false
-    const isExpired = exp ? dayjs.unix(exp).diff(dayjs()) < 1 : true
 
-    if (!isExpired) {
-      req.headers.Authorization = `Bearer ${token}`
-      return req // Devuelve req después de asignar el token
+    if (token) {
+      const { exp } = decodeJwt(token)
+      const isExpired = exp ? dayjs.unix(exp).diff(dayjs()) < 1 : true
+      if (!isExpired) {
+        req.headers.Authorization = `Bearer ${token}`
+        return req // Devuelve req después de asignar el token
+      }
     }
 
     const newTokenResponse = await api.get('/auth/update_token')

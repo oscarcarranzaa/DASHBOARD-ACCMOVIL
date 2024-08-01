@@ -10,6 +10,7 @@ export const ZTerms = z.object({
   updatedAt: z.string(),
   option: z.string().optional(),
   image: media.optional(),
+  slug: z.string(),
 })
 export const ZAttributes = z.object({
   _id: z.string(),

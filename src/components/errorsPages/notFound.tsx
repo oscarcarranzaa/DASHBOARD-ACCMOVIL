@@ -15,7 +15,7 @@ export default function NotFound({ message }: TProps) {
             <img src="/static/404.svg" alt="404 image" className="max-w-60" />
           </picture>
           <div className="text-xl font-semibold mt-5  ">
-            <p> Página no encontrada :( 😶‍🌫️</p>
+            <p> Página no encontrada :(</p>
           </div>
           <div className="stroke-red-500  text-red-500  mt-1 flex items-center">
             <span className="mr-1">
@@ -23,7 +23,7 @@ export default function NotFound({ message }: TProps) {
             </span>
             <p>{message}</p>
           </div>
-          <div className="mt-3">
+          <div className="mt-5">
             <Link href={'/dash'} className="text-sky-600 underline ">
               Llévame al inicio
             </Link>

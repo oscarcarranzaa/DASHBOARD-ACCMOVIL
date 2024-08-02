@@ -29,7 +29,7 @@ export default function Gallery() {
   }
   return (
     <>
-      <div className="w-full min-h-24 flex justify-center items-center border border-zinc-500 rounded-xl dark:bg-zinc-900 dark:hover:bg-zinc-800 transition-colors overflow-hidden p-2">
+      <div className="w-full min-h-24 flex justify-center items-center border border-zinc-500 rounded-xl dark:bg-zinc-900 transition-colors overflow-hidden p-2">
         <div className=" grid grid-cols-6 xl:grid-cols-8 gap-2 w-full h-full">
           {gallery && gallery.length > 0 ? (
             <DndContext
@@ -56,12 +56,12 @@ export default function Gallery() {
           ) : null}
           {gallery && gallery.length > 0 ? (
             <div
-              className="rounded-md overflow-hidden relative cursor-pointer border-3 border-dashed hover:bg-zinc-200"
+              className="rounded-md overflow-hidden relative cursor-pointer border-3 border-dashed dark:border-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               style={{ paddingTop: 'calc(100% - 6px)' }}
               onClick={() => setIsModalMedia(!isModalMedia)}
             >
               <div
-                className="absolute  overflow-hidden flex items-center justify-center"
+                className="absolute  overflow-hidden flex items-center justify-center dark:fill-white"
                 style={{
                   transform: 'translate(-50%, -50%)',
                   top: '50%',

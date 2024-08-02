@@ -49,7 +49,7 @@ export default function ChipItems({
     }
   }, [])
   return (
-    <div className="flex-none dark:bg-zinc-800 px-2 py-1 rounded-xl mr-2">
+    <div className="flex-none dark:bg-zinc-800 px-2 py-1 rounded-xl mr-2 bg-zinc-100">
       <div className="flex items-center ">
         {renderIcon()}
         <p className="text-xs ml-2">{name}</p>

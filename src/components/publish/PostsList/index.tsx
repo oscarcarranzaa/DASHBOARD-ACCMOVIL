@@ -67,49 +67,53 @@ export default function PostsList() {
           Agregar Nuevo <PlusSVG size={20} />
         </Button>
       </div>
-      <div className=" bg-white dark:bg-black py-10 rounded-xl px-5 flex justify-center">
-        <ul
-          className="grid gap-x-5 gap-y-1 w-full"
-          style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-          }}
-        >
-          {itemData
-            ? itemData.map((post) => {
-                const {
-                  title,
-                  type,
-                  gallery,
-                  variations,
-                  productID,
-                  totalStock,
-                  _id,
-                } = post
-                const outStock = totalStock === 0
-                const prices = ConvertPricePost({
-                  variations,
-                  product: productID,
-                  type,
+      <div className=" bg-white dark:bg-black py-10 rounded-xl mt-5 px-5 flex justify-center">
+        {itemData && itemData.length === 0 ? (
+          <p>No se encontraron resultados...</p>
+        ) : (
+          <ul
+            className="grid gap-x-5 gap-y-1 w-full"
+            style={{
+              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+            }}
+          >
+            {itemData
+              ? itemData.map((post) => {
+                  const {
+                    title,
+                    type,
+                    gallery,
+                    variations,
+                    productID,
+                    totalStock,
+                    _id,
+                  } = post
+                  const outStock = totalStock === 0
+                  const prices = ConvertPricePost({
+                    variations,
+                    product: productID,
+                    type,
+                  })
+                  return (
+                    <PostItem
+                      id={_id}
+                      price={prices ? prices.price : 0}
+                      discount={prices ? prices.discount : undefined}
+                      porcentDiscount={
+                        prices ? prices.porcentDiscount : undefined
+                      }
+                      name={title}
+                      image={gallery[0]}
+                      outStock={outStock}
+                      key={_id}
+                    />
+                  )
                 })
-                return (
-                  <PostItem
-                    id={_id}
-                    price={prices ? prices.price : 0}
-                    discount={prices ? prices.discount : undefined}
-                    porcentDiscount={
-                      prices ? prices.porcentDiscount : undefined
-                    }
-                    name={title}
-                    image={gallery[0]}
-                    outStock={outStock}
-                    key={_id}
-                  />
-                )
-              })
-            : Array.from({ length: 30 }).map((_, i) => (
-                <SkeletonPostItem key={i} />
-              ))}
-        </ul>
+              : Array.from({ length: 30 }).map((_, i) => (
+                  <SkeletonPostItem key={i} />
+                ))}
+          </ul>
+        )}
       </div>
       <div className=" float-right mt-10">
         {totalPages > 0 && <PaginationPage totalPages={totalPages} />}

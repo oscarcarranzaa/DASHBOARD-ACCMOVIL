@@ -1,3 +1,4 @@
+'use client'
 import NavegationPages from '@/components/navegationPages'
 import PostsList from '@/components/publish/PostsList'
 

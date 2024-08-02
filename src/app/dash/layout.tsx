@@ -14,7 +14,7 @@ export default function DashLayout({
       <NextUIProvider>
         <ThemeProvider attribute="class">
           <Header />
-          <div className="bg-zinc-100 dark:bg-zinc-900 flex">
+          <div className="bg-zinc-50 dark:bg-zinc-900 flex">
             <SideMenu />
             <main className="container p-5 2xl:ml-10">{children}</main>
           </div>

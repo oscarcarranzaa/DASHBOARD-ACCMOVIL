@@ -93,7 +93,7 @@ export default function AttributeValues({
   return (
     <>
       <div
-        className="w-full mt-1 dark:bg-zinc-950 bg-zinc-100 rounded-md"
+        className="w-full mt-1 dark:bg-zinc-950 bg-white rounded-xl border border-zinc-200 dark:border-zinc-800"
         style={style}
       >
         <div

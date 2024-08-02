@@ -4,9 +4,15 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
-export default function Search() {
+type Props = {
+  searchName?: string
+  pageName?: string
+}
+export default function Search({ searchName, pageName }: Props) {
   const searchParams = useSearchParams()
-  const searchFromURL = searchParams.get('search') || ''
+  const searchQueryName = searchName ?? 'search'
+  const pageQueryName = pageName ?? 'p'
+  const searchFromURL = searchParams.get(searchQueryName) || ''
   const [value, setValue] = useState(searchFromURL)
   const pathname = usePathname()
   const router = useRouter()
@@ -23,17 +29,17 @@ export default function Search() {
   )
 
   const clear = () => {
-    params.delete('search')
-    params.delete('p')
+    params.delete(searchQueryName)
+    params.delete(pageQueryName)
     const url = `${pathname}?${params.toString()}`
     router.push(url)
   }
   const newSearch = (search: string) => {
-    const page = params.get('p')
+    const page = params.get(pageQueryName)
     if (page) {
-      params.set('p', '1')
+      params.set(pageQueryName, '1')
     }
-    params.set('search', search)
+    params.set(searchQueryName, search)
     const url = `${pathname}?${params.toString()}`
     router.push(url)
     return

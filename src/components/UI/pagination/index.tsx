@@ -5,16 +5,18 @@ import { useRouter } from 'next/navigation'
 
 type TProps = {
   totalPages: number
+  pageName?: string
 }
-export default function PaginationPage({ totalPages }: TProps) {
+export default function PaginationPage({ totalPages, pageName }: TProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
-  const currentPage = Number(searchParams.get('p')) || 1
+  const queryName = pageName ?? 'p'
+  const currentPage = Number(searchParams.get(queryName)) || 1
 
   const createPageUrl = (page: number) => {
     const params = new URLSearchParams(searchParams)
-    params.set('p', page.toString())
+    params.set(queryName, page.toString())
     const url = `${pathname}?${params.toString()}`
     router.push(url)
     return
@@ -24,10 +26,9 @@ export default function PaginationPage({ totalPages }: TProps) {
       <div>
         <Pagination
           onChange={(n) => createPageUrl(n)}
-          showControls
           variant="bordered"
           total={totalPages}
-          page={currentPage}
+          page={Math.abs(currentPage)}
         />
       </div>
     </>

@@ -13,7 +13,7 @@ export default function DropDown({ label, children }: TProps) {
     <>
       <div ref={ref as React.MutableRefObject<HTMLDivElement>}>
         <div
-          className={`absolute right-0 z-50 top-8 ${openActions ? '' : 'hidden'}`}
+          className={`absolute right-0 z-10 top-8 ${openActions ? '' : 'hidden'}`}
         >
           <div className=" p-2 rounded-md min-w-52 max-w-60 border border-zinc-500 dark:bg-zinc-950 bg-zinc-100">
             <p className="text-xs line-clamp-1 font-semibold">{label}</p>

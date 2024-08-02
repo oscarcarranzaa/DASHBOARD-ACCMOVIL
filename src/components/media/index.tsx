@@ -12,6 +12,6 @@ export type TSelectMedia = {
 }
 
 export default function Media({ select }: TSelectMedia) {
-  const dataItem = getMedia()
-  return <DragMedia select={select} dataMedia={dataItem} />
+  const { data, totalPages } = getMedia()
+  return <DragMedia select={select} dataMedia={data} totalPages={totalPages} />
 }

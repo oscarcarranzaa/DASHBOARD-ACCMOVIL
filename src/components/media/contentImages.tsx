@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { Checkbox } from '@nextui-org/react'
 import DropDown from '../UI/dropDown/dropDown'
 import { IUploads } from '@/types'
+import style from './style.module.css'
 
 interface IProps {
   id: string
@@ -76,14 +77,16 @@ export default function ContentImages({
       onClick={handleSelect}
     >
       <div
-        className={`p-3 pl-4 pr-4  rounded-md relative border ${select && isSelect ? ' bg-zinc-200 dark:bg-zinc-700' : 'border-transparent'}`}
+        className={`p-3  rounded-md relative border select-none ${select && isSelect ? ' bg-zinc-200 dark:bg-zinc-700 border-zinc-400 dark:border-zinc-600' : 'border-transparent'} ${style.media_container}`}
       >
         {isSelect ? (
-          <div className="absolute z-10 right-0 top-0 p-1 rounded-md">
+          <div className="absolute z-10 right-3 top-3 p-1 rounded-md">
             <Checkbox isSelected={select} onChange={handleSelect} />
           </div>
         ) : (
-          <div className="absolute z-10 right-4 top-3 p-1 rounded-md">
+          <div
+            className={`absolute z-50  right-4 top-3 p-1 rounded-md ${style.media_menu}`}
+          >
             <DropDown label={name}>
               <MediaAction
                 url={url}
@@ -95,8 +98,8 @@ export default function ContentImages({
           </div>
         )}
         <div
-          className="rounded-md overflow-hidden relative"
-          style={{ paddingTop: 'calc(100% + 4px)' }}
+          className="rounded-md overflow-hidden relative border"
+          style={{ paddingTop: '100%' }}
         >
           <div
             className="absolute h-full w-full overflow-hidden"

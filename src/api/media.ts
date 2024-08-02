@@ -7,10 +7,15 @@ import {
   getOneMediaData,
 } from '@/types/schemas'
 
-export async function getDataMedias(page: string, limit: string) {
+export async function getDataMedias(
+  page: number,
+  limit: number,
+  search?: string
+) {
   try {
+    const searchValue = search ? `&q=${search}` : ''
     const { data } = await axiosInstance.get<GetMediasSchema>(
-      `/media?page=${page}&limit=${limit}`
+      `/media?page=${page}&limit=${limit + searchValue}`
     )
     const validData = getMedias.parse(data)
     return validData

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IUploads } from '@/types'
 import ModalMedia from '@/components/media/modalMedia'
 import PlusSVG from '@/components/icons/plus'
@@ -16,6 +16,16 @@ export default function Gallery() {
   const setGallery = usePublishStore((state) => state.setGallery)
 
   const [isModalMedia, setIsModalMedia] = useState(false)
+  useEffect(() => {
+    if (isModalMedia) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+    return () => {
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [isModalMedia])
 
   const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e

@@ -1,11 +1,18 @@
 'use client'
 import { getDataMedias } from '@/api/media'
 import { useQuery } from '@tanstack/react-query'
+import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 export default function getMedia() {
-  const { data, isPending } = useQuery({
-    queryKey: ['medias'],
-    queryFn: () => getDataMedias('1', '50'),
+  const searchParams = useSearchParams()
+  const pageValue = searchParams.get('pageMedia') ?? '1'
+  const page = Number(pageValue) || 1
+  const search = searchParams.get('searchMedia') ?? ''
+
+  const { data } = useQuery({
+    queryKey: ['medias', pageValue, search],
+    queryFn: () => getDataMedias(page, 53, search),
     refetchOnWindowFocus: false,
   })
   const allMedia = data?.data
@@ -22,5 +29,5 @@ export default function getMedia() {
         }
       })
     : null
-  return dataItem
+  return { data: dataItem, totalPages: data?.totalPages }
 }

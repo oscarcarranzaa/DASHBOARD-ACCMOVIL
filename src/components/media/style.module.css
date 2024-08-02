@@ -1,0 +1,6 @@
+.media_menu {
+  display: none;
+}
+.media_container:hover > .media_menu {
+  display: block;
+}

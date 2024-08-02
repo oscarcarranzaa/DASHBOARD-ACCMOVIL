@@ -8,7 +8,7 @@ import { MediaSchema } from '@/types/schemas'
 import { TSelectMedia } from '../index'
 import { IUploads } from '@/types'
 import SkeletonImage from '../skeletonImage'
-
+import PaginationPage from '@/components/UI/pagination'
 interface IMutation {
   formFile: FormData
   index: number
@@ -16,23 +16,33 @@ interface IMutation {
 interface IProps extends TSelectMedia {
   children?: React.ReactNode
   dataMedia: IUploads[] | null
-  mediaSelect: IUploads[] | undefined
-  setMediasSelect: React.Dispatch<SetStateAction<IUploads[] | undefined>>
+  mediaSelect?: IUploads[]
+  totalPages?: number
+  setMediasSelect?: React.Dispatch<SetStateAction<IUploads[] | undefined>>
 }
 export default function DragMedia({
   select,
   dataMedia,
   mediaSelect,
+  totalPages,
   setMediasSelect,
 }: IProps) {
   const [dragOver, setDragOver] = useState(false)
   const [upload, setUpload] = useState<IUploads[] | null>(dataMedia)
   const [totalUp, setTotalUp] = useState(0)
+  const [totalPageDefine, setTotalPageDefine] = useState<number>()
 
   useEffect(() => {
-    if (totalUp < 1 && dataMedia !== upload) {
-      setUpload(dataMedia)
+    if (totalPages) {
+      setTotalPageDefine(totalPages)
     }
+  }, [totalPages])
+
+  useEffect(() => {
+    /* if (totalUp < 1 && dataMedia !== upload) {
+      setUpload(dataMedia)
+    }*/
+    setUpload(dataMedia)
   }, [dataMedia])
 
   const { mutate } = useMutation({
@@ -167,7 +177,7 @@ export default function DragMedia({
       >
         <DragFiles />
       </div>
-
+    
       <div className={style.mediaContent}>
         {upload
           ? upload.map((e) => {
@@ -191,7 +201,12 @@ export default function DragMedia({
                 )
               }
             })
-          : Array.from({ length: 30 }).map((_, i) => <SkeletonImage key={i} />)}
+          : Array.from({ length: 50 }).map((_, i) => <SkeletonImage key={i} />)}
+      </div>
+      <div className="mt-10 flex justify-end mb-20">
+        {totalPageDefine && (
+          <PaginationPage totalPages={totalPageDefine} pageName="pageMedia" />
+        )}
       </div>
     </div>
   )

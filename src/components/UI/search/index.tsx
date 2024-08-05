@@ -7,8 +7,9 @@ import { useDebouncedCallback } from 'use-debounce'
 type Props = {
   searchName?: string
   pageName?: string
+  placeHolder?: string
 }
-export default function Search({ searchName, pageName }: Props) {
+export default function Search({ searchName, pageName, placeHolder }: Props) {
   const searchParams = useSearchParams()
   const searchQueryName = searchName ?? 'search'
   const pageQueryName = pageName ?? 'p'
@@ -62,8 +63,10 @@ export default function Search({ searchName, pageName }: Props) {
             setValue(e.target.value)
           }}
           value={value}
+          autoComplete="off"
+          autoCapitalize="off"
           startContent={<SearchSVG size={24} />}
-          placeholder="Buscar producto..."
+          placeholder={placeHolder ?? 'Buscar producto...'}
           isClearable
           onClear={() => clear()}
           defaultValue={searchFromURL}

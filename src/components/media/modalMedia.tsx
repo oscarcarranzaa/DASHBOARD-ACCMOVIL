@@ -80,9 +80,13 @@ export default function ModalMedia({
             </button>
           </div>
           <div className="px-3">
-            <Search searchName="searchMedia" pageName="pageMedia" />
+            <Search
+              searchName="searchMedia"
+              pageName="pageMedia"
+              placeHolder="Buscar medio..."
+            />
             <div className="overflow-y-scroll max-h-screen mt-5">
-              <div className="mb-52 pb-1">
+              <div className="mb-60 pb-1">
                 <DragMedia
                   select={select}
                   dataMedia={data}

@@ -134,8 +134,8 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
         type: data.type,
         gallery: data.gallery?.map((img) => {
           return {
-            id: img._id,
-            mediaIDItem: img.mediaId,
+            id: img.mediaId,
+            mediaIDItem: img._id,
             urlMedia: img.url,
             name: img.title,
             imgURI: img.url,

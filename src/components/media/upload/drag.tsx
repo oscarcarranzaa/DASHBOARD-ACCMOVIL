@@ -177,13 +177,14 @@ export default function DragMedia({
       >
         <DragFiles />
       </div>
-    
+
       <div className={style.mediaContent}>
         {upload
           ? upload.map((e) => {
               const checkSelect = mediaSelect?.find((s) => s.id == e.id)
                 ? true
                 : false
+
               if (e.imgURI) {
                 return (
                   <ContentImages
@@ -203,7 +204,7 @@ export default function DragMedia({
             })
           : Array.from({ length: 50 }).map((_, i) => <SkeletonImage key={i} />)}
       </div>
-      <div className="mt-10 flex justify-end mb-20">
+      <div className="mt-10 flex justify-center mb-20">
         {totalPageDefine && (
           <PaginationPage totalPages={totalPageDefine} pageName="pageMedia" />
         )}

@@ -7,7 +7,7 @@ import ProductSVG from '../icons/product'
 import PublishSVG from '../icons/publish'
 import TeamSVG from '../icons/team'
 import WorldSVG from '../icons/world'
-const iconSize = 22
+const iconSize = 20
 
 export const menuItems = [
   {
@@ -38,7 +38,7 @@ export const menuItems = [
     icon: <ProductSVG size={iconSize} />,
     items: [
       {
-        name: 'Agregar nuevos',
+        name: 'Nuevo',
         href: '/dash/productos/nuevo',
       },
 

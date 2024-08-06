@@ -30,7 +30,7 @@ export default function PublishEditor({ data }: { data?: PostSchema }) {
   const isPublish = status === 'publish'
   return (
     <>
-      <div className="grid grid-cols-12 mt-10 gap-8 m-auto">
+      <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-[90rem]">
         <div className=" col-span-7 mb-24">
           <Input
             variant="bordered"
@@ -56,7 +56,7 @@ export default function PublishEditor({ data }: { data?: PostSchema }) {
             <DescriptionPost />
           </div>
         </div>
-        <div className=" col-span-4">
+        <div className=" col-span-5">
           <p className="mb-1">Guardar</p>
           <div
             className={`grid  gap-x-2 mb-5 ${isNew && !isPublish && 'grid-cols-2'}`}

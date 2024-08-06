@@ -120,7 +120,7 @@ export default function ProductEditor({
     <>
       <form onSubmit={handleSubmit(handleForm)}>
         <div className="mt-10 grid grid-cols-3 gap-10 max-w-[1200px] m-auto ">
-          <div className="col-span-2 p-8 ">
+          <div className="col-span-2 ">
             <p className="text-lg font-medium mb-5">Información del producto</p>
             <Input
               label="Nombre del producto"

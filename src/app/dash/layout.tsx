@@ -16,7 +16,12 @@ export default function DashLayout({
           <Header />
           <div className="bg-zinc-50 dark:bg-zinc-900 flex">
             <SideMenu />
-            <main className="container p-5 2xl:ml-10">{children}</main>
+
+            <main className="flex justify-center w-full">
+              <div className=" max-w-[130rem] p-5 2xl:ml-10 2xl:mr-10 w-full">
+                {children}
+              </div>
+            </main>
           </div>
         </ThemeProvider>
       </NextUIProvider>

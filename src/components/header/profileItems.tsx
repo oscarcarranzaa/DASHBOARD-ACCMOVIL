@@ -1,3 +1,4 @@
+'use client'
 import { logout } from '@/api/login'
 import OffSVG from '../icons/off'
 import { profileItems } from './menuObjects'

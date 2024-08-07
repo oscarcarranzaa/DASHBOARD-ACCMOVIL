@@ -9,12 +9,22 @@ import { usePublishStore } from '@/store/publish'
 import ShortDescriptionPost from './textEditor/shortDescription'
 import DescriptionPost from './textEditor/description'
 import { PostSchema } from '@/types/posts'
-import { useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 
-export default function PublishEditor({ data }: { data?: PostSchema }) {
+export default function PublishEditor({
+  data,
+  action,
+  children,
+}: {
+  data?: PostSchema
+  action?: (action: 'publish' | 'draft') => void
+  children?: ReactNode
+}) {
   const { title, categories, id, status } = usePublishStore(
     (state) => state.postData
   )
+  const isNew = id === 'new'
+  const isPublish = status === 'publish'
 
   const { setTitle, setCagories, reset, setData } = usePublishStore()
 
@@ -26,8 +36,7 @@ export default function PublishEditor({ data }: { data?: PostSchema }) {
       reset()
     }
   }, [data, setData])
-  const isNew = id === 'new'
-  const isPublish = status === 'publish'
+
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-[90rem]">
@@ -59,12 +68,9 @@ export default function PublishEditor({ data }: { data?: PostSchema }) {
         <div className=" col-span-5">
           <p className="mb-1">Guardar</p>
           <div
-            className={`grid  gap-x-2 mb-5 ${isNew && !isPublish && 'grid-cols-2'}`}
+            className={`grid  gap-x-2 mb-5 ${isNew || !isPublish ? 'grid-cols-2' : ''} `}
           >
-            <Button color="primary">
-              {isNew || !isPublish ? 'Publicar' : 'Actualizar'}
-            </Button>
-            {isNew && !isPublish && <Button>Guardar</Button>}
+            {children}
           </div>
 
           <DisplayCategory

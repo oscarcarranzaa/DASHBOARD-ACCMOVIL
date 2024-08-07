@@ -1,4 +1,4 @@
-import TrashSVG from '@/components/icons/trahs'
+'use client'
 import { Tooltip } from '@nextui-org/react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'

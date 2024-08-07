@@ -1,3 +1,5 @@
+'use client'
+
 import { getAllProducts } from '@/api/products'
 import SearchSVG from '@/components/icons/search'
 import SquareImage from '@/components/squareImage'
@@ -32,7 +34,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
 
   const { data } = useQuery({
     queryKey: ['selectProduct', searchFromURL],
-    queryFn: () => getAllProducts('1', '50', searchFromURL),
+    queryFn: () => getAllProducts('1', '30', searchFromURL),
     refetchOnWindowFocus: false,
   })
   useEffect(() => {

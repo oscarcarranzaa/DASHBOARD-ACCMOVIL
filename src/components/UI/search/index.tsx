@@ -1,3 +1,4 @@
+'use client'
 import SearchSVG from '@/components/icons/search'
 import { Input } from '@nextui-org/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -52,7 +53,7 @@ export default function Search({ searchName, pageName, placeHolder }: Props) {
     if (value.length === 0) {
       clear()
     }
-  }, 800)
+  }, 500)
   return (
     <>
       <div className="dark:fill-white w-full sm:max-w-[35%]">

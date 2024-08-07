@@ -3,7 +3,10 @@ import {
   getLisPosts,
   getLisPostsSchema,
   PostSchema,
+  SaveNewPostSchema,
+  SavePostSchema,
   ZGetPost,
+  ZSaveGetPost,
 } from '@/types/posts'
 import { isAxiosError } from 'axios'
 
@@ -34,6 +37,42 @@ export async function getPost(postID: string) {
     const validPost = ZGetPost.parse(data)
 
     return validPost
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('An unexpected error occurred while get the post.')
+    }
+  }
+}
+type TUpdateSchema = {
+  postID: string
+  formData: SavePostSchema
+}
+export async function createPost(formData: SavePostSchema) {
+  try {
+    const { data } = await axiosInstance.post<SaveNewPostSchema>(
+      `/posts/new`,
+      formData
+    )
+    const validate = ZSaveGetPost.parse(data)
+    return validate
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error(
+        'An unexpected error occurred while get the post.' + error
+      )
+    }
+  }
+}
+
+export async function updatePost({ postID, formData }: TUpdateSchema) {
+  try {
+    const { data } = await axiosInstance.put(`/posts/post/${postID}`, formData)
+    console.log(data)
+    return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)

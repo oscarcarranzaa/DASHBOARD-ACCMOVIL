@@ -59,8 +59,34 @@ export const getLisPosts = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
+export const ZVariatiosSave = z.object({
+  product: z.string().nullable(),
+  attributes: z.string().array(),
+})
+
+export const ZSavePost = z.object({
+  title: z.string().min(3),
+  categories: z.array(string()).optional(),
+  description: z.string().optional(),
+  shortDescription: z.string().optional(),
+  specifications: z.string().optional(),
+  status: z.enum(['publish', 'draft']),
+  productID: z.string().nullable().optional(),
+  type: z.enum(['variable', 'simple']),
+  gallery: z.string().array().optional(),
+  variations: z.array(ZVariatiosSave).optional(),
+  videoID: z.string().optional(),
+})
+
+export const ZSaveGetPost = ZSavePost.extend({
+  _id: z.string(),
+  slug: z.string(),
+  variations: z.array(string()).optional(),
+}).omit({ variations: true })
 
 export type getLisPostsSchema = z.infer<typeof getLisPosts>
 export type variationsPost = z.infer<typeof ZVariations>
 export type VariationsAndAttributes = z.infer<typeof ZVariationsPost>
 export type PostSchema = z.infer<typeof ZGetPost>
+export type SavePostSchema = z.infer<typeof ZSavePost>
+export type SaveNewPostSchema = z.infer<typeof ZSaveGetPost>

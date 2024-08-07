@@ -29,7 +29,7 @@ export default function VariationsValues() {
   const groupAtt = attributes ? attributes[0] : null
   const childAtt = attributes ? attributes[1] : null
   const isChildTerms = childAtt ? childAtt?.terms.length > 0 : false
-  console.log(getVariations, deletedVariations)
+
   const terms =
     attributes
       ?.filter((attribute) => attribute.terms && attribute.terms.length > 0)
@@ -101,7 +101,7 @@ export default function VariationsValues() {
 
   useEffect(() => {
     const variations = cartesianVariations()
-    console.log(getVariations)
+
     if (variations && id === 'new') {
       const findDeleted = variations.filter(
         (args) => !deletedVariations?.some((d) => d.id === args.id)

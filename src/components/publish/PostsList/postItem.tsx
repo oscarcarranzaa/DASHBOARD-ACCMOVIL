@@ -23,6 +23,7 @@ export default function PostItem({
   porcentDiscount,
   id,
 }: TProps) {
+  const IMAGE_NOT_FOUND = '/static/image-not-found.webp'
   return (
     <>
       <li
@@ -30,7 +31,7 @@ export default function PostItem({
       >
         <div className={style.boxChild}>
           <div className="relative">
-            <SquareImage src={image} />
+            <SquareImage src={image ?? IMAGE_NOT_FOUND} />
             {outStock && (
               <div className="absolute left-0 bottom-0 top-0 right-0  text-red-500 flex justify-center items-center">
                 <p className=" bg-[var(--box-opacity)] text-red-500 dark:text-white px-5 py-1 rounded-lg font-semibold border dark:border-none border-zinc-300">

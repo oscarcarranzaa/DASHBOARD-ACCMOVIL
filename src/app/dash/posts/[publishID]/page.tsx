@@ -57,6 +57,7 @@ export default function EditPublish() {
     const savePostStatus = { ...post, status: action }
     setIsSaving(true)
     mutate({ postID: publishID, formData: savePostStatus })
+    setButtonAction(action)
   }
 
   if (isError) {

@@ -1,15 +1,21 @@
 import CheckSVG from '@/components/icons/check'
 import { usePublishStore } from '@/store/publish'
 import { Button, Input } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function EmbedVideo() {
   const { video } = usePublishStore((store) => store.postData)
   const setVideo = usePublishStore((store) => store.setVideo)
   const defaultUrl = video ? 'https://www.youtube.com/watch?v=' + video : ''
-  const [url, setUrl] = useState<string>(defaultUrl)
 
+  const [videoID, setVideoID] = useState<string>()
+  const [url, setUrl] = useState<string>(defaultUrl)
   const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    setVideoID(video)
+    setUrl(defaultUrl)
+  }, [video])
 
   const handleVideo = async () => {
     if (url === '') {
@@ -17,13 +23,15 @@ export default function EmbedVideo() {
       return
     }
     if (video && video.length > 1) {
-      setVideo(undefined)
+      console.log(video, 'll')
+      setVideo('')
       setUrl('')
       return
     }
 
     const videoId = getVideoId(url)
     if (videoId) {
+      console.log(videoId)
       setVideo(videoId.split('&')[0])
       setError('')
     } else {
@@ -41,6 +49,7 @@ export default function EmbedVideo() {
     }
     return null
   }
+  console.log(url)
   return (
     <>
       <p className="mt-5">Video gallery</p>
@@ -74,13 +83,15 @@ export default function EmbedVideo() {
         </div>
         <div className={video ? 'block mt-3' : 'hidden  '}>
           <div className="w-full aspect-video">
-            <iframe
-              className="w-full h-full"
-              src={`https://www.youtube.com/embed/${video}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title="YouTube video player"
-            ></iframe>
+            {videoID && (
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${videoID}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="YouTube video player"
+              ></iframe>
+            )}
           </div>
           <div className="flex items-center dark:stroke-zinc-400 stroke-zinc-600 dark:text-zinc-400 text-zinc-600">
             <CheckSVG size={16} />

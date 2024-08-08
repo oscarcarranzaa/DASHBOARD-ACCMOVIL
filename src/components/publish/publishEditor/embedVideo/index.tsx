@@ -49,7 +49,7 @@ export default function EmbedVideo() {
     }
     return null
   }
-  console.log(url)
+
   return (
     <>
       <p className="mt-5">Video gallery</p>

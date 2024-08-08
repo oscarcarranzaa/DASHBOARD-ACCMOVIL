@@ -84,9 +84,14 @@ export const ZSaveGetPost = ZSavePost.extend({
   variations: z.array(string()).optional(),
 }).omit({ variations: true })
 
+export const ZGetID = z.object({
+  id: z.string(),
+})
+
 export type getLisPostsSchema = z.infer<typeof getLisPosts>
 export type variationsPost = z.infer<typeof ZVariations>
 export type VariationsAndAttributes = z.infer<typeof ZVariationsPost>
 export type PostSchema = z.infer<typeof ZGetPost>
 export type SavePostSchema = z.infer<typeof ZSavePost>
 export type SaveNewPostSchema = z.infer<typeof ZSaveGetPost>
+export type IdSchema = z.infer<typeof ZGetID>

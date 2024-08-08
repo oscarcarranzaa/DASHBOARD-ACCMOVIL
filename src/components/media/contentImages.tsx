@@ -17,6 +17,7 @@ import style from './style.module.css'
 interface IProps {
   id: string
   image: string
+  isNew?: boolean
   url: string
   name: string
   load?: number
@@ -30,6 +31,7 @@ export default function ContentImages({
   image,
   url,
   name,
+  isNew,
   load,
   mediaID,
   id,
@@ -77,7 +79,7 @@ export default function ContentImages({
       onClick={handleSelect}
     >
       <div
-        className={`p-3  rounded-md relative border select-none ${select && isSelect ? ' bg-zinc-200 dark:bg-zinc-700 border-zinc-400 dark:border-zinc-600' : 'border-transparent'} ${style.media_container}`}
+        className={`p-3  rounded-md relative border select-none ${select && isSelect ? ' bg-zinc-100 dark:bg-zinc-700 border-zinc-400 dark:border-zinc-600' : 'border-transparent'} ${style.media_container}`}
       >
         {isSelect ? (
           <div className="absolute z-10 right-3 top-3 p-1 rounded-md">
@@ -95,6 +97,11 @@ export default function ContentImages({
                 setIsDeletingChild={setIsDeletingChild}
               />
             </DropDown>
+          </div>
+        )}
+        {isNew && (
+          <div className="bg-red-500 font-medium text-white absolute top-5 z-10 text-[0.6rem] left-3 px-2  rounded-lg">
+            New
           </div>
         )}
         <div

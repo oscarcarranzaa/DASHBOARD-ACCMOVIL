@@ -28,9 +28,8 @@ export default function DragMedia({
   setMediasSelect,
 }: IProps) {
   const [dragOver, setDragOver] = useState(false)
-  const [upload, setUpload] = useState<IUploads[] | null>(dataMedia)
-  const [totalUp, setTotalUp] = useState(0)
-  const [totalPageDefine, setTotalPageDefine] = useState<number>()
+  const [upload, setUpload] = useState<IUploads[] | null>(null)
+  const [totalPageDefine, setTotalPageDefine] = useState(0)
 
   useEffect(() => {
     if (totalPages) {
@@ -38,16 +37,8 @@ export default function DragMedia({
     }
   }, [totalPages])
 
-  useEffect(() => {
-    /* if (totalUp < 1 && dataMedia !== upload) {
-      setUpload(dataMedia)
-    }*/
-    setUpload(dataMedia)
-  }, [dataMedia])
-
   const { mutate } = useMutation({
     mutationFn: async ({ formFile, index }: IMutation) => {
-      setTotalUp((prev) => prev + 1)
       const { data } = await axiosInstance.post<MediaSchema>(
         `/media/upload`,
         formFile,
@@ -164,11 +155,7 @@ export default function DragMedia({
     )
   }
   return (
-    <div
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      // className="min-h-screen"
-    >
+    <div onDragOver={handleDragOver} onDrop={handleDrop}>
       <div
         onDragLeave={handleDragLeave}
         className={
@@ -179,12 +166,38 @@ export default function DragMedia({
       </div>
 
       <div className={style.mediaContent}>
-        {upload
-          ? upload.map((e) => {
+        {upload?.map((e) => {
+          const checkSelect = mediaSelect?.find((s) => s.id == e.id)
+            ? true
+            : false
+
+          if (e.imgURI) {
+            return (
+              <ContentImages
+                isNew
+                check={checkSelect}
+                id={e.mediaIDItem}
+                mediaID={e.id}
+                isSelect={select}
+                key={e.id}
+                image={e.imgURI}
+                url={e.urlMedia}
+                name={e.name}
+                load={e.progress}
+                selectItem={setMediasSelect}
+              />
+            )
+          }
+        })}
+        {dataMedia
+          ? dataMedia.map((e) => {
               const checkSelect = mediaSelect?.find((s) => s.id == e.id)
                 ? true
                 : false
-
+              const isExists = upload?.find(
+                (up) => up.mediaIDItem === e.mediaIDItem
+              )
+              if (isExists) return
               if (e.imgURI) {
                 return (
                   <ContentImages
@@ -205,7 +218,7 @@ export default function DragMedia({
           : Array.from({ length: 50 }).map((_, i) => <SkeletonImage key={i} />)}
       </div>
       <div className="mt-10 flex justify-center mb-20">
-        {totalPageDefine && (
+        {totalPageDefine > 0 && (
           <PaginationPage totalPages={totalPageDefine} pageName="pageMedia" />
         )}
       </div>

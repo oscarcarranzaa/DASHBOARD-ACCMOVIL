@@ -3,6 +3,11 @@ import style from './posts.module.css'
 import SquareImage from '@/components/squareImage'
 import { Button } from '@nextui-org/button'
 import Link from 'next/link'
+import { useMutation } from '@tanstack/react-query'
+import { duplicatePost } from '@/api/posts'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Spinner from '@/components/icons/spinner'
 
 type TProps = {
   id: string
@@ -23,6 +28,14 @@ export default function PostItem({
   porcentDiscount,
   id,
 }: TProps) {
+  const [isDuplicating, setIsDuplicating] = useState(false)
+  const router = useRouter()
+  const { mutate } = useMutation({
+    mutationFn: duplicatePost,
+    onSuccess: (res) => {
+      router.push(`/dash/posts/${res.id}`)
+    },
+  })
   const IMAGE_NOT_FOUND = '/static/image-not-found.webp'
   return (
     <>
@@ -58,8 +71,23 @@ export default function PostItem({
             >
               Editar
             </Button>
-            <Button variant="bordered" className=" rounded-full" size="sm">
-              Duplicar
+            <Button
+              variant="bordered"
+              className=" rounded-full"
+              size="sm"
+              onClick={() => {
+                mutate(id)
+                setIsDuplicating(true)
+              }}
+              disabled={isDuplicating}
+            >
+              {isDuplicating ? (
+                <div className=" animate-spin">
+                  <Spinner fill="#333" size={24}></Spinner>
+                </div>
+              ) : (
+                'Duplicar'
+              )}
             </Button>
           </div>
         </div>

@@ -21,6 +21,7 @@ export default function PaginationPage({ totalPages, pageName }: TProps) {
     router.push(url)
     return
   }
+
   return (
     <>
       <div>

@@ -37,7 +37,6 @@ export default function Gallery() {
 
     setGallery(newItems)
   }
-
   return (
     <>
       <div className="w-full min-h-24 flex justify-center items-center border border-zinc-500 rounded-xl dark:bg-zinc-900 transition-colors overflow-hidden p-2">
@@ -83,17 +82,16 @@ export default function Gallery() {
               </div>
             </div>
           ) : null}
-          {!gallery ||
-            (gallery.length === 0 && (
-              <div
-                className="flex justify-center flex-col cursor-pointer col-span-6"
-                onClick={() => setIsModalMedia(!isModalMedia)}
-              >
-                <div className="flex justify-center text-sm hover:underline">
-                  Selecciona imágenes para la galería..
-                </div>
+          {!gallery || gallery.length === 0 ? (
+            <div
+              className="flex justify-center flex-col cursor-pointer col-span-6"
+              onClick={() => setIsModalMedia(!isModalMedia)}
+            >
+              <div className="flex justify-center text-sm hover:underline">
+                Selecciona imágenes para la galería..
               </div>
-            ))}
+            </div>
+          ) : null}
         </div>
         <ModalMedia
           setValue={(e) => setGallery(e)}

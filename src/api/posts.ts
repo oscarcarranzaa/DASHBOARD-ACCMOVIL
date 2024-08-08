@@ -2,9 +2,11 @@ import axiosInstance from '@/lib/axiosClient'
 import {
   getLisPosts,
   getLisPostsSchema,
+  IdSchema,
   PostSchema,
   SaveNewPostSchema,
   SavePostSchema,
+  ZGetID,
   ZGetPost,
   ZSaveGetPost,
 } from '@/types/posts'
@@ -56,6 +58,23 @@ export async function createPost(formData: SavePostSchema) {
       formData
     )
     const validate = ZSaveGetPost.parse(data)
+    return validate
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error(
+        'An unexpected error occurred while get the post.' + error
+      )
+    }
+  }
+}
+export async function duplicatePost(id: string) {
+  try {
+    const { data } = await axiosInstance.post<IdSchema>(`/posts/duplicated`, {
+      id,
+    })
+    const validate = ZGetID.parse(data)
     return validate
   } catch (error) {
     if (isAxiosError(error) && error.response) {

@@ -1,9 +1,10 @@
 import { updateOneProductImage } from '@/api/products'
 import DisplayPrice from '@/components/displayPrice'
-import ModalMedia from '@/components/media/modalMedia'
 import SelectImage from '@/components/media/selectImage'
+import { usePublishStore } from '@/store/publish'
 import { IUploads } from '@/types'
 import { getProductImageSchema } from '@/types/poducts'
+import { Spinner } from '@nextui-org/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
@@ -14,15 +15,42 @@ export default function DisplayProduct({ select }: TProps) {
   const [getImage, setGetImage] = useState<IUploads[] | undefined>()
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
   const queryClient = useQueryClient()
+  const getVariations = usePublishStore((state) => state.variations)
+  const { productID } = usePublishStore((state) => state.postData)
+  const setProductID = usePublishStore((state) => state.setProductID)
+  const setVariation = usePublishStore((state) => state.setVariation)
+
   const { mutate, isPending } = useMutation({
     mutationFn: updateOneProductImage,
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: [select._id] })
+      if (productID?._id === select._id) {
+        setProductID({ ...productID, image: res })
+      } else {
+        const updateImageVariations = getVariations?.map((variation) => {
+          const variationsID = variation.product?._id
+          if (variationsID === select._id) {
+            const { product } = variation
+            const productValue = product ? { ...product, image: res } : null
+
+            return { ...variation, product: productValue }
+          }
+          return variation
+        })
+        setVariation(updateImageVariations)
+      }
     },
   })
+
   useEffect(() => {
-    if (getImage) {
-      // mutate({ image: getImage[0], id: select._id })
+    const productImage = select.image?._id
+
+    if (
+      getImage &&
+      getImage.length === 1 &&
+      getImage[0].mediaIDItem !== productImage
+    ) {
+      mutate({ image: getImage[0].mediaIDItem, id: select._id })
     }
   }, [getImage])
   useEffect(() => {
@@ -43,13 +71,21 @@ export default function DisplayProduct({ select }: TProps) {
     <div className="mt-8 w-full dark:bg-zinc-950 ">
       <div>
         <div className="flex w-full items-center">
-          <div className="w-16 mr-2 flex-none">
+          <div className="w-16 mr-2 flex-none relative">
             <SelectImage
               select="only"
               iconSize={40}
               setValue={setGetImage}
               defaultMedias={defaultImage}
             />
+            {isPending && (
+              <div
+                className="absolute top-0 left-0 bottom-0 right-0 flex justify-center items-center rounded-lg"
+                style={{ background: 'rgba(0,0,0,0.5)' }}
+              >
+                <Spinner size="sm" color="white" />
+              </div>
+            )}
           </div>
           <div className="flex justify-between w-full text-left">
             <div>
@@ -61,7 +97,7 @@ export default function DisplayProduct({ select }: TProps) {
                 <p className="text-xs text-zinc-500 ml-5">
                   <span className=" dark:text-yellow-500 text-yellow-600 font-semibold">
                     {select.stock} und
-                  </span>{' '}
+                  </span>
                 </p>
               </div>
             </div>

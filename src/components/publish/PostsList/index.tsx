@@ -22,10 +22,11 @@ export default function PostsList() {
   const params = useSearchParams()
   const search = params.get('search') || ''
   const currentPage = params.get('p') || '1'
+  const status = params.get('status') ?? undefined
   const rows = '32'
   const { data } = useQuery({
-    queryKey: ['postsLists', currentPage, rows, search],
-    queryFn: () => getLisPostsData(currentPage, rows, search),
+    queryKey: ['postsLists', currentPage, rows, search, status],
+    queryFn: () => getLisPostsData(currentPage, rows, search, status),
     refetchOnWindowFocus: false,
     refetchInterval: false,
   })
@@ -33,25 +34,21 @@ export default function PostsList() {
     if (data) setTotalPages(data?.totalPages)
   }, [data])
   const itemData = data && data.data
-
   return (
     <>
       <div className="flex gap-3 border-b border-zinc-500">
         <PostsListTarget
           title="Publicados"
-          value="2,582 Publicaciones"
-          query="published"
+          query="publish"
           icon={<PublishSVG size={24} />}
         />
         <PostsListTarget
           title="Borradores"
           query="draft"
-          value="25 Borradores"
           icon={<TrashSVG size={24} />}
         />
         <PostsListTarget
           title="Tus publicaciones"
-          value="1,528 Publicaciones"
           query="me"
           icon={<UserCheckSVG size={24} />}
         />

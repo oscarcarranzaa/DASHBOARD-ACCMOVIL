@@ -20,8 +20,10 @@ export default function SelectProduct({
   const [productSelected, setProductSelected] = useState<
     getProductImageSchema | undefined
   >(initialSelect)
+
   const ref = useRef<HTMLElement>(null)
   useOutsideClick(ref, () => open(false))
+
   return (
     <>
       <div
@@ -50,7 +52,10 @@ export default function SelectProduct({
                 className="w-full"
                 onClick={() => {
                   open(false)
-                  if (onSelectProduct) {
+                  if (
+                    onSelectProduct &&
+                    selectedProduct?._id !== productSelected?._id
+                  ) {
                     onSelectProduct(productSelected as getProductImageSchema)
                   }
                 }}

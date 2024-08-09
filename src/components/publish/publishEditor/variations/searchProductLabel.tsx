@@ -22,6 +22,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
   const [select, setSelect] = useState<getProductImageSchema | null>(
     initialSelect
   )
+
   useEffect(() => {
     setSelect(initialSelect)
   }, [seleted])

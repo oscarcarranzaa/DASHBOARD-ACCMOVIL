@@ -8,6 +8,7 @@ import {
   getOneProductSchema,
   getOneProductType,
 } from '@/types/poducts'
+import { media, MediaSchema } from '@/types/schemas'
 import { isAxiosError } from 'axios'
 
 export async function createProduct(formData: newProduct) {
@@ -88,10 +89,14 @@ export async function updateOneProductImage({
   id,
 }: TUpdateProductImage) {
   try {
-    const { data } = await axiosInstance.put(`/product/${id}/image`, {
-      imageID: image,
-    })
-    return data
+    const { data } = await axiosInstance.put<MediaSchema>(
+      `/product/${id}/image`,
+      {
+        imageID: image,
+      }
+    )
+    const validate = media.parse(data)
+    return validate
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data)

@@ -22,8 +22,8 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
       const termsAtt = terms.map((term) => term.id).sort()
       return variationsAtt.every((att, index) => att === termsAtt[index])
     })?.product ?? null
+
   const [openSelect, setOpenSelect] = useState(false)
-  useState<getProductImageSchema | null>(product)
 
   useEffect(() => {
     document.body.style.overflow = openSelect ? 'hidden' : 'auto'

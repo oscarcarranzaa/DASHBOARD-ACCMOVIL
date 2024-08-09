@@ -6,30 +6,28 @@ import { ReactNode } from 'react'
 
 type TProps = {
   title: string
-  value: string
+  value?: string
   query: string
   icon: ReactNode
 }
 export default function PostsListTarget({ title, value, icon, query }: TProps) {
   const DEFAUTL_QUERY = 'published'
   const path = useSearchParams()
-  const q = path.get('query') ?? DEFAUTL_QUERY
+  const q = path.get('status') ?? DEFAUTL_QUERY
 
   return (
     <>
-      <Tooltip key={value} content={value} placement="bottom">
-        <Link
-          href={`/dash/posts?query=${query}`}
-          className={`max-w-60 hover:cursor-pointer border-b-2 ${q === query ? ' border-zinc-500' : 'border-transparent'}`}
-        >
-          <div className="   p-1 px-3">
-            <div className=" dark:fill-white dark:stroke-white stroke-zinc-500 flex gap-2">
-              {icon}
-              <p className=" text-lg font-semibold">{title}</p>
-            </div>
+      <Link
+        href={`/dash/posts?status=${query}`}
+        className={`max-w-60 hover:cursor-pointer border-b-2 ${q === query ? ' border-zinc-500' : 'border-transparent'}`}
+      >
+        <div className="   p-1 px-3">
+          <div className=" dark:fill-white dark:stroke-white stroke-zinc-500 flex gap-2">
+            {icon}
+            <p className=" text-lg font-semibold">{title}</p>
           </div>
-        </Link>
-      </Tooltip>
+        </div>
+      </Link>
     </>
   )
 }

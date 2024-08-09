@@ -15,11 +15,12 @@ import { isAxiosError } from 'axios'
 export async function getLisPostsData(
   page: string,
   limit: string,
-  query?: string
+  query?: string,
+  status?: string
 ) {
   try {
     const { data } = await axiosInstance.get<getLisPostsSchema>(
-      `/posts?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
+      `/posts?page=${page}&limit=${limit}${query ? '&q=' + query : ''}${status ? '&status=' + status : ''}`
     )
     const validProduct = getLisPosts.parse(data)
     return validProduct
@@ -90,7 +91,7 @@ export async function duplicatePost(id: string) {
 export async function updatePost({ postID, formData }: TUpdateSchema) {
   try {
     const { data } = await axiosInstance.put(`/posts/post/${postID}`, formData)
-    console.log(data)
+
     return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {

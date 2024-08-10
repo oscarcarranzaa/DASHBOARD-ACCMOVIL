@@ -36,7 +36,6 @@ export default function NewPublish() {
   const { data: response, mutate } = useMutation({
     mutationFn: createPost,
     onSuccess: (res) => {
-      console.log(res)
       toast(<ToastInfo text="Guardado"></ToastInfo>)
       router.push(`/dash/posts/${res._id}`)
     },

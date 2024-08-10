@@ -26,7 +26,7 @@ export default function SelectImage({
         className="cursor-pointer"
       >
         <div
-          className=" rounded-md  overflow-hidden relative bg-zinc-200 dark:bg-zinc-800"
+          className=" rounded-md  overflow-hidden relative bg-zinc-200 dark:bg-zinc-800 border dark:border-zinc-700"
           style={{ paddingTop: '100%' }}
         >
           <div

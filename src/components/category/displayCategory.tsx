@@ -13,39 +13,55 @@ export type selectCategory = {
 }
 type TProps = {
   value?: selectCategory[]
+  noClosed?: boolean
+  isOnly?: boolean
   onSelectCategory?: (select: selectCategory[]) => void
 }
-export default function DisplayCategory({ value, onSelectCategory }: TProps) {
+export default function DisplayCategory({
+  value,
+  onSelectCategory,
+  noClosed,
+  isOnly,
+}: TProps) {
   const [openID, setOpenID] = useState<string>('')
   const [selected, setSelected] = useState<selectCategory[] | undefined>(value)
+
   useEffect(() => {
     setSelected(value)
   }, [value])
+
   const { data } = useQuery({
     queryKey: ['categories', openID],
     queryFn: () => getCategories(openID),
     refetchOnWindowFocus: false,
   })
+
   const handleSelect = (category: selectCategory) => {
-    if (selected) {
-      const find = selected.find((item) => item._id === category._id)
-      if (find) {
-        if (onSelectCategory) {
-          onSelectCategory(selected.filter((item) => item._id !== category._id))
-        }
-        setSelected(selected.filter((item) => item._id !== category._id))
-      } else {
-        if (onSelectCategory) {
-          onSelectCategory([...selected, category])
-        }
-        setSelected([...selected, category])
-      }
-    } else {
-      if (onSelectCategory) {
-        onSelectCategory([category])
-      }
+    /// Si selected es undefined pues se agrega el array de categorias
+    if (!selected) {
+      onSelectCategory && onSelectCategory([category])
       setSelected([category])
+      return
     }
+    /// Busca si existe la categoria en seleccionados
+    const find = selected.find((item) => item._id === category._id)
+    /// Si ya existe y no isOnly ("Seleccion unica") la quita
+    if (find && !isOnly) {
+      const deleteCategory = selected.filter(
+        (item) => item._id !== category._id
+      )
+      onSelectCategory && onSelectCategory(deleteCategory)
+      setSelected(deleteCategory)
+      return
+    }
+    /// O si no pues la agrega
+    if (!isOnly) {
+      onSelectCategory && onSelectCategory([...selected, category])
+      setSelected([...selected, category])
+      return
+    }
+    onSelectCategory && onSelectCategory([category])
+    setSelected([category])
   }
   return (
     <>
@@ -137,21 +153,23 @@ export default function DisplayCategory({ value, onSelectCategory }: TProps) {
                 >
                   {item.name}
                 </p>
-                <button
-                  className="ml-5"
-                  onClick={() => {
-                    setSelected(
-                      selected.filter((select) => select._id !== item._id)
-                    )
-                    if (onSelectCategory) {
-                      onSelectCategory(
+                {!noClosed && (
+                  <button
+                    className="ml-5"
+                    onClick={() => {
+                      setSelected(
                         selected.filter((select) => select._id !== item._id)
                       )
-                    }
-                  }}
-                >
-                  <CloseSVG size={12} />
-                </button>
+                      if (onSelectCategory) {
+                        onSelectCategory(
+                          selected.filter((select) => select._id !== item._id)
+                        )
+                      }
+                    }}
+                  >
+                    <CloseSVG size={12} />
+                  </button>
+                )}
               </div>
             ))}
         </div>

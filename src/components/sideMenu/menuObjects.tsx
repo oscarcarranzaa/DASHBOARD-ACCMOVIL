@@ -62,7 +62,7 @@ export const menuItems = [
       },
       {
         name: 'Categorías',
-        href: '/dash/posts/categorias',
+        href: '/dash/posts/categories',
       },
       {
         name: 'Atributos',

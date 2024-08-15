@@ -1,12 +1,12 @@
 'use client'
 
-import { Tab, Tabs } from '@nextui-org/react'
-import CategoryForm from './categoryForm'
-import DisplayCategory from '../displayCategory'
-import { useRouter } from 'next/navigation'
+import { select, Tab, Tabs } from '@nextui-org/react'
+import NewCategoryForm from './newCategoryForm'
+import DisplayCategory, { selectCategory } from '../displayCategory'
+import { useState } from 'react'
 
 export default function CategoryEditor() {
-  const router = useRouter()
+  const [category, setCategory] = useState<selectCategory>()
 
   return (
     <>
@@ -14,24 +14,21 @@ export default function CategoryEditor() {
         <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl py-5 col-span-3 2xl:col-span-2">
           <Tabs size="md" aria-label="Tabs form" variant="bordered">
             <Tab key="nuevo" title="Nuevo">
-              <div className="mt-10">
-                <CategoryForm />
-              </div>
+              <NewCategoryForm
+                category={`Agregar a: ${category ? category.name : '[Root]'}`}
+                categorySelected={category && category._id}
+              />
             </Tab>
             <Tab key="editar" title="Editar">
-              <div className="mt-10">
-                <CategoryForm />
-              </div>
+              <div className="mt-5"></div>
             </Tab>
           </Tabs>
         </div>
         <div className="col-span-3">
           <DisplayCategory
-            onSelectCategory={(category) => {
-              const categoryID = category[0]._id
-              router.push(`/dash/posts/categories/${categoryID}`)
+            onSelectCategory={(cat) => {
+              setCategory(cat[0])
             }}
-            noClosed
             isOnly
           />
         </div>

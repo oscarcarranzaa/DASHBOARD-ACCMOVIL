@@ -35,7 +35,7 @@ export default function NewCategoryForm({
   }, [categorySelected, newImageValue, setValue])
 
   const handleForm = (formData: newCategoryForm) => {
-    console.log(formData, 'hi')
+    console.log(formData, 'hello')
   }
   return (
     <>

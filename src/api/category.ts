@@ -26,7 +26,7 @@ export async function newCategory(formData: newCategoryForm) {
     return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data)
+      throw new Error(error.response.data.response.msg)
     } else {
       throw new Error('Hubo un error al obtener las categorías.')
     }

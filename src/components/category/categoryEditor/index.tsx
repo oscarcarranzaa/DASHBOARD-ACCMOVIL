@@ -11,7 +11,7 @@ export default function CategoryEditor() {
   return (
     <>
       <section className="grid grid-cols-6 gap-x-4">
-        <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl py-5 col-span-3 2xl:col-span-2">
+        <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl pt-5 py-1 col-span-3 2xl:col-span-2">
           <Tabs size="md" aria-label="Tabs form" variant="bordered">
             <Tab key="nuevo" title="Nuevo">
               <NewCategoryForm

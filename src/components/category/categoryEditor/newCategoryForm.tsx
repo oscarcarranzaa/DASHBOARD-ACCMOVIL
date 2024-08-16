@@ -1,10 +1,11 @@
 import { newCategory } from '@/api/category'
+import Spinner from '@/components/icons/spinner'
 import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { newCategoryForm, ZNewCategoryForm } from '@/types/category'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, Textarea } from '@nextui-org/react'
-import { useMutation } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -17,17 +18,27 @@ export default function NewCategoryForm({
   categorySelected,
 }: TProps) {
   const [newImageValue, seNewImageValue] = useState<IUploads[]>()
-  const { data, mutate } = useMutation({
-    mutationFn: newCategory,
-    onSuccess: (data) => {
-      console.log(data)
-    },
-  })
-
-  const { register, handleSubmit, setValue, unregister, getValues } =
+  const [errorMessage, setErrorMessage] = useState<string>()
+  const queryClient = useQueryClient()
+  const { register, handleSubmit, setValue, reset, getValues } =
     useForm<newCategoryForm>({
       resolver: zodResolver(ZNewCategoryForm),
     })
+
+  const { data, isPending, mutate, isError } = useMutation({
+    mutationFn: newCategory,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['categories', categorySelected],
+      })
+      seNewImageValue(undefined)
+      reset()
+      setValue('parent', categorySelected)
+    },
+    onError: (err) => {
+      setErrorMessage(err.message)
+    },
+  })
 
   useEffect(() => {
     setValue('parent', categorySelected)
@@ -35,14 +46,14 @@ export default function NewCategoryForm({
   }, [categorySelected, newImageValue, setValue])
 
   const handleForm = (formData: newCategoryForm) => {
-    console.log(formData, 'hello')
+    mutate(formData)
   }
   return (
     <>
       <div className="mt-5">
         <form onSubmit={handleSubmit(handleForm)}>
           <p className=" font-semibold mb-5">{category}</p>
-          <div className="flex justify-center  flex-col gap-y-5">
+          <div className="flex justify-center  flex-col gap-y-3">
             <Input
               {...register('name', {
                 required: 'El nombre es obligatorio',
@@ -78,11 +89,28 @@ export default function NewCategoryForm({
             />
             <div className="max-w-60">
               <p className="text-sm pb-3">Imagen </p>
-              <SelectImage iconSize={100} setValue={seNewImageValue} />
+              <SelectImage
+                iconSize={100}
+                setValue={seNewImageValue}
+                defaultMedias={newImageValue}
+              />
             </div>
-            <Button color="primary" type="submit">
-              Añadir
+            <Button color="primary" type="submit" disabled={isPending}>
+              {isPending ? (
+                <div className=" animate-spin">
+                  <Spinner size={24} fill="#fff" />
+                </div>
+              ) : (
+                'Añadir'
+              )}
             </Button>
+            <div className="h-5">
+              {isError && (
+                <p className="text-xs font-semibold text-red-500">
+                  {errorMessage}
+                </p>
+              )}
+            </div>
           </div>
         </form>
       </div>

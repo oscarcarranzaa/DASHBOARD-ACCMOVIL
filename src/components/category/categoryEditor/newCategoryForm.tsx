@@ -71,7 +71,7 @@ export default function NewCategoryForm({
             <Textarea
               {...register('description')}
               placeholder="Descripción de la categoría"
-              label="Descripción"
+              label="Descripción (opcional)"
               labelPlacement="outside"
               variant="bordered"
               size="md"
@@ -80,7 +80,7 @@ export default function NewCategoryForm({
             <Input
               {...register('keywords')}
               placeholder="Keywords"
-              label="Keywords"
+              label="Keywords (opcional)"
               labelPlacement="outside"
               autoComplete="off"
               variant="bordered"
@@ -88,7 +88,7 @@ export default function NewCategoryForm({
               name="keywords"
             />
             <div className="max-w-60">
-              <p className="text-sm pb-3">Imagen </p>
+              <p className="text-sm pb-3">Imagen (opcional)</p>
               <SelectImage
                 iconSize={100}
                 setValue={seNewImageValue}

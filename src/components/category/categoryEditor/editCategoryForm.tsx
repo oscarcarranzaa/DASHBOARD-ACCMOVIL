@@ -1,21 +1,60 @@
+import { getOneCategories } from '@/api/category'
 import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
-import { newCategoryForm } from '@/types/category'
-import { Button, Input, Textarea } from '@nextui-org/react'
-import { useState } from 'react'
-import { UseFormRegister } from 'react-hook-form'
+import { newCategoryForm, ZNewCategoryForm } from '@/types/category'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button, Input, Progress, Textarea } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 type TProps = {
   category: string
-  register: UseFormRegister<newCategoryForm>
+  categorySelected: string
 }
-export default function EditCategoryForm({ category, register }: TProps) {
+export default function EditCategoryForm({
+  category,
+  categorySelected,
+}: TProps) {
   const [newImageValue, seNewImageValue] = useState<IUploads[]>()
 
+  const { data, isPending } = useQuery({
+    queryFn: () => getOneCategories(categorySelected),
+    queryKey: [category],
+  })
+
+  const { register, handleSubmit, setValue, reset, getValues } =
+    useForm<newCategoryForm>({
+      resolver: zodResolver(ZNewCategoryForm),
+    })
+  useEffect(() => {
+    if (data) {
+      setValue('name', data.name)
+      setValue('description', data.description)
+      setValue('keywords', data.keywords)
+      setValue('image', data.image?._id)
+    }
+  }, [data, setValue])
   return (
     <>
+      <div className="absolute top-0 left-0 right-0">
+        {isPending && (
+          <Progress
+            size="sm"
+            isIndeterminate
+            aria-label="Loading..."
+            className="max-w-md"
+          />
+        )}
+      </div>
+
       <p className=" font-semibold mb-5">{category}</p>
       <div className="flex justify-center  flex-col gap-y-5">
+        <input
+          {...register('name', {
+            required: 'El nombre es obligatorio',
+          })}
+        />
         <Input
           {...register('name', {
             required: 'El nombre es obligatorio',
@@ -33,7 +72,7 @@ export default function EditCategoryForm({ category, register }: TProps) {
         <Textarea
           {...register('description')}
           placeholder="Descripción de la categoría"
-          label="Descripción"
+          label="Descripción (opcional)"
           labelPlacement="outside"
           variant="bordered"
           size="md"
@@ -42,7 +81,7 @@ export default function EditCategoryForm({ category, register }: TProps) {
         <Input
           {...register('keywords')}
           placeholder="Keywords"
-          label="Keywords"
+          label="Keywords (opcional)"
           labelPlacement="outside"
           autoComplete="off"
           variant="bordered"
@@ -50,7 +89,7 @@ export default function EditCategoryForm({ category, register }: TProps) {
           name="keywords"
         />
         <div className="max-w-60">
-          <p className="text-sm pb-3">Imagen </p>
+          <p className="text-sm pb-3">Imagen (opcional)</p>
           <input
             type="hidden"
             {...register('image')}

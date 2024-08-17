@@ -1,6 +1,12 @@
 import axiosInstance from '@/lib/axiosClient'
 import { isAxiosError } from 'axios'
-import { newCategoryForm, ZCategories, ZCategorySchema } from '@/types/category'
+import {
+  newCategoryForm,
+  oneCategorySchema,
+  ZCategories,
+  ZCategorySchema,
+  ZOneCategory,
+} from '@/types/category'
 
 export async function getCategories(id: string) {
   try {
@@ -24,6 +30,21 @@ export async function newCategory(formData: newCategoryForm) {
     const { data } = await axiosInstance.post('/posts/category', formData)
 
     return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Hubo un error al obtener las categorías.')
+    }
+  }
+}
+export async function getOneCategories(id: string) {
+  try {
+    const { data } = await axiosInstance.get<oneCategorySchema>(
+      `/posts/category/${id}`
+    )
+    const validCategory = ZOneCategory.parse(data)
+    return validCategory
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)

@@ -93,7 +93,7 @@ export default function DisplayCategory({
                       } select-none rounded-md`}
                     >
                       <button
-                        className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 p-2 rounded-md px-3  ${
+                        className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 rounded-md px-3 p-2 ${
                           selected?.find((item) => item._id === category._id)
                             ? 'bg-zinc-300 dark:bg-zinc-950'
                             : ''
@@ -107,7 +107,7 @@ export default function DisplayCategory({
                           })
                         }}
                       >
-                        <p className="text-sm text-left">{category.name}</p>
+                        <p className="text-sm text-left ">{category.name}</p>
                       </button>
                       <div
                         onClick={() => {
@@ -115,7 +115,7 @@ export default function DisplayCategory({
                             setOpenID(category._id)
                           }
                         }}
-                        className="flex-grow flex justify-end items-center"
+                        className="flex-grow flex justify-end items-center p-1"
                       >
                         {category.child ? (
                           <div className="-rotate-90 w-6 h-6">

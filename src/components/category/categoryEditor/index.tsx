@@ -31,6 +31,7 @@ export default function CategoryEditor() {
           >
             <Tab key="nuevo" title="Nuevo">
               <NewCategoryForm
+                parentCategory={category?.parent ? category.parent : ''}
                 category={`Agregar a: ${category ? category.name : '[Root]'}`}
                 categorySelected={category && category._id}
               />

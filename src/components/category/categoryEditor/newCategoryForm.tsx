@@ -12,14 +12,17 @@ import { useForm } from 'react-hook-form'
 type TProps = {
   categorySelected?: string | undefined
   category: string
+  parentCategory: string
 }
 export default function NewCategoryForm({
   category,
   categorySelected,
+  parentCategory,
 }: TProps) {
   const [newImageValue, seNewImageValue] = useState<IUploads[]>()
   const [errorMessage, setErrorMessage] = useState<string>()
   const queryClient = useQueryClient()
+
   const { register, handleSubmit, setValue, reset, getValues } =
     useForm<newCategoryForm>({
       resolver: zodResolver(ZNewCategoryForm),
@@ -27,9 +30,9 @@ export default function NewCategoryForm({
 
   const { data, isPending, mutate, isError } = useMutation({
     mutationFn: newCategory,
-    onSuccess: (data) => {
+    onSuccess: (dat) => {
       queryClient.invalidateQueries({
-        queryKey: ['categories', categorySelected],
+        queryKey: ['categories', parentCategory],
       })
       seNewImageValue(undefined)
       reset()
@@ -53,7 +56,7 @@ export default function NewCategoryForm({
       <div className="mt-5">
         <form onSubmit={handleSubmit(handleForm)}>
           <p className=" font-semibold mb-5">{category}</p>
-          <div className="flex justify-center  flex-col gap-y-3">
+          <div className="flex justify-center  flex-col gap-y-5">
             <Input
               {...register('name', {
                 required: 'El nombre es obligatorio',
@@ -95,7 +98,12 @@ export default function NewCategoryForm({
                 defaultMedias={newImageValue}
               />
             </div>
-            <Button color="primary" type="submit" disabled={isPending}>
+            <Button
+              color="primary"
+              type="submit"
+              disabled={isPending}
+              className=" font-medium"
+            >
               {isPending ? (
                 <div className=" animate-spin">
                   <Spinner size={24} fill="#fff" />
@@ -104,13 +112,14 @@ export default function NewCategoryForm({
                 'Añadir'
               )}
             </Button>
-            <div className="h-5">
-              {isError && (
+
+            {isError && (
+              <div className="h-5">
                 <p className="text-xs font-semibold text-red-500">
                   {errorMessage}
                 </p>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </form>
       </div>

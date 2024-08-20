@@ -1,12 +1,14 @@
-import { getOneCategories } from '@/api/category'
+'use client'
+import { getOneCategories, updateCategory } from '@/api/category'
+import Spinner from '@/components/icons/spinner'
 import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { newCategoryForm, ZNewCategoryForm } from '@/types/category'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, Progress, Textarea } from '@nextui-org/react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 type TProps = {
   category: string
@@ -17,24 +19,68 @@ export default function EditCategoryForm({
   categorySelected,
 }: TProps) {
   const [newImageValue, seNewImageValue] = useState<IUploads[]>()
-
+  const queryClient = useQueryClient()
   const { data, isPending } = useQuery({
     queryFn: () => getOneCategories(categorySelected),
-    queryKey: [category],
+    queryKey: [categorySelected],
+  })
+  const { mutate, isPending: loadUpdate } = useMutation({
+    mutationFn: updateCategory,
+    onSuccess: (rec) => {
+      queryClient.invalidateQueries({
+        queryKey: ['categories', data?.parent || ''],
+      })
+      queryClient.invalidateQueries({ queryKey: [categorySelected] })
+    },
   })
 
-  const { register, handleSubmit, setValue, reset, getValues } =
+  const defaultValues = {
+    name: '',
+    description: '',
+    keywords: '',
+    image: undefined,
+    parent: categorySelected,
+  }
+
+  const { handleSubmit, control, formState, reset, setValue } =
     useForm<newCategoryForm>({
       resolver: zodResolver(ZNewCategoryForm),
+      defaultValues,
     })
+
   useEffect(() => {
     if (data) {
-      setValue('name', data.name)
-      setValue('description', data.description)
-      setValue('keywords', data.keywords)
-      setValue('image', data.image?._id)
+      reset({
+        name: data.name || '',
+        description: data.description || '',
+        keywords: data.keywords || '',
+        image: data.image?._id || undefined,
+      })
+
+      if (data.image) {
+        const { image } = data
+        seNewImageValue([
+          {
+            name: image.title,
+            imgURI: image.images ? image.images[3].src : image.url,
+            id: image.mediaId,
+            mediaIDItem: image._id,
+            urlMedia: image.url,
+          },
+        ])
+      } else {
+        seNewImageValue(undefined)
+      }
     }
-  }, [data, setValue])
+  }, [data, reset])
+
+  useEffect(() => {
+    setValue('image', newImageValue ? newImageValue[0].mediaIDItem : undefined)
+  }, [categorySelected, newImageValue, setValue])
+
+  const submitForm = (form: newCategoryForm) => {
+    mutate({ formData: form, id: categorySelected })
+  }
   return (
     <>
       <div className="absolute top-0 left-0 right-0">
@@ -48,60 +94,91 @@ export default function EditCategoryForm({
         )}
       </div>
 
-      <p className=" font-semibold mb-5">{category}</p>
-      <div className="flex justify-center  flex-col gap-y-5">
-        <input
-          {...register('name', {
-            required: 'El nombre es obligatorio',
-          })}
-        />
-        <Input
-          {...register('name', {
-            required: 'El nombre es obligatorio',
-          })}
-          isRequired
-          required
-          placeholder="Nombre de la categoría"
-          label="Nombre"
-          autoComplete="off"
-          labelPlacement="outside"
-          variant="bordered"
-          size="md"
-          name="name"
-        />
-        <Textarea
-          {...register('description')}
-          placeholder="Descripción de la categoría"
-          label="Descripción (opcional)"
-          labelPlacement="outside"
-          variant="bordered"
-          size="md"
-          name="description"
-        />
-        <Input
-          {...register('keywords')}
-          placeholder="Keywords"
-          label="Keywords (opcional)"
-          labelPlacement="outside"
-          autoComplete="off"
-          variant="bordered"
-          size="md"
-          name="keywords"
-        />
-        <div className="max-w-60">
-          <p className="text-sm pb-3">Imagen (opcional)</p>
-          <input
-            type="hidden"
-            {...register('image')}
-            value={newImageValue ? newImageValue[0].mediaIDItem : undefined}
-            name="image"
-          />
-          <SelectImage iconSize={100} setValue={seNewImageValue} />
+      <div className="flex gap-2 items-center mb-5">
+        <p className=" font-semibold">{category}</p>
+        <div>
+          {isPending && (
+            <div className=" animate-spin">
+              <Spinner fill="#777" size={20} />
+            </div>
+          )}
         </div>
-        <Button color="primary" type="submit">
-          Agregar
-        </Button>
       </div>
+      <form onSubmit={handleSubmit(submitForm)}>
+        <div className="flex justify-center  flex-col gap-y-5">
+          <Controller
+            name="name"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                isRequired
+                required
+                placeholder="Nombre de la categoría"
+                label="Nombre"
+                autoComplete="off"
+                labelPlacement="outside"
+                variant="bordered"
+                size="md"
+              />
+            )}
+          />
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <Textarea
+                {...field}
+                placeholder="Descripción de la categoría"
+                label="Descripción (opcional)"
+                labelPlacement="outside"
+                variant="bordered"
+                size="md"
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="keywords"
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Keywords"
+                label="Keywords (opcional)"
+                labelPlacement="outside"
+                autoComplete="off"
+                variant="bordered"
+                size="md"
+              />
+            )}
+          />
+          <div className="max-w-60">
+            <p className="text-sm pb-3">Imagen (opcional)</p>
+            <SelectImage
+              iconSize={100}
+              defaultMedias={newImageValue}
+              setValue={seNewImageValue}
+            />
+          </div>
+          <Button
+            color="primary"
+            className={
+              isPending || loadUpdate ? ' cursor-not-allowed' : ' font-medium'
+            }
+            type="submit"
+            disabled={isPending || loadUpdate}
+          >
+            {loadUpdate ? (
+              <div className=" animate-spin">
+                <Spinner size={24} fill="#fff" />
+              </div>
+            ) : (
+              'Actualizar'
+            )}
+          </Button>
+        </div>
+      </form>
     </>
   )
 }

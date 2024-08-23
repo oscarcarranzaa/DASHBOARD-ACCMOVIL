@@ -5,6 +5,7 @@ import ArrowSVG from '../icons/arrow'
 import ArrowAngleSVG from '../icons/arrowAngle'
 import CategorySkeleton from './categorySkeleton'
 import CloseSVG from '../icons/close'
+import { useCategoryStore } from '@/store/category'
 
 export type selectCategory = {
   _id: string
@@ -12,7 +13,7 @@ export type selectCategory = {
   parent: string | undefined
 }
 type TProps = {
-  value?: selectCategory[]
+  value?: selectCategory[] | undefined
   noClosed?: boolean
   isOnly?: boolean
   onSelectCategory?: (select: selectCategory[]) => void
@@ -23,16 +24,16 @@ export default function DisplayCategory({
   noClosed,
   isOnly,
 }: TProps) {
-  const [openID, setOpenID] = useState<string>('')
+  const { openCategory, setOpenCategory } = useCategoryStore()
   const [selected, setSelected] = useState<selectCategory[] | undefined>(value)
 
   useEffect(() => {
     setSelected(value)
   }, [value])
 
-  const { data } = useQuery({
-    queryKey: ['categories', openID],
-    queryFn: () => getCategories(openID),
+  const { data, error } = useQuery({
+    queryKey: ['categories', openCategory],
+    queryFn: () => getCategories(openCategory),
     refetchOnWindowFocus: false,
   })
 
@@ -72,7 +73,7 @@ export default function DisplayCategory({
           <div className=" dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg ">
             {data && data.parent && (
               <button
-                onClick={() => setOpenID(data.parent?.parent ?? '')}
+                onClick={() => setOpenCategory(data.parent?.parent ?? '')}
                 type="button"
                 className="flex w-full bg-zinc-200 dark:bg-zinc-700 py-2 px-1 rounded-md items-center mt-1"
               >
@@ -80,7 +81,7 @@ export default function DisplayCategory({
                 <p className="ml-2 text-left">{data.parent?.name}</p>
               </button>
             )}
-            <div className="h-80 w-full mt-1 menu-content  p-1 ">
+            <div className="h-96 w-full mt-1 menu-content  p-1 ">
               <ul>
                 {data ? (
                   data.categories.map((category) => (
@@ -112,7 +113,7 @@ export default function DisplayCategory({
                       <div
                         onClick={() => {
                           if (category.child) {
-                            setOpenID(category._id)
+                            setOpenCategory(category._id)
                           }
                         }}
                         className="flex-grow flex justify-end items-center p-1"
@@ -127,8 +128,22 @@ export default function DisplayCategory({
                       </div>
                     </li>
                   ))
-                ) : (
+                ) : !error ? (
                   <CategorySkeleton />
+                ) : (
+                  <div>
+                    <button
+                      onClick={() => setOpenCategory('')}
+                      type="button"
+                      className="flex w-full bg-zinc-200 dark:bg-zinc-700 py-2 px-1 rounded-md items-center mt-1"
+                    >
+                      <ArrowSVG size={24} />
+                      <p className="ml-2 text-left">[Root]</p>
+                    </button>
+                    <p className="mt-10 text-red-500 text-center">
+                      {error.message}
+                    </p>
+                  </div>
                 )}
               </ul>
             </div>
@@ -145,10 +160,10 @@ export default function DisplayCategory({
                   className=" hover:underline cursor-pointer"
                   onClick={() => {
                     if (item.parent) {
-                      setOpenID(item.parent)
+                      setOpenCategory(item.parent)
                       return
                     }
-                    setOpenID('')
+                    setOpenCategory('')
                   }}
                 >
                   {item.name}

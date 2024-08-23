@@ -9,14 +9,17 @@ import { Button, Input, Progress, Textarea } from '@nextui-org/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import AdvancedSettings from './advancedSettings'
 
 type TProps = {
   category: string
   categorySelected: string
+  onCloseCategory: () => void
 }
 export default function EditCategoryForm({
   category,
   categorySelected,
+  onCloseCategory,
 }: TProps) {
   const [newImageValue, seNewImageValue] = useState<IUploads[]>()
   const queryClient = useQueryClient()
@@ -26,7 +29,7 @@ export default function EditCategoryForm({
   })
   const { mutate, isPending: loadUpdate } = useMutation({
     mutationFn: updateCategory,
-    onSuccess: (rec) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['categories', data?.parent || ''],
       })
@@ -42,11 +45,10 @@ export default function EditCategoryForm({
     parent: categorySelected,
   }
 
-  const { handleSubmit, control, formState, reset, setValue } =
-    useForm<newCategoryForm>({
-      resolver: zodResolver(ZNewCategoryForm),
-      defaultValues,
-    })
+  const { handleSubmit, control, reset, setValue } = useForm<newCategoryForm>({
+    resolver: zodResolver(ZNewCategoryForm),
+    defaultValues,
+  })
 
   useEffect(() => {
     if (data) {
@@ -153,6 +155,11 @@ export default function EditCategoryForm({
               />
             )}
           />
+          <AdvancedSettings
+            parent={data?.parent || ''}
+            categoryID={categorySelected}
+            onSelectCategory={onCloseCategory}
+          />
           <div className="max-w-60">
             <p className="text-sm pb-3">Imagen (opcional)</p>
             <SelectImage
@@ -161,22 +168,25 @@ export default function EditCategoryForm({
               setValue={seNewImageValue}
             />
           </div>
-          <Button
-            color="primary"
-            className={
-              isPending || loadUpdate ? ' cursor-not-allowed' : ' font-medium'
-            }
-            type="submit"
-            disabled={isPending || loadUpdate}
-          >
-            {loadUpdate ? (
-              <div className=" animate-spin">
-                <Spinner size={24} fill="#fff" />
-              </div>
-            ) : (
-              'Actualizar'
-            )}
-          </Button>
+
+          <div className="flex flex-col gap-y-2">
+            <Button
+              color="primary"
+              className={
+                isPending || loadUpdate ? ' cursor-not-allowed' : ' font-medium'
+              }
+              type="submit"
+              disabled={isPending || loadUpdate}
+            >
+              {loadUpdate ? (
+                <div className=" animate-spin">
+                  <Spinner size={24} fill="#fff" />
+                </div>
+              ) : (
+                'Actualizar'
+              )}
+            </Button>
+          </div>
         </div>
       </form>
     </>

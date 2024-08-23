@@ -16,11 +16,11 @@ export default function CategoryEditor() {
       setSelectedTabs('nuevo')
     }
   }, [setSelectedTabs, category, selectedTabs])
-
+  console.log('render')
   return (
     <>
       <section className="grid grid-cols-6 gap-x-4">
-        <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl pt-5 py-1 col-span-3 2xl:col-span-2 relative overflow-hidden">
+        <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl pt-5 py-1 col-span-4 2xl:col-span-3 relative overflow-hidden">
           <Tabs
             size="md"
             aria-label="Tabs form"
@@ -40,6 +40,7 @@ export default function CategoryEditor() {
               <div className="mt-5">
                 {category && (
                   <EditCategoryForm
+                    onCloseCategory={() => setCategory(undefined)}
                     category={`Agregar a: ${category ? category.name : '[Root]'}`}
                     categorySelected={category._id}
                   />
@@ -53,6 +54,7 @@ export default function CategoryEditor() {
             onSelectCategory={(cat) => {
               setCategory(cat[0])
             }}
+            value={category ? [category] : undefined}
             isOnly
           />
         </div>

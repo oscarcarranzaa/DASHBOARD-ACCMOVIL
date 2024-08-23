@@ -21,7 +21,7 @@ export async function getCategories(id: string) {
     return validCategory
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data)
+      throw new Error(error.response.data.response.msg)
     } else {
       throw new Error('Hubo un error al obtener las categorías.')
     }
@@ -68,6 +68,18 @@ export async function getOneCategories(id: string) {
     )
     const validCategory = ZOneCategory.parse(data)
     return validCategory
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Hubo un error al obtener las categorías.')
+    }
+  }
+}
+export async function deleteCategory(id: string) {
+  try {
+    const { data } = await axiosInstance.delete(`/posts/category/${id}`)
+    return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)

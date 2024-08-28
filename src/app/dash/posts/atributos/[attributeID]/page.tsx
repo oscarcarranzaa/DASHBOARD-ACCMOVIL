@@ -1,14 +1,20 @@
-import FormTerms from '@/components/attributes/formTerms'
-import ListTerms from '@/components/attributes/listTerms'
+'use client'
+import { getOneAttribute } from '@/api/attributes'
+import FormTerms from '@/components/attributes/terms/formTerms'
+import ListTerms from '@/components/attributes/terms/listTerms'
 import NavegationPages from '@/components/navegationPages'
 
 export default function AttributeID() {
   return (
-    <div>
+    <>
       <NavegationPages text="Atributos" />
-      <p>Aca es el attributoID</p>
-      <ListTerms />
-      <FormTerms />
-    </div>
+
+      <div className="grid grid-cols-2">
+        <FormTerms />
+        <div>
+          <ListTerms />
+        </div>
+      </div>
+    </>
   )
 }

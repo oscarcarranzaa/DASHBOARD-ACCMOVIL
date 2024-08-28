@@ -1,6 +1,7 @@
+import IconTerm from '@/components/attributes/terms/iconTerm'
 import CloseSVG from '@/components/icons/close'
 import { Key } from '@react-types/shared'
-import { SetStateAction, useCallback } from 'react'
+import { SetStateAction } from 'react'
 
 type TProps = {
   name: string
@@ -18,40 +19,10 @@ export default function ChipItems({
   colors,
   Close,
 }: TProps) {
-  const renderIcon = useCallback(() => {
-    switch (type) {
-      case 'colors':
-        return (
-          <div>
-            <div className=" -rotate-45 w-6 h-6 rounded-full overflow-hidden">
-              {colors?.map((color, index) => (
-                <div
-                  key={index}
-                  className={`w-6 h-6 ${colors?.length > 1 ? '  -translate-y-3 ' : ''}`}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-            </div>
-          </div>
-        )
-      case 'option':
-        return null
-      case 'image':
-        return (
-          <div className=" rounded-md overflow-hidden">
-            {image && (
-              <picture>
-                <img src={image} className="w-8 h-8" />{' '}
-              </picture>
-            )}
-          </div>
-        )
-    }
-  }, [])
   return (
     <div className="flex-none dark:bg-zinc-800 px-2 py-1 rounded-xl mr-2 bg-zinc-100">
       <div className="flex items-center ">
-        {renderIcon()}
+        <IconTerm type={type} colors={colors} image={image} />
         <p className="text-xs ml-2">{name}</p>
         <div className="ml-2">
           <button

@@ -33,4 +33,5 @@ export const ZOneAttribute = z.object({
 
 export const ZAttributesAll = z.array(ZAttributes)
 export type AttributeSchema = z.infer<typeof ZAttributesAll>
+export type ZTermsSchema = z.infer<typeof ZTerms>
 export type ZOneAttributeSchema = z.infer<typeof ZOneAttribute>

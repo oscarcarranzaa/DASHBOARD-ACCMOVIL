@@ -1,27 +1,44 @@
+'use client'
+import { getAllAttributes } from '@/api/attributes'
 import ItemsAttributes from '@/components/attributes/itemsAttributes'
+import ItemsAttributesSkeleton from '@/components/attributes/itemsAttributesSkeleton'
+import NewAttribute from '@/components/attributes/newAttribute'
 import NavegationPages from '@/components/navegationPages'
-import { Button } from '@nextui-org/button'
+import { useQuery } from '@tanstack/react-query'
 
 export default function Attributes() {
+  const { data, isPending } = useQuery({
+    queryKey: ['Attributes'],
+    queryFn: getAllAttributes,
+    refetchOnWindowFocus: false,
+  })
+  console.log(data)
   return (
     <>
       <div className="flex justify-between">
         <NavegationPages text="Atributos" />
-        <Button color="primary">Crear atributo</Button>
+        <NewAttribute />
       </div>
-      <div className=" grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 w-full flex-wrap select-none">
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
-        <ItemsAttributes />
+      <p className="mb-10">
+        Mostrando todos los atributos creados para tus productos...
+      </p>
+      <div className=" grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-2 w-full flex-wrap select-none">
+        {data ? (
+          data.map((att) => {
+            const termsMessage = `+${att.terms.length} terms`
+            return (
+              <ItemsAttributes
+                key={att._id}
+                _id={att._id}
+                name={att.name}
+                type={att.type}
+                terms={termsMessage}
+              />
+            )
+          })
+        ) : (
+          <ItemsAttributesSkeleton />
+        )}
       </div>
     </>
   )

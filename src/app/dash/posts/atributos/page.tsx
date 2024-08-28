@@ -7,12 +7,12 @@ import NavegationPages from '@/components/navegationPages'
 import { useQuery } from '@tanstack/react-query'
 
 export default function Attributes() {
-  const { data, isPending } = useQuery({
+  const { data } = useQuery({
     queryKey: ['Attributes'],
     queryFn: getAllAttributes,
     refetchOnWindowFocus: false,
   })
-  console.log(data)
+
   return (
     <>
       <div className="flex justify-between">

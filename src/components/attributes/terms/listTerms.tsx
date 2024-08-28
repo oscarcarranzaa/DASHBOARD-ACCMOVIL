@@ -1,8 +1,6 @@
 'use client'
-import { useParams } from 'next/navigation'
+
 import IconTerm from './iconTerm'
-import { useQuery } from '@tanstack/react-query'
-import { getOneAttribute } from '@/api/attributes'
 import {
   Table,
   TableHeader,
@@ -12,17 +10,14 @@ import {
   TableCell,
   Spinner,
 } from '@nextui-org/react'
-import { ZTermsSchema } from '@/types/attributes'
+import { ZOneAttributeSchema, ZTermsSchema } from '@/types/attributes'
 import { useCallback } from 'react'
 
-export default function ListTerms() {
-  const params = useParams()
-  const ID = params.attributeID
-  const { data, isPending } = useQuery({
-    queryKey: ['oneAtt', ID],
-    queryFn: () => getOneAttribute(ID.toString()),
-    refetchOnWindowFocus: false,
-  })
+type TProps = {
+  data?: ZOneAttributeSchema
+  isPending: boolean
+}
+export default function ListTerms({ data, isPending }: TProps) {
   const rows = [
     {
       key: 'preview',
@@ -62,7 +57,7 @@ export default function ListTerms() {
   const loadingState = isPending ? 'loading' : 'idle'
   const getTerms = data?.terms || []
   return (
-    <div>
+    <div className="z-0">
       <p className="mb-3 text-lg font-semibold">
         Términos del atributo {data?.name}
       </p>

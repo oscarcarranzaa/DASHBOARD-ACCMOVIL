@@ -57,33 +57,43 @@ export default function ListTerms({ data, isPending }: TProps) {
   const loadingState = isPending ? 'loading' : 'idle'
   const getTerms = data?.terms || []
   return (
-    <div className="z-0">
+    <>
       <p className="mb-3 text-lg font-semibold">
         Términos del atributo {data?.name}
       </p>
-      <Table isHeaderSticky isStriped aria-label="Atributos">
-        <TableHeader>
-          {rows.map((r) => {
-            return <TableColumn key={r.key}>{r.name}</TableColumn>
-          })}
-        </TableHeader>
-        <TableBody
-          emptyContent={'No se encontraron terminos'}
-          items={getTerms}
-          loadingState={loadingState}
-          loadingContent={<Spinner label="Cargando..." />}
+      <div>
+        <Table
+          isHeaderSticky
+          isStriped
+          aria-label="Atributos"
+          classNames={{
+            base: 'max-h-screen ',
+            table: 'min-h-[420px]',
+          }}
         >
-          {(item) => (
-            <TableRow key={item._id}>
-              {(columnKey) => (
-                <TableCell align="center">
-                  {renderCell(item, columnKey)}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+          <TableHeader>
+            {rows.map((r) => {
+              return <TableColumn key={r.key}>{r.name}</TableColumn>
+            })}
+          </TableHeader>
+          <TableBody
+            emptyContent={'No se encontraron terminos'}
+            items={getTerms}
+            loadingState={loadingState}
+            loadingContent={<Spinner label="Cargando..." />}
+          >
+            {(item) => (
+              <TableRow key={item._id}>
+                {(columnKey) => (
+                  <TableCell align="center">
+                    {renderCell(item, columnKey)}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   )
 }

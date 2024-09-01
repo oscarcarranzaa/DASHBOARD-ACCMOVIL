@@ -1,4 +1,6 @@
 'use client'
+import { newAttribute } from '@/api/attributes'
+import { newAttributeSchema, ZNewAttribute } from '@/types/attributes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -11,15 +13,29 @@ import {
   SelectItem,
   ModalFooter,
 } from '@nextui-org/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
-import { z } from 'zod'
+import Spinner from '../icons/spinner'
 
-type TNewAttribute = {
-  name: string
-  type: 'image' | 'option' | 'colors'
-}
 export default function NewAttribute() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const defaultValues = {
+    name: '',
+  }
+  const { handleSubmit, control, reset, setValue } =
+    useForm<newAttributeSchema>({
+      resolver: zodResolver(ZNewAttribute),
+      defaultValues,
+    })
+  const queryClient = useQueryClient()
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: newAttribute,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['Attributes'] })
+      reset()
+      onOpenChange()
+    },
+  })
   const selectOptions = [
     {
       key: 'image',
@@ -34,20 +50,9 @@ export default function NewAttribute() {
       label: 'Opción',
     },
   ]
-  const defaultValues = {
-    name: '',
-  }
-  const { handleSubmit, control, reset, setValue } = useForm<TNewAttribute>({
-    resolver: zodResolver(
-      z.object({
-        name: z.string(),
-        type: z.enum(['image', 'option', 'colors']),
-      })
-    ),
-    defaultValues,
-  })
-  const submitNewAtt = (form: TNewAttribute) => {
-    console.log(form)
+
+  const submitNewAtt = (form: newAttributeSchema) => {
+    mutate(form)
   }
   return (
     <>
@@ -93,7 +98,7 @@ export default function NewAttribute() {
                         items={selectOptions}
                         isRequired
                         required
-                        className="mt-5 mb-14"
+                        className="mt-5 "
                         label="Tipo de attributo"
                         placeholder="Seleccione un tipo"
                         variant="bordered"
@@ -104,13 +109,23 @@ export default function NewAttribute() {
                       </Select>
                     )}
                   />
+
+                  <div className="mb-14 text-sm font-semibold text-red-500">
+                    {error && <p>{error.message}</p>}
+                  </div>
                 </div>
                 <ModalFooter>
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Cerrar
                   </Button>
-                  <Button color="primary" type="submit">
-                    Crear atributo
+                  <Button color="primary" type="submit" isDisabled={isPending}>
+                    {isPending ? (
+                      <div className=" animate-spin">
+                        <Spinner size={24} fill="#fff" />
+                      </div>
+                    ) : (
+                      'Crear atributo'
+                    )}
                   </Button>
                 </ModalFooter>
               </form>

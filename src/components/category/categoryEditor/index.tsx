@@ -16,7 +16,7 @@ export default function CategoryEditor() {
       setSelectedTabs('nuevo')
     }
   }, [setSelectedTabs, category, selectedTabs])
-  console.log('render')
+
   return (
     <>
       <section className="grid grid-cols-6 gap-x-4">

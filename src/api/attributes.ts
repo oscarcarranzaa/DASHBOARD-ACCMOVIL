@@ -1,6 +1,8 @@
 import axiosInstance from '@/lib/axiosClient'
 import {
   AttributeSchema,
+  newAttributeSchema,
+  newTermSchema,
   ZAttributesAll,
   ZOneAttribute,
   ZOneAttributeSchema,
@@ -33,6 +35,39 @@ export async function getOneAttribute(id: string) {
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data)
+    } else {
+      throw new Error('Error al obtener los items de los atributos.')
+    }
+  }
+}
+export async function newAttribute(formData: newAttributeSchema) {
+  try {
+    const { data } = await axiosInstance.post('/product/attribute', formData)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Error al obtener los items de los atributos.')
+    }
+  }
+}
+export async function newTerm({
+  formData,
+  id,
+}: {
+  formData: newTermSchema
+  id: string
+}) {
+  try {
+    const { data } = await axiosInstance.post(
+      `/product/attribute/${id}/terms`,
+      formData
+    )
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
     } else {
       throw new Error('Error al obtener los items de los atributos.')
     }

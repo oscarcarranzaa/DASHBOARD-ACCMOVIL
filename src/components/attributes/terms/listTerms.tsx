@@ -68,7 +68,6 @@ export default function ListTerms({ data, isPending }: TProps) {
           aria-label="Atributos"
           classNames={{
             base: 'max-h-screen ',
-            table: 'min-h-[420px]',
           }}
         >
           <TableHeader>

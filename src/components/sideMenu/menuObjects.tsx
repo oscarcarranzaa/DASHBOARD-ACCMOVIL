@@ -76,6 +76,16 @@ export const menuItems = [
     href: '/dash/multimedia',
   },
   {
+    name: 'Equipo',
+    icon: <TeamSVG size={iconSize} />,
+    href: '/dash/equipo',
+  },
+  {
+    name: 'Clientes',
+    icon: <ClientSVG size={iconSize} />,
+    href: '/dash/clientes',
+  },
+  {
     name: 'Ofertas',
     icon: <OfferSVG size={iconSize} />,
     items: [
@@ -96,16 +106,6 @@ export const menuItems = [
         href: '/dash/ofertas/puntos',
       },
     ],
-  },
-  {
-    name: 'Equipo',
-    icon: <TeamSVG size={iconSize} />,
-    href: '/dash/equipo',
-  },
-  {
-    name: 'Clientes',
-    icon: <ClientSVG size={iconSize} />,
-    href: '/dash/clientes',
   },
   {
     name: 'Sitio',

@@ -31,7 +31,7 @@ export const team = z.object({
 
 export const user = z.object({
   _id: z.string(),
-  name: z.string(),
+  name: z.string().optional(),
   email: z.string().email(),
   verify: z.boolean(),
   avatar: media.optional(),
@@ -55,7 +55,6 @@ const mediaUser = user
 const oneMediaTypes = media.omit({ user: true }).extend({ user: mediaUser })
 
 export const getOneMediaData = oneMediaTypes
-/////// USUARIOS
 
 export type GetMediasSchema = z.infer<typeof getMedias>
 export type GetOneMediaSchema = z.infer<typeof getOneMediaData>

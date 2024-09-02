@@ -8,6 +8,7 @@ export const login = z.object({
 })
 export type TSVG = {
   size: number
+  color?: string
 }
 export interface IUploads {
   imgURI: string

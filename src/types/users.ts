@@ -37,5 +37,25 @@ export const ZAllUsers = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
+export const ZPassword = z.object({
+  password: z
+    .string()
+    .min(8, 'Contraseña muy corta')
+    .max(50, 'Contraseña muy larga')
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+      'La contraseña debe tener al menos una letra minúscula, una letra mayúscula y un número.'
+    ),
+  firstName: z.string().min(3, 'Nombre muy corto').max(100, 'Nombre muy largo'),
+  lastName: z
+    .string()
+    .min(3, 'Apellido muy corto')
+    .max(100, 'Apellido muy largo'),
+})
+export const ZCreateUser = ZUser.pick({
+  email: true,
+}).merge(ZPassword)
+
+export type CreateUserSchema = z.infer<typeof ZCreateUser>
 export type AllUsersSchema = z.infer<typeof ZAllUsers>
 export type UserSchema = z.infer<typeof ZUser>

@@ -45,14 +45,15 @@ export default function UserList({ data, rows, isPending }: IProps) {
     switch (columnKey) {
       case 'name':
         const verifiedColor = user.verify ? '#09f' : '#777'
+        const name = `${user.firstName} ${user.lastName}`
         return (
-          <Link className="hover:underline" href={`/dash/clientes/${user._id}`}>
+          <Link className="hover:underline" href={`/dash/usuarios/${user._id}`}>
             <User
               avatarProps={{ radius: 'lg', src: image }}
               description={user.email}
               name={
                 <div className="flex gap-x-2">
-                  <p>{user.name}</p>{' '}
+                  <p>{name}</p>
                   <VerifiedSVG size={18} color={verifiedColor} />
                 </div>
               }
@@ -91,7 +92,7 @@ export default function UserList({ data, rows, isPending }: IProps) {
     <>
       <p className="text-sm text-zinc-500 ">
         {data?.total
-          ? `Mostrando ${rows >= data.total ? data.total : rows} de ${data.total} clientes`
+          ? `Mostrando ${rows >= data.total ? data.total : rows} de ${data.total} usuarios`
           : ''}
         {isPending && 'Cargando...'}
         {!isPending && data?.data.length === 0 && search ? (

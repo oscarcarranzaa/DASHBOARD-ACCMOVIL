@@ -81,9 +81,9 @@ export const menuItems = [
     href: '/dash/equipo',
   },
   {
-    name: 'Clientes',
+    name: 'Usuarios',
     icon: <ClientSVG size={iconSize} />,
-    href: '/dash/clientes',
+    href: '/dash/usuarios',
   },
   {
     name: 'Ofertas',

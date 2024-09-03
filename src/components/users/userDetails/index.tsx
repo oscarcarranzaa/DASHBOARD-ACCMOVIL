@@ -15,6 +15,7 @@ export default function UserDetails({ user }: IProps) {
     ? user.avatar.images[0].src
     : '/static/default-profile.png'
   const verifiedColor = user.verify ? '#09f' : '#777'
+  const name = `${user.firstName} ${user.lastName}`
   return (
     <>
       <div className="dark:bg-zinc-950 bg-zinc-100 p-3 px-5 rounded-lg">
@@ -25,8 +26,9 @@ export default function UserDetails({ user }: IProps) {
           }}
           description={user.email}
           name={
-            <div className="flex gap-x-2">
-              <p>{user.name}</p> <VerifiedSVG size={18} color={verifiedColor} />
+            <div className="flex gap-x-2 items-center">
+              <p className="text-lg font-semibold">{name}</p>{' '}
+              <VerifiedSVG size={18} color={verifiedColor} />
             </div>
           }
         >

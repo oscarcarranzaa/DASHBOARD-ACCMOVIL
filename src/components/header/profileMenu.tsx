@@ -13,10 +13,8 @@ export default function ProfileMenu({ data }: IProps) {
 
   useOutsideClick(ref, () => setOpenProfile(false))
 
-  const avatar = data?.avatar?.images
-    ? data.avatar.images[2].src
-    : '/static/default-profile.png'
-
+  const avatar = data.avatar || '/static/default-profile.png'
+  const name = `${data.firstName.split(' ')[0]} ${data.lastName.split(' ')[0]}`
   return (
     <>
       <div
@@ -24,7 +22,7 @@ export default function ProfileMenu({ data }: IProps) {
         ref={ref as React.MutableRefObject<HTMLDivElement>}
       >
         <div className="flex items-center ">
-          <p className="mr-2 text-sm font-medium">{data?.name}</p>
+          <p className="mr-2 text-sm font-medium">{name}</p>
           <button
             className="p-1  rounded-full "
             onClick={() => setOpenProfile(!openProfile)}
@@ -39,8 +37,8 @@ export default function ProfileMenu({ data }: IProps) {
         >
           <ProfileItems
             image={avatar}
-            name={data.name ?? data.email}
-            role={data.team.role}
+            name={name}
+            role={data.role?.name ?? 'Administrador'}
           />
         </div>
       </div>

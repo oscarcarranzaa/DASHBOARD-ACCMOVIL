@@ -28,14 +28,23 @@ export const team = z.object({
   role: z.string(),
   job: z.string().optional(),
 })
-
+export const role = z.object({
+  id: z.string(),
+  name: z.string(),
+  keys: z.array(z.string()).nullable(),
+})
 export const user = z.object({
-  _id: z.string(),
-  name: z.string().optional(),
+  id: z.string(),
+  username: z.string(),
   email: z.string().email(),
-  verify: z.boolean(),
-  avatar: media.optional(),
-  team: team,
+  firstName: z.string(),
+  lastName: z.string(),
+  birthDate: z.string().nullable(),
+  phone: z.string().nullable(),
+  gender: z.enum(['female', 'male', 'others']).nullable(),
+  job: z.string().nullable(),
+  role: role.nullable(),
+  avatar: z.string().nullable(),
   createdAt: z.string(),
 })
 

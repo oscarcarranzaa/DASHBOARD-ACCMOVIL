@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios'
 
 export async function loginUser(formData: LoginSchema) {
   try {
-    const { data } = await api.post('/team/login', formData)
+    const { data } = await api.post('/admin/auth/login', formData)
     return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -14,7 +14,7 @@ export async function loginUser(formData: LoginSchema) {
 }
 export async function logout() {
   try {
-    const { data } = await api.get('/auth/logout')
+    const { data } = await api.get('/admin/auth/logout')
     return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {

@@ -25,7 +25,7 @@ axiosInstance.interceptors.request.use(async (req) => {
       }
     }
 
-    const newTokenResponse = await api.get('/auth/update_token')
+    const newTokenResponse = await api.get('/admin/auth/update-token')
     useAuthStore.getState().setToken(newTokenResponse.data.data.token)
 
     req.headers.Authorization = `Bearer ${newTokenResponse.data.data.token}`

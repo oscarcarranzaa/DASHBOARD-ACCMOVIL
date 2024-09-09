@@ -4,7 +4,7 @@ import { UserSchema, user } from '@/types/schemas'
 
 export async function userData() {
   try {
-    const { data } = await axiosInstance.get<UserSchema>('/team')
+    const { data } = await axiosInstance.get<UserSchema>('/admin/user')
     const validData = user.parse(data)
     return validData
   } catch (error) {

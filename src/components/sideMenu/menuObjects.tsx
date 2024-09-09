@@ -27,10 +27,6 @@ export const menuItems = [
         name: 'Historial',
         href: '/dash/Pedidos/historial',
       },
-      {
-        name: 'Devoluciones',
-        href: '/dash/pedidos/devoluciones',
-      },
     ],
   },
   {

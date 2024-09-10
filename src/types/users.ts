@@ -17,7 +17,28 @@ export const ZRole = z.object({
   id: z.string(),
   name: z.string(),
   keys: z.array(z.string()),
+  createdAt: z.string(),
 })
+export const ZPermissions = z.object({
+  name: z.string(),
+  key: z.string(),
+  items: z.array(
+    z.object({
+      name: z.string(),
+      description: z.string(),
+      key: z.string(),
+      active: z.boolean(),
+      requiredKeys: z.array(z.string()).optional(),
+    })
+  ),
+})
+export const ZAllRoles = z.array(
+  ZRole.merge(
+    z.object({
+      user: z.optional(z.array(z.object({ id: z.string() }))),
+    })
+  )
+)
 export const ZUser = z.object({
   id: z.string(),
   firstName: z.string(),
@@ -34,6 +55,25 @@ export const ZUser = z.object({
   document_number: z.string().nullable(),
   createdAt: z.string(),
 })
+export const ZRolePermissions = ZRole.merge(
+  z.object({
+    permissions: z.array(ZPermissions),
+    users: z
+      .array(
+        ZUser.pick({
+          id: true,
+          firstName: true,
+          lastName: true,
+          username: true,
+          gender: true,
+          job: true,
+          email: true,
+          avatar: true,
+        })
+      )
+      .optional(),
+  })
+)
 export const ZAllUsers = z.object({
   data: z.array(ZUser),
   totalPages: z.number(),
@@ -75,6 +115,8 @@ export const ZCreateUser = ZUser.pick({
   email: true,
 }).merge(ZPassword)
 
+export type rolePermissions = z.infer<typeof ZRolePermissions>
+export type getAllRolesType = z.infer<typeof ZAllRoles>
 export type CreateUserSchema = z.infer<typeof ZCreateUser>
 export type AllUsersSchema = z.infer<typeof ZAllUsers>
-export type   UserSchema = z.infer<typeof ZUser>
+export type UserSchema = z.infer<typeof ZUser>

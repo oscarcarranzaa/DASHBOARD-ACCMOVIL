@@ -11,14 +11,14 @@ import { isAxiosError } from 'axios'
 export async function getAllUsers(page: string, limit: string, query?: string) {
   try {
     const { data } = await axiosInstance.get<AllUsersSchema>(
-      `/users?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
+      `/admin/users?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
     )
     const validClient = ZAllUsers.parse(data)
     return validClient
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
-    } else {
+    } else {  
       throw new Error('Ocurrió un error al obtener los clientes.')
     }
   }
@@ -38,8 +38,8 @@ export async function getOneUser(params: string) {
 }
 export async function createUser(userData: CreateUserSchema) {
   try {
-    const { data } = await axiosInstance.post<UserSchema>(
-      '/auth/create-account',
+    const { data } = await axiosInstance.post(
+      '/admin/auth/create-user',
       userData
     )
     const isCreated = data ? 'Usuario creado' : 'Error al crear usuario'

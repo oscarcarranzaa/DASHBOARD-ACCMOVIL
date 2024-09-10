@@ -72,9 +72,9 @@ export const menuItems = [
     href: '/dash/multimedia',
   },
   {
-    name: 'Equipo',
+    name: 'Clientes',
     icon: <TeamSVG size={iconSize} />,
-    href: '/dash/equipo',
+    href: '/dash/clientes',
   },
   {
     name: 'Usuarios',

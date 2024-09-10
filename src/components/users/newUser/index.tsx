@@ -26,6 +26,8 @@ export default function NewUserForm() {
     lastName: '',
     password: '',
     email: '',
+    username: '',
+    job: '',
   }
   const {
     handleSubmit,
@@ -147,6 +149,42 @@ export default function NewUserForm() {
                             type="text"
                             placeholder="Ejem: (Martínez García)"
                             label="Apellidos"
+                            required
+                            isRequired
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="mt-5 flex gap-2">
+                      <Controller
+                        name="username"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            type="text"
+                            errorMessage={errors.username?.message}
+                            isInvalid={!!errors.username}
+                            placeholder="Ejem: (juanfernandez13)"
+                            label="Nombre de usuario"
+                            required
+                            isRequired
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="job"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            errorMessage={errors.job?.message}
+                            isInvalid={!!errors.job}
+                            type="text"
+                            placeholder="Ejem: (Marketing)"
+                            label="Puesto de trabajo"
                             required
                             isRequired
                           />

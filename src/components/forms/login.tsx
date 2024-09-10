@@ -31,7 +31,7 @@ export default function LoginForm({
             Email: <span className="text-red-600">*</span>
           </p>
           <input
-            type="text"
+            type="email"
             className={`${errors.email ? 'border-red-300' : ''} w-80 p-3 border  rounded-md`}
             placeholder="Ingrese su correo"
             autoComplete="email"

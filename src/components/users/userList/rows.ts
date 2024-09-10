@@ -4,6 +4,14 @@ export const userRows = [
     key: 'name',
   },
   {
+    name: 'Correo',
+    key: 'email',
+  },
+  {
+    name: 'Puesto',
+    key: 'job',
+  },
+  {
     name: 'Teléfono',
     key: 'phone',
   },

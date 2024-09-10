@@ -27,9 +27,10 @@ interface IProps {
   isPending: boolean
 }
 const statusColorMap: Record<string, ChipProps['color']> = {
-  active: 'success',
-  suspended: 'danger',
-  disabled: 'warning',
+  ACTIVE: 'success',
+  INACTIVE: 'default',
+  SUSPENDED: 'danger',
+  TERMINATED: 'warning',
 }
 export default function UserList({ data, rows, isPending }: IProps) {
   const [totalPages, setTotalPages] = useState(0)
@@ -38,30 +39,33 @@ export default function UserList({ data, rows, isPending }: IProps) {
 
   const getData = data ? data.data : []
   const renderCell = useCallback((user: UserSchema, columnKey: React.Key) => {
-    const image = user.avatar?.images
-      ? user.avatar.images[0].src
-      : '/static/default-profile.png'
+    const image = user.avatar || '/static/default-profile.png'
 
     switch (columnKey) {
       case 'name':
-        const verifiedColor = user.verify ? '#09f' : '#777'
-        const name = `${user.firstName} ${user.lastName}`
+        const name = `${user.firstName.split(' ')[0]} ${user.lastName.split(' ')[0]}`
         return (
-          <Link className="hover:underline" href={`/dash/usuarios/${user._id}`}>
+          <Link
+            className="hover:underline"
+            href={`/dash/usuarios/${user.username}`}
+          >
             <User
               avatarProps={{ radius: 'lg', src: image }}
-              description={user.email}
+              description={user.username}
               name={
-                <div className="flex gap-x-2">
+                <div className="flex gap-x-2 line-clamp-1">
                   <p>{name}</p>
-                  <VerifiedSVG size={18} color={verifiedColor} />
                 </div>
               }
             >
-              {user.email}
+              {`@${user.username}`}
             </User>
           </Link>
         )
+      case 'email':
+        return user.email
+      case 'job':
+        return user.job
       case 'phone':
         return user.phone || '-'
       case 'status':
@@ -128,7 +132,7 @@ export default function UserList({ data, rows, isPending }: IProps) {
         >
           {(item) => (
             <TableRow
-              key={item._id}
+              key={item.username}
               className="hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               {(columnKey) => (

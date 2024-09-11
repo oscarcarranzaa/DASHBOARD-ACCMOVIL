@@ -3,11 +3,15 @@ import {
   AllUsersSchema,
   CreateUserSchema,
   getAllRolesType,
+  getPermissionsType,
   newRoleType,
   rolePermissions,
+  roleType,
   UserSchema,
   ZAllRoles,
   ZAllUsers,
+  ZGetPermissions,
+  ZRole,
   ZRolePermissions,
   ZUser,
 } from '@/types/users'
@@ -53,6 +57,33 @@ export async function getOneRol(id: string) {
       throw new Error(error.response.data.response.msg)
     } else {
       throw new Error('Ocurrió un error al obtener el rol.')
+    }
+  }
+}
+export async function getPermissions() {
+  try {
+    const { data } =
+      await axiosInstance.get<getPermissionsType>('/admin/permissions')
+    const validData = ZGetPermissions.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Ocurrió un error al obtener los permisos.')
+    }
+  }
+}
+export async function createRol(value: newRoleType) {
+  try {
+    const { data } = await axiosInstance.post<roleType>('/admin/rol', value)
+    const validData = ZRole.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Error al crear el rol')
     }
   }
 }

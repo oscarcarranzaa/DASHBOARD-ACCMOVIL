@@ -74,6 +74,23 @@ export const ZRolePermissions = ZRole.merge(
       .optional(),
   })
 )
+
+export const ZGetPermissions = z.array(ZPermissions)
+export const ZUserPermissions = z
+  .array(
+    ZUser.pick({
+      id: true,
+      firstName: true,
+      lastName: true,
+      username: true,
+      gender: true,
+      job: true,
+      email: true,
+      avatar: true,
+    })
+  )
+  .optional()
+
 export const ZNewRole = z.object({
   name: z.string(),
   keys: z.array(z.string()),
@@ -119,6 +136,9 @@ export const ZCreateUser = ZUser.pick({
   email: true,
 }).merge(ZPassword)
 
+export type getPermissionsType = z.infer<typeof ZGetPermissions>
+export type userPermissionsType = z.infer<typeof ZUserPermissions>
+export type roleType = z.infer<typeof ZRole>
 export type rolePermissions = z.infer<typeof ZRolePermissions>
 export type getAllRolesType = z.infer<typeof ZAllRoles>
 export type newRoleType = z.infer<typeof ZNewRole>

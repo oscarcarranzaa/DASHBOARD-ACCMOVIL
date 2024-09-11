@@ -1,7 +1,12 @@
 'use client'
 import Spinner from '@/components/icons/spinner'
 import { useRoleStore } from '@/store/role'
-import { newRoleType, rolePermissions } from '@/types/users'
+import {
+  getPermissionsType,
+  newRoleType,
+  rolePermissions,
+  userPermissionsType,
+} from '@/types/users'
 import {
   Button,
   Input,
@@ -15,16 +20,20 @@ import {
 import { useEffect } from 'react'
 
 type TProps = {
-  data: rolePermissions
+  permissions: getPermissionsType
+  users?: userPermissionsType
+  roleName: string
   isLoading: boolean
   buttonName: string
   onSend: (e: newRoleType) => void
 }
 
 export default function RoleEditor({
-  data,
+  permissions,
   onSend,
   isLoading,
+  users,
+  roleName,
   buttonName,
 }: TProps) {
   const {
@@ -37,16 +46,16 @@ export default function RoleEditor({
   } = useRoleStore()
 
   useEffect(() => {
-    if (data) {
-      const keysData = data.permissions
+    if (permissions) {
+      const keysData = permissions
         .map((p) => p.items.filter((i) => i.active).map((k) => k.key))
         .flat()
       setKeys(keysData)
-      setName(data.name)
+      setName(roleName)
     }
-  }, [data, setKeys, setName])
+  }, [permissions, setKeys, setName])
 
-  const addActiveRole = data.permissions.map((p) => {
+  const addActiveRole = permissions.map((p) => {
     const items = p.items.map((i) => {
       const includeKeys = roleKeys.includes(i.key)
 
@@ -145,8 +154,8 @@ export default function RoleEditor({
         </form>
       </div>
       <div className="col-span-2 ">
-        <p className="mb-5">Usuarios con este rol:</p>
-        {data.users?.map((user) => {
+        {users && <p className="mb-5">Usuarios con este rol:</p>}
+        {users?.map((user) => {
           const image = user.avatar || '/static/default-profile.png'
           const name = `${user.firstName.split(' ')[0]} ${user.lastName.split(' ')[0]}`
           return (

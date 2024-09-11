@@ -1,8 +1,9 @@
 'use client'
-
+import Link from 'next/link'
 import { getAllRoles } from '@/api/users'
 import NavegationPages from '@/components/navegationPages'
 import RoleList from '@/components/users/roles/roleItems'
+import { Button } from '@nextui-org/button'
 import { useQuery } from '@tanstack/react-query'
 
 export default function UserRoles() {
@@ -14,7 +15,12 @@ export default function UserRoles() {
 
   return (
     <>
-      <NavegationPages text="Roles de usuarios" />
+      <div className="flex justify-between">
+        <NavegationPages text="Roles de usuarios" />
+        <Button href="/dash/usuarios/roles/nuevo" as={Link} color="primary">
+          Crear nuevo
+        </Button>
+      </div>
       <p className="mb-5">
         Mostrando los roles de acceso para tus usuarios creados...
       </p>

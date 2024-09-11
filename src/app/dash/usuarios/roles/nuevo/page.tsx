@@ -1,47 +1,42 @@
 'use client'
-import { getOneRol, updateRol } from '@/api/users'
-import NotFound from '@/components/errorsPages/notFound'
+import { createRol, getPermissions } from '@/api/users'
 import NavegationPages from '@/components/navegationPages'
 import RoleEditor from '@/components/users/roles/roleEditor'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { toast, Toaster } from 'sonner'
 
 export default function AdminRolPage() {
-  const params = useParams()
-  const ID = params.roleId
   const queryClient = useQueryClient()
-  const { data, isError } = useQuery({
-    queryKey: ['roles', ID],
-    queryFn: () => getOneRol(ID.toString()),
+  const router = useRouter()
+  const { data } = useQuery({
+    queryKey: ['permissions'],
+    queryFn: getPermissions,
     refetchOnWindowFocus: false,
   })
   const { isPending: rolPending, mutate } = useMutation({
-    mutationFn: updateRol,
-    onSuccess: () => {
+    mutationFn: createRol,
+    onSuccess: (dat) => {
       queryClient.invalidateQueries({ queryKey: ['roles'] })
-      toast.success('Rol actualizado')
+      router.push(`/dash/usuarios/roles/${dat.id}`)
+      toast.success('Rol creado')
     },
     onError: (err) => {
       toast.error(err.message)
     },
   })
-  if (isError) {
-    return <NotFound message="No se pudo cargar este rol..." />
-  }
   return (
     <>
-      <NavegationPages text={data?.name ?? 'Cargando...'} />
+      <NavegationPages text="Crear un nuevo Rol" />
       <div className="w-full">
         {data && (
           <RoleEditor
-            permissions={data.permissions}
-            roleName={data.name}
-            users={data.users}
+            permissions={data}
+            roleName=""
             isLoading={rolPending}
-            buttonName="Actualizar"
+            buttonName="Crear"
             onSend={(e) => {
-              mutate({ id: data.id, value: e })
+              mutate(e)
             }}
           />
         )}

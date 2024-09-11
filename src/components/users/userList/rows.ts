@@ -8,7 +8,7 @@ export const userRows = [
     key: 'email',
   },
   {
-    name: 'Puesto',
+    name: 'Puesto/Rol',
     key: 'job',
   },
   {

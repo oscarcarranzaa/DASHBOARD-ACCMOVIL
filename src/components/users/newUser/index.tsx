@@ -1,4 +1,4 @@
-import { createUser } from '@/api/users'
+import { createUser, getAllRoles } from '@/api/users'
 import EyeSVG from '@/components/icons/eye'
 import EyeInvisibleSVG from '@/components/icons/eyeInvisible'
 import Spinner from '@/components/icons/spinner'
@@ -12,8 +12,10 @@ import {
   Input,
   ModalHeader,
   ModalFooter,
+  Autocomplete,
+  AutocompleteItem,
 } from '@nextui-org/react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
@@ -25,22 +27,29 @@ export default function NewUserForm() {
     firstName: '',
     lastName: '',
     password: '',
+    roleId: null,
     email: '',
     username: '',
     job: '',
   }
+  const { data, isPending: pendingRoles } = useQuery({
+    queryKey: ['roles'],
+    queryFn: getAllRoles,
+    refetchOnWindowFocus: false,
+  })
   const {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<CreateUserSchema>({
     resolver: zodResolver(ZCreateUser),
     defaultValues,
   })
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: createUser,
-    onSuccess: (data) => {
+    onSuccess: () => {
       reset()
       onClose()
       queryClient.invalidateQueries({ queryKey: ['users'] })
@@ -50,6 +59,11 @@ export default function NewUserForm() {
     mutate(form)
   }
   const toggleVisibility = () => setIsVisible(!isVisible)
+  const optionsRoles = data ?? []
+
+  const setRole = (key: string | null) => {
+    setValue('roleId', key)
+  }
   return (
     <>
       <div>
@@ -86,38 +100,57 @@ export default function NewUserForm() {
                         />
                       )}
                     />
-                    <Controller
-                      name="password"
-                      control={control}
-                      rules={{ required: true }}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          className="mt-5"
-                          type={isVisible ? 'text' : 'password'}
-                          placeholder="Contraseña"
-                          label="Contraseña"
-                          errorMessage={errors.password?.message}
-                          isInvalid={!!errors.password}
-                          endContent={
-                            <button
-                              className="focus:outline-none dark:fill-zinc-400"
-                              type="button"
-                              onClick={toggleVisibility}
-                              aria-label="toggle password visibility"
-                            >
-                              {isVisible ? (
-                                <EyeInvisibleSVG size={24} />
-                              ) : (
-                                <EyeSVG size={24} />
-                              )}
-                            </button>
-                          }
-                          required
-                          isRequired
-                        />
-                      )}
-                    />
+                    <div className="mt-5 flex gap-2">
+                      <Controller
+                        name="password"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="mt-5"
+                            type={isVisible ? 'text' : 'password'}
+                            placeholder="Contraseña"
+                            label="Contraseña"
+                            errorMessage={errors.password?.message}
+                            isInvalid={!!errors.password}
+                            endContent={
+                              <button
+                                className="focus:outline-none dark:fill-zinc-400"
+                                type="button"
+                                onClick={toggleVisibility}
+                                aria-label="toggle password visibility"
+                              >
+                                {isVisible ? (
+                                  <EyeInvisibleSVG size={24} />
+                                ) : (
+                                  <EyeSVG size={24} />
+                                )}
+                              </button>
+                            }
+                            required
+                            isRequired
+                          />
+                        )}
+                      />
+
+                      <Autocomplete
+                        items={data}
+                        isLoading={pendingRoles}
+                        className="mt-5"
+                        label="Rol"
+                        placeholder="Seleccione un Rol"
+                        onSelectionChange={(key) =>
+                          setRole(key ? key.toString() : null)
+                        }
+                      >
+                        {optionsRoles.map((role) => (
+                          <AutocompleteItem key={role.id} value={role.id}>
+                            {role.name}
+                          </AutocompleteItem>
+                        ))}
+                      </Autocomplete>
+                    </div>
 
                     <div className="mt-5 flex gap-2">
                       <Controller
@@ -191,6 +224,11 @@ export default function NewUserForm() {
                         )}
                       />
                     </div>
+                    {error && (
+                      <p className="text-xs mt-2 ml-2 text-red-500 font-semibold">
+                        {error.message}
+                      </p>
+                    )}
                   </div>
                   <ModalFooter>
                     <Button className=" min-w-32" onPress={onClose}>

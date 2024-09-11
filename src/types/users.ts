@@ -131,6 +131,7 @@ export const ZPassword = z.object({
         'El username solo puede contener letras, números y guiones bajos',
     }),
   job: z.string(),
+  roleId: z.string().nullable(),
 })
 export const ZCreateUser = ZUser.pick({
   email: true,

@@ -74,6 +74,10 @@ export const ZRolePermissions = ZRole.merge(
       .optional(),
   })
 )
+export const ZNewRole = z.object({
+  name: z.string(),
+  keys: z.array(z.string()),
+})
 export const ZAllUsers = z.object({
   data: z.array(ZUser),
   totalPages: z.number(),
@@ -117,6 +121,7 @@ export const ZCreateUser = ZUser.pick({
 
 export type rolePermissions = z.infer<typeof ZRolePermissions>
 export type getAllRolesType = z.infer<typeof ZAllRoles>
+export type newRoleType = z.infer<typeof ZNewRole>
 export type CreateUserSchema = z.infer<typeof ZCreateUser>
 export type AllUsersSchema = z.infer<typeof ZAllUsers>
 export type UserSchema = z.infer<typeof ZUser>

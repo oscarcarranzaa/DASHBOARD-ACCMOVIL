@@ -3,6 +3,7 @@ import {
   AllUsersSchema,
   CreateUserSchema,
   getAllRolesType,
+  newRoleType,
   rolePermissions,
   UserSchema,
   ZAllRoles,
@@ -47,6 +48,25 @@ export async function getOneRol(id: string) {
     )
     const validData = ZRolePermissions.parse(data)
     return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Ocurrió un error al obtener el rol.')
+    }
+  }
+}
+export async function updateRol({
+  id,
+  value,
+}: {
+  id: string
+  value: newRoleType
+}) {
+  try {
+    const { data } = await axiosInstance.post(`/admin/roles/${id}`, value)
+
+    return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)

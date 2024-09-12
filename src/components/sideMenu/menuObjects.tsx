@@ -13,11 +13,13 @@ export const menuItems = [
   {
     name: 'Dashboard',
     icon: <MenuSquareSVG size={iconSize} />,
-    href: '/dash',
+    urlKey: '/dash/dashboard',
+    href: '/dash/dashboard',
   },
   {
     name: 'Pedidos',
     icon: <OrdertSVG size={iconSize} />,
+    urlKey: '/dash/pedidos',
     items: [
       {
         name: 'Ver pedidos',
@@ -25,13 +27,14 @@ export const menuItems = [
       },
       {
         name: 'Historial',
-        href: '/dash/Pedidos/historial',
+        href: '/dash/pedidos/historial',
       },
     ],
   },
   {
     name: 'Productos',
     icon: <ProductSVG size={iconSize} />,
+    urlKey: '/dash/productos',
     items: [
       {
         name: 'Nuevo',
@@ -47,6 +50,7 @@ export const menuItems = [
   {
     name: 'Posts',
     icon: <PublishSVG size={iconSize} />,
+    urlKey: '/dash/posts',
     items: [
       {
         name: 'Nuevo',
@@ -69,16 +73,19 @@ export const menuItems = [
   {
     name: 'Multimedia',
     icon: <MediaImageSVG size={iconSize} />,
+    urlKey: '/dash/multimedia',
     href: '/dash/multimedia',
   },
   {
     name: 'Clientes',
     icon: <TeamSVG size={iconSize} />,
+    urlKey: '/dash/clientes',
     href: '/dash/clientes',
   },
   {
     name: 'Usuarios',
     icon: <ClientSVG size={iconSize} />,
+    urlKey: '/dash/usuarios',
     items: [
       {
         name: 'Usuarios',
@@ -93,6 +100,7 @@ export const menuItems = [
   {
     name: 'Ofertas',
     icon: <OfferSVG size={iconSize} />,
+    urlKey: '/dash/ofertas',
     items: [
       {
         name: 'Ofertas',
@@ -115,6 +123,7 @@ export const menuItems = [
   {
     name: 'Sitio',
     icon: <WorldSVG size={iconSize} />,
+    urlKey: '/dash/sitio',
     items: [
       {
         name: 'Análisis',

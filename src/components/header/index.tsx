@@ -16,7 +16,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-3 bg-white dark:bg-zinc-900 flex justify-between border-b border-gray-300 dark:border-zinc-600">
+      <header className="p-3 bg-white dark:bg-[#131315] flex justify-between border-b border-gray-300 dark:border-zinc-600">
         <div className="ml-5">
           <Image
             src={'/static/logo.webp'}

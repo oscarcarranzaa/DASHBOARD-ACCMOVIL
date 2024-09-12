@@ -1,4 +1,3 @@
-'use client'
 import { ThemeProvider } from 'next-themes'
 import { NextUIProvider } from '@nextui-org/system'
 import Header from '@/components/header'

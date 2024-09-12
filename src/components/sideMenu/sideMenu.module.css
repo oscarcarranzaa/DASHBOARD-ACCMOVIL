@@ -26,3 +26,27 @@
   background-color: #bfbfbf;
   width: 8px;
 }
+@keyframes vibrate {
+  0% {
+    transform: translateX(0deg);
+  }
+  33% {
+    transform: translateX(-20deg);
+  }
+  66% {
+    transform: rotate(20deg);
+  }
+
+  100% {
+    transform: translateX(0deg);
+  }
+}
+.activeVibrate .vibrate {
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.activeVibrate:hover .vibrate {
+  animation: vibrate 0.3s ease-in-out;
+  animation-fill-mode: forwards;
+}

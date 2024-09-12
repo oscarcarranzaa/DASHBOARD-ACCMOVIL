@@ -1,8 +1,6 @@
 'use client'
+import DashboardPage from './dashboard/page'
+
 export default function Dash() {
-  return (
-    <>
-      <div>Desde el dash</div>
-    </>
-  )
+  return <DashboardPage />
 }

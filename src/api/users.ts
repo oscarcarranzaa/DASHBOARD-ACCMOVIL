@@ -22,11 +22,14 @@ export async function getAllUsers(page: string, limit: string, query?: string) {
     const { data } = await axiosInstance.get<AllUsersSchema>(
       `/admin/users?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
     )
+
     const validClient = ZAllUsers.parse(data)
     return validClient
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
     } else {
       throw new Error('Ocurrió un error al obtener los usuarios.')
     }
@@ -39,7 +42,9 @@ export async function getAllRoles() {
     return validClient
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
     } else {
       throw new Error('Ocurrió un error al obtener los roles de los usuarios.')
     }
@@ -54,7 +59,9 @@ export async function getOneRol(id: string) {
     return validData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
     } else {
       throw new Error('Ocurrió un error al obtener el rol.')
     }
@@ -68,7 +75,9 @@ export async function getPermissions() {
     return validData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
     } else {
       throw new Error('Ocurrió un error al obtener los permisos.')
     }

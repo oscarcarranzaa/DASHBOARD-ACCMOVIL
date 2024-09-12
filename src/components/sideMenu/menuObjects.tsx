@@ -24,10 +24,12 @@ export const menuItems = [
       {
         name: 'Ver pedidos',
         href: '/dash/pedidos/',
+        permissionKeys: ['order.view'],
       },
       {
         name: 'Historial',
         href: '/dash/pedidos/historial',
+        permissionKeys: ['order.history'],
       },
     ],
   },
@@ -39,11 +41,13 @@ export const menuItems = [
       {
         name: 'Nuevo',
         href: '/dash/productos/nuevo',
+        permissionKeys: ['product.create'],
       },
 
       {
         name: 'Ver productos',
         href: '/dash/productos/',
+        permissionKeys: ['product.view'],
       },
     ],
   },
@@ -55,6 +59,7 @@ export const menuItems = [
       {
         name: 'Nuevo',
         href: '/dash/posts/nuevo',
+        permissionKeys: ['posts.create'],
       },
       {
         name: 'Ver posts',
@@ -63,10 +68,12 @@ export const menuItems = [
       {
         name: 'Categorías',
         href: '/dash/posts/categories',
+        permissionKeys: ['posts.categoriesAllActions'],
       },
       {
         name: 'Atributos',
         href: '/dash/posts/atributos',
+        permissionKeys: ['posts.attributesAllActions'],
       },
     ],
   },
@@ -94,6 +101,7 @@ export const menuItems = [
       {
         name: 'Roles',
         href: '/dash/usuarios/roles',
+        permissionKeys: ['team.roles'],
       },
     ],
   },
@@ -103,20 +111,19 @@ export const menuItems = [
     urlKey: '/dash/ofertas',
     items: [
       {
-        name: 'Ofertas',
-        href: '/dash/ofertas/',
-      },
-      {
         name: 'Cupones',
         href: '/dash/ofertas/cupones',
+        permissionKey: ['offers.coupons'],
       },
       {
         name: 'Descuentos',
         href: '/dash/ofertas/descuentos',
+        permissionKey: ['offers.discounts'],
       },
       {
         name: 'Puntos',
         href: '/dash/ofertas/puntos',
+        permissionKey: ['offers.points'],
       },
     ],
   },

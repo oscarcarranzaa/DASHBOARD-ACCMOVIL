@@ -104,7 +104,7 @@ export default function UserList({ data, rows, isPending }: IProps) {
     <>
       <p className="text-sm text-zinc-500 ">
         {data?.total
-          ? `Mostrando ${rows >= data.total ? data.total : rows} de ${data.total} usuarios`
+          ? `Mostrando ${rows >= data.results ? data.results : rows} de ${data.total} usuarios`
           : ''}
         {isPending && 'Cargando...'}
         {!isPending && data?.data.length === 0 && search ? (

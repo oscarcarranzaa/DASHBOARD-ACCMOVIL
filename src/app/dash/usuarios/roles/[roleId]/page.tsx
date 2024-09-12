@@ -1,6 +1,6 @@
 'use client'
 import { getOneRol, updateRol } from '@/api/users'
-import NotFound from '@/components/errorsPages/notFound'
+import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import RoleEditor from '@/components/users/roles/roleEditor'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -11,10 +11,11 @@ export default function AdminRolPage() {
   const params = useParams()
   const ID = params.roleId
   const queryClient = useQueryClient()
-  const { data, isError } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ['roles', ID],
     queryFn: () => getOneRol(ID.toString()),
     refetchOnWindowFocus: false,
+    retry: false,
   })
   const { isPending: rolPending, mutate } = useMutation({
     mutationFn: updateRol,
@@ -26,8 +27,8 @@ export default function AdminRolPage() {
       toast.error(err.message)
     },
   })
-  if (isError) {
-    return <NotFound message="No se pudo cargar este rol..." />
+  if (error) {
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
   }
   return (
     <>

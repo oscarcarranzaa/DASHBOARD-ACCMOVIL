@@ -1,18 +1,12 @@
 'use client'
-
-import { userData } from '@/api/userData'
-import { useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import ProfileMenu from './profileMenu'
 import HeaderSkeleton from './skeleton/skeletonLoader'
 import DarkModeButton from './darkMode'
+import useUserInfo from '@/hooks/useUserInfo'
 
 export default function Header() {
-  const { data, isPending } = useQuery({
-    queryKey: ['user'],
-    queryFn: userData,
-    refetchOnWindowFocus: false,
-  })
+  const { userData, userPending } = useUserInfo()
 
   return (
     <>
@@ -30,8 +24,8 @@ export default function Header() {
           <div className="ml-3 mr-5">
             <DarkModeButton />
           </div>
-          {data && !isPending ? (
-            <ProfileMenu data={data} />
+          {userData && !userPending ? (
+            <ProfileMenu data={userData} />
           ) : (
             <HeaderSkeleton />
           )}

@@ -151,7 +151,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
                             </p>
                           </div>
                           <div
-                            className={`${openMenu === index ? ' rotate-180' : ''} transition-transform stroke-black fill-black  dark:fill-zinc-300 dark:stroke-zinc-300 `}
+                            className={`${openMenu === index ? ' rotate-180' : ''}  ${isRouteActive ? 'fill-white stroke-white' : ''} transition-transform stroke-black fill-black  dark:fill-zinc-300 dark:stroke-zinc-300 `}
                           >
                             {menu.items && !isOpen ? (
                               <ArrowAngleSVG size={20} />

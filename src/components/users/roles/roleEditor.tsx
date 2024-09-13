@@ -53,7 +53,7 @@ export default function RoleEditor({
       setKeys(keysData)
       setName(roleName)
     }
-  }, [permissions, setKeys, setName])
+  }, [permissions, setKeys, setName, roleName])
 
   const addActiveRole = permissions.map((p) => {
     const items = p.items.map((i) => {

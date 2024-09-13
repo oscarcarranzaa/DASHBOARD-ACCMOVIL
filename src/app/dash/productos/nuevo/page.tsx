@@ -10,7 +10,7 @@ import ToastInfo from '@/components/UI/toast'
 import ProductEditor from '@/components/products/productEditor/'
 
 export default function NewProduct() {
-  const { mutate, isPending, error, data } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: createProduct,
     onSuccess: (response) => {
       toast(

@@ -1,17 +1,22 @@
+import { verifyAccess } from '@/lib/verifyAccess'
 import Link from 'next/link'
 
 interface IProps {
   items: {
     name: string
     href: string
+    permissionKeys: string[]
   }[]
   space: boolean
+  userKeys: string[] | null
 }
 
-export default function MenuItems({ items, space }: IProps) {
+export default function MenuItems({ items, space, userKeys }: IProps) {
   return (
     <>
       {items.map((i, index) => {
+        const isView = verifyAccess({ keys: i.permissionKeys, userKeys })
+        if (!isView) return null
         return (
           <div key={index}>
             <Link href={i.href}>

@@ -4,6 +4,7 @@ import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import Search from '@/components/UI/search'
 import NewUserForm from '@/components/users/newUser'
+import AccessComponent from '@/components/users/roles/accessComponent'
 import UserList from '@/components/users/userList'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
@@ -29,7 +30,9 @@ export default function ClientPage() {
         <div>
           <div className="mb-3 flex justify-between">
             <Search placeHolder="Buscar usuario..." />
-            <NewUserForm />
+            <AccessComponent keys={['admin']}>
+              <NewUserForm />
+            </AccessComponent>
           </div>
           <div className="mb-16">
             <UserList data={data} rows={rows} isPending={isPending} />

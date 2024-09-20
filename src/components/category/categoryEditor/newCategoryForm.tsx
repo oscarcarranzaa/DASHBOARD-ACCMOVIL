@@ -45,7 +45,7 @@ export default function NewCategoryForm({
 
   useEffect(() => {
     setValue('parent', categorySelected)
-    setValue('image', newImageValue ? newImageValue[0].mediaIDItem : undefined)
+    setValue('image', newImageValue ? newImageValue[0].id : undefined)
   }, [categorySelected, newImageValue, setValue])
 
   const handleForm = (formData: newCategoryForm) => {

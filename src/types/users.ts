@@ -52,7 +52,7 @@ export const ZUser = z.object({
   avatar: z.string().nullable(),
   birthDate: z.string().nullable(),
   status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED', 'TERMINATED']),
-  document_number: z.string().nullable(),
+  documentNumber: z.string().nullable(),
   createdAt: z.string(),
 })
 export const ZRolePermissions = ZRole.merge(

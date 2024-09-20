@@ -2,16 +2,16 @@ import { z } from 'zod'
 
 ///// MEDIOS
 export const images = z.object({
-  _id: z.string(),
+  id: z.string(),
   key: z.string(),
   src: z.string(),
+  type: z.string(),
   width: z.number(),
   height: z.number(),
 })
 
 export const media = z.object({
-  _id: z.string(),
-  mediaId: z.string(),
+  id: z.string(),
   title: z.string(),
   url: z.string(),
   type: z.string(),
@@ -19,8 +19,8 @@ export const media = z.object({
   see: z.string().optional(),
   size: z.number(),
   key: z.string(),
-  user: z.string(),
-  images: z.array(images).optional(),
+  userId: z.string(),
+  qualities: z.array(images).optional(),
   createdAt: z.string(),
 })
 export const team = z.object({
@@ -55,13 +55,9 @@ export const getMedias = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
-const mediaUserAvatar = media
-  .pick({ _id: true, mediaId: true, images: true })
-  .optional()
-const mediaUser = user
-  .omit({ avatar: true })
-  .extend({ avatar: mediaUserAvatar })
-const oneMediaTypes = media.omit({ user: true }).extend({ user: mediaUser })
+const mediaUserAvatar = media.pick({ id: true, qualities: true }).optional()
+
+const oneMediaTypes = media.omit({ userId: true }).extend({ user })
 
 export const getOneMediaData = oneMediaTypes
 

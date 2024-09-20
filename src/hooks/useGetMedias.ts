@@ -1,10 +1,8 @@
-'use client'
 import { getDataMedias } from '@/api/media'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
-import { useState } from 'react'
 
-export default function getMedia() {
+export default function useGetMedia() {
   const searchParams = useSearchParams()
   const pageValue = searchParams.get('pageMedia') ?? '1'
   const page = Number(pageValue) || 1
@@ -18,14 +16,13 @@ export default function getMedia() {
   const allMedia = data?.data
   const dataItem = allMedia
     ? allMedia.map((i) => {
-        const mediaImage = i.images ? i.images[2].src : i.url
-        const urlImage = i.images ? i.images[6].src : i.url
+        const mediaImage = i.qualities ? i.qualities[1].src : i.url
+        const urlImage = i.url
         return {
           imgURI: mediaImage,
           urlMedia: urlImage,
           name: i.title,
-          id: i.mediaId,
-          mediaIDItem: i._id,
+          id: i.id,
         }
       })
     : null

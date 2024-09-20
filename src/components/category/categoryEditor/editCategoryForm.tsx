@@ -56,7 +56,7 @@ export default function EditCategoryForm({
         name: data.name || '',
         description: data.description || '',
         keywords: data.keywords || '',
-        image: data.image?._id || undefined,
+        image: data.image?.id || undefined,
       })
 
       if (data.image) {
@@ -64,9 +64,8 @@ export default function EditCategoryForm({
         seNewImageValue([
           {
             name: image.title,
-            imgURI: image.images ? image.images[3].src : image.url,
-            id: image.mediaId,
-            mediaIDItem: image._id,
+            imgURI: image.qualities ? image.qualities[3].src : image.url,
+            id: image.id,
             urlMedia: image.url,
           },
         ])
@@ -77,7 +76,7 @@ export default function EditCategoryForm({
   }, [data, reset])
 
   useEffect(() => {
-    setValue('image', newImageValue ? newImageValue[0].mediaIDItem : undefined)
+    setValue('image', newImageValue ? newImageValue[0].id : undefined)
   }, [categorySelected, newImageValue, setValue])
 
   const submitForm = (form: newCategoryForm) => {

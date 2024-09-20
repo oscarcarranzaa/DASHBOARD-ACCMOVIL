@@ -62,7 +62,7 @@ export default function ProductEditor({
     stock: productValues?.stock,
     minStock: productValues?.minStock,
     price: productValues?.price,
-    image: productValues?.image?._id,
+    image: productValues?.image?.id,
     priceDiscount: {
       price: productValues?.priceDiscount?.price,
       start: productValues?.priceDiscount?.start,
@@ -78,7 +78,7 @@ export default function ProductEditor({
 
   useEffect(() => {
     if (getImages && getImages.length > 0) {
-      setValue('image', getImages[0].mediaIDItem)
+      setValue('image', getImages[0].id)
     } else {
       setValue('image', undefined)
     }
@@ -102,14 +102,13 @@ export default function ProductEditor({
   }, [selectDate, unregister, setDate])
 
   useEffect(() => {
-    const defaultMediaValues = productValues?.image?.images
+    const defaultMediaValues = productValues?.image?.qualities
       ? [
           {
-            mediaIDItem: productValues?.image._id,
-            id: productValues?.image?.mediaId,
-            imgURI: productValues.image.images[3].src,
+            id: productValues?.image?.id,
+            imgURI: productValues.image.qualities[3].src,
             name: productValues?.image?.title,
-            urlMedia: productValues.image.images[6].src,
+            urlMedia: productValues.image.qualities[6].src,
           },
         ]
       : []

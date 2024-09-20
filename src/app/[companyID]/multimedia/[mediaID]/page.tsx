@@ -22,7 +22,7 @@ export default function MediaID() {
   const queryClient = useQueryClient()
   const router = useRouter()
   const param = useParams()
-  const id = String(param.mediaID)
+  const id = param.mediaID.toString()
   const { data, isFetching } = useQuery({
     queryKey: ['oneMedia'],
     queryFn: () => getOneMedia(id),
@@ -59,9 +59,8 @@ export default function MediaID() {
     router.push('/dash/multimedia')
     return 'No hay datos'
   }
-  const getAvatar = data.user.avatar
-  const avatar = getAvatar?.images
-    ? getAvatar.images[0].src
+  const avatar = data.user.avatar
+    ? data.user.avatar
     : '/static/default-profile.png'
   const handleCopy = (string: string) => {
     return () => {
@@ -70,7 +69,7 @@ export default function MediaID() {
   }
   const handleForm = (formData: IEditMedia) => {
     const dataMedia = {
-      mediaID: data.mediaId,
+      mediaID: data.id,
       title: formData.title,
     }
     editMutate(dataMedia)
@@ -80,9 +79,14 @@ export default function MediaID() {
       <NavegationPages text="Previsualizar medio" />
       <h2 className="text-xl mt-5 font-semibold pl-5">{fileName}</h2>
       <div className="grid grid-cols-6 mt-2 gap-8">
-        <section className="w-full col-span-3 p-5 flex justify-center">
+        <section className="w-full col-span-3 p-5 justify-center">
           {data && (
-            <Image src={data.url} className="w-full" alt="Imagen del medio" />
+            <Image
+              src={data.url}
+              className="w-full"
+              alt="Imagen del medio"
+              isBlurred
+            />
           )}
         </section>
         <section className="col-span-2 pt-5">
@@ -109,7 +113,7 @@ export default function MediaID() {
           <ul className="text-sm">
             <li className="pb-1">
               <span className="font-semibold">ID: </span>
-              {data?.mediaId}
+              {data?.id}
             </li>
             <li className="pb-1">
               <span className="font-semibold">Nombre: </span>
@@ -144,7 +148,7 @@ export default function MediaID() {
             <div className="w-16 h-16 rounded-full overflow-hidden mt-3">
               <img src={avatar} />
             </div>
-            <p className="text-sm font-semibold">{data.user.name}</p>
+            <p className="text-sm font-semibold">{data.user.firstName}</p>
           </div>
           <div className="mt-20 text-red-600">
             <h3 className="font-semibold text-xl ">Zona peligrosa</h3>
@@ -156,7 +160,7 @@ export default function MediaID() {
               <Button
                 color="danger"
                 className="bg-red-600 rounded-xl focus:outline-none"
-                onClick={() => mutate(data.mediaId)}
+                onClick={() => mutate(data.id)}
               >
                 <span className=" stroke-white">
                   <FireSVG size={20} />
@@ -193,8 +197,8 @@ export default function MediaID() {
             Recursos optimizados
           </h3>
           <div className="flex  flex-col-reverse">
-            {data.images
-              ? data.images.map((img) => {
+            {data.qualities
+              ? data.qualities.map((img) => {
                   return (
                     <CardImageDetails
                       url={img.src}

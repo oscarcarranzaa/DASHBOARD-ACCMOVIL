@@ -53,9 +53,8 @@ export default function ContentImages({
     setSelect((prevSelect) => !prevSelect)
 
     const mediaInfo: IUploads = {
-      mediaIDItem: id,
       urlMedia: url,
-      id: mediaID,
+      id: id,
       imgURI: image,
       name: name,
     }
@@ -146,7 +145,7 @@ export default function ContentImages({
           <p className="text-xs line-clamp-1 mt-1">{name}</p>
         ) : (
           <Link
-            href={`/dash/multimedia/${mediaID}`}
+            href={`/dash/multimedia/${load && load <= 100 ? '' : mediaID}`}
             className="text-xs line-clamp-1 mt-1 hover:underline"
           >
             {name}

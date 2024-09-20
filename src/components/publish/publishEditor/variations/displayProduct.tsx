@@ -43,29 +43,26 @@ export default function DisplayProduct({ select }: TProps) {
   })
 
   useEffect(() => {
-    const productImage = select.image?._id
+    const productImage = select.image?.id
 
-    if (
-      getImage &&
-      getImage.length === 1 &&
-      getImage[0].mediaIDItem !== productImage
-    ) {
-      mutate({ image: getImage[0].mediaIDItem, id: select._id })
+    if (getImage && getImage.length === 1 && getImage[0].id !== productImage) {
+      mutate({ image: getImage[0].id, id: select._id })
     }
-  }, [getImage])
+  }, [getImage, mutate, select._id, select.image?.id])
   useEffect(() => {
-    const defaultMediaValues = select.image?.images
-      ? [
-          {
-            mediaIDItem: select?.image._id,
-            id: select?.image?.mediaId,
-            imgURI: select.image.images[3].src,
-            name: select?.image?.title,
-            urlMedia: select.image.images[6].src,
-          },
-        ]
-      : []
-    setDefaultImage(defaultMediaValues)
+    if (select.image?.qualities) {
+      const defaultMediaValues = select.image?.id
+        ? [
+            {
+              id: select?.image?.id,
+              imgURI: select.image.qualities[3].src,
+              name: select?.image?.title,
+              urlMedia: select.image.qualities[6].src,
+            },
+          ]
+        : []
+      setDefaultImage(defaultMediaValues)
+    }
   }, [select])
   return (
     <div className="mt-8 w-full dark:bg-zinc-950 ">

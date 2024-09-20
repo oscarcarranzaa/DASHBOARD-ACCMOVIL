@@ -5,11 +5,7 @@ import { useSortable } from '@dnd-kit/sortable'
 interface IProps extends IUploads {
   isLarge?: boolean
 }
-export default function SelectGalleryItem({
-  mediaIDItem,
-  imgURI,
-  isLarge,
-}: IProps) {
+export default function SelectGalleryItem({ id, imgURI, isLarge }: IProps) {
   const {
     attributes,
     listeners,
@@ -18,7 +14,7 @@ export default function SelectGalleryItem({
     transition,
     isDragging,
     isOver,
-  } = useSortable({ id: mediaIDItem })
+  } = useSortable({ id })
   const style = {
     transform: transform
       ? `translate3d(${transform.x}px, ${transform.y}px, 0 ) `

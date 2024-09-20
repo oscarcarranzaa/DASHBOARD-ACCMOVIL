@@ -16,7 +16,6 @@ export interface IUploads {
   name: string
   progress?: number
   id: string
-  mediaIDItem: string
 }
 export type TAuth = {}
 export type LoginSchema = z.infer<typeof login>

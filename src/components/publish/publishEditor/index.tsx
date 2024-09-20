@@ -35,7 +35,7 @@ export default function PublishEditor({
     if (!data && id !== 'new') {
       reset()
     }
-  }, [data, setData])
+  }, [data, setData, id, reset])
 
   return (
     <>

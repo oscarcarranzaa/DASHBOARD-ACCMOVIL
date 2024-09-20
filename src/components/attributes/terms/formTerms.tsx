@@ -36,7 +36,7 @@ export default function FormTerms({ type, id }: TProps) {
     },
   })
   useEffect(() => {
-    setValue('image', image ? image[0].mediaIDItem : undefined)
+    setValue('image', image ? image[0].id : undefined)
   }, [image, setValue])
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setColorType(e.target.value)

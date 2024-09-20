@@ -31,8 +31,8 @@ export default function Gallery() {
     const { active, over } = e
     if (!gallery || active.id === over?.id) return
 
-    const oldIndex = gallery.findIndex((item) => item.mediaIDItem === active.id)
-    const newIndex = gallery.findIndex((item) => item.mediaIDItem === over?.id)
+    const oldIndex = gallery.findIndex((item) => item.id === active.id)
+    const newIndex = gallery.findIndex((item) => item.id === over?.id)
     const newItems = arrayMove(gallery, oldIndex, newIndex)
 
     setGallery(newItems)
@@ -47,17 +47,16 @@ export default function Gallery() {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={gallery ? gallery.map((media) => media.mediaIDItem) : []}
+                items={gallery ? gallery.map((media) => media.id) : []}
                 strategy={rectSortingStrategy}
               >
                 {gallery?.map((media, index) => (
                   <SelectGalleryItem
                     isLarge={index === 0}
-                    key={media.mediaIDItem}
+                    key={media.id}
                     imgURI={media.imgURI}
-                    mediaIDItem={media.mediaIDItem}
-                    name={media.name}
                     id={media.id}
+                    name={media.name}
                     urlMedia={media.urlMedia}
                   />
                 ))}

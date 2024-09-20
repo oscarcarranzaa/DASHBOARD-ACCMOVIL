@@ -9,6 +9,7 @@ import { TSelectMedia } from '../index'
 import { IUploads } from '@/types'
 import SkeletonImage from '../skeletonImage'
 import PaginationPage from '@/components/UI/pagination'
+import EmptyMedia from './emptyMedias'
 interface IMutation {
   formFile: FormData
   index: number
@@ -59,16 +60,15 @@ export default function DragMedia({
     onSuccess: async (res) => {
       setUpload((prevUpload) => {
         if (prevUpload && prevUpload !== null) {
-          const mediaImage = res.data.images
-            ? res.data.images[2].src
+          const mediaImage = res.data.qualities
+            ? res.data.qualities[2].src
             : res.data.url
-          const urlImage = res.data.images
-            ? res.data.images[6].src
+          const urlImage = res.data.qualities
+            ? res.data.qualities[6].src
             : res.data.url
           const newUploads = [...prevUpload]
           newUploads[res.index] = {
-            mediaIDItem: res.data._id,
-            id: res.data.mediaId,
+            id: res.data.id,
             urlMedia: urlImage,
             imgURI: mediaImage,
             name: res.data.title,
@@ -145,7 +145,6 @@ export default function DragMedia({
               name,
               progress: 1,
               id,
-              mediaIDItem: '#',
               urlMedia: '#',
             })
           }
@@ -156,6 +155,7 @@ export default function DragMedia({
   }
   return (
     <div onDragOver={handleDragOver} onDrop={handleDrop}>
+      {dataMedia?.length === 0 && !upload ? <EmptyMedia /> : null}
       <div
         onDragLeave={handleDragLeave}
         className={
@@ -176,7 +176,7 @@ export default function DragMedia({
               <ContentImages
                 isNew
                 check={checkSelect}
-                id={e.mediaIDItem}
+                id={e.id}
                 mediaID={e.id}
                 isSelect={select}
                 key={e.id}
@@ -194,15 +194,13 @@ export default function DragMedia({
               const checkSelect = mediaSelect?.find((s) => s.id == e.id)
                 ? true
                 : false
-              const isExists = upload?.find(
-                (up) => up.mediaIDItem === e.mediaIDItem
-              )
+              const isExists = upload?.find((up) => up.id === e.id)
               if (isExists) return
               if (e.imgURI) {
                 return (
                   <ContentImages
                     check={checkSelect}
-                    id={e.mediaIDItem}
+                    id={e.id}
                     mediaID={e.id}
                     isSelect={select}
                     key={e.id}

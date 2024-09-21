@@ -1,9 +1,7 @@
 'use client'
 import Spinner from '@/components/icons/spinner'
 import WarningInfo from '@/components/icons/warningInfo'
-import { getProductImageSchema, newProduct, product } from '@/types/poducts'
 import { zodResolver } from '@hookform/resolvers/zod'
-
 import {
   Button,
   DateRangePicker,
@@ -11,16 +9,19 @@ import {
   Switch,
   Textarea,
 } from '@nextui-org/react'
-import dayjs from 'dayjs'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { parseAbsoluteToLocal } from '@internationalized/date'
 import { IUploads } from '@/types'
 import SelectImage from '@/components/media/selectImage'
+import { newProductSchema, productSchema, ZProductNew } from '@/types/poducts'
+import { RangeValue } from '@react-types/shared'
+import { DateValue } from '@react-types/datepicker'
+import dayjs from 'dayjs'
 
 type TProps = {
-  productValues?: getProductImageSchema
-  handleForm: (formData: newProduct) => void
+  productValues?: productSchema
+  handleForm: (formData: newProductSchema) => void
   isPending: boolean
   error?: {
     message: string
@@ -34,45 +35,46 @@ export default function ProductEditor({
 }: TProps) {
   const [getImages, setGetImages] = useState<IUploads[] | undefined>()
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
-  const startDate = productValues?.priceDiscount?.start
-  const endDate = productValues?.priceDiscount?.end
+  const startDate = productValues?.startDiscount
+  const endDate = productValues?.endDiscount
   const isDate = startDate && endDate ? true : false
   // Verifica si hay una fecha
-  const starCalendarDate = isDate ? dayjs(startDate).toISOString() : undefined
-  const endCalendarDate = isDate ? dayjs(endDate).toISOString() : undefined
   const defaultDateCalendar =
-    starCalendarDate && endCalendarDate
+    startDate && endDate
       ? {
-          start: parseAbsoluteToLocal(starCalendarDate),
-          end: parseAbsoluteToLocal(endCalendarDate),
+          start: parseAbsoluteToLocal(startDate),
+          end: parseAbsoluteToLocal(endDate),
         }
-      : null
-  const discountDefault = productValues?.priceDiscount?.price ?? 0
+      : undefined
+  const discountDefault = productValues?.discountPrice ?? 0
   // states
-  const [calendarDate, setCalendarDate] = useState(defaultDateCalendar)
+  const [calendarDate, setCalendarDate] = useState<
+    RangeValue<DateValue> | undefined
+  >(defaultDateCalendar)
+
   const [selectDate, setSelectDate] = useState(isDate)
   const [discount, setDiscount] = useState<number>(discountDefault)
-  const [visibleSite, setVisibleSite] = useState(productValues?.active ?? true)
+  const [visibleSite, setVisibleSite] = useState(
+    productValues?.isActive ?? true
+  )
 
   const initialValues = {
     name: productValues?.name,
-    active: productValues?.active,
-    code: productValues?.code,
+    isActive: productValues?.isActive,
+    sku: productValues?.sku,
     barCode: productValues?.barCode,
     stock: productValues?.stock,
     minStock: productValues?.minStock,
     price: productValues?.price,
-    image: productValues?.image?.id,
-    priceDiscount: {
-      price: productValues?.priceDiscount?.price,
-      start: productValues?.priceDiscount?.start,
-      end: productValues?.priceDiscount?.end,
-    },
-    note: productValues?.note,
+    image: productValues?.image,
+    discountPrice: productValues?.discountPrice,
+    startDiscount: productValues?.startDiscount,
+    endDiscount: productValues?.endDiscount,
+    salesNote: productValues?.salesNote,
   }
   const { register, handleSubmit, setValue, unregister, getValues } =
-    useForm<newProduct>({
-      resolver: zodResolver(product),
+    useForm<newProductSchema>({
+      resolver: zodResolver(ZProductNew),
       defaultValues: initialValues,
     })
 
@@ -85,30 +87,34 @@ export default function ProductEditor({
   }, [getImages, setValue])
 
   const setDate = useCallback(() => {
-    const intDate = calendarDate?.start ? calendarDate.start.toDate() : false
-    const finallyDate = calendarDate?.end ? calendarDate.end.toDate() : false
+    const intDate = calendarDate?.start ? calendarDate.start : false
+    const finallyDate = calendarDate?.end ? calendarDate.end : false
     if (intDate && finallyDate) {
-      setValue('priceDiscount.start', dayjs(intDate).toISOString())
-      setValue('priceDiscount.end', dayjs(finallyDate).toISOString())
+      setValue('startDiscount', dayjs(intDate.toString()).toISOString())
+      setValue('endDiscount', dayjs(finallyDate.toString()).toISOString())
     }
   }, [calendarDate, setValue])
   useEffect(() => {
     if (!selectDate) {
-      unregister('priceDiscount.start')
-      unregister('priceDiscount.end')
+      unregister('startDiscount')
+      unregister('endDiscount')
       return
     }
     setDate()
   }, [selectDate, unregister, setDate])
 
   useEffect(() => {
-    const defaultMediaValues = productValues?.image?.qualities
+    setValue('isActive', visibleSite)
+  }, [visibleSite, setValue])
+
+  useEffect(() => {
+    const defaultMediaValues = productValues?.media?.qualities
       ? [
           {
-            id: productValues?.image?.id,
-            imgURI: productValues.image.qualities[3].src,
-            name: productValues?.image?.title,
-            urlMedia: productValues.image.qualities[6].src,
+            id: productValues?.media.id,
+            imgURI: productValues?.media?.qualities[3].src,
+            name: productValues?.media?.title,
+            urlMedia: productValues.media?.url,
           },
         ]
       : []
@@ -136,16 +142,12 @@ export default function ProductEditor({
             />
             <div className="flex mt-5 gap-8">
               <Input
-                label="Código"
+                label="SKU"
                 variant="bordered"
-                isRequired
-                required
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
-                {...register('code', {
-                  required: 'El códogo es obligatorio',
-                })}
+                {...register('sku')}
               />
               <Input
                 label="Código de barras"
@@ -214,7 +216,7 @@ export default function ProductEditor({
                 autoCapitalize="off"
                 isInvalid={getValues('price') <= discount}
                 errorMessage={'No puede ser mayor o igual al precio'}
-                {...register('priceDiscount.price', {
+                {...register('discountPrice', {
                   setValueAs: (value) => {
                     if (value === '') {
                       return undefined
@@ -237,7 +239,6 @@ export default function ProductEditor({
                   isSelected={visibleSite}
                   onValueChange={(s) => {
                     setVisibleSite(s)
-                    setValue('active', s)
                   }}
                 />
                 <p className="ml-1">Mostrar en el sitio</p>
@@ -264,6 +265,25 @@ export default function ProductEditor({
                   variant="underlined"
                   value={calendarDate}
                   onChange={setCalendarDate}
+                  calendarProps={{
+                    classNames: {
+                      base: 'bg-background',
+                      headerWrapper: 'pt-4 bg-background',
+                      prevButton: 'border-1 border-default-200 rounded-small',
+                      nextButton: 'border-1 border-default-200 rounded-small',
+                      gridHeader:
+                        'bg-background shadow-none border-b-1 border-default-100',
+                      cellButton: [
+                        'data-[today=true]:bg-default-100 data-[selected=true]:bg-transparent rounded-small',
+                        'data-[range-start=true]:before:rounded-l-small',
+                        'data-[selection-start=true]:before:rounded-l-small',
+                        'data-[range-end=true]:before:rounded-r-small',
+                        'data-[selection-end=true]:before:rounded-r-small',
+                        'data-[selected=true]:data-[selection-start=true]:data-[range-selection=true]:rounded-small',
+                        'data-[selected=true]:data-[selection-end=true]:data-[range-selection=true]:rounded-small',
+                      ],
+                    },
+                  }}
                 />
               </div>
             </div>
@@ -298,9 +318,9 @@ export default function ProductEditor({
             <div className="mt-5">
               <p className="text-lg font-medium mb-5">Notas</p>
               <Textarea
-                label="Agregar nota"
+                label="Agregar nota de venta"
                 variant="faded"
-                {...register('note')}
+                {...register('salesNote')}
               />
             </div>
           </div>

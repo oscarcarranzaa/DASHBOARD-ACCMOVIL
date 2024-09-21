@@ -1,12 +1,11 @@
-import dayjs from 'dayjs'
 import ClockSVG from '../icons/clock'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 
 type TProps = {
   price: number
-  discountPrice?: number
-  startDate?: string
-  endDate?: string
+  discountPrice?: number | null
+  startDate?: string | null
+  endDate?: string | null
 }
 export default function DisplayPrice({
   price,

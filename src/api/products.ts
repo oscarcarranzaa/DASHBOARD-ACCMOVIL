@@ -1,23 +1,26 @@
 import axiosInstance from '@/lib/axiosClient'
 import {
-  getProduct,
-  getProductSchema,
-  newProduct,
-  getProductImageSchema,
-  getProductImage,
-  getOneProductSchema,
-  getOneProductType,
+  getProductsSchema,
+  newProductSchema,
+  productSchema,
+  ZGetProducts,
+  ZProduct,
 } from '@/types/poducts'
-import { media, MediaSchema } from '@/types/schemas'
+import {
+  media,
+  MediaSchema,
+  resposeIdSchema,
+  ZResponseId,
+} from '@/types/schemas'
 import { isAxiosError } from 'axios'
 
-export async function createProduct(formData: newProduct) {
+export async function createProduct(formData: newProductSchema) {
   try {
-    const { data } = await axiosInstance.post<getOneProductSchema>(
+    const { data } = await axiosInstance.post<resposeIdSchema>(
       '/product',
       formData
     )
-    const validProduct = getOneProductType.parse(data)
+    const validProduct = ZResponseId.parse(data)
     return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -33,10 +36,10 @@ export async function getAllProducts(
   query?: string
 ) {
   try {
-    const { data } = await axiosInstance.get<getProductSchema>(
+    const { data } = await axiosInstance.get<getProductsSchema>(
       `/product?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
     )
-    const validProduct = getProduct.parse(data)
+    const validProduct = ZGetProducts.parse(data)
     return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -48,10 +51,8 @@ export async function getAllProducts(
 }
 export async function getOneProduct(id: string) {
   try {
-    const { data } = await axiosInstance.get<getProductImageSchema>(
-      `/product/${id}`
-    )
-    const validProduct = getProductImage.parse(data)
+    const { data } = await axiosInstance.get<productSchema>(`/product/${id}`)
+    const validProduct = ZProduct.parse(data)
     return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -62,12 +63,12 @@ export async function getOneProduct(id: string) {
   }
 }
 type TUpdateProduct = {
-  formData: newProduct
+  formData: newProductSchema
   id: string
 }
 export async function updateOneProduct({ formData, id }: TUpdateProduct) {
   try {
-    const { data } = await axiosInstance.put<getProductImageSchema>(
+    const { data } = await axiosInstance.put<productSchema>(
       `/product/${id}`,
       formData
     )

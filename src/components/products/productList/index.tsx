@@ -2,7 +2,7 @@
 import PaginationPage from '@/components/UI/pagination'
 import DisplayPrice from '@/components/displayPrice'
 import SquareImage from '@/components/squareImage'
-import { getProductImageSchema, getProductSchema } from '@/types/poducts'
+import { getProductsSchema, productSchema } from '@/types/poducts'
 import {
   Table,
   TableHeader,
@@ -22,7 +22,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteOneProduct } from '@/api/products'
 
 interface IProps {
-  data?: getProductSchema
+  data?: getProductsSchema
   rows: number
   isPending: boolean
 }
@@ -51,9 +51,9 @@ export default function ProductList({ data, rows, isPending }: IProps) {
   const getData = data ? data.data : []
 
   const renderCell = useCallback(
-    (user: getProductImageSchema, columnKey: React.Key) => {
-      const image = user.image?.images
-        ? user.image.images[0].src
+    (product: productSchema, columnKey: React.Key) => {
+      const image = product.media
+        ? product.media.qualities[0].src
         : '/static/product.webp'
 
       switch (columnKey) {
@@ -67,26 +67,26 @@ export default function ProductList({ data, rows, isPending }: IProps) {
           return (
             <Link
               className="hover:underline"
-              href={`/dash/productos/${user._id}`}
+              href={`/dash/productos/${product.id}`}
             >
-              {user.name}
+              {product.name}
             </Link>
           )
         case 'price':
           return (
             <DisplayPrice
-              price={user.price}
-              discountPrice={user.priceDiscount?.price}
-              startDate={user.priceDiscount?.start}
-              endDate={user.priceDiscount?.end}
+              price={product.price}
+              discountPrice={product.discountPrice}
+              startDate={product.startDiscount}
+              endDate={product.endDiscount}
             />
           )
         case 'actions':
-          return <ProductActions id={user._id} modal={setDeletedModal} />
+          return <ProductActions id={product.id} modal={setDeletedModal} />
         case 'stock':
-          return user.stock
-        case 'code':
-          return user.code
+          return product.stock
+        case 'SKU':
+          return product.sku
       }
     },
     []
@@ -148,7 +148,7 @@ export default function ProductList({ data, rows, isPending }: IProps) {
         >
           {(item) => (
             <TableRow
-              key={item._id}
+              key={item.id}
               className="hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               {(columnKey) => (

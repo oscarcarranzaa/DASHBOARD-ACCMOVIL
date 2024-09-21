@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
 export default function validDiscountPrice(
-  startDate?: string,
-  endDate?: string
+  startDate?: string | null,
+  endDate?: string | null
 ) {
   const currentDate = dayjs().toISOString()
   const start = dayjs(startDate)

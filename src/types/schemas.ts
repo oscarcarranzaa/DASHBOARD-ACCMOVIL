@@ -9,7 +9,9 @@ export const images = z.object({
   width: z.number(),
   height: z.number(),
 })
-
+export const ZResponseId = z.object({
+  id: z.string(),
+})
 export const media = z.object({
   id: z.string(),
   title: z.string(),
@@ -20,7 +22,7 @@ export const media = z.object({
   size: z.number(),
   key: z.string(),
   userId: z.string(),
-  qualities: z.array(images).optional(),
+  qualities: z.array(images),
   createdAt: z.string(),
 })
 export const team = z.object({
@@ -60,7 +62,7 @@ const mediaUserAvatar = media.pick({ id: true, qualities: true }).optional()
 const oneMediaTypes = media.omit({ userId: true }).extend({ user })
 
 export const getOneMediaData = oneMediaTypes
-
+export type resposeIdSchema = z.infer<typeof ZResponseId>
 export type GetMediasSchema = z.infer<typeof getMedias>
 export type GetOneMediaSchema = z.infer<typeof getOneMediaData>
 export type MediaSchema = z.infer<typeof media>

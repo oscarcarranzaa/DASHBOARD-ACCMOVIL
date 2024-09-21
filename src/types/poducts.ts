@@ -1,40 +1,45 @@
 import { z } from 'zod'
-import { media } from './schemas'
+import { media, user } from './schemas'
 
 /** Productos */
 
-export const product = z.object({
-  name: z.string(),
-  code: z.string(),
-  barCode: z.string().optional(),
+export const ZProduct = z.object({
+  id: z.string(),
+  name: z.string().min(5),
+  isActive: z.boolean(),
+  barCode: z.string().nullable(),
+  sku: z.string().nullable(),
   price: z.number(),
-  priceDiscount: z
-    .object({
-      price: z.number().optional(),
-      start: z.string().optional(),
-      end: z.string().optional(),
-    })
-    .optional(),
-  image: z.string().optional(),
+  discountPrice: z.number().nullable().optional(),
+  startDiscount: z.string().optional().nullable(),
+  endDiscount: z.string().optional().nullable(),
+  image: z.string().nullable().optional(),
   stock: z.number(),
-  active: z.boolean().optional(),
-  note: z.string().optional(),
   minStock: z.number().optional(),
+  salesNote: z.string().nullable().optional(),
+  userId: z.string(),
+  media: media.optional().nullable(),
+  user: user,
+  updatedAt: z.string(),
+  createdAt: z.string(),
 })
-export const getOneProductType = product.extend({ _id: z.string() })
-export const getProductImage = product
-  .omit({ image: true })
-  .extend({ _id: z.string(), image: media.optional() || null })
 
-export const getProduct = z.object({
-  data: z.array(getProductImage),
+export const ZProductNew = ZProduct.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  userId: true,
+  media: true,
+  user: true,
+})
+export const ZGetProducts = z.object({
+  data: z.array(ZProduct),
   totalPages: z.number(),
   limit: z.number(),
   results: z.number(),
   totalProducts: z.number(),
   pageNumber: z.number(),
 })
-export type getProductImageSchema = z.infer<typeof getProductImage>
-export type getOneProductSchema = z.infer<typeof getOneProductType>
-export type getProductSchema = z.infer<typeof getProduct>
-export type newProduct = z.infer<typeof product>
+export type productSchema = z.infer<typeof ZProduct>
+export type getProductsSchema = z.infer<typeof ZGetProducts>
+export type newProductSchema = z.infer<typeof ZProductNew>

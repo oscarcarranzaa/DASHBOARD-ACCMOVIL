@@ -13,7 +13,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "3.3.4",
-    "@internationalized/date": "3.5.3",
+    "@internationalized/date": "3.5.5",
     "@nextui-org/button": "^2.0.31",
     "@nextui-org/progress": "^2.0.28",
     "@nextui-org/react": "2.4.6",

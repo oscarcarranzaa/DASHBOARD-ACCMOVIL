@@ -1,6 +1,6 @@
 import SearchProductLabel from '@/components/publish/publishEditor/variations/searchProductLabel'
 import useOutsideClick from '@/hooks/useOutSideClick'
-import { getProductImageSchema } from '@/types/poducts'
+import { getProductImageSchema } from '@/types/products'
 import { Button } from '@nextui-org/button'
 import { SetStateAction, useRef, useState } from 'react'
 

@@ -2,7 +2,7 @@
 import PaginationPage from '@/components/UI/pagination'
 import DisplayPrice from '@/components/displayPrice'
 import SquareImage from '@/components/squareImage'
-import { getProductsSchema, productSchema } from '@/types/poducts'
+import { getProductsSchema, productSchema } from '@/types/products'
 import {
   Table,
   TableHeader,
@@ -85,7 +85,7 @@ export default function ProductList({ data, rows, isPending }: IProps) {
           return <ProductActions id={product.id} modal={setDeletedModal} />
         case 'stock':
           return product.stock
-        case 'SKU':
+        case 'sku':
           return product.sku
       }
     },

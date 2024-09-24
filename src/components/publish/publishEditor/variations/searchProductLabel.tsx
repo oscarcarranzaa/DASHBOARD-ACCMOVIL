@@ -3,7 +3,7 @@
 import { getAllProducts } from '@/api/products'
 import SearchSVG from '@/components/icons/search'
 import SquareImage from '@/components/squareImage'
-import { getProductImageSchema } from '@/types/poducts'
+import { getProductImageSchema } from '@/types/products'
 import { Input } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'

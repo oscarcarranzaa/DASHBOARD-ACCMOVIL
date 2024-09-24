@@ -1,9 +1,10 @@
 'use client'
 import { getOneProduct, updateOneProduct } from '@/api/products'
+import ErrorsPages from '@/components/errorsPages'
 import NotFound from '@/components/errorsPages/notFound'
 import NavegationPages from '@/components/navegationPages'
 import ProductEditor from '@/components/products/productEditor/'
-import { newProductSchema } from '@/types/poducts'
+import { newProductSchema } from '@/types/products'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { toast, Toaster } from 'sonner'
@@ -33,7 +34,8 @@ export default function EditProduct() {
   const handleForm = (formData: newProductSchema) => {
     mutate({ formData: formData, id: productID })
   }
-  if (error) return <NotFound message={error.message} />
+  if (error)
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
   return (
     <>
       <NavegationPages text="Editar producto" />
@@ -46,7 +48,7 @@ export default function EditProduct() {
         />
       )}
 
-      <Toaster theme="dark" />
+      <Toaster theme="dark" richColors />
     </>
   )
 }

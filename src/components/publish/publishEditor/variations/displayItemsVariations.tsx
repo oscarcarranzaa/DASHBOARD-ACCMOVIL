@@ -1,7 +1,7 @@
 import SelectProduct from '@/components/products/selectProduct'
 import SquareImage from '@/components/squareImage'
 import { usePublishStore } from '@/store/publish'
-import { getProductImageSchema } from '@/types/poducts'
+import { getProductImageSchema } from '@/types/products'
 import { useEffect, useState, useCallback } from 'react'
 
 type TProps = {

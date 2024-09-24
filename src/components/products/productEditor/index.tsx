@@ -11,10 +11,10 @@ import {
 } from '@nextui-org/react'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { parseAbsoluteToLocal } from '@internationalized/date'
+import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
 import { IUploads } from '@/types'
 import SelectImage from '@/components/media/selectImage'
-import { newProductSchema, productSchema, ZProductNew } from '@/types/poducts'
+import { newProductSchema, productSchema, ZProductNew } from '@/types/products'
 import { RangeValue } from '@react-types/shared'
 import { DateValue } from '@react-types/datepicker'
 import dayjs from 'dayjs'
@@ -47,7 +47,7 @@ export default function ProductEditor({
         }
       : undefined
   const discountDefault = productValues?.discountPrice ?? 0
-  // states
+
   const [calendarDate, setCalendarDate] = useState<
     RangeValue<DateValue> | undefined
   >(defaultDateCalendar)
@@ -58,25 +58,17 @@ export default function ProductEditor({
     productValues?.isActive ?? true
   )
 
-  const initialValues = {
-    name: productValues?.name,
-    isActive: productValues?.isActive,
-    sku: productValues?.sku,
-    barCode: productValues?.barCode,
-    stock: productValues?.stock,
-    minStock: productValues?.minStock,
-    price: productValues?.price,
-    image: productValues?.image,
-    discountPrice: productValues?.discountPrice,
-    startDiscount: productValues?.startDiscount,
-    endDiscount: productValues?.endDiscount,
-    salesNote: productValues?.salesNote,
-  }
-  const { register, handleSubmit, setValue, unregister, getValues } =
-    useForm<newProductSchema>({
-      resolver: zodResolver(ZProductNew),
-      defaultValues: initialValues,
-    })
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    unregister,
+    getValues,
+    formState: { errors },
+  } = useForm<newProductSchema>({
+    resolver: zodResolver(ZProductNew),
+    defaultValues: productValues,
+  })
 
   useEffect(() => {
     if (getImages && getImages.length > 0) {
@@ -87,11 +79,16 @@ export default function ProductEditor({
   }, [getImages, setValue])
 
   const setDate = useCallback(() => {
-    const intDate = calendarDate?.start ? calendarDate.start : false
-    const finallyDate = calendarDate?.end ? calendarDate.end : false
-    if (intDate && finallyDate) {
-      setValue('startDiscount', dayjs(intDate.toString()).toISOString())
-      setValue('endDiscount', dayjs(finallyDate.toString()).toISOString())
+    const initDate = calendarDate?.start
+      ? calendarDate.start.toDate(getLocalTimeZone())
+      : false
+    const finallyDate = calendarDate?.end
+      ? calendarDate.end.toDate(getLocalTimeZone())
+      : false
+
+    if (initDate && finallyDate) {
+      setValue('startDiscount', initDate.toISOString())
+      setValue('endDiscount', finallyDate.toISOString())
     }
   }, [calendarDate, setValue])
   useEffect(() => {

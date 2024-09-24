@@ -8,8 +8,8 @@ export const ProductsRows = [
     key: 'name',
   },
   {
-    name: 'Código',
-    key: 'code',
+    name: 'SKU',
+    key: 'sku',
   },
   {
     name: 'Cantidad',

@@ -13,7 +13,7 @@ export type TTimeLeft = {
   seconds: number
 } | null
 
-export default function useCountDownTimer(date?: string) {
+export default function useCountDownTimer(date?: string | null) {
   const calcTimeLeft = useCallback(() => {
     if (!date) return null
 
@@ -23,15 +23,20 @@ export default function useCountDownTimer(date?: string) {
 
     if (isFinish) return null
 
-    const durationDate = dayjs.duration(endDate.diff(now))
-    const days = durationDate.days()
+    // Calcular la diferencia en milisegundos y crear una duración
+    const diff = endDate.diff(now)
+    const durationDate = dayjs.duration(diff)
+
+    const days = Math.floor(durationDate.asDays())
     const hours = durationDate.hours()
     const minutes = durationDate.minutes()
     const seconds = durationDate.seconds()
 
     return { days, hours, minutes, seconds }
   }, [date])
+
   const [timeLeft, setTimeLeft] = useState<TTimeLeft>(calcTimeLeft())
+
   useEffect(() => {
     const updateTimer = () => {
       const time = calcTimeLeft()

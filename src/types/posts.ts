@@ -1,5 +1,5 @@
 import { string, z } from 'zod'
-import { getOneProductType, getProductImage, product } from './poducts'
+import { getOneProductType, getProductImage, product } from './products'
 import { ZAttributes, ZTerms } from './attributes'
 import { ZCategories, ZCategory } from './category'
 import { media } from './schemas'

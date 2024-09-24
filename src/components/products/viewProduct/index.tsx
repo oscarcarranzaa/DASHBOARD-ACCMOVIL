@@ -1,6 +1,5 @@
 'use client'
-
-import { getProductImageSchema } from '@/types/poducts'
+import { productSchema } from '@/types/products'
 import SquareImage from '@/components/squareImage'
 import DisplayPrice from '@/components/displayPrice'
 import InformationSVG from '@/components/icons/information'
@@ -12,27 +11,26 @@ import { memo } from 'react'
 import dayjs from 'dayjs'
 
 type TProps = {
-  data: getProductImageSchema
+  data: productSchema
 }
 
 function ViewProduct({ data }: TProps) {
-  const image = data.image?.images
-    ? data.image.images[5].src
+  const image = data.media?.qualities
+    ? data.media.qualities[4].src
     : '/static/product.webp'
-  const differentPrice = data.priceDiscount?.price
-    ? data.price - data.priceDiscount.price
-    : 0
+  const differentPrice = data.discountPrice ? data.price - data.price : 0
   const totalDiscount = Math.round((differentPrice / data.price) * 100)
   const { validDiscount } = validDiscountPrice(
-    data.priceDiscount?.start,
-    data.priceDiscount?.end
+    data.startDiscount,
+    data.endDiscount
   )
   // Chekear
-  const end = data.priceDiscount?.end
-  const start = data.priceDiscount?.start
+  const end = data.endDiscount
+  const start = data.startDiscount
   const startDate = start ? dayjs(start).format('DD-MM-YYYY hh:mm:ss') : '----'
   const endDate = end ? dayjs(end).format('DD-MM-YYYY hh:mm:ss') : '----'
   const timeLeft = useCountDownTimer(end)
+  console.log(timeLeft)
 
   return (
     <>
@@ -62,7 +60,7 @@ function ViewProduct({ data }: TProps) {
               <ul>
                 <li>
                   <p>
-                    <span className=" font-medium">Código:</span> {data.code}
+                    <span className=" font-medium">Código:</span> {data.sku}
                   </p>
                 </li>
                 <li>
@@ -105,7 +103,7 @@ function ViewProduct({ data }: TProps) {
                 <li>
                   <p>
                     <span className=" font-medium">Precio descuento: </span>
-                    {data.priceDiscount?.price?.toLocaleString('es-HN', {
+                    {data.discountPrice?.toLocaleString('es-HN', {
                       style: 'currency',
                       currency: 'HNL',
                     }) ?? '---'}
@@ -131,9 +129,9 @@ function ViewProduct({ data }: TProps) {
             <div className=" scale-150 p-2 mb-2">
               <DisplayPrice
                 price={data.price}
-                discountPrice={data.priceDiscount?.price}
-                startDate={data.priceDiscount?.start}
-                endDate={data.priceDiscount?.end}
+                discountPrice={data.discountPrice}
+                startDate={data.startDiscount}
+                endDate={data.endDiscount}
               />
             </div>
             {validDiscount && <CountDownTimer date={timeLeft} />}

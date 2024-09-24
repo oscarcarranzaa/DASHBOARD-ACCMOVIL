@@ -25,8 +25,8 @@ export default function NotFound({ message }: TProps) {
             </div>
             <p>Página no encontrada</p>
           </div>
-          <div className=" text-zinc-700 dark:text-zinc-400 text-sm font-medium  mt-1 flex items-center">
-            <p className=" max-w-96">{message}</p>
+          <div className=" text-zinc-700 dark:text-zinc-400 text-sm font-medium  mt-1 flex items-center text-center w-full">
+            <p className=" max-w-96 m-auto">{message}</p>
           </div>
           <div className="mt-5">
             <Link href={'/dash/dashboard'} className="text-sky-600 underline ">

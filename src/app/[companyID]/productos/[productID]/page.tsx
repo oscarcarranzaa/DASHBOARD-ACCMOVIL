@@ -1,5 +1,6 @@
 'use client'
 import { getOneProduct } from '@/api/products'
+import ErrorsPages from '@/components/errorsPages'
 import NotFound from '@/components/errorsPages/notFound'
 import NavegationPages from '@/components/navegationPages'
 import ViewProduct from '@/components/products/viewProduct/'
@@ -16,7 +17,9 @@ export default function ProductDetails() {
     retry: false,
     refetchOnWindowFocus: false,
   })
-  if (error) return <NotFound message={error.message} />
+
+  if (error)
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
 
   return (
     <>

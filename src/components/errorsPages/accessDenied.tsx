@@ -26,7 +26,7 @@ export default function AccessDenied({ message }: TProps) {
             <p> Acceso denegado</p>
           </div>
           <div className=" text-zinc-700 dark:text-zinc-400 text-sm font-medium  mt-1 flex items-center">
-            <p className=" max-w-96">{message}</p>
+            <p className=" max-w-96 m-auto">{message}</p>
           </div>
           <div className="mt-5">
             <Link href={'/dash/dashboard'} className="text-sky-600 underline ">

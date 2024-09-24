@@ -5,7 +5,7 @@ import {
   productSchema,
   ZGetProducts,
   ZProduct,
-} from '@/types/poducts'
+} from '@/types/products'
 import {
   media,
   MediaSchema,
@@ -42,6 +42,7 @@ export async function getAllProducts(
     const validProduct = ZGetProducts.parse(data)
     return validProduct
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
     } else {
@@ -56,7 +57,7 @@ export async function getOneProduct(id: string) {
     return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data)
+      throw new Error(error.response.data, { cause: error.response.status })
     } else {
       throw new Error('An unexpected error occurred while get the product.')
     }
@@ -72,12 +73,13 @@ export async function updateOneProduct({ formData, id }: TUpdateProduct) {
       `/product/${id}`,
       formData
     )
-    return data
+    const validProduct = ZProduct.parse(data)
+    return validProduct
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data)
     } else {
-      throw new Error('An unexpected error occurred while update the product.')
+      throw new Error('Error al actualizar el producto')
     }
   }
 }

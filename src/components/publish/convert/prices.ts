@@ -1,4 +1,4 @@
-import { getOneProductSchema } from '@/types/poducts'
+import { getOneProductSchema } from '@/types/products'
 import { variationsPost } from '@/types/posts'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 

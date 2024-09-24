@@ -5,7 +5,7 @@ import { media, user } from './schemas'
 
 export const ZProduct = z.object({
   id: z.string(),
-  name: z.string().min(5),
+  name: z.string().min(3),
   isActive: z.boolean(),
   barCode: z.string().nullable(),
   sku: z.string().nullable(),
@@ -19,7 +19,7 @@ export const ZProduct = z.object({
   salesNote: z.string().nullable().optional(),
   userId: z.string(),
   media: media.optional().nullable(),
-  user: user,
+  User: user,
   updatedAt: z.string(),
   createdAt: z.string(),
 })
@@ -30,7 +30,7 @@ export const ZProductNew = ZProduct.omit({
   updatedAt: true,
   userId: true,
   media: true,
-  user: true,
+  User: true,
 })
 export const ZGetProducts = z.object({
   data: z.array(ZProduct),

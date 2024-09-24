@@ -1,7 +1,7 @@
 'use client'
 import { selectCategory } from '@/components/category/displayCategory'
 import { IUploads } from '@/types'
-import { getProductImageSchema } from '@/types/poducts'
+import { getProductImageSchema } from '@/types/products'
 import { PostSchema, VariationsAndAttributes } from '@/types/posts'
 import { create } from 'zustand'
 

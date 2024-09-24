@@ -1,7 +1,7 @@
 'use client'
 import { createProduct } from '@/api/products'
 import NavegationPages from '@/components/navegationPages'
-import { newProductSchema } from '@/types/poducts'
+import { newProductSchema } from '@/types/products'
 import { useMutation } from '@tanstack/react-query'
 import ProductEditor from '@/components/products/productEditor/'
 import { toast, Toaster } from 'sonner'

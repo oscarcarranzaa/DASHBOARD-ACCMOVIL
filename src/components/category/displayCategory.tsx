@@ -6,11 +6,12 @@ import ArrowAngleSVG from '../icons/arrowAngle'
 import CategorySkeleton from './categorySkeleton'
 import CloseSVG from '../icons/close'
 import { useCategoryStore } from '@/store/category'
+import EmptyCategory from './emptyCategory'
 
 export type selectCategory = {
   _id: string
   name: string
-  parent: string | undefined
+  parent: string | undefined | null
 }
 type TProps = {
   value?: selectCategory[] | undefined
@@ -30,7 +31,6 @@ export default function DisplayCategory({
   useEffect(() => {
     setSelected(value)
   }, [value])
-
   const { data, error } = useQuery({
     queryKey: ['categories', openCategory],
     queryFn: () => getCategories(openCategory),
@@ -68,12 +68,17 @@ export default function DisplayCategory({
     <>
       <p>Categorías</p>
       <div className=" dark:border border-zinc-500 dark:bg-zinc-900 bg-white py-5 px-2 rounded-lg">
-        <p className="text-sm">Seleccione las categorías</p>
+        <p className="text-sm">
+          {' '}
+          {data && data.categories.length === 0
+            ? 'Agrega nuevas categorías'
+            : 'Seleccione categorías'}
+        </p>
         <div className="dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg">
           <div className=" dark:stroke-white dark:fill-white stroke-black dark:bg-zinc-800 bg-zinc-50 rounded-lg ">
             {data && data.parent && (
               <button
-                onClick={() => setOpenCategory(data.parent?.parent ?? '')}
+                onClick={() => setOpenCategory(data.parent?.parentId ?? '')}
                 type="button"
                 className="flex w-full bg-zinc-200 dark:bg-zinc-700 py-2 px-1 rounded-md items-center mt-1"
               >
@@ -82,29 +87,30 @@ export default function DisplayCategory({
               </button>
             )}
             <div className="h-96 w-full mt-1 menu-content  p-1 ">
+              {data && data.categories.length === 0 ? <EmptyCategory /> : null}
               <ul>
                 {data ? (
                   data.categories.map((category) => (
                     <li
-                      key={category._id}
+                      key={category.id}
                       className={`flex justify-between w-full items-center ${
-                        category.child
+                        category.children
                           ? 'dark:hover:bg-zinc-700 hover:bg-zinc-200 cursor-pointer'
                           : ''
                       } select-none rounded-md`}
                     >
                       <button
                         className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 rounded-md px-3 p-2 ${
-                          selected?.find((item) => item._id === category._id)
+                          selected?.find((item) => item._id === category.id)
                             ? 'bg-zinc-300 dark:bg-zinc-950'
                             : ''
                         }`}
                         type="button"
                         onClick={() => {
                           handleSelect({
-                            _id: category._id,
+                            _id: category.id,
                             name: category.name,
-                            parent: category.parent,
+                            parent: category.parentId,
                           })
                         }}
                       >
@@ -112,13 +118,13 @@ export default function DisplayCategory({
                       </button>
                       <div
                         onClick={() => {
-                          if (category.child) {
-                            setOpenCategory(category._id)
+                          if (category.children) {
+                            setOpenCategory(category.id)
                           }
                         }}
                         className="flex-grow flex justify-end items-center p-1"
                       >
-                        {category.child ? (
+                        {category.children ? (
                           <div className="-rotate-90 w-6 h-6">
                             <ArrowAngleSVG size={24} />
                           </div>

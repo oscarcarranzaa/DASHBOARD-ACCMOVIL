@@ -8,6 +8,7 @@ import { Button, Input, Textarea } from '@nextui-org/react'
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast, Toaster } from 'sonner'
 
 type TProps = {
   categorySelected?: string | undefined
@@ -23,10 +24,9 @@ export default function NewCategoryForm({
   const [errorMessage, setErrorMessage] = useState<string>()
   const queryClient = useQueryClient()
 
-  const { register, handleSubmit, setValue, reset, getValues } =
-    useForm<newCategoryForm>({
-      resolver: zodResolver(ZNewCategoryForm),
-    })
+  const { register, handleSubmit, setValue, reset } = useForm<newCategoryForm>({
+    resolver: zodResolver(ZNewCategoryForm),
+  })
 
   const { data, isPending, mutate, isError } = useMutation({
     mutationFn: newCategory,
@@ -36,6 +36,7 @@ export default function NewCategoryForm({
       })
       seNewImageValue(undefined)
       reset()
+      toast.success('Nueva categoría creada.')
       setValue('parent', categorySelected)
     },
     onError: (err) => {
@@ -123,6 +124,7 @@ export default function NewCategoryForm({
           </div>
         </form>
       </div>
+      <Toaster theme="dark" richColors />
     </>
   )
 }

@@ -1,19 +1,19 @@
 import axiosInstance from '@/lib/axiosClient'
 import { isAxiosError } from 'axios'
 import {
-  CategorySchema,
   newCategoryForm,
   oneCategorySchema,
   ZCategories,
-  ZCategory,
   ZCategorySchema,
   ZOneCategory,
 } from '@/types/category'
+import { resposeIdSchema, ZResponseId } from '@/types/schemas'
+import { toast } from 'sonner'
 
 export async function getCategories(id: string) {
   try {
     const { data } = await axiosInstance.get<ZCategorySchema>(
-      `/posts/category?parentID=${id}`
+      `/posts/category${id ? '?parentID=' + id : ''}`
     )
 
     const validCategory = ZCategories.parse(data)
@@ -29,11 +29,11 @@ export async function getCategories(id: string) {
 }
 export async function newCategory(formData: newCategoryForm) {
   try {
-    const { data } = await axiosInstance.post<CategorySchema>(
+    const { data } = await axiosInstance.post<resposeIdSchema>(
       '/posts/category',
       formData
     )
-    const validCategory = ZCategory.parse(data)
+    const validCategory = ZResponseId.parse(data)
 
     return validCategory
   } catch (error) {
@@ -50,7 +50,14 @@ type updateCategoryProps = {
 }
 export async function updateCategory({ formData, id }: updateCategoryProps) {
   try {
-    const { data } = await axiosInstance.put(`/posts/category/${id}`, formData)
+    const data = await toast.promise(
+      axiosInstance.put(`/posts/category/${id}`, formData),
+      {
+        loading: 'Actualizando categoría...',
+        success: () => 'Categoría actualizada.',
+        error: 'Error al actualizar categoría.',
+      }
+    )
 
     return data
   } catch (error) {

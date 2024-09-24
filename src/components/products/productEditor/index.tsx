@@ -17,7 +17,6 @@ import SelectImage from '@/components/media/selectImage'
 import { newProductSchema, productSchema, ZProductNew } from '@/types/products'
 import { RangeValue } from '@react-types/shared'
 import { DateValue } from '@react-types/datepicker'
-import dayjs from 'dayjs'
 
 type TProps = {
   productValues?: productSchema

@@ -2,17 +2,19 @@ import { z } from 'zod'
 import { media } from './schemas'
 
 export const ZCategory = z.object({
-  _id: z.string(),
+  id: z.string(),
   name: z.string(),
-  parent: z.string().optional(),
   slug: z.string(),
-  child: z.boolean(),
   description: z.string().optional(),
-  image: z.string().optional(),
-  keywords: z.string().optional(),
+  image: z.string().optional().nullable(),
+  parentId: z.string().optional().nullable(),
+  children: z.boolean(),
+  keywords: z.string().optional().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 })
-export const ZOneCategory = ZCategory.omit({ image: true }).extend({
-  image: media.optional(),
+export const ZOneCategory = ZCategory.extend({
+  media: media.optional().nullable(),
 })
 export const ZCategories = z.object({
   categories: z.array(ZCategory),

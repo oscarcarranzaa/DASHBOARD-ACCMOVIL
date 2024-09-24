@@ -1,12 +1,12 @@
 import { string, z } from 'zod'
-import { getOneProductType, getProductImage, product } from './products'
+import { ZGetProducts, ZProduct } from './products'
 import { ZAttributes, ZTerms } from './attributes'
 import { ZCategories, ZCategory } from './category'
 import { media } from './schemas'
 
 export const ZVariations = z.object({
   _id: z.string(),
-  product: getOneProductType.nullable(),
+  product: ZGetProducts.nullable(),
   attributes: z.array(
     ZTerms.pick({ _id: true, option: true, image: true }).extend({
       attribute: ZAttributes.pick({ _id: true, type: true, name: true }),
@@ -16,7 +16,7 @@ export const ZVariations = z.object({
 
 export const ZVariationsPost = z.object({
   _id: z.string(),
-  product: getProductImage.optional().nullable(),
+  product: ZProduct.optional().nullable(),
   attributes: z.array(
     ZTerms.pick({ _id: true, option: true, image: true, name: true }).extend({
       attribute: ZAttributes.pick({ _id: true, type: true, name: true }),
@@ -34,7 +34,7 @@ export const ZGetPost = z.object({
   specifications: z.string().optional(),
   slug: z.string(),
   status: z.enum(['publish', 'draft']),
-  productID: getProductImage.nullable().optional(),
+  productID: ZProduct.nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.array(media).optional(),
   variations: z.array(ZVariationsPost).optional(),
@@ -47,7 +47,7 @@ export const ZGetOneListPost = ZGetPost.omit({
   variations: true,
 }).extend({
   gallery: z.array(string()),
-  productID: getOneProductType.nullable().optional(),
+  productID: ZProduct.nullable().optional(),
   variations: z.array(ZVariations).optional(),
 })
 

@@ -20,7 +20,7 @@ export default function CategoryEditor() {
   return (
     <>
       <section className="grid grid-cols-6 gap-x-4">
-        <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl pt-5 py-1 col-span-4 2xl:col-span-3 relative overflow-hidden">
+        <div className=" bg-white dark:bg-zinc-800 p-2 rounded-xl pt-5 py-1 col-span-4 md:col-span-3 relative overflow-hidden">
           <Tabs
             size="md"
             aria-label="Tabs form"

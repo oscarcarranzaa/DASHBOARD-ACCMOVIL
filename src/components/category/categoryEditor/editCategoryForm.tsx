@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import AdvancedSettings from './advancedSettings'
+import { toast, Toaster } from 'sonner'
 
 type TProps = {
   category: string
@@ -26,12 +27,13 @@ export default function EditCategoryForm({
   const { data, isPending } = useQuery({
     queryFn: () => getOneCategories(categorySelected),
     queryKey: [categorySelected],
+    refetchOnWindowFocus: false,
   })
   const { mutate, isPending: loadUpdate } = useMutation({
     mutationFn: updateCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['categories', data?.parent || ''],
+        queryKey: ['categories', data?.parentId || ''],
       })
       queryClient.invalidateQueries({ queryKey: [categorySelected] })
     },
@@ -56,17 +58,17 @@ export default function EditCategoryForm({
         name: data.name || '',
         description: data.description || '',
         keywords: data.keywords || '',
-        image: data.image?.id || undefined,
+        image: data.media?.id || undefined,
       })
 
-      if (data.image) {
-        const { image } = data
+      if (data.media) {
+        const { media } = data
         seNewImageValue([
           {
-            name: image.title,
-            imgURI: image.qualities ? image.qualities[3].src : image.url,
-            id: image.id,
-            urlMedia: image.url,
+            name: media.title,
+            imgURI: media.qualities ? media.qualities[1].src : media.url,
+            id: media.id,
+            urlMedia: media.url,
           },
         ])
       } else {
@@ -86,12 +88,7 @@ export default function EditCategoryForm({
     <>
       <div className="absolute top-0 left-0 right-0">
         {isPending && (
-          <Progress
-            size="sm"
-            isIndeterminate
-            aria-label="Loading..."
-            className="max-w-md"
-          />
+          <Progress size="sm" isIndeterminate aria-label="Loading..." />
         )}
       </div>
 
@@ -155,7 +152,7 @@ export default function EditCategoryForm({
             )}
           />
           <AdvancedSettings
-            parent={data?.parent || ''}
+            parent={data?.parentId || ''}
             categoryID={categorySelected}
             onSelectCategory={onCloseCategory}
           />
@@ -188,6 +185,7 @@ export default function EditCategoryForm({
           </div>
         </div>
       </form>
+      <Toaster theme="dark" richColors />
     </>
   )
 }

@@ -28,14 +28,14 @@ export default function DisplayCategory({
   const { openCategory, setOpenCategory } = useCategoryStore()
   const [selected, setSelected] = useState<selectCategory[] | undefined>(value)
 
-  useEffect(() => {
-    setSelected(value)
-  }, [value])
   const { data, error } = useQuery({
     queryKey: ['categories', openCategory],
     queryFn: () => getCategories(openCategory),
     refetchOnWindowFocus: false,
   })
+  useEffect(() => {
+    setSelected(value)
+  }, [value, data])
 
   const handleSelect = (category: selectCategory) => {
     /// Si selected es undefined pues se agrega el array de categorias

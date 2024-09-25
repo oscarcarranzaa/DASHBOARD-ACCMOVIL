@@ -5,6 +5,7 @@ export const ZCategory = z.object({
   id: z.string(),
   name: z.string(),
   slug: z.string(),
+  path: z.string(),
   description: z.string().optional(),
   image: z.string().optional().nullable(),
   parentId: z.string().optional().nullable(),
@@ -21,7 +22,7 @@ export const ZCategories = z.object({
   parent: ZCategory.optional(),
 })
 export const ZNewCategoryForm = z.object({
-  name: z.string(),
+  name: z.string().min(3, { message: 'Al menos 3 caracteres' }),
   parent: z.string().optional(),
   description: z.string().optional(),
   keywords: z.string().optional(),

@@ -24,7 +24,13 @@ export default function NewCategoryForm({
   const [errorMessage, setErrorMessage] = useState<string>()
   const queryClient = useQueryClient()
 
-  const { register, handleSubmit, setValue, reset } = useForm<newCategoryForm>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<newCategoryForm>({
     resolver: zodResolver(ZNewCategoryForm),
   })
 
@@ -32,7 +38,7 @@ export default function NewCategoryForm({
     mutationFn: newCategory,
     onSuccess: (dat) => {
       queryClient.invalidateQueries({
-        queryKey: ['categories', parentCategory],
+        queryKey: ['categories'],
       })
       seNewImageValue(undefined)
       reset()
@@ -63,13 +69,14 @@ export default function NewCategoryForm({
                 required: 'El nombre es obligatorio',
               })}
               isRequired
-              required
               placeholder="Nombre de la categoría"
               label="Nombre"
               autoComplete="off"
               labelPlacement="outside"
               variant="bordered"
               size="md"
+              isInvalid={errors.name !== undefined}
+              errorMessage={errors.name?.message ?? ''}
               name="name"
             />
             <Textarea

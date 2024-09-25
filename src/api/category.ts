@@ -50,17 +50,14 @@ type updateCategoryProps = {
 }
 export async function updateCategory({ formData, id }: updateCategoryProps) {
   try {
-    const data = await toast.promise(
-      axiosInstance.put(`/posts/category/${id}`, formData),
-      {
-        loading: 'Actualizando categoría...',
-        success: () => 'Categoría actualizada.',
-        error: 'Error al actualizar categoría.',
-      }
+    const { data } = await axiosInstance.put<oneCategorySchema>(
+      `/posts/category/${id}`,
+      formData
     )
-
-    return data
+    const validCategory = ZOneCategory.parse(data)
+    return validCategory
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
     } else {

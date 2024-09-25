@@ -24,18 +24,19 @@ export default function EditCategoryForm({
 }: TProps) {
   const [newImageValue, seNewImageValue] = useState<IUploads[]>()
   const queryClient = useQueryClient()
-  const { data, isPending } = useQuery({
+  const { data, isPending, isFetching } = useQuery({
     queryFn: () => getOneCategories(categorySelected),
     queryKey: [categorySelected],
     refetchOnWindowFocus: false,
   })
   const { mutate, isPending: loadUpdate } = useMutation({
     mutationFn: updateCategory,
-    onSuccess: () => {
+    onSuccess: (cat) => {
+      toast.success('Categoría actualizada...')
       queryClient.invalidateQueries({
-        queryKey: ['categories', data?.parentId || ''],
+        queryKey: ['categories'],
       })
-      queryClient.invalidateQueries({ queryKey: [categorySelected] })
+      queryClient.invalidateQueries({ queryKey: [cat.id] })
     },
   })
 
@@ -47,19 +48,29 @@ export default function EditCategoryForm({
     parent: categorySelected,
   }
 
-  const { handleSubmit, control, reset, setValue } = useForm<newCategoryForm>({
+  const {
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    formState: { isDirty, errors },
+  } = useForm<newCategoryForm>({
     resolver: zodResolver(ZNewCategoryForm),
     defaultValues,
   })
 
   useEffect(() => {
     if (data) {
-      reset({
-        name: data.name || '',
-        description: data.description || '',
-        keywords: data.keywords || '',
-        image: data.media?.id || undefined,
-      })
+      reset(
+        {
+          name: data.name || '',
+          description: data.description || '',
+          keywords: data.keywords || '',
+          image: data.media?.id || undefined,
+          parent: categorySelected,
+        },
+        { keepDirty: false }
+      )
 
       if (data.media) {
         const { media } = data
@@ -75,15 +86,21 @@ export default function EditCategoryForm({
         seNewImageValue(undefined)
       }
     }
-  }, [data, reset])
+  }, [data, reset, categorySelected])
 
   useEffect(() => {
-    setValue('image', newImageValue ? newImageValue[0].id : undefined)
+    setValue('image', newImageValue ? newImageValue[0].id : undefined, {
+      shouldDirty: true,
+    })
   }, [categorySelected, newImageValue, setValue])
 
+  const disabled =
+    isFetching || loadUpdate || !isDirty || errors.name !== undefined
   const submitForm = (form: newCategoryForm) => {
+    if (disabled) return
     mutate({ formData: form, id: categorySelected })
   }
+
   return (
     <>
       <div className="absolute top-0 left-0 right-0">
@@ -112,13 +129,14 @@ export default function EditCategoryForm({
               <Input
                 {...field}
                 isRequired
-                required
                 placeholder="Nombre de la categoría"
                 label="Nombre"
                 autoComplete="off"
                 labelPlacement="outside"
                 variant="bordered"
                 size="md"
+                isInvalid={errors.name !== undefined}
+                errorMessage={errors.name?.message ?? ''}
               />
             )}
           />
@@ -167,12 +185,10 @@ export default function EditCategoryForm({
 
           <div className="flex flex-col gap-y-2">
             <Button
-              color="primary"
-              className={
-                isPending || loadUpdate ? ' cursor-not-allowed' : ' font-medium'
-              }
+              color={`${disabled ? 'default' : 'primary'}`}
+              className={disabled ? ' cursor-not-allowed' : ' font-medium'}
               type="submit"
-              disabled={isPending || loadUpdate}
+              disabled={disabled}
             >
               {loadUpdate ? (
                 <div className=" animate-spin">

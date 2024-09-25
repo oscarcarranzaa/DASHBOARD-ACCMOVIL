@@ -3,6 +3,7 @@ import Settings from '@/components/icons/settings'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteCategory } from '@/api/category'
 import { useCategoryStore } from '@/store/category'
+import DisplayCategory from '../displayCategory'
 
 type TProps = {
   categoryID: string

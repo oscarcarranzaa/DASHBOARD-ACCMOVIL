@@ -1,7 +1,7 @@
 import SelectProduct from '@/components/products/selectProduct'
 import SquareImage from '@/components/squareImage'
 import { usePublishStore } from '@/store/publish'
-import { getProductImageSchema } from '@/types/products'
+import { productSchema } from '@/types/products'
 import { useEffect, useState, useCallback } from 'react'
 
 type TProps = {
@@ -33,7 +33,7 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
   }, [openSelect])
 
   const saveProduct = useCallback(
-    (value: getProductImageSchema) => {
+    (value: productSchema) => {
       const newVariation =
         getVariations?.map((variation) => {
           const variationsAtt = variation.attributesTerms

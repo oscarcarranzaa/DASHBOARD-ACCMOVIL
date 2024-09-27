@@ -25,11 +25,11 @@ export default function Attributes() {
       <div className=" grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-2 w-full flex-wrap select-none">
         {data ? (
           data.map((att) => {
-            const termsMessage = `+${att.terms.length} terms`
+            const termsMessage = `${att.terms} terms`
             return (
               <ItemsAttributes
-                key={att._id}
-                _id={att._id}
+                key={att.id}
+                _id={att.id}
                 name={att.name}
                 type={att.type}
                 terms={termsMessage}

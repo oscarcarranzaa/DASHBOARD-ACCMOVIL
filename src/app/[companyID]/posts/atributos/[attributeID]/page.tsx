@@ -23,7 +23,7 @@ export default function AttributeID() {
       <div className="grid grid-cols-6 gap-3 ">
         <div className=" col-span-2 ">
           <div className="  top-5">
-            {data && <FormTerms type={data.type} id={data._id} />}
+            {data && <FormTerms type={data.type} id={data.id} />}
           </div>
         </div>
         <div className=" col-span-4">

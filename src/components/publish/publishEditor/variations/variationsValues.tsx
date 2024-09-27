@@ -1,4 +1,4 @@
-import { ItemsVariations, TVariations, usePublishStore } from '@/store/publish'
+import { ItemsVariations, usePublishStore } from '@/store/publish'
 import DisplayGroupVariations from './displayGroupVariations'
 import { useEffect, useState } from 'react'
 import DisplayItemsVariations from './displayItemsVariations'

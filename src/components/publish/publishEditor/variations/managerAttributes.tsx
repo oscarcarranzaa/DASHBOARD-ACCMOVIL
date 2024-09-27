@@ -30,12 +30,12 @@ export default function ManagerAttributes() {
   }, [getAttribute])
 
   const attribute = selectedAttributes.map((att) => {
-    return data?.find((a) => a._id === att)
+    return data?.find((a) => a.id === att)
   })
 
   const options =
     data?.map((attribute) => ({
-      id: attribute._id,
+      id: attribute.id,
       label: attribute.name,
     })) ?? []
 
@@ -44,15 +44,15 @@ export default function ManagerAttributes() {
     if (selected && !selectedAttributes.includes(selected)) {
       const updateValues = [...selectedAttributes, selected]
       const attributeFind = updateValues.map((att) => {
-        return data?.find((a) => a._id === att)
+        return data?.find((a) => a.id === att)
       })
       setSelectedAttributes(updateValues)
       const attStoreValue = attributeFind.map((att) => {
-        const isExists = getAttribute?.find((a) => a.id === att?._id)
+        const isExists = getAttribute?.find((a) => a.id === att?.id)
         if (isExists) return isExists
 
         return {
-          id: att?._id ?? '',
+          id: att?.id ?? '',
           name: att?.name ?? '',
           terms: [],
         }
@@ -74,14 +74,14 @@ export default function ManagerAttributes() {
 
     //// Cambio de posición en el store
     const attributeFind = newAttributes.map((att) => {
-      return data?.find((a) => a._id === att)
+      return data?.find((a) => a.id === att)
     })
 
     const attStoreValue = attributeFind.map((att) => {
-      const isExists = getAttribute?.find((a) => a.id === att?._id)
+      const isExists = getAttribute?.find((a) => a.id === att?.id)
       if (isExists) return isExists
       return {
-        id: att?._id ?? '',
+        id: att?.id ?? '',
         name: att?.name ?? '',
         terms: [],
       }
@@ -95,13 +95,13 @@ export default function ManagerAttributes() {
     const newAttributes = selectedAttributes.filter((att) => att !== id)
     setSelectedAttributes(newAttributes)
     const attributeFind = newAttributes.map((att) => {
-      return data?.find((a) => a._id === att)
+      return data?.find((a) => a.id === att)
     })
     const attStoreValue = attributeFind.map((att) => {
-      const isExists = getAttribute?.find((a) => a.id === att?._id)
+      const isExists = getAttribute?.find((a) => a.id === att?.id)
       if (isExists) return isExists
       return {
-        id: att?._id ?? '',
+        id: att?.id ?? '',
         name: att?.name ?? '',
         terms: [],
       }
@@ -150,9 +150,9 @@ export default function ManagerAttributes() {
               if (!att) return null
               return (
                 <AttributeValues
-                  key={att._id}
+                  key={att.id}
                   deleteAtt={deleteAtt}
-                  id={att._id.toString()}
+                  id={att.id.toString()}
                   name={att.name}
                   type={att.type}
                 />

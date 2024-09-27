@@ -36,8 +36,8 @@ export default function ListTerms({ data, isPending }: TProps) {
     (term: ZTermsSchema, columnKey: React.Key) => {
       switch (columnKey) {
         case 'preview':
-          const image = term.image?.images
-            ? term.image.images[0].src
+          const image = term.image?.qualities
+            ? term.image.qualities[0].src
             : undefined
           return (
             <IconTerm
@@ -82,7 +82,7 @@ export default function ListTerms({ data, isPending }: TProps) {
             loadingContent={<Spinner label="Cargando..." />}
           >
             {(item) => (
-              <TableRow key={item._id}>
+              <TableRow key={item.id}>
                 {(columnKey) => (
                   <TableCell align="center">
                     {renderCell(item, columnKey)}

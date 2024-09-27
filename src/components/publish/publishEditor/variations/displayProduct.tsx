@@ -3,13 +3,13 @@ import DisplayPrice from '@/components/displayPrice'
 import SelectImage from '@/components/media/selectImage'
 import { usePublishStore } from '@/store/publish'
 import { IUploads } from '@/types'
-import { getProductImageSchema } from '@/types/products'
+import { productSchema } from '@/types/products'
 import { Spinner } from '@nextui-org/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
 type TProps = {
-  select: getProductImageSchema
+  select: productSchema
 }
 export default function DisplayProduct({ select }: TProps) {
   const [getImage, setGetImage] = useState<IUploads[] | undefined>()
@@ -23,13 +23,13 @@ export default function DisplayProduct({ select }: TProps) {
   const { mutate, isPending } = useMutation({
     mutationFn: updateOneProductImage,
     onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: [select._id] })
-      if (productID?._id === select._id) {
+      queryClient.invalidateQueries({ queryKey: [select.id] })
+      if (productID?._id === select.id) {
         setProductID({ ...productID, image: res })
       } else {
         const updateImageVariations = getVariations?.map((variation) => {
-          const variationsID = variation.product?._id
-          if (variationsID === select._id) {
+          const variationsID = variation.product?.id
+          if (variationsID === select.id) {
             const { product } = variation
             const productValue = product ? { ...product, image: res } : null
 
@@ -43,21 +43,21 @@ export default function DisplayProduct({ select }: TProps) {
   })
 
   useEffect(() => {
-    const productImage = select.image?.id
+    const productImage = select.image
 
     if (getImage && getImage.length === 1 && getImage[0].id !== productImage) {
-      mutate({ image: getImage[0].id, id: select._id })
+      mutate({ image: getImage[0].id, id: select.id })
     }
-  }, [getImage, mutate, select._id, select.image?.id])
+  }, [getImage, mutate, select.id, select.image])
   useEffect(() => {
-    if (select.image?.qualities) {
-      const defaultMediaValues = select.image?.id
+    if (select.media?.qualities) {
+      const defaultMediaValues = select.image
         ? [
             {
-              id: select?.image?.id,
-              imgURI: select.image.qualities[3].src,
-              name: select?.image?.title,
-              urlMedia: select.image.qualities[6].src,
+              id: select?.image,
+              imgURI: select.media.qualities[2].src,
+              name: select?.media?.title,
+              urlMedia: select.media.url,
             },
           ]
         : []
@@ -89,7 +89,7 @@ export default function DisplayProduct({ select }: TProps) {
               <p className=" line-clamp-2 text-sm">{select.name}</p>
               <div className="flex">
                 <p className="text-xs dark:text-green-500 text-green-600 line-clamp-1 font-bold">
-                  {select.code}
+                  {select.sku}
                 </p>
                 <p className="text-xs text-zinc-500 ml-5">
                   <span className=" dark:text-yellow-500 text-yellow-600 font-semibold">
@@ -101,9 +101,9 @@ export default function DisplayProduct({ select }: TProps) {
             <div>
               <DisplayPrice
                 price={select.price}
-                discountPrice={select.priceDiscount?.price}
-                startDate={select.priceDiscount?.start}
-                endDate={select.priceDiscount?.end}
+                discountPrice={select.discountPrice}
+                startDate={select.startDiscount}
+                endDate={select.endDiscount}
               />
             </div>
           </div>

@@ -41,11 +41,11 @@ export default function AttributeValues({
   })
 
   const valueItems = valueSelected.map((att) => {
-    return data?.terms.find((a) => a._id === att)
+    return data?.terms.find((a) => a.id === att)
   })
   const options =
     data?.terms.map((attribute) => ({
-      id: attribute._id,
+      id: attribute.id,
       label: attribute.name,
     })) ?? []
 
@@ -61,11 +61,11 @@ export default function AttributeValues({
     if (!data || getAtt === null) return
 
     const values = valueSelected.map((att) => {
-      return data.terms.find((a) => a._id === att)
+      return data.terms.find((a) => a.id === att)
     })
     const attStoreValue = values.map((att) => {
       return {
-        id: att?._id ?? '',
+        id: att?.id ?? '',
         name: att?.name ?? '',
       }
     })
@@ -153,15 +153,15 @@ export default function AttributeValues({
             <div className="mt-3 flex flex-wrap gap-y-2">
               {data &&
                 valueSelected.map((att) => {
-                  const attribute = data?.terms.find((a) => a._id === att)
-                  const img = attribute?.image?.images
+                  const attribute = data?.terms.find((a) => a.id === att)
+                  const img = attribute?.image?.qualities
                   return (
                     <ChipItems
                       key={att}
                       Close={setValueSelected}
                       colors={attribute?.colors}
                       name={attribute?.name ?? ''}
-                      id={attribute?._id ?? ''}
+                      id={attribute?.id ?? ''}
                       type={type}
                       image={img ? img[0].src : ''}
                     />

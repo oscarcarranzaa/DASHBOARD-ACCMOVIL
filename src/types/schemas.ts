@@ -57,7 +57,6 @@ export const getMedias = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
-const mediaUserAvatar = media.pick({ id: true, qualities: true }).optional()
 
 const oneMediaTypes = media.omit({ userId: true }).extend({ user })
 

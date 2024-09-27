@@ -9,7 +9,7 @@ type TProps = {
 export default function IconTerm({ type, image, colors }: TProps) {
   const renderIcon = useCallback(() => {
     switch (type) {
-      case 'colors':
+      case 'color':
         return (
           <div>
             <div className=" -rotate-45 w-6 h-6 rounded-full overflow-hidden">

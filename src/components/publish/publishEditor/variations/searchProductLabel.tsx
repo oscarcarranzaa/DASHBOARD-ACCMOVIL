@@ -3,7 +3,7 @@
 import { getAllProducts } from '@/api/products'
 import SearchSVG from '@/components/icons/search'
 import SquareImage from '@/components/squareImage'
-import { getProductImageSchema } from '@/types/products'
+import { productSchema } from '@/types/products'
 import { Input } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -13,15 +13,13 @@ import CloseSVG from '@/components/icons/close'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type TProps = {
-  seleted?: getProductImageSchema | null
-  onSelect?: (value: getProductImageSchema | undefined) => void
+  seleted?: productSchema | null
+  onSelect?: (value: productSchema | undefined) => void
 }
 export default function SearchProductLabel({ seleted, onSelect }: TProps) {
   const initialSelect = seleted ? seleted : null
 
-  const [select, setSelect] = useState<getProductImageSchema | null>(
-    initialSelect
-  )
+  const [select, setSelect] = useState<productSchema | null>(initialSelect)
 
   useEffect(() => {
     setSelect(initialSelect)
@@ -93,12 +91,12 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
         >
           {data &&
             data.data.map((item) => {
-              const image = item.image?.images
-                ? item.image.images[0].src
+              const image = item.media
+                ? item.media.qualities[0].src
                 : '/static/product.webp'
               return (
                 <button
-                  key={item._id}
+                  key={item.id}
                   className="  p-2 hover:bg-zinc-200 dark:hover:bg-zinc-950 rounded-lg cursor-pointer w-full"
                   onClick={() => {
                     setSelect(item)
@@ -115,7 +113,7 @@ export default function SearchProductLabel({ seleted, onSelect }: TProps) {
                         {item.name}
                       </p>
                       <div className="text-xs flex">
-                        <p className=" text-green-500 mr-5">{item.code}</p>
+                        <p className=" text-green-500 mr-5">{item.sku}</p>
                         <p className=" text-rose-500 font-bold">{item.price}</p>
                       </div>
                     </div>

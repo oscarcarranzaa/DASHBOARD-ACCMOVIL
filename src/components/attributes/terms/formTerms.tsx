@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 type TProps = {
-  type: 'image' | 'colors' | 'option'
+  type: 'image' | 'color' | 'option'
   id: string
 }
 export default function FormTerms({ type, id }: TProps) {
@@ -21,7 +21,7 @@ export default function FormTerms({ type, id }: TProps) {
     name: '',
     option: '',
     slug: '',
-    colors: [],
+    color: [],
   }
   const { handleSubmit, control, reset, setValue } = useForm<newTermSchema>({
     resolver: zodResolver(ZNewTerm),
@@ -102,7 +102,7 @@ export default function FormTerms({ type, id }: TProps) {
               <SelectImage iconSize={100} setValue={setImage} />
             </div>
           )}
-          {type === 'colors' && (
+          {type === 'color' && (
             <>
               <div>
                 <p className="text-sm dark:text-zinc-300 text-zinc-600 pl-1 mb-1">
@@ -118,7 +118,7 @@ export default function FormTerms({ type, id }: TProps) {
                 </Select>
                 <div className="flex mt-5 gap-2">
                   <Controller
-                    name="colors.0"
+                    name="color.0"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -131,7 +131,7 @@ export default function FormTerms({ type, id }: TProps) {
 
                   {colorType === 'bicolor' && (
                     <Controller
-                      name="colors.1"
+                      name="color.1"
                       control={control}
                       render={({ field }) => (
                         <Input

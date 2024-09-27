@@ -2,39 +2,35 @@ import { z } from 'zod'
 import { media } from './schemas'
 
 export const ZTerms = z.object({
-  _id: z.string(),
+  id: z.string(),
   name: z.string(),
   colors: z.string().array(),
-  attribute: z.string(),
+  attributeId: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  option: z.string().optional(),
-  image: media.optional(),
+  option: z.string().optional().nullable(),
+  image: media.optional().nullable(),
   slug: z.string(),
 })
 export const ZAttributes = z.object({
-  _id: z.string(),
+  id: z.string(),
   name: z.string(),
-  terms: z.array(z.string()),
-  type: z.enum(['option', 'image', 'colors']),
-  user: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  terms: z.number(),
+  type: z.enum(['option', 'image', 'color']),
+  userId: z.string(),
 })
 export const ZOneAttribute = z.object({
-  _id: z.string(),
+  id: z.string(),
   name: z.string(),
   terms: z.array(ZTerms),
-  type: z.enum(['option', 'image', 'colors']),
-  user: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  type: z.enum(['option', 'image', 'color']),
+  userId: z.string(),
 })
 
 export const ZNewAttribute = ZAttributes.pick({ name: true, type: true })
 export const ZNewTerm = z.object({
   name: z.string(),
-  colors: z.string().array().optional(),
+  color: z.string().array().optional(),
   option: z.string().optional(),
   image: z.string().optional(),
   slug: z.string().optional(),

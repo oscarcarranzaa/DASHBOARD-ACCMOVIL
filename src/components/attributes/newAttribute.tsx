@@ -42,7 +42,7 @@ export default function NewAttribute() {
       label: 'Imagen',
     },
     {
-      key: 'colors',
+      key: 'color',
       label: 'Color',
     },
     {

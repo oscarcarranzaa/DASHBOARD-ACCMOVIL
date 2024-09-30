@@ -29,7 +29,7 @@ export default function Attributes() {
             return (
               <ItemsAttributes
                 key={att.id}
-                _id={att.id}
+                id={att.id}
                 name={att.name}
                 type={att.type}
                 terms={termsMessage}

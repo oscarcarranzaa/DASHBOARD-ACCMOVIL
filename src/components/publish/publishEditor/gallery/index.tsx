@@ -37,6 +37,7 @@ export default function Gallery() {
 
     setGallery(newItems)
   }
+  console.log(gallery)
   return (
     <>
       <div className="w-full min-h-24 flex justify-center items-center border border-zinc-500 rounded-xl dark:bg-zinc-900 transition-colors overflow-hidden p-2">

@@ -1,8 +1,7 @@
 import { z } from 'zod'
-import { media } from './schemas'
 
 export const team = z.object({
-  _id: z.string(),
+  id: z.string(),
   role: z.string(),
   job: z.string().optional(),
 })

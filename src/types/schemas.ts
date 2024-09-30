@@ -26,7 +26,7 @@ export const media = z.object({
   createdAt: z.string(),
 })
 export const team = z.object({
-  _id: z.string(),
+  id: z.string(),
   role: z.string(),
   job: z.string().optional(),
 })

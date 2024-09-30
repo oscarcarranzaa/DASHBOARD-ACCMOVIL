@@ -1,7 +1,7 @@
 'use client'
 import { selectCategory } from '@/components/category/displayCategory'
 import { IUploads } from '@/types'
-import { getProductImageSchema } from '@/types/products'
+import { productSchema } from '@/types/products'
 import { PostSchema, VariationsAndAttributes } from '@/types/posts'
 import { create } from 'zustand'
 
@@ -12,14 +12,16 @@ export type TPostData = {
   status: 'publish' | 'draft'
   type: 'simple' | 'variable'
   gallery?: IUploads[]
-  video?: string
+  youtubeVideoId?: string
   categories?: selectCategory[]
   shortDescription?: string
-  productID?: getProductImageSchema | null
+  productId?: string | null
+  Product?: productSchema | null
 }
 export type TVariations = {
   id: string
-  product: getProductImageSchema | null
+  productId?: string | null
+  Product?: productSchema | null
   attributesTerms: {
     id: string
     name: string
@@ -28,7 +30,6 @@ export type TVariations = {
 export interface ItemsVariations extends TVariations {
   status: 'draft' | 'new'
 }
-;[]
 
 export type StatePublish = {
   variations?: TVariations[]
@@ -76,7 +77,7 @@ const extractAttributesAndTerms = (
   variationsData.forEach((variation) => {
     variation.attributes.forEach((attribute) => {
       const attributeName = attribute.attribute.name
-      const attributeID = attribute.attribute._id
+      const attributeID = attribute.attribute.id
 
       if (!attributesMap[attributeID]) {
         attributesMap[attributeID] = {
@@ -88,11 +89,11 @@ const extractAttributesAndTerms = (
 
       if (
         !attributesMap[attributeID].terms.some(
-          (term) => term.id === attribute._id
+          (term) => term.id === attribute.id
         )
       ) {
         attributesMap[attributeID].terms.push({
-          id: attribute._id,
+          id: attribute.id,
           name: attribute.name,
         })
       }
@@ -116,7 +117,7 @@ type Action = {
   setShortDescription: (description: string) => void
   setCagories: (categories: selectCategory[]) => void
   setVideo: (video?: string) => void
-  setProductID: (productID?: getProductImageSchema) => void
+  setProductId: (productId?: productSchema) => void
 }
 
 export const usePublishStore = create<StatePublish & Action>((set) => ({
@@ -126,8 +127,8 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
     set((state) => ({
       postData: {
         ...state.postData,
+        id: data.id,
         title: data.title,
-        id: data._id,
         description: data.description,
         shortDescription: data.shortDescription,
         status: data.status,
@@ -141,28 +142,30 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
           }
         }),
         categories: data.categories.map((c) => ({
-          _id: c._id,
+          id: c.id,
           name: c.name,
-          parent: c.parent,
+          parent: c.parentId,
         })),
-        video: data.videoID,
-        productID: data.productID,
+        productId: data.productId,
+        youtubeVideoId: data.youtubeVideoId,
+        Product: data.Product,
       },
       attributes: data.variations
         ? extractAttributesAndTerms(data.variations)
         : null,
       variations:
         data.variations?.map((v) => ({
-          id: v._id,
-          product: v.product ?? null,
+          id: v.id,
+          productId: v.productId,
+          Product: v.Product ?? null,
           attributesTerms: v.attributes.map((at) => ({
-            id: at._id,
+            id: at.id,
             name: at.name,
           })),
         })) ?? [],
     })),
-  setProductID: (productID) =>
-    set((state) => ({ postData: { ...state.postData, productID } })),
+  setProductId: (Product) =>
+    set((state) => ({ postData: { ...state.postData, Product } })),
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),
   setDeleteVariations: (deletedVariations) =>
     set(() => ({ deletedVariations: deletedVariations })),
@@ -180,6 +183,6 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
     set((state) => ({ postData: { ...state.postData, description } })),
   setCagories: (categories) =>
     set((state) => ({ postData: { ...state.postData, categories } })),
-  setVideo: (video) =>
-    set((state) => ({ postData: { ...state.postData, video } })),
+  setVideo: (youtubeVideoId) =>
+    set((state) => ({ postData: { ...state.postData, youtubeVideoId } })),
 }))

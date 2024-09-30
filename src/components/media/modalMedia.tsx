@@ -21,9 +21,7 @@ export default function ModalMedia({
   closeModal,
   defaultMedias,
 }: IProps) {
-  const [mediaSelect, setMediaSelect] = useState<IUploads[] | undefined>(
-    defaultMedias
-  )
+  const [mediaSelect, setMediaSelect] = useState<IUploads[] | undefined>()
   const [selectedMedia, setSelectedMedia] = useState<IUploads[] | undefined>(
     defaultMedias
   )
@@ -34,7 +32,7 @@ export default function ModalMedia({
   useEffect(() => {
     const value = defaultMedias ?? undefined
     setMediaSelect(defaultMedias)
-    setSelectedMedia(value)
+    // setSelectedMedia(value)
   }, [defaultMedias])
 
   const handleSelect = () => {

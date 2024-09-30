@@ -4,26 +4,27 @@ import { Button, Input } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 
 export default function EmbedVideo() {
-  const { video } = usePublishStore((store) => store.postData)
+  const { youtubeVideoId } = usePublishStore((store) => store.postData)
   const setVideo = usePublishStore((store) => store.setVideo)
-  const defaultUrl = video ? 'https://www.youtube.com/watch?v=' + video : ''
+  const defaultUrl = youtubeVideoId
+    ? 'https://www.youtube.com/watch?v=' + youtubeVideoId
+    : ''
 
   const [videoID, setVideoID] = useState<string>()
   const [url, setUrl] = useState<string>(defaultUrl)
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
-    setVideoID(video)
+    setVideoID(youtubeVideoId)
     setUrl(defaultUrl)
-  }, [video])
+  }, [youtubeVideoId])
 
   const handleVideo = async () => {
     if (url === '') {
       setError('Debes ingresar un enlace')
       return
     }
-    if (video && video.length > 1) {
-      console.log(video, 'll')
+    if (youtubeVideoId && youtubeVideoId.length > 1) {
       setVideo('')
       setUrl('')
       return
@@ -31,7 +32,6 @@ export default function EmbedVideo() {
 
     const videoId = getVideoId(url)
     if (videoId) {
-      console.log(videoId)
       setVideo(videoId.split('&')[0])
       setError('')
     } else {
@@ -52,12 +52,13 @@ export default function EmbedVideo() {
 
   return (
     <>
-      <p className="mt-5">Video gallery</p>
+      <p className="mt-5">Video de YouTube</p>
       <div className="p-2 dark:bg-zinc-800 bg-white mt-1 rounded-xl">
         <div className="w-full ">
           <Input
             variant="bordered"
             label="Enlace del video"
+            placeholder="Pega el enlace del video de YouTube"
             value={url}
             isInvalid={error ? true : false}
             onChange={(e) => {
@@ -70,7 +71,7 @@ export default function EmbedVideo() {
             onClick={handleVideo}
             className="w-full mt-2 rounded-md"
             color={
-              video && video.length > 1
+              youtubeVideoId && youtubeVideoId.length > 1
                 ? 'danger'
                 : url === ''
                   ? 'default'
@@ -78,10 +79,12 @@ export default function EmbedVideo() {
             }
             disabled={url === ''}
           >
-            {video && video.length > 1 ? 'Eliminar' : 'Cargar video'}
+            {youtubeVideoId && youtubeVideoId.length > 1
+              ? 'Eliminar'
+              : 'Cargar video'}
           </Button>
         </div>
-        <div className={video ? 'block mt-3' : 'hidden  '}>
+        <div className={youtubeVideoId ? 'block mt-3' : 'hidden  '}>
           <div className="w-full aspect-video">
             {videoID && (
               <iframe

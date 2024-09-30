@@ -4,9 +4,9 @@ import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
 
 export default function Variations() {
-  const { type, productID } = usePublishStore((state) => state.postData)
+  const { type, Product } = usePublishStore((state) => state.postData)
   const setType = usePublishStore((state) => state.setType)
-  const setProduct = usePublishStore((state) => state.setProductID)
+  const setProduct = usePublishStore((state) => state.setProductId)
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function Variations() {
               <Tab key="simple" title="Simple">
                 <div className="w-full ">
                   <SearchProductLabel
-                    seleted={productID}
+                    seleted={Product}
                     onSelect={(value) => setProduct(value)}
                   />
                 </div>

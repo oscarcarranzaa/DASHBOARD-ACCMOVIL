@@ -16,22 +16,22 @@ export default function DisplayProduct({ select }: TProps) {
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
   const queryClient = useQueryClient()
   const getVariations = usePublishStore((state) => state.variations)
-  const { productID } = usePublishStore((state) => state.postData)
-  const setProductID = usePublishStore((state) => state.setProductID)
+  const { Product } = usePublishStore((state) => state.postData)
+  const setProductID = usePublishStore((state) => state.setProductId)
   const setVariation = usePublishStore((state) => state.setVariation)
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateOneProductImage,
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: [select.id] })
-      if (productID?._id === select.id) {
-        setProductID({ ...productID, image: res })
+      if (Product?.id === select.id) {
+        setProductID({ ...Product, media: res })
       } else {
         const updateImageVariations = getVariations?.map((variation) => {
-          const variationsID = variation.product?.id
+          const variationsID = variation.productId
           if (variationsID === select.id) {
-            const { product } = variation
-            const productValue = product ? { ...product, image: res } : null
+            const { Product } = variation
+            const productValue = Product ? { ...Product, media: res } : null
 
             return { ...variation, product: productValue }
           }

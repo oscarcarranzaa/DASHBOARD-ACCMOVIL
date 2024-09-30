@@ -33,7 +33,7 @@ export default function CategoryEditor() {
               <NewCategoryForm
                 parentCategory={category?.parent ? category.parent : ''}
                 category={`Agregar a: ${category ? category.name : '[Root]'}`}
-                categorySelected={category && category._id}
+                categorySelected={category && category.id}
               />
             </Tab>
             <Tab key="editar" title="Editar">
@@ -42,7 +42,7 @@ export default function CategoryEditor() {
                   <EditCategoryForm
                     onCloseCategory={() => setCategory(undefined)}
                     category={`Agregar a: ${category ? category.name : '[Root]'}`}
-                    categorySelected={category._id}
+                    categorySelected={category.id}
                   />
                 )}
               </div>

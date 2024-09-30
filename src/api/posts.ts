@@ -2,14 +2,13 @@ import axiosInstance from '@/lib/axiosClient'
 import {
   getLisPosts,
   getLisPostsSchema,
-  IdSchema,
   PostSchema,
   SaveNewPostSchema,
   SavePostSchema,
-  ZGetID,
   ZGetPost,
   ZSaveGetPost,
 } from '@/types/posts'
+import { resposeIdSchema, ZResponseId } from '@/types/schemas'
 import { isAxiosError } from 'axios'
 
 export async function getLisPostsData(
@@ -41,6 +40,7 @@ export async function getPost(postID: string) {
 
     return validPost
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
     } else {
@@ -72,10 +72,13 @@ export async function createPost(formData: SavePostSchema) {
 }
 export async function duplicatePost(id: string) {
   try {
-    const { data } = await axiosInstance.post<IdSchema>(`/posts/duplicated`, {
-      id,
-    })
-    const validate = ZGetID.parse(data)
+    const { data } = await axiosInstance.post<resposeIdSchema>(
+      `/posts/duplicated`,
+      {
+        id,
+      }
+    )
+    const validate = ZResponseId.parse(data)
     return validate
   } catch (error) {
     if (isAxiosError(error) && error.response) {

@@ -91,7 +91,7 @@ export default function VariationsValues() {
         const id = terms.map((t) => t.id).join()
         return {
           id,
-          product: null,
+          Product: null,
           attributesTerms: terms,
         }
       }) ?? getVariations

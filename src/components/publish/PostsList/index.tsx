@@ -81,28 +81,28 @@ export default function PostsList() {
                     type,
                     gallery,
                     variations,
-                    productID,
+                    Product,
                     totalStock,
-                    _id,
+                    id,
                   } = post
                   const outStock = totalStock === 0
                   const prices = ConvertPricePost({
                     variations,
-                    product: productID,
+                    product: Product,
                     type,
                   })
                   return (
                     <PostItem
-                      id={_id}
-                      price={prices ? prices.price : 0}
-                      discount={prices ? prices.discount : undefined}
+                      id={id}
+                      price={prices?.price ? prices.price : 0}
+                      discount={prices?.discount ? prices.discount : undefined}
                       porcentDiscount={
                         prices ? prices.porcentDiscount : undefined
                       }
                       name={title}
                       image={gallery[0]}
                       outStock={outStock}
-                      key={_id}
+                      key={id}
                     />
                   )
                 })

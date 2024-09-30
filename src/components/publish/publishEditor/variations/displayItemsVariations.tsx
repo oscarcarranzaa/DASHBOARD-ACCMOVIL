@@ -16,12 +16,12 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
   const getVariations = usePublishStore((state) => state.variations)
   const setVariations = usePublishStore((state) => state.setVariation)
 
-  const product =
+  const product: productSchema | null =
     getVariations?.find((variation) => {
       const variationsAtt = variation.attributesTerms.map((s) => s.id).sort()
       const termsAtt = terms.map((term) => term.id).sort()
       return variationsAtt.every((att, index) => att === termsAtt[index])
-    })?.product ?? null
+    })?.Product ?? null
 
   const [openSelect, setOpenSelect] = useState(false)
 
@@ -42,7 +42,8 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
           const termsAtt = terms.map((term) => term.id).sort()
           if (variationsAtt.every((att, index) => att === termsAtt[index])) {
             return {
-              product: value,
+              productId: value.id,
+              Product: value,
               attributesTerms: terms,
               id: variation.id,
             }
@@ -71,7 +72,6 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
       }) ?? []
     setVariations(changeStatus)
   }, [terms, getVariations])
-
   return (
     <>
       {openSelect && (
@@ -90,8 +90,8 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
           onClick={() => setOpenSelect(true)}
         >
           <div className="w-12 h-12">
-            {product?.image?.images ? (
-              <SquareImage src={product.image.images[0].src} />
+            {product?.media?.qualities ? (
+              <SquareImage src={product.media.qualities[0].src} />
             ) : (
               <SquareImage src="/static/product.webp" />
             )}
@@ -118,7 +118,7 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
                 <p className="text-xs  line-clamp-1">{product.name}</p>
                 <span className="px-1"> • </span>
                 <p className="text-xs text-green-500 line-clamp-1">
-                  {product.code}
+                  {product.sku ?? 'N/D'}
                 </p>
               </div>
             )}

@@ -9,7 +9,7 @@ import { useCategoryStore } from '@/store/category'
 import EmptyCategory from './emptyCategory'
 
 export type selectCategory = {
-  _id: string
+  id: string
   name: string
   parent: string | undefined | null
 }
@@ -45,12 +45,10 @@ export default function DisplayCategory({
       return
     }
     /// Busca si existe la categoria en seleccionados
-    const find = selected.find((item) => item._id === category._id)
+    const find = selected.find((item) => item.id === category.id)
     /// Si ya existe y no isOnly ("Seleccion unica") la quita
     if (find && !isOnly) {
-      const deleteCategory = selected.filter(
-        (item) => item._id !== category._id
-      )
+      const deleteCategory = selected.filter((item) => item.id !== category.id)
       onSelectCategory && onSelectCategory(deleteCategory)
       setSelected(deleteCategory)
       return
@@ -101,14 +99,14 @@ export default function DisplayCategory({
                     >
                       <button
                         className={`dark:hover:bg-zinc-950 hover:bg-zinc-300 rounded-md px-3 p-2 ${
-                          selected?.find((item) => item._id === category.id)
+                          selected?.find((item) => item.id === category.id)
                             ? 'bg-zinc-300 dark:bg-zinc-950'
                             : ''
                         }`}
                         type="button"
                         onClick={() => {
                           handleSelect({
-                            _id: category.id,
+                            id: category.id,
                             name: category.name,
                             parent: category.parentId,
                           })
@@ -159,7 +157,7 @@ export default function DisplayCategory({
           {selected &&
             selected.map((item) => (
               <div
-                key={item._id}
+                key={item.id}
                 className="flex  justify-between items-center p-2 bg-zinc-200 dark:bg-zinc-700 rounded-md mt-1 text-xs"
               >
                 <p
@@ -179,11 +177,11 @@ export default function DisplayCategory({
                     className="ml-5"
                     onClick={() => {
                       setSelected(
-                        selected.filter((select) => select._id !== item._id)
+                        selected.filter((select) => select.id !== item.id)
                       )
                       if (onSelectCategory) {
                         onSelectCategory(
-                          selected.filter((select) => select._id !== item._id)
+                          selected.filter((select) => select.id !== item.id)
                         )
                       }
                     }}

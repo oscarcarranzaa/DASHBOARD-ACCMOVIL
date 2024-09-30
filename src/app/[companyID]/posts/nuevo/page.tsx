@@ -18,26 +18,28 @@ export default function NewPublish() {
   const router = useRouter()
   const postData = usePublishStore((state) => state.postData)
   const variations = usePublishStore((state) => state.variations)
+  const { reset } = usePublishStore()
   const post = {
     title: postData.title,
-    categories: postData.categories?.map((c) => c._id),
+    categories: postData.categories?.map((c) => c.id),
     description: postData.description,
     shortDescription: postData.shortDescription,
     status: postData.status,
     type: postData.type,
-    productID: postData.productID?._id,
+    productId: postData?.Product?.id,
     gallery: postData.gallery?.map((g) => g.id),
     variations: variations?.map((v) => ({
       attributes: v.attributesTerms.map((t) => t.id),
-      product: v.product?._id ?? null,
+      productId: v.productId ?? null,
     })),
-    videoID: postData.video,
+    youtubeVideoId: postData.youtubeVideoId,
   }
   const { data: response, mutate } = useMutation({
     mutationFn: createPost,
     onSuccess: (res) => {
+      reset()
       toast(<ToastInfo text="Guardado"></ToastInfo>)
-      router.push(`/dash/posts/${res._id}`)
+      router.push(`/dash/posts/${res.id}`)
     },
   })
   const handleSave = (action: 'publish' | 'draft') => {

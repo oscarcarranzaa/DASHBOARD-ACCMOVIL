@@ -32,18 +32,18 @@ export default function EditPublish() {
   const variations = usePublishStore((state) => state.variations)
   const post = {
     title: postData.title,
-    categories: postData.categories?.map((c) => c._id),
+    categories: postData.categories?.map((c) => c.id),
     description: postData.description,
     shortDescription: postData.shortDescription,
     status: postData.status,
     type: postData.type,
-    productID: postData.productID?._id,
+    productId: postData.productId,
     gallery: postData.gallery?.map((g) => g.id),
     variations: variations?.map((v) => ({
       attributes: v.attributesTerms.map((t) => t.id),
-      product: v.product?._id ?? null,
+      productId: v.productId ?? null,
     })),
-    videoID: postData.video,
+    youtubeVideoId: postData.youtubeVideoId,
   }
   const { data: response, mutate } = useMutation({
     mutationFn: updatePost,

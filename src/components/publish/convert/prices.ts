@@ -1,9 +1,9 @@
-import { productSchema } from '@/types/products'
+import { productInfoType, productSchema } from '@/types/products'
 import { PostSchema } from '@/types/posts'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 
 type TProps = {
-  product?: productSchema | null
+  product?: productInfoType | null
   variations?: PostSchema['variations']
   type: 'simple' | 'variable'
 }
@@ -42,7 +42,7 @@ export default function ConvertPricePost({
   }
   return type === 'variable' ? priceVariations : priceProduct
 }
-const porcentDiscount = (product?: productSchema | null) => {
+const porcentDiscount = (product?: productInfoType | null) => {
   if (product) {
     const differentPrice = product?.discountPrice
       ? product.price - product.discountPrice

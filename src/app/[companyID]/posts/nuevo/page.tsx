@@ -3,13 +3,11 @@ import { createPost } from '@/api/posts'
 import Spinner from '@/components/icons/spinner'
 import NavegationPages from '@/components/navegationPages'
 import PublishEditor from '@/components/publish/publishEditor/'
-import ToastInfo from '@/components/UI/toast'
 import { usePublishStore } from '@/store/publish'
 import { Button } from '@nextui-org/button'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 
 export default function NewPublish() {
   const [isSaving, setIsSaving] = useState(false)
@@ -38,7 +36,6 @@ export default function NewPublish() {
     mutationFn: createPost,
     onSuccess: (res) => {
       reset()
-      toast(<ToastInfo text="Guardado"></ToastInfo>)
       router.push(`/dash/posts/${res.id}`)
     },
   })

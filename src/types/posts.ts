@@ -1,5 +1,5 @@
 import { string, z } from 'zod'
-import { ZProduct } from './products'
+import { ZProduct, ZProductInfo } from './products'
 import { ZAttributes, ZTerms } from './attributes'
 import { ZCategory } from './category'
 import { media } from './schemas'
@@ -7,7 +7,7 @@ import { media } from './schemas'
 export const ZVariationsPost = z.object({
   id: z.string(),
   productId: z.string().optional().nullable(),
-  Product: ZProduct.optional().nullable(),
+  Product: ZProduct.omit({ User: true }).optional().nullable(),
   attributes: z.array(
     ZTerms.pick({ id: true, option: true, image: true, name: true }).extend({
       attribute: ZAttributes.pick({ id: true, type: true, name: true }),
@@ -20,26 +20,35 @@ export const ZGetPost = z.object({
   title: z.string(),
   totalStock: z.number(),
   categories: z.array(ZCategory),
-  description: z.string().optional(),
-  shortDescription: z.string().optional(),
-  specifications: z.string().optional(),
+  description: z.string().optional().nullable(),
+  shortDescription: z.string().optional().nullable(),
+  specifications: z.string().optional().nullable(),
   slug: z.string(),
   status: z.enum(['publish', 'draft']),
-  Product: ZProduct.nullable().optional(),
+  Product: ZProductInfo.nullable().optional(),
   productId: z.string().nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.array(media).optional(),
   variations: z.array(ZVariationsPost).optional(),
-  youtubeVideoId: z.string().optional(),
+  youtubeVideoId: z.string().optional().nullable(),
   createdAt: z.string(),
 })
-export const ZGetOneListPost = ZGetPost.omit({
-  gallery: true,
+export const ZGetOneListPost = ZGetPost.pick({
+  id: true,
+  title: true,
+  categories: true,
+  slug: true,
+  status: true,
+  type: true,
+  totalStock: true,
+  youtubeVideoId: true,
   Product: true,
+  variations: true,
+  createdAt: true,
 }).extend({
   gallery: z.array(string()),
-  Product: ZProduct.nullable().optional(),
 })
+
 export const ZVariatiosSave = z.object({
   productId: z.string().nullable(),
   attributes: z.string().array(),

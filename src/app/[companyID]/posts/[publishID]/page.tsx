@@ -5,14 +5,12 @@ import NotFound from '@/components/errorsPages/notFound'
 import Spinner from '@/components/icons/spinner'
 import NavegationPages from '@/components/navegationPages'
 import PublishEditor from '@/components/publish/publishEditor/'
-import ToastInfo from '@/components/UI/toast'
 import { usePublishStore } from '@/store/publish'
 import { Button } from '@nextui-org/button'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { toast, Toaster } from 'sonner'
 
 export default function EditPublish() {
   const [isSaving, setIsSaving] = useState(false)
@@ -49,8 +47,11 @@ export default function EditPublish() {
     mutationFn: updatePost,
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: [publishID] })
-      toast(<ToastInfo text="Guardado"></ToastInfo>)
+      toast.success('Catálogo actualizado...')
       setIsSaving(false)
+    },
+    onError: (err) => {
+      toast.error('Error al actualizar.')
     },
   })
   const handleSave = (action: 'publish' | 'draft') => {
@@ -70,18 +71,7 @@ export default function EditPublish() {
     <>
       <NavegationPages text={title} />
       <div className="w-full">
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover={false}
-          stacked
-        />
+        <Toaster richColors theme="dark" />
       </div>
 
       {data && (

@@ -23,7 +23,7 @@ export const ZProduct = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
 })
-
+export const ZProductInfo = ZProduct.omit({ User: true, media: true })
 export const ZProductNew = ZProduct.omit({
   id: true,
   createdAt: true,
@@ -41,5 +41,6 @@ export const ZGetProducts = z.object({
   pageNumber: z.number(),
 })
 export type productSchema = z.infer<typeof ZProduct>
+export type productInfoType = z.infer<typeof ZProductInfo>
 export type getProductsSchema = z.infer<typeof ZGetProducts>
 export type newProductSchema = z.infer<typeof ZProductNew>

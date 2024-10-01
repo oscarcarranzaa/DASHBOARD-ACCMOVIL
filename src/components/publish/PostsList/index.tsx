@@ -64,7 +64,7 @@ export default function PostsList() {
           Agregar Nuevo <PlusSVG size={20} />
         </Button>
       </div>
-      <div className=" bg-white dark:bg-black py-10 rounded-xl mt-5 px-5 flex justify-center">
+      <div className=" bg-white dark:bg-neutral-900 py-10 rounded-xl mt-5 px-5 flex justify-center">
         {itemData && itemData.length === 0 ? (
           <p>No se encontraron resultados...</p>
         ) : (

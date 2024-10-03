@@ -59,10 +59,22 @@ export const getMedias = z.object({
 })
 
 const oneMediaTypes = media.omit({ userId: true }).extend({ user })
+export const ZTokenAuth = z.object({
+  data: z.object({
+    token: z.string(),
+    expireToken: z.number(),
+    user: user,
+  }),
+  response: z.object({
+    success: z.boolean(),
+    msg: z.string(),
+  }),
+})
 
 export const getOneMediaData = oneMediaTypes
 export type resposeIdSchema = z.infer<typeof ZResponseId>
 export type GetMediasSchema = z.infer<typeof getMedias>
 export type GetOneMediaSchema = z.infer<typeof getOneMediaData>
 export type MediaSchema = z.infer<typeof media>
+export type tokenAuthSchema = z.infer<typeof ZTokenAuth>
 export type UserSchema = z.infer<typeof user>

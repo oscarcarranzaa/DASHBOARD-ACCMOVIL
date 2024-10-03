@@ -1,10 +1,10 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import MoonSVG from '../icons/moon'
-import LightSVG from '../icons/light'
+import MoonSVG from '@/components/icons/moon'
+import LightSVG from '@/components/icons/light'
 import { useEffect, useState } from 'react'
-import Spinner from '../icons/spinner'
+import Spinner from '@/components/icons/spinner'
 
 export default function DarkModeButton() {
   const { theme, setTheme } = useTheme()

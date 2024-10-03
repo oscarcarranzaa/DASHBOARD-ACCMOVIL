@@ -1,16 +1,17 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import ArrowAngleSVG from '../icons/arrowAngle'
+import ArrowAngleSVG from '@/components/icons/arrowAngle'
 import { menuItems } from './menuObjects'
 import MenuItems from './menuItems'
 import { useCallback, useEffect, useState } from 'react'
 import style from './sideMenu.module.css'
 import Link from 'next/link'
-import CollapseArrowLeftSVG from '../icons/collapseArrowLeft'
-import CollapseArrowRightSVG from '../icons/collapseArrowRight'
+import CollapseArrowLeftSVG from '@/components/icons/collapseArrowLeft'
+import CollapseArrowRightSVG from '@/components/icons/collapseArrowRight'
 import { Tooltip } from '@nextui-org/react'
-import useUserInfo from '@/hooks/useUserInfo'
 import { verifyAccess } from '@/lib/verifyAccess'
+import { useAuthStore } from '@/store/auth'
+import useUserInfo from '@/hooks/useUserInfo'
 
 type TProps = {
   startMenu: boolean

@@ -1,8 +1,9 @@
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { decodeJwt } from 'jose'
 import dayjs from 'dayjs'
 import { useAuthStore } from '@/store/auth'
 import api from './axios'
+import { tokenAuthSchema, ZTokenAuth } from '@/types/schemas'
 
 const baseURL = 'http://localhost:4000/api/v1'
 
@@ -12,7 +13,6 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use(async (req) => {
-  // Verificamos si el token no ha expirado
   try {
     const token = useAuthStore.getState().token
 
@@ -21,18 +21,23 @@ axiosInstance.interceptors.request.use(async (req) => {
       const isExpired = exp ? dayjs.unix(exp).diff(dayjs()) < 1 : true
       if (!isExpired) {
         req.headers.Authorization = `Bearer ${token}`
-        return req // Devuelve req después de asignar el token
+        return req
       }
     }
 
-    const newTokenResponse = await api.get('/admin/auth/update-token')
-    useAuthStore.getState().setToken(newTokenResponse.data.data.token)
+    const { data } = await api.get<tokenAuthSchema>('/admin/auth/update-token')
+    const validToken = ZTokenAuth.parse(data)
 
-    req.headers.Authorization = `Bearer ${newTokenResponse.data.data.token}`
-    return req // Devuelve req con el nuevo token en el encabezado de autorización
+    useAuthStore.getState().setToken(validToken.data.token)
+    useAuthStore.getState().setUser(validToken.data.user)
+    req.headers.Authorization = `Bearer ${validToken.data.token}`
+    return req
   } catch (error) {
-    console.error('Error al solicitar un nuevo token:', error)
-    return Promise.reject(error) // Rechazar la promesa con el error
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Error al verificar tu usuario.')
+    }
   }
 })
 

@@ -2,12 +2,12 @@
 import CategoryEditor from '@/components/category/categoryEditor'
 import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
-import useUserInfo from '@/hooks/useUserInfo'
 import { verifyAccess } from '@/lib/verifyAccess'
+import { useAuthStore } from '@/store/auth'
 
 export default function Categories() {
-  const { userData } = useUserInfo()
-  const userRoles = userData?.role ? userData.role.keys : null
+  const user = useAuthStore((state) => state.user)
+  const userRoles = user?.role ? user.role.keys : null
   const verify = verifyAccess({
     keys: ['posts.categoriesAllActions'],
     userKeys: userRoles,
@@ -22,7 +22,7 @@ export default function Categories() {
   return (
     <>
       <NavegationPages text="Categorías" />
-      {userData && <CategoryEditor />}
+      {user && <CategoryEditor />}
     </>
   )
 }

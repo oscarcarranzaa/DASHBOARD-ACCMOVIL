@@ -1,10 +1,11 @@
 'use client'
 import { logout } from '@/api/login'
-import OffSVG from '../icons/off'
+import OffSVG from '@/components/icons/off'
 import { profileItems } from './menuObjects'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
+import { useAuthStore } from '@/store/auth'
 
 interface IProfileProps {
   image: string
@@ -13,7 +14,7 @@ interface IProfileProps {
 }
 
 export default function ProfileItems({ image, name, role }: IProfileProps) {
-  const { setTheme } = useTheme()
+  const { logoutUserToken } = useAuthStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -22,8 +23,8 @@ export default function ProfileItems({ image, name, role }: IProfileProps) {
     try {
       await queryClient.invalidateQueries()
       await logout()
-      router.push('/login')
-      setTheme('light')
+      logoutUserToken()
+      router.refresh()
     } catch (error) {
       console.error('Error al cerrar sesión:', error)
     }
@@ -32,7 +33,13 @@ export default function ProfileItems({ image, name, role }: IProfileProps) {
     <>
       <div>
         <div className="flex items-center mb-5">
-          <img src={image} className="w-20 h-20 rounded-full" />
+          <picture>
+            <img
+              src={image}
+              className="w-20 h-20 rounded-full"
+              alt={`Foto de perfil: ${name}`}
+            />
+          </picture>
           <div className="ml-2">
             <p className=" font-semibold">{name}</p>
             <p className="text-xs text-green-600 font-semibold inline-blockrounded-xl">

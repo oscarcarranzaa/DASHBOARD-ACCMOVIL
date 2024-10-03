@@ -1,5 +1,5 @@
-import useUserInfo from '@/hooks/useUserInfo'
 import { verifyAccess } from '@/lib/verifyAccess'
+import { useAuthStore } from '@/store/auth'
 
 type TProps = {
   children: React.ReactNode
@@ -7,8 +7,8 @@ type TProps = {
 }
 
 export default function AccessComponent({ children, keys }: TProps) {
-  const { userData } = useUserInfo()
-  const userRoles = userData?.role ? userData.role.keys : null
+  const user = useAuthStore((state) => state.user)
+  const userRoles = user?.role ? user.role.keys : null
   const isView = verifyAccess({ keys, userKeys: userRoles })
   if (!isView) return null
   return children

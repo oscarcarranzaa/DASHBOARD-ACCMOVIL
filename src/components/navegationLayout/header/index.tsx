@@ -3,10 +3,11 @@ import Image from 'next/image'
 import ProfileMenu from './profileMenu'
 import HeaderSkeleton from './skeleton/skeletonLoader'
 import DarkModeButton from './darkMode'
+import { useAuthStore } from '@/store/auth'
 import useUserInfo from '@/hooks/useUserInfo'
 
 export default function Header() {
-  const { userData, userPending } = useUserInfo()
+  const { userData } = useUserInfo()
 
   return (
     <>
@@ -24,11 +25,7 @@ export default function Header() {
           <div className="ml-3 mr-5">
             <DarkModeButton />
           </div>
-          {userData && !userPending ? (
-            <ProfileMenu data={userData} />
-          ) : (
-            <HeaderSkeleton />
-          )}
+          {userData ? <ProfileMenu data={userData} /> : <HeaderSkeleton />}
         </div>
       </header>
     </>

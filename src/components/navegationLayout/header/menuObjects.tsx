@@ -1,4 +1,4 @@
-import ClientSVG from '../icons/client'
+import ClientSVG from '@/components/icons/client'
 
 const iconSize = 22
 

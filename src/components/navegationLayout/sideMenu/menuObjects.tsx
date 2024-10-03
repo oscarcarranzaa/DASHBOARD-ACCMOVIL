@@ -1,12 +1,12 @@
-import ClientSVG from '../icons/client'
-import MediaImageSVG from '../icons/mediaImage'
-import MenuSquareSVG from '../icons/menuSquare'
-import OfferSVG from '../icons/offer'
-import OrdertSVG from '../icons/order'
-import ProductSVG from '../icons/product'
-import PublishSVG from '../icons/publish'
-import TeamSVG from '../icons/team'
-import WorldSVG from '../icons/world'
+import ClientSVG from '@/components/icons/client'
+import MediaImageSVG from '@/components/icons/mediaImage'
+import MenuSquareSVG from '@/components/icons/menuSquare'
+import OfferSVG from '@/components/icons/offer'
+import OrdertSVG from '@/components/icons/order'
+import ProductSVG from '@/components/icons/product'
+import PublishSVG from '@/components/icons/publish'
+import TeamSVG from '@/components/icons/team'
+import WorldSVG from '@/components/icons/world'
 const iconSize = 20
 
 export const menuItems = [

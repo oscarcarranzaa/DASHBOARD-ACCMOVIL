@@ -40,7 +40,6 @@ export async function getPost(postID: string) {
 
     return validPost
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
     } else {

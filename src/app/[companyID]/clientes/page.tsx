@@ -1,23 +1,23 @@
 'use client'
-import { getAllUsers } from '@/api/users'
+import { getAllCustomer } from '@/api/customer'
+import CustomerList from '@/components/customers/customerList'
+import NewCustomerForm from '@/components/customers/newCustomer'
 import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import Search from '@/components/UI/search'
-import NewUserForm from '@/components/users/newUser'
-import AccessComponent from '@/components/users/roles/accessComponent'
-import UserList from '@/components/users/userList'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 
 const rows = 20
-export default function ClientPage() {
+export default function CustomersHome() {
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('p')) || 1
   const search = searchParams.get('search') || ''
 
   const { data, isPending, error } = useQuery({
-    queryKey: ['users', currentPage.toString(), search],
-    queryFn: () => getAllUsers(currentPage.toString(), rows.toString(), search),
+    queryKey: ['customer', currentPage.toString(), search],
+    queryFn: () =>
+      getAllCustomer(currentPage.toString(), rows.toString(), search),
     refetchOnWindowFocus: false,
     retry: false,
   })
@@ -25,17 +25,16 @@ export default function ClientPage() {
     return <ErrorsPages message={error.message} errorRef={error.cause} />
   return (
     <>
-      <NavegationPages text={data ? 'Usuarios' : 'Cargando usuarios...'} />
-
+      <NavegationPages
+        text={data ? 'Área de clientes' : 'Cargando clientes...'}
+      />
       <div>
         <div className="mb-3 flex justify-between">
-          <Search placeHolder="Buscar usuario..." />
-          <AccessComponent keys={['admin']}>
-            <NewUserForm />
-          </AccessComponent>
+          <Search placeHolder="Buscar cliente..." />
+          <NewCustomerForm />
         </div>
         <div className="mb-16">
-          <UserList data={data} rows={rows} isPending={isPending} />
+          <CustomerList data={data} rows={rows} isPending={isPending} />
         </div>
       </div>
     </>

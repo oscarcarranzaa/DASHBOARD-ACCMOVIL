@@ -7,6 +7,16 @@ import { media } from './schemas'
 export const ZVariationsPost = z.object({
   id: z.string(),
   productId: z.string().optional().nullable(),
+  Product: ZProduct.optional().nullable(),
+  attributes: z.array(
+    ZTerms.pick({ id: true, option: true, image: true, name: true }).extend({
+      attribute: ZAttributes.pick({ id: true, type: true, name: true }),
+    })
+  ),
+})
+export const ZVariationsInfoPost = z.object({
+  id: z.string(),
+  productId: z.string().optional().nullable(),
   Product: ZProduct.omit({ User: true }).optional().nullable(),
   attributes: z.array(
     ZTerms.pick({ id: true, option: true, image: true, name: true }).extend({
@@ -14,7 +24,6 @@ export const ZVariationsPost = z.object({
     })
   ),
 })
-
 export const ZGetPost = z.object({
   id: z.string(),
   title: z.string(),
@@ -25,7 +34,7 @@ export const ZGetPost = z.object({
   specifications: z.string().optional().nullable(),
   slug: z.string(),
   status: z.enum(['publish', 'draft']),
-  Product: ZProductInfo.nullable().optional(),
+  Product: ZProduct.nullable().optional(),
   productId: z.string().nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.array(media).optional(),
@@ -43,10 +52,11 @@ export const ZGetOneListPost = ZGetPost.pick({
   totalStock: true,
   youtubeVideoId: true,
   Product: true,
-  variations: true,
   createdAt: true,
 }).extend({
   gallery: z.array(string()),
+  Product: ZProductInfo.nullable().optional(),
+  variations: z.array(ZVariationsInfoPost).optional(),
 })
 
 export const ZVariatiosSave = z.object({
@@ -57,15 +67,15 @@ export const ZVariatiosSave = z.object({
 export const ZSavePost = z.object({
   title: z.string().min(3),
   categories: z.array(string()).optional(),
-  description: z.string().optional(),
-  shortDescription: z.string().optional(),
+  description: z.string().optional().nullable(),
+  shortDescription: z.string().optional().nullable(),
   specifications: z.string().optional(),
   status: z.enum(['publish', 'draft']),
   productId: z.string().nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.string().array().optional(),
   variations: z.array(ZVariatiosSave).optional(),
-  videoID: z.string().optional(),
+  videoID: z.string().optional().nullable(),
 })
 
 export const ZSaveGetPost = ZSavePost.extend({

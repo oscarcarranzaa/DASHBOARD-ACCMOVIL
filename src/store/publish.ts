@@ -8,13 +8,13 @@ import { create } from 'zustand'
 export type TPostData = {
   id: string
   title: string
-  description?: string
+  description?: string | null
   status: 'publish' | 'draft'
   type: 'simple' | 'variable'
   gallery?: IUploads[]
-  youtubeVideoId?: string
+  youtubeVideoId?: string | null
   categories?: selectCategory[]
-  shortDescription?: string
+  shortDescription?: string | null
   productId?: string | null
   Product?: productSchema | null
 }

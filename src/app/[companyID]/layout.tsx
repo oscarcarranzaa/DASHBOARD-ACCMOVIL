@@ -1,6 +1,7 @@
 import { ThemeProvider } from 'next-themes'
 import { NextUIProvider } from '@nextui-org/system'
 import NavegationLayout from '@/components/navegationLayout'
+import { Toaster } from 'sonner'
 
 export default function DashLayout({
   children,
@@ -16,6 +17,7 @@ export default function DashLayout({
               <div className=" max-w-[130rem] p-5 2xl:ml-10 2xl:mr-10 w-full">
                 {children}
               </div>
+              <Toaster theme="dark" richColors />
             </main>
           </NavegationLayout>
         </ThemeProvider>

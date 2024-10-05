@@ -24,6 +24,7 @@ export async function getLisPostsData(
     const validProduct = getLisPosts.parse(data)
     return validProduct
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg)
     } else {

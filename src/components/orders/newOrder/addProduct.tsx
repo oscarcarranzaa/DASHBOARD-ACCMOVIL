@@ -11,7 +11,7 @@ export default function AddProductOrder() {
   const [openSelect, setOpenSelect] = useState(false)
   const setProduct = createOrderState((state) => state.addProduct)
   const productsInOrder = createOrderState((state) => state.products)
-  console.log(productsInOrder)
+  const orderNavegation = createOrderState((state) => state.navegation)
   return (
     <>
       <div className="w-full">
@@ -25,7 +25,18 @@ export default function AddProductOrder() {
           {productsInOrder.length === 0 ? (
             <EmptyOrder size={100} />
           ) : (
-            <ProductItems />
+            <>
+              <ProductItems />
+              <div className=" float-right mt-5">
+                <Button
+                  color="primary"
+                  disabled={productsInOrder.length === 0}
+                  onClick={() => orderNavegation('contact')}
+                >
+                  Continuar
+                </Button>
+              </div>
+            </>
           )}
         </div>
       </div>

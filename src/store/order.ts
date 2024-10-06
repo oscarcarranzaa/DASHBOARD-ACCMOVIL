@@ -1,5 +1,5 @@
 'use client'
-import { productSchema } from '@/types/products'
+
 import { MediaSchema } from '@/types/schemas'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -17,18 +17,45 @@ type productOrder = {
   startDiscount?: string | null
   endDiscount?: string | null
 }
+type contactOrder = {
+  customerId?: string
+  firstName?: string | null
+  lastName?: string | null
+  email: string
+  documentNumber?: string | null
+  typeContact: 'customer' | 'guest'
+  phone?: string | null
+  rtn?: string | null
+  withRtn: boolean
+  companyPhone?: string | null
+  companyName?: string | null
+  company?: string | null
+}
 type State = {
   products: productOrder[]
+  contact: contactOrder
+  orderNavegation: 'details' | 'contact' | 'shipping' | 'finish'
 }
 type Action = {
   addProduct: (product: productOrder) => void
+  navegation: (nav: State['orderNavegation']) => void
   incrementProduct: (id: string) => void
   decrementalProduct: (id: string) => void
   deletedProduct: (id: string) => void
+  setContact: (contact: contactOrder) => void
 }
 
 export const createOrderState = create<State & Action>((set) => ({
   products: [],
+  contact: {
+    firstName: '',
+    email: '',
+    typeContact: 'guest',
+    lastName: '',
+    documentNumber: '',
+    withRtn: false,
+  },
+  orderNavegation: 'details',
   addProduct: (newProduct) =>
     set((state) => {
       const existingProduct = state.products.find(
@@ -52,6 +79,10 @@ export const createOrderState = create<State & Action>((set) => ({
         // Si el producto no está en la lista, lo agrega
         return { products: [...state.products, newProduct] }
       }
+    }),
+  navegation: (nav) =>
+    set((state) => {
+      return { ...state, orderNavegation: nav }
     }),
   incrementProduct: (id) =>
     set((state) => {
@@ -112,5 +143,9 @@ export const createOrderState = create<State & Action>((set) => ({
         toast.error('No se encontró el producto.')
         return state
       }
+    }),
+  setContact: (contact) =>
+    set((state) => {
+      return { ...state, contact }
     }),
 }))

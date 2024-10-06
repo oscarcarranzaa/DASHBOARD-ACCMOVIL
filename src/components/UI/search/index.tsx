@@ -9,8 +9,14 @@ type Props = {
   searchName?: string
   pageName?: string
   placeHolder?: string
+  styles?: string
 }
-export default function Search({ searchName, pageName, placeHolder }: Props) {
+export default function Search({
+  searchName,
+  pageName,
+  placeHolder,
+  styles = 'sm:max-w-[35%]',
+}: Props) {
   const searchParams = useSearchParams()
   const searchQueryName = searchName ?? 'search'
   const pageQueryName = pageName ?? 'p'
@@ -47,7 +53,7 @@ export default function Search({ searchName, pageName, placeHolder }: Props) {
     return
   }
   const debounce = useDebouncedCallback((value: string) => {
-    if (value.length > 2) {
+    if (value.length > 1) {
       newSearch(value)
     }
     if (value.length === 0) {
@@ -56,7 +62,7 @@ export default function Search({ searchName, pageName, placeHolder }: Props) {
   }, 500)
   return (
     <>
-      <div className="dark:fill-white w-full sm:max-w-[35%]">
+      <div className={`dark:fill-white w-full ${styles}`}>
         <Input
           size="lg"
           onChange={(e) => {

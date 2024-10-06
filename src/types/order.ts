@@ -33,13 +33,37 @@ export const ZBillingInfo = z.object({
   orderId: z.string(),
   firstName: z.string(),
   lastName: z.string(),
-  email: z.string().email(),
+  email: z.string().email('Debe ser un correo electronico'),
   documentNumber: z.string(),
-  phone: z.string().optional().nullable(),
+  phone: z.string().max(8, 'Telefono no válido').min(8, 'Teléfono no válido'),
   rtn: z.string().nullable().optional(),
   companyName: z.string().nullable().optional(),
+  companyPhone: z
+    .string()
+    .max(8, 'Teléfono no válido')
+    .min(8, 'Teléfono no válido')
+    .nullable()
+    .optional(),
   company: z.string().nullable().optional(),
 })
+export const ZNewBillingInfo = ZBillingInfo.pick({
+  firstName: true,
+  lastName: true,
+  email: true,
+  documentNumber: true,
+  phone: true,
+}).merge(
+  z.object({
+    rtn: z.string().optional(),
+    companyName: z.string().optional(),
+    companyPhone: z
+      .string()
+      .max(8, 'Telefono no válido')
+      .min(8, 'Teléfono no válido')
+      .optional(),
+    company: z.string().optional(),
+  })
+)
 export const ZOrder = z.object({
   id: z.string(),
   orderId: z.string(),
@@ -64,3 +88,5 @@ export const ZOrder = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
 })
+
+export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>

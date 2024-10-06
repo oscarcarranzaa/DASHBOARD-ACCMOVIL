@@ -11,10 +11,8 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   disabled: 'warning',
 }
 export default function UserDetails({ user }: IProps) {
-  const image = user.avatar?.images
-    ? user.avatar.images[0].src
-    : '/static/default-profile.png'
-  const verifiedColor = user.verify ? '#09f' : '#777'
+  const image = user.avatar ? user.avatar : '/static/default-profile.png'
+
   const name = `${user.firstName} ${user.lastName}`
   return (
     <>
@@ -28,7 +26,6 @@ export default function UserDetails({ user }: IProps) {
           name={
             <div className="flex gap-x-2 items-center">
               <p className="text-lg font-semibold">{name}</p>{' '}
-              <VerifiedSVG size={18} color={verifiedColor} />
             </div>
           }
         >

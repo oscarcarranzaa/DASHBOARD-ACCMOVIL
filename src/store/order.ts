@@ -2,7 +2,6 @@
 
 import { MediaSchema } from '@/types/schemas'
 import { toast } from 'sonner'
-import { z } from 'zod'
 import { create } from 'zustand'
 
 type productOrder = {
@@ -16,6 +15,18 @@ type productOrder = {
   discountPrice?: number | null
   startDiscount?: string | null
   endDiscount?: string | null
+}
+
+type ShippingAddress = {
+  name: string
+  phone: string
+  country: string
+  state: string
+  city: string
+  zone: string
+  street: string
+  reference?: string
+  documentNumber: string
 }
 type contactOrder = {
   customerId?: string
@@ -34,15 +45,19 @@ type contactOrder = {
 type State = {
   products: productOrder[]
   contact: contactOrder
+  shippingInfo: ShippingAddress
   orderNavegation: 'details' | 'contact' | 'shipping' | 'finish'
+  orderId?: string | null
 }
 type Action = {
   addProduct: (product: productOrder) => void
   navegation: (nav: State['orderNavegation']) => void
+  setOrderId: (id: string) => void
   incrementProduct: (id: string) => void
   decrementalProduct: (id: string) => void
   deletedProduct: (id: string) => void
   setContact: (contact: contactOrder) => void
+  setShippingInfo: (shpi: ShippingAddress) => void
 }
 
 export const createOrderState = create<State & Action>((set) => ({
@@ -55,8 +70,19 @@ export const createOrderState = create<State & Action>((set) => ({
     documentNumber: '',
     withRtn: false,
   },
+  shippingInfo: {
+    name: '',
+    documentNumber: '',
+    phone: '',
+    country: 'Honduras',
+    state: '',
+    city: '',
+    zone: '',
+    street: '',
+    reference: '',
+  },
   orderNavegation: 'details',
-
+  orderId: null,
   addProduct: (newProduct) =>
     set((state) => {
       const existingProduct = state.products.find(
@@ -77,13 +103,16 @@ export const createOrderState = create<State & Action>((set) => ({
           ),
         }
       } else {
-        // Si el producto no está en la lista, lo agrega
         return { products: [...state.products, newProduct] }
       }
     }),
   navegation: (nav) =>
     set((state) => {
       return { ...state, orderNavegation: nav }
+    }),
+  setOrderId: (id) =>
+    set((state) => {
+      return { ...state, orderId: id }
     }),
   incrementProduct: (id) =>
     set((state) => {
@@ -148,5 +177,9 @@ export const createOrderState = create<State & Action>((set) => ({
   setContact: (contact) =>
     set((state) => {
       return { ...state, contact }
+    }),
+  setShippingInfo: (shpi) =>
+    set((state) => {
+      return { ...state, shippingInfo: shpi }
     }),
 }))

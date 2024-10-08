@@ -1,5 +1,5 @@
 'use client'
-import { createOrder } from '@/api/order'
+import { createOrder, updateOrder } from '@/api/order'
 import SaveDiskSVG from '@/components/icons/saveDisk'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 export default function ContactOrderForm() {
   const contactOrder = createOrderState((state) => state.contact)
   const productsOrder = createOrderState((state) => state.products)
+  const orderId = createOrderState((state) => state.orderId)
   const setContactOrder = createOrderState((state) => state.setContact)
   const setNavegationOrder = createOrderState((state) => state.navegation)
 
@@ -21,6 +22,15 @@ export default function ContactOrderForm() {
 
   const { data, mutate, isPending, error } = useMutation({
     mutationFn: createOrder,
+    onSuccess: (data) => {
+      setNavegationOrder('shipping')
+    },
+    onError: (err) => {
+      toast.error(err.message)
+    },
+  })
+  const { mutate: upOrder, isPending: isUpdating } = useMutation({
+    mutationFn: updateOrder,
     onSuccess: (data) => {
       setNavegationOrder('shipping')
     },
@@ -67,12 +77,19 @@ export default function ContactOrderForm() {
       companyName: form.companyName,
       company: form.company,
     }
-    mutate({ products: productsIds, billingInfo })
     setContactOrder({
       ...contactOrder,
       withRtn,
       typeContact: contactOrder.typeContact,
     })
+    if (orderId) {
+      upOrder({
+        id: orderId,
+        orderData: { products: productsIds, billingInfo },
+      })
+      return
+    }
+    mutate({ products: productsIds, billingInfo })
   }
 
   return (

@@ -1,4 +1,4 @@
-import { createOrderSchema, ZCreateOrder } from './../types/order'
+import { createOrderSchema, createShippingInfoSchema } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
 import { isAxiosError } from 'axios'
@@ -14,6 +14,52 @@ export async function createOrder(orderData: createOrderSchema) {
       })
     } else {
       throw new Error('Error al crear una orden nueva')
+    }
+  }
+}
+
+export async function updateOrder({
+  orderData,
+  id,
+}: {
+  orderData: createOrderSchema
+  id: string
+}) {
+  try {
+    const { data } = await axiosInstance.put(`/admin/order/${id}`, orderData)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al actualizar la orden.')
+    }
+  }
+}
+export async function addShippingData({
+  id,
+  form,
+}: {
+  id: string
+  form: createShippingInfoSchema
+}) {
+  try {
+    const { data } = await axiosInstance.put(
+      `/admin/order/${id}/shippingData`,
+      form
+    )
+    // const validCountry = ZCreateShippingInfo.parse(data)
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al agregar datos de envio al pedido.')
     }
   }
 }

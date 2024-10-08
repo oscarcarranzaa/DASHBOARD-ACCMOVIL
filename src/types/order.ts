@@ -20,11 +20,13 @@ export const ZTransaction = z.object({
 export const ZShippingInfo = z.object({
   id: z.string(),
   orderId: z.string(),
-  name: z.string().nullable().optional(),
+  name: z.string().trim(),
   phone: z.string(),
   country: z.string(),
   state: z.string(),
+  documentNumber: z.string(),
   city: z.string(),
+  zone: z.string(),
   street: z.string(),
   reference: z.string().nullable().optional(),
 })
@@ -100,6 +102,12 @@ export const ZCreateOrder = z.object({
   products: z.array(ZProductsOrder),
   billingInfo: ZContactOrder,
 })
+export const ZCreateShippingInfo = ZShippingInfo.omit({
+  id: true,
+  orderId: true,
+  reference: true,
+}).extend({ reference: z.string().optional() })
 
+export type createShippingInfoSchema = z.infer<typeof ZCreateShippingInfo>
 export type createOrderSchema = z.infer<typeof ZCreateOrder>
 export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>

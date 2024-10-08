@@ -23,7 +23,7 @@ type contactOrder = {
   lastName?: string | null
   email: string
   documentNumber?: string | null
-  typeContact: 'customer' | 'guest'
+  typeContact: 'customer' | 'guest' | 'empty'
   phone?: string | null
   rtn?: string | null
   withRtn: boolean
@@ -50,12 +50,13 @@ export const createOrderState = create<State & Action>((set) => ({
   contact: {
     firstName: '',
     email: '',
-    typeContact: 'guest',
+    typeContact: 'empty',
     lastName: '',
     documentNumber: '',
     withRtn: false,
   },
   orderNavegation: 'details',
+
   addProduct: (newProduct) =>
     set((state) => {
       const existingProduct = state.products.find(

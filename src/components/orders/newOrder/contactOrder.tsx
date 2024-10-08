@@ -14,7 +14,8 @@ export default function ContactOrder() {
     <>
       <div>
         <p className="font-semibold">Datos de contacto</p>
-        {contactOrder.email.length > 5 ? (
+        {contactOrder.email.length > 5 ||
+        contactOrder.typeContact === 'guest' ? (
           <ContactOrderForm />
         ) : (
           <div className=" w-full flex flex-col items-center justify-center mt-5">
@@ -32,7 +33,14 @@ export default function ContactOrder() {
                 >
                   Seleccionar
                 </Button>
-                <Button variant="flat">Invitado</Button>
+                <Button
+                  variant="flat"
+                  onClick={() =>
+                    setContactOrder({ ...contactOrder, typeContact: 'guest' })
+                  }
+                >
+                  Invitado
+                </Button>
               </div>
             </div>
           </div>

@@ -38,12 +38,7 @@ export const ZBillingInfo = z.object({
   phone: z.string().max(8, 'Telefono no válido').min(8, 'Teléfono no válido'),
   rtn: z.string().nullable().optional(),
   companyName: z.string().nullable().optional(),
-  companyPhone: z
-    .string()
-    .max(8, 'Teléfono no válido')
-    .min(8, 'Teléfono no válido')
-    .nullable()
-    .optional(),
+  companyPhone: z.string().nullable().optional(),
   company: z.string().nullable().optional(),
 })
 export const ZNewBillingInfo = ZBillingInfo.pick({
@@ -56,11 +51,7 @@ export const ZNewBillingInfo = ZBillingInfo.pick({
   z.object({
     rtn: z.string().optional(),
     companyName: z.string().optional(),
-    companyPhone: z
-      .string()
-      .max(8, 'Telefono no válido')
-      .min(8, 'Teléfono no válido')
-      .optional(),
+    companyPhone: z.string().optional(),
     company: z.string().optional(),
   })
 )
@@ -89,4 +80,26 @@ export const ZOrder = z.object({
   createdAt: z.string(),
 })
 
+const ZProductsOrder = z.object({
+  id: z.string(),
+  quantity: z.number(),
+})
+const ZContactOrder = z.object({
+  customerId: z.string().optional().nullable(),
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  documentNumber: z.string(),
+  phone: z.string(),
+  rtn: z.string().optional().nullable(),
+  companyPhone: z.string().nullable().optional(),
+  companyName: z.string().nullable().optional(),
+  company: z.string().optional().nullable(),
+})
+export const ZCreateOrder = z.object({
+  products: z.array(ZProductsOrder),
+  billingInfo: ZContactOrder,
+})
+
+export type createOrderSchema = z.infer<typeof ZCreateOrder>
 export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>

@@ -71,6 +71,20 @@ export const ZTokenAuth = z.object({
   }),
 })
 
+export const ZGetCountry = z.array(
+  z.object({
+    idCity_c_CX: z.number(),
+    OrigenDestino_c: z.string(),
+    City_c: z.string(),
+    County_Id_c: z.number(),
+    County_c: z.string(),
+    SUUM_StateId_FDS_c: z.string(),
+    StateName_C: z.string(),
+    SUUM_LatitudFDS_c: z.string(),
+    SUUM_Longitud_FDS_c: z.string(),
+    SUUM_AplicaParaSameday_FDS_c: z.string(),
+  })
+)
 export const getOneMediaData = oneMediaTypes
 export type resposeIdSchema = z.infer<typeof ZResponseId>
 export type GetMediasSchema = z.infer<typeof getMedias>
@@ -78,3 +92,4 @@ export type GetOneMediaSchema = z.infer<typeof getOneMediaData>
 export type MediaSchema = z.infer<typeof media>
 export type tokenAuthSchema = z.infer<typeof ZTokenAuth>
 export type UserSchema = z.infer<typeof user>
+export type countrySchema = z.infer<typeof ZGetCountry>

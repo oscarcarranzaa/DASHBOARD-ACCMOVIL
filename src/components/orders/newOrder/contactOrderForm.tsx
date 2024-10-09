@@ -17,6 +17,7 @@ export default function ContactOrderForm() {
   const orderId = createOrderState((state) => state.orderId)
   const setContactOrder = createOrderState((state) => state.setContact)
   const setNavegationOrder = createOrderState((state) => state.navegation)
+  const setOrderId = createOrderState((state) => state.setOrderId)
 
   const [withRtn, setWithRtn] = useState(false)
 
@@ -24,6 +25,7 @@ export default function ContactOrderForm() {
     mutationFn: createOrder,
     onSuccess: (data) => {
       setNavegationOrder('shipping')
+      setOrderId(data.id)
     },
     onError: (err) => {
       toast.error(err.message)

@@ -5,6 +5,8 @@ export const ZOrderItems = z.object({
   orderId: z.string(),
   productId: z.string(),
   quantity: z.number(),
+  price: z.number(),
+  discountPrice: z.number().nullable().optional(),
   discount: z.number().nullable(),
   total: z.number(),
 })
@@ -63,7 +65,7 @@ export const ZOrder = z.object({
   customerId: z.string().nullable(),
   totalAmount: z.number(),
   couponDiscount: z.number().nullable(),
-  pointsDiscount: z.number(),
+  pointsDiscount: z.number().nullable().optional(),
   status: z.enum([
     'pending',
     'processing',
@@ -108,6 +110,7 @@ export const ZCreateShippingInfo = ZShippingInfo.omit({
   reference: true,
 }).extend({ reference: z.string().optional() })
 
+export type orderSchema = z.infer<typeof ZOrder>
 export type createShippingInfoSchema = z.infer<typeof ZCreateShippingInfo>
 export type createOrderSchema = z.infer<typeof ZCreateOrder>
 export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>

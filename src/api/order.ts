@@ -1,13 +1,23 @@
-import { createOrderSchema, createShippingInfoSchema } from './../types/order'
+import {
+  createOrderSchema,
+  createShippingInfoSchema,
+  orderSchema,
+  ZOrder,
+} from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
 import { isAxiosError } from 'axios'
 
 export async function createOrder(orderData: createOrderSchema) {
   try {
-    const { data } = await axiosInstance.post('/admin/order/create', orderData)
-    return data
+    const { data } = await axiosInstance.post<orderSchema>(
+      '/admin/order/create',
+      orderData
+    )
+    const validOrder = ZOrder.parse(data)
+    return validOrder
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,

@@ -81,14 +81,14 @@ export default function ShippingOrderForm() {
       ...form,
       state: stateSelect,
       city: citySelect,
-      street: zoneSelect,
+      zone: zoneSelect,
     }
     setShippingInfo(shippingData)
-    /* if (!orderId) {
+    if (!orderId) {
       toast.error('No se encontro la orden.')
       return
-    }*/
-    mutate({ id: orderId ?? 'ffssa', form: shippingData })
+    }
+    mutate({ id: orderId, form: shippingData })
   }
   return (
     <>

@@ -4,7 +4,14 @@ import { z } from 'zod'
 
 export const login = z.object({
   email: z.string().email({ message: 'Correo electrónico no es válido' }),
-  password: z.string().min(8, { message: 'Contraseña muy corta' }),
+  password: z
+    .string()
+    .min(8, 'Contraseña muy corta.')
+    .max(50, 'Contraseña muy larga.')
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+      'La contraseña debe tener al menos una letra minúscula, una letra mayúscula y un número.'
+    ),
 })
 export type TSVG = {
   size: number

@@ -70,9 +70,11 @@ export default function LoginForm({
             </button>
           </div>
         </label>
-        {errors.password && (
-          <ErrorsMessage>{errors.password.message}</ErrorsMessage>
-        )}
+        <div className=" max-w-80">
+          {errors.password && (
+            <ErrorsMessage>{errors.password.message}</ErrorsMessage>
+          )}
+        </div>
       </div>
       <div className=" max-w-80 h-14">
         {error && <ErrorsMessage>{error}</ErrorsMessage>}

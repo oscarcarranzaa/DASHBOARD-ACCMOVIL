@@ -8,7 +8,10 @@ export async function loginUser(formData: LoginSchema) {
     return data
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      const err = error.response.data?.response
+        ? error.response.data?.response?.msg
+        : 'Error al soliciar acceso.'
+      throw new Error(err)
     }
   }
 }

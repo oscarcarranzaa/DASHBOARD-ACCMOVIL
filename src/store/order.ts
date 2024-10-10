@@ -18,15 +18,15 @@ type productOrder = {
 }
 
 type ShippingAddress = {
-  name: string
-  phone: string
+  name: string | null
+  phone: string | null
   country: string
   state: string
   city: string
   zone: string
   street: string
   reference?: string
-  documentNumber: string
+  documentNumber: string | null
 }
 type contactOrder = {
   customerId?: string
@@ -71,9 +71,9 @@ export const createOrderState = create<State & Action>((set) => ({
     withRtn: false,
   },
   shippingInfo: {
-    name: '',
-    documentNumber: '',
-    phone: '',
+    name: null,
+    documentNumber: null,
+    phone: null,
     country: 'Honduras',
     state: '',
     city: '',

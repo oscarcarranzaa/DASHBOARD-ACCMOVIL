@@ -44,10 +44,10 @@ export default function ShippingOrderForm() {
   const orderId = createOrderState((state) => state.orderId)
   const contactOrder = createOrderState((state) => state.contact)
   const setShippingInfo = createOrderState((state) => state.setShippingInfo)
-
   const clientName = contactOrder.firstName
     ? `${contactOrder.firstName} ${contactOrder.lastName}`
     : ''
+  console.log(shippingInfo, contactOrder)
 
   const defaultValues = {
     name: shippingInfo.name ?? clientName,

@@ -63,7 +63,6 @@ export default function ContactOrderForm() {
     defaultValues,
   })
   const submitForm = (form: newBillingInfoSchema) => {
-    console.log('is Submit')
     const productsIds = productsOrder.map((p) => {
       return { id: p.id, quantity: p.quantity }
     })
@@ -80,7 +79,7 @@ export default function ContactOrderForm() {
       company: form.company,
     }
     setContactOrder({
-      ...contactOrder,
+      ...form,
       withRtn,
       typeContact: contactOrder.typeContact,
     })

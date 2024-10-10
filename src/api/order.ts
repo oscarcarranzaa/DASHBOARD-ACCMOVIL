@@ -60,7 +60,6 @@ export async function addShippingData({
       `/admin/order/${id}/shippingData`,
       form
     )
-    // const validCountry = ZCreateShippingInfo.parse(data)
     return data
   } catch (error) {
     console.log(error)
@@ -84,6 +83,35 @@ export async function getCountry() {
     console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error('Error al obtener las ciudades.', {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al crear una orden nueva')
+    }
+  }
+}
+export async function finishOrder({
+  id,
+  form,
+}: {
+  id: string
+  form: FormData
+}) {
+  try {
+    const { data } = await axiosInstance.put(
+      `/admin/order/${id}/finishOrder`,
+      form,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error('Error al finalizar pedido.', {
         cause: error.response.status,
       })
     } else {

@@ -22,6 +22,7 @@ export default function ShippingOrderForm() {
   const [stateSelect, setStateSelect] = useState<string>('')
   const [citySelect, setCitySelect] = useState<string>('')
   const [zoneSelect, setZoneSelect] = useState<string>('')
+  const setOrderNavegation = createOrderState((state) => state.navegation)
   const {
     mutate,
     isPending: savingShipping,
@@ -29,7 +30,7 @@ export default function ShippingOrderForm() {
   } = useMutation({
     mutationFn: addShippingData,
     onSuccess: (d) => {
-      console.log(d)
+      setOrderNavegation('finish')
     },
   })
   console.log(error)

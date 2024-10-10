@@ -5,6 +5,7 @@ import OrderResume from './orderResume'
 import OrderStatusBar from './orderStatusBar'
 import ContactOrder from './contactOrder'
 import ShippingOrderForm from './shippingForm'
+import FinishOrder from './finishOrder'
 
 export default function NewOrder() {
   const statusOrder = createOrderState((state) => state.orderNavegation)
@@ -14,8 +15,10 @@ export default function NewOrder() {
         return <AddProductOrder />
       case 'contact':
         return <ContactOrder />
-      default:
+      case 'shipping':
         return <ShippingOrderForm />
+      case 'finish':
+        return <FinishOrder />
     }
   }
   return (

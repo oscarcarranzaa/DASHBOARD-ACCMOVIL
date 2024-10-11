@@ -1,5 +1,6 @@
 'use client'
 import { createCoupon } from '@/api/offerts'
+import Spinner from '@/components/icons/spinner'
 import { createCouponSchema, ZCreateCoupon } from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone } from '@internationalized/date'
@@ -27,26 +28,17 @@ type createCouponFormSchema = {
   userLimit?: string
   expiresAt?: string
 }
+const defaultValues = {
+  code: '',
+  discount: '',
+  expiresAt: '',
+  minimumExpense: '',
+  maximumExpense: '',
+  usageLimit: '',
+  userLimit: '',
+}
 export default function CouponEditor() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
-  const { mutate, isPending } = useMutation({
-    mutationFn: createCoupon,
-    onSuccess: (data) => {
-      console.log(data)
-    },
-    onError: (err) => {
-      console.log(err)
-    },
-  })
-  const defaultValues = {
-    code: '',
-    discount: '',
-    expiresAt: '',
-    minimumExpense: '',
-    maximumExpense: '',
-    usageLimit: '',
-    userLimit: '',
-  }
   const {
     handleSubmit,
     control,
@@ -57,6 +49,18 @@ export default function CouponEditor() {
     resolver: zodResolver(ZCreateCoupon),
     defaultValues,
   })
+  const { mutate, isPending } = useMutation({
+    mutationFn: createCoupon,
+    onSuccess: (data) => {
+      console.log(data)
+      reset()
+      onClose()
+    },
+    onError: (err) => {
+      console.log(err)
+    },
+  })
+
   const submitCoupon = (form: createCouponFormSchema) => {
     const processedForm: createCouponSchema = {
       ...form,
@@ -232,8 +236,19 @@ export default function CouponEditor() {
                   <Button className=" min-w-32" onPress={onClose}>
                     Cancelar
                   </Button>
-                  <Button className=" min-w-32" color="primary" type="submit">
-                    Crear
+                  <Button
+                    className=" min-w-32"
+                    color="primary"
+                    type="submit"
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <div className=" animate-spin">
+                        <Spinner size={24} fill="#fff" />
+                      </div>
+                    ) : (
+                      'Crear'
+                    )}
                   </Button>
                 </ModalFooter>
               </form>

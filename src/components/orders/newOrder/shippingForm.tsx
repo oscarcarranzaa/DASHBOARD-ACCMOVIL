@@ -256,10 +256,10 @@ export default function ShippingOrderForm() {
           <Button color="primary" type="submit">
             {savingShipping ? (
               <div className=" animate-spin">
-                <Spinner size={16} fill="#fff" />
+                <Spinner size={12} fill="#fff" />
               </div>
             ) : (
-              <SaveDiskSVG size={16} />
+              <SaveDiskSVG size={12} />
             )}
             Guardar y continuar
           </Button>

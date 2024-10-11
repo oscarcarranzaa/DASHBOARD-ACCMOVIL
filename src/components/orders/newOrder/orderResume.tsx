@@ -3,7 +3,8 @@
 import DisplayPrice from '@/components/displayPrice'
 import { createOrderState } from '@/store/order'
 import CalcSubToltalOrder from '@/utils/calcSubTotalOrder'
-import { Avatar, Badge } from '@nextui-org/react'
+import { Avatar, Badge, Input } from '@nextui-org/react'
+import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {
   const orderProducts = createOrderState((state) => state.products)
@@ -64,7 +65,12 @@ export default function OrderResume() {
               })}
             </ul>
           </div>
-          <ul className="mt-5 border-t border-zinc-300 px-2 pb-5">
+          <div className="mt-5 border-t border-zinc-300 px-2">
+            <div className="py-5">
+              <RendeemCoupon />
+            </div>
+          </div>
+          <ul className=" px-2 pb-5">
             <li className="mt-2 flex justify-between text-sm">
               <p>Subtotal:</p>
               <p>

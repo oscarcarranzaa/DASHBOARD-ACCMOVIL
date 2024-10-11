@@ -4,7 +4,6 @@ import { Button } from '@nextui-org/button'
 import { useState } from 'react'
 import SelectProduct from '@/components/products/selectProduct'
 import { createOrderState } from '@/store/order'
-import { Toaster } from 'sonner'
 import ProductItems from './productItems'
 
 export default function AddProductOrder() {

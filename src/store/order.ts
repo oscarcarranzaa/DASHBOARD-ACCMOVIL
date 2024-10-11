@@ -58,6 +58,8 @@ type Action = {
   deletedProduct: (id: string) => void
   setContact: (contact: contactOrder) => void
   setShippingInfo: (shpi: ShippingAddress) => void
+  resetContact: () => void
+  reset: () => void
 }
 
 export const createOrderState = create<State & Action>((set) => ({
@@ -182,4 +184,40 @@ export const createOrderState = create<State & Action>((set) => ({
     set((state) => {
       return { ...state, shippingInfo: shpi }
     }),
+  reset: () =>
+    set(() => ({
+      products: [],
+      contact: {
+        firstName: '',
+        email: '',
+        typeContact: 'empty',
+        lastName: '',
+        documentNumber: '',
+        withRtn: false,
+      },
+      shippingInfo: {
+        name: null,
+        documentNumber: null,
+        phone: null,
+        country: 'Honduras',
+        state: '',
+        city: '',
+        zone: '',
+        street: '',
+        reference: '',
+      },
+      orderNavegation: 'details',
+      orderId: null,
+    })),
+  resetContact: () =>
+    set(() => ({
+      contact: {
+        firstName: '',
+        email: '',
+        typeContact: 'empty',
+        lastName: '',
+        documentNumber: '',
+        withRtn: false,
+      },
+    })),
 }))

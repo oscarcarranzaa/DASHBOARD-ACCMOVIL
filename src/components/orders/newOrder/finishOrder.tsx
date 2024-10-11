@@ -10,6 +10,8 @@ import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { finishOrder } from '@/api/order'
 import { createOrderState } from '@/store/order'
+import { useRouter } from 'next/navigation'
+import Spinner from '@/components/icons/spinner'
 
 interface FormData {
   image: FileList | null
@@ -19,20 +21,30 @@ const paymentMethods = ['BANK_TRANSFER', 'CASH'] as const
 
 export default function FinishOrder() {
   const [preview, setPreview] = useState<string | null>(null)
-  const orderId = createOrderState((state) => state.orderId)
+  const [successTransact, setSuccessTransact] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState<
     'BANK_TRANSFER' | 'CASH' | 'PENDING'
   >('PENDING')
 
-  const { mutate } = useMutation({
+  const router = useRouter()
+
+  const orderId = createOrderState((state) => state.orderId)
+  const resetOrder = createOrderState((state) => state.reset)
+  const { mutate, isPending } = useMutation({
     mutationFn: finishOrder,
     onSuccess: (sc) => {
-      console.log(sc)
+      setSuccessTransact(true)
+      resetOrder()
+      if (orderId) {
+        router.push(`${orderId}/finalizado`)
+      }
+    },
+    onError: () => {
+      toast.error('Error al agregar pago a la orden.')
     },
   })
 
   const {
-    register,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -41,8 +53,7 @@ export default function FinishOrder() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Guardamos la imagen en el estado de React Hook Form manualmente
-      setValue('image', e.target.files) // Aquí actualizamos el valor de imagen en el formulario
+      setValue('image', e.target.files)
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result as string)
@@ -80,6 +91,7 @@ export default function FinishOrder() {
     label: 'w-full',
   }
 
+  const disabledButton = isPending || successTransact
   return (
     <div>
       <p className="font-semibold">Finalizar orden</p>
@@ -128,8 +140,13 @@ export default function FinishOrder() {
             color="danger"
             size="lg"
             type="submit"
+            disabled={disabledButton}
           >
-            <ClockSVG size={26} />
+            {disabledButton ? (
+              <Spinner fill="#fff" size={26} />
+            ) : (
+              <ClockSVG size={26} />
+            )}
             Dejar pendiente pago
           </Button>
         )}
@@ -138,9 +155,14 @@ export default function FinishOrder() {
             className="w-full stroke-black stroke-2"
             color="success"
             size="lg"
+            disabled={disabledButton}
             type="submit"
           >
-            <Money size={32} />
+            {disabledButton ? (
+              <Spinner fill="#000" size={26} />
+            ) : (
+              <Money size={26} />
+            )}
             Pagar en efectivo
           </Button>
         )}
@@ -177,9 +199,13 @@ export default function FinishOrder() {
               color="success"
               size="lg"
               type="submit"
-              isDisabled={!preview}
+              isDisabled={!preview || disabledButton}
             >
-              <Bank size={26} />
+              {disabledButton ? (
+                <Spinner fill="#000" size={26} />
+              ) : (
+                <Bank size={26} />
+              )}
               Procesar transferencia
             </Button>
           </>

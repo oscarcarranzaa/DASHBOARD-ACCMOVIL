@@ -254,7 +254,6 @@ export default function NewUserForm() {
             )}
           </ModalContent>
         </Modal>
-        <form></form>
       </div>
     </>
   )

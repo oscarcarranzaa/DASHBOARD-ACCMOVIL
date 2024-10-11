@@ -18,7 +18,7 @@ export default function ContactOrderForm() {
   const setContactOrder = createOrderState((state) => state.setContact)
   const setNavegationOrder = createOrderState((state) => state.navegation)
   const setOrderId = createOrderState((state) => state.setOrderId)
-
+  const resetContact = createOrderState((state) => state.resetContact)
   const [withRtn, setWithRtn] = useState(false)
 
   const { data, mutate, isPending, error } = useMutation({
@@ -238,16 +238,21 @@ export default function ContactOrderForm() {
           </div>
         </div>
         <div className=" flex justify-end items-end flex-col  fill-white">
-          <Button color="primary" type="submit">
-            {isPending ? (
-              <div className=" animate-spin">
-                <Spinner size={16} fill="#fff" />
-              </div>
-            ) : (
-              <SaveDiskSVG size={16} />
-            )}
-            Guardar y continuar
-          </Button>
+          <div>
+            <Button onClick={() => resetContact()} className="mr-2">
+              Regresar
+            </Button>
+            <Button color="primary" type="submit">
+              {isPending ? (
+                <div className=" animate-spin">
+                  <Spinner size={12} fill="#fff" />
+                </div>
+              ) : (
+                <SaveDiskSVG size={12} />
+              )}
+              Guardar y continuar
+            </Button>
+          </div>
         </div>
       </form>
     </>

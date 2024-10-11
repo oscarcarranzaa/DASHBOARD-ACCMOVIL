@@ -72,7 +72,7 @@ export default function ProductItems() {
                 className="w-10 h-10"
                 onClick={() => deletedProduct(orderProduct.id)}
               >
-                <span className="fill-white stroke-white">
+                <span className="dark:stroke-white stroke-black">
                   <TrashSVG size={16} />
                 </span>
               </Button>

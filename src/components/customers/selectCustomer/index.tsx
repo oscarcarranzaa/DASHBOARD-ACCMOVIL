@@ -33,14 +33,14 @@ export default function SelectCustomer({
   return (
     <>
       <div
-        className={`fixed w-screen h-screen top-0 bottom-0 left-0 right-0  z-50 ${openModal ? 'hidden' : ''}`}
+        className={`fixed w-screen h-screen top-0  bottom-0 left-0 right-0  z-50 ${openModal ? 'hidden' : ''}`}
         style={{
           backgroundColor: 'var(--box-opacity)',
           backdropFilter: 'blur(8px)',
         }}
       >
         <div
-          className="fill-white float-right w-[500px] dark:bg-zinc-900  h-full p-5"
+          className="fill-white float-right w-[500px] border-l border-zinc-500 dark:bg-zinc-900 bg-zinc-100  h-full p-5"
           ref={ref as React.MutableRefObject<HTMLDivElement>}
         >
           <div>
@@ -50,7 +50,7 @@ export default function SelectCustomer({
                 <CloseSVG size={28} />
               </button>
             </div>
-            <div className="w-full border-b border-zinc-500 pb-2">
+            <div className="w-full border-b border-zinc-500 pb-2 fill-black">
               <div className="mt-3">
                 <Search
                   searchName="cliente"
@@ -74,7 +74,7 @@ export default function SelectCustomer({
                             closeModal()
                           }}
                         >
-                          <div className="flex gap-2 bg-zinc-950 p-3 rounded-md mt-1 border-2 border-transparent hover:border-primary text-left">
+                          <div className="flex gap-2 dark:bg-zinc-950 p-3 rounded-md mt-1 border-2 border-transparent hover:border-primary text-left">
                             <div className=" flex-none">
                               <Avatar
                                 src={results.avatar ?? undefined}

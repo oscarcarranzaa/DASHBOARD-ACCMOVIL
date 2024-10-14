@@ -22,7 +22,7 @@ export default function OrderResume() {
   })
   return (
     <>
-      <div className=" bg-zinc-100 dark:bg-zinc-950 rounded-lg">
+      <div className=" bg-zinc-50 border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
         <div className="px-3">
           <div>
             <p className=" font-medium py-3 px-2">Resumen del pedido</p>
@@ -80,7 +80,7 @@ export default function OrderResume() {
                 })}
               </p>
             </li>
-            <li className=" flex justify-between text-sm">
+            <li className=" flex justify-between text-sm text-red-500 font-semibold">
               <p>Descuento:</p>
               <p>
                 {discount.toLocaleString('es-HN', {
@@ -89,7 +89,7 @@ export default function OrderResume() {
                 })}
               </p>
             </li>
-            <li className=" flex justify-between font-semibold mt-2">
+            <li className=" flex justify-between font-bold mt-2 text-lg">
               <p>Total:</p>
               <p>
                 {total.toLocaleString('es-HN', {

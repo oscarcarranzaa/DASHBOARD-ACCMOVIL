@@ -1,3 +1,4 @@
+import { StringDecoder } from 'string_decoder'
 import { z } from 'zod'
 
 /** Login */
@@ -23,6 +24,13 @@ export interface IUploads {
   name: string
   progress?: number
   id: string
+}
+export type filterQueryType = {
+  page: string
+  limit?: string
+  q?: string
+  startDate?: String
+  endDate?: string
 }
 export type TAuth = {}
 export type LoginSchema = z.infer<typeof login>

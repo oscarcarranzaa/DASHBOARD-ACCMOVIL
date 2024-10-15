@@ -28,6 +28,7 @@ export const ZCoupon = z.object({
     z.number().nonnegative().nullable().optional()
   ),
   expiresAt: z.string().optional().nullable(),
+  createdAt: z.string().optional().nullable(),
 })
 
 export const ZCreateCoupon = ZCoupon.pick({
@@ -65,5 +66,14 @@ export const ZCreateCoupon = ZCoupon.pick({
       path: ['userLimit'],
     }
   )
-
+export const ZGetListCoupon = z.object({
+  data: z.array(ZCoupon),
+  totalPages: z.number(),
+  limit: z.number(),
+  total: z.number(),
+  results: z.number(),
+  pageNumber: z.number(),
+})
+export type couponSchema = z.infer<typeof ZCoupon>
+export type listCouponSchema = z.infer<typeof ZGetListCoupon>
 export type createCouponSchema = z.infer<typeof ZCreateCoupon>

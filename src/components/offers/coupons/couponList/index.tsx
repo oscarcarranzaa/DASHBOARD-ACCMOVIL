@@ -42,25 +42,48 @@ export default function CouponList({ data, rows, isPending }: IProps) {
   const getData = data ? data.data : []
   const renderCell = useCallback(
     (coupon: couponSchema, columnKey: React.Key) => {
+      const {
+        id,
+        code,
+        discount,
+        minimumExpense,
+        maximumExpense,
+        expiresAt,
+        usageLimit,
+        isActive,
+        userLimit,
+        createdAt,
+      } = coupon
+      const minExp = minimumExpense?.toLocaleString('es-HN', {
+        style: 'currency',
+        currency: 'HNL',
+      })
+      const maxExp = maximumExpense?.toLocaleString('es-HN', {
+        style: 'currency',
+        currency: 'HNL',
+      })
       switch (columnKey) {
         case 'id':
           return (
             <>
-              <p>{coupon.id}</p>
+              <p>{id}</p>
             </>
           )
         case 'code':
           return (
             <>
-              <p className=" font-medium">{`${coupon.code}`}</p>
-              <p className=" text-xs opacity-70">{`Creado el ${dayjs(coupon.createdAt).format('DD/MM/YYYY')}`}</p>
+              <p className=" font-medium">{`${code}`}</p>
+              <p className=" text-xs opacity-60">{`Creado el ${dayjs(createdAt).format('DD/MM/YYYY')}`}</p>
             </>
           )
         case 'discount':
           return (
             <>
-              <p className="text-red-500 font-semibold">
-                {coupon.discount}% DTO
+              <p className="text-red-500 font-semibold">{discount}% DTO</p>
+              <p className="text-zinc-600 dark:text-zinc-400 text-xs">
+                {expiresAt
+                  ? `Vence el ${dayjs(expiresAt).format('DD/MM/YYYY')}`
+                  : 'Sin límite de vencimiento'}
               </p>
             </>
           )
@@ -68,35 +91,25 @@ export default function CouponList({ data, rows, isPending }: IProps) {
         case 'expense':
           return (
             <>
+              <p>{minimumExpense ? minExp : 'N/D'}</p>
               <p className="text-zinc-600 dark:text-zinc-400 text-xs">
-                {coupon.minimumExpense?.toLocaleString('es-HN', {
-                  style: 'currency',
-                  currency: 'HNL',
-                }) || '∞'}
-              </p>
-              <p className="text-zinc-600 dark:text-zinc-400 text-xs">
-                {coupon.maximumExpense?.toLocaleString('es-HN', {
-                  style: 'currency',
-                  currency: 'HNL',
-                }) || '∞'}
+                {maximumExpense ? maxExp : 'N/D'}
               </p>
             </>
           )
         case 'usage':
           return (
             <>
+              <p className="  ">{usageLimit || 'Ilimitado'}</p>
               <p className="text-zinc-600 dark:text-zinc-400 text-xs">
-                {coupon.usageLimit || '∞'}
-              </p>
-              <p className="text-zinc-600 dark:text-zinc-400 text-xs">
-                {coupon.userLimit || '∞'}
+                {userLimit || 'Ilimitado'}
               </p>
             </>
           )
         case 'state':
           return (
             <>
-              <CouponState status={coupon.isActive} id={coupon.id} />
+              <CouponState status={isActive} id={id} />
             </>
           )
       }

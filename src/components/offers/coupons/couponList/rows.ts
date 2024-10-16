@@ -8,15 +8,15 @@ export const couponsRows = [
     key: 'code',
   },
   {
-    name: 'Descuento (%)',
+    name: 'Descuento (%) / Vencimiento',
     key: 'discount',
   },
   {
-    name: 'Min/Max gastado',
+    name: 'Gasto (Min/Max)',
     key: 'expense',
   },
   {
-    name: 'Uso/Usuario Limite',
+    name: 'Límite (Uso/Usuario)',
     key: 'usage',
   },
   {

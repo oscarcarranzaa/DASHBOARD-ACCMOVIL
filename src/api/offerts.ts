@@ -1,8 +1,10 @@
 import axiosInstance from '@/lib/axiosClient'
 import { filterQueryType } from '@/types'
 import {
+  couponSchema,
   createCouponSchema,
   listCouponSchema,
+  ZCoupon,
   ZGetListCoupon,
 } from '@/types/offers'
 import { FilterQueryUrl } from '@/utils/filterQueryUrl'
@@ -62,13 +64,14 @@ export async function handleStateCoupon({
   status: boolean
 }) {
   try {
-    const { data } = await axiosInstance.put(
+    const { data } = await axiosInstance.put<couponSchema>(
       `/admin/offerts/coupon/status/${id}`,
       {
         status,
       }
     )
-    return data
+    const validCoupon = ZCoupon.parse(data)
+    return validCoupon
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {

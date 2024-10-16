@@ -3,7 +3,12 @@ import { createCoupon } from '@/api/offerts'
 import Spinner from '@/components/icons/spinner'
 import { createCouponSchema, ZCreateCoupon } from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { getLocalTimeZone } from '@internationalized/date'
+import {
+  DateValue,
+  getLocalTimeZone,
+  parseAbsolute,
+  parseDate,
+} from '@internationalized/date'
 import {
   Button,
   DatePicker,
@@ -16,7 +21,8 @@ import {
   Tabs,
   useDisclosure,
 } from '@nextui-org/react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
 type createCouponFormSchema = {
@@ -39,11 +45,14 @@ const defaultValues = {
 }
 export default function CouponEditor() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+  const [expires, setExpires] = useState<DateValue | null>()
+  const queryClient = useQueryClient()
   const {
     handleSubmit,
     control,
     reset,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<createCouponFormSchema>({
     resolver: zodResolver(ZCreateCoupon),
@@ -52,8 +61,8 @@ export default function CouponEditor() {
   const { mutate, isPending } = useMutation({
     mutationFn: createCoupon,
     onSuccess: (data) => {
-      console.log(data)
       reset()
+      queryClient.invalidateQueries({ queryKey: ['coupons'] })
       onClose()
     },
     onError: (err) => {
@@ -144,22 +153,18 @@ export default function CouponEditor() {
                               />
                             )}
                           />
-                          <Controller
-                            name="expiresAt"
-                            control={control}
-                            render={({ field }) => (
-                              <DatePicker
-                                onChange={(val) => {
-                                  setValue(
-                                    'expiresAt',
-                                    val.toDate(getLocalTimeZone()).toISOString()
-                                  )
-                                }}
-                                label="Fecha de expiración"
-                                variant="bordered"
-                                labelPlacement="outside"
-                              />
-                            )}
+                          <DatePicker
+                            value={expires}
+                            onChange={(val) => {
+                              setValue(
+                                'expiresAt',
+                                val.toDate(getLocalTimeZone()).toISOString()
+                              )
+                              setExpires(val)
+                            }}
+                            label="Fecha de expiración"
+                            variant="bordered"
+                            labelPlacement="outside"
                           />
                         </div>
                       </div>
@@ -220,7 +225,7 @@ export default function CouponEditor() {
                               {...field}
                               isInvalid={!!errors.userLimit?.message}
                               errorMessage={errors.userLimit?.message}
-                              placeholder="Ej: 1"
+                              placeholder="1 vez por defecto"
                               label="Canje por usuario (Veces)"
                               labelPlacement="outside"
                               variant="bordered"

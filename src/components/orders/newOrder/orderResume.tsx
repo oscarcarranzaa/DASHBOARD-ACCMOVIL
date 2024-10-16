@@ -28,6 +28,11 @@ export default function OrderResume() {
             <p className=" font-medium py-3 px-2">Resumen del pedido</p>
           </div>
           <div>
+            {orderProducts.length === 0 && (
+              <p className=" text-center mt-5 mb-5">
+                Comienza agregado productos a la lista.
+              </p>
+            )}
             <ul>
               {orderProducts.map((p) => {
                 const image = p.media
@@ -66,9 +71,11 @@ export default function OrderResume() {
             </ul>
           </div>
           <div className="mt-5 border-t border-zinc-300 px-2">
-            <div className="py-5">
-              <RendeemCoupon />
-            </div>
+            {orderProducts.length > 0 && (
+              <div className="py-5">
+                <RendeemCoupon />
+              </div>
+            )}
           </div>
           <ul className=" px-2 pb-5">
             <li className="mt-2 flex justify-between text-sm">

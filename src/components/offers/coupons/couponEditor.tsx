@@ -58,7 +58,7 @@ export default function CouponEditor() {
     resolver: zodResolver(ZCreateCoupon),
     defaultValues,
   })
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: createCoupon,
     onSuccess: (data) => {
       reset()
@@ -236,6 +236,11 @@ export default function CouponEditor() {
                       </div>
                     </Tab>
                   </Tabs>
+                  {error && (
+                    <p className="text-xs mt-2 ml-2 text-red-500 font-semibold">
+                      {error.message}
+                    </p>
+                  )}
                 </div>
                 <ModalFooter>
                   <Button className=" min-w-32" onPress={onClose}>

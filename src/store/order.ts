@@ -42,16 +42,25 @@ type contactOrder = {
   companyName?: string | null
   company?: string | null
 }
+type couponCode = {
+  code: string
+  discount: number
+  maximumExpense?: number | null
+  minimumExpense?: number | null
+}
 type State = {
   products: productOrder[]
   contact: contactOrder
   shippingInfo: ShippingAddress
+  coupon?: couponCode
   orderNavegation: 'details' | 'contact' | 'shipping' | 'finish'
   orderId?: string | null
 }
 type Action = {
   addProduct: (product: productOrder) => void
   navegation: (nav: State['orderNavegation']) => void
+  addCoupon: (coupon: couponCode) => void
+  removeCoupon: () => void
   setOrderId: (id: string) => void
   incrementProduct: (id: string) => void
   decrementalProduct: (id: string) => void
@@ -183,6 +192,14 @@ export const createOrderState = create<State & Action>((set) => ({
   setShippingInfo: (shpi) =>
     set((state) => {
       return { ...state, shippingInfo: shpi }
+    }),
+  addCoupon: (coupon) =>
+    set((state) => {
+      return { ...state, coupon }
+    }),
+  removeCoupon: () =>
+    set((state) => {
+      return { ...state, coupon: undefined }
     }),
   reset: () =>
     set(() => ({

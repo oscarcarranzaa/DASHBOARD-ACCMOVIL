@@ -82,3 +82,21 @@ export async function handleStateCoupon({
     }
   }
 }
+
+export async function checkCouponCode({ code }: { code: string }) {
+  try {
+    const { data } = await axiosInstance.get<couponSchema>(
+      `/admin/offerts/coupon/check/${code}`
+    )
+    const validCoupon = ZCoupon.parse(data)
+    return validCoupon
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al cambiar el estado del cupon.')
+    }
+  }
+}

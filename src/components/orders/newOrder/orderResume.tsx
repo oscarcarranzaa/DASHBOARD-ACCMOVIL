@@ -8,6 +8,8 @@ import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {
   const orderProducts = createOrderState((state) => state.products)
+  const orderId = createOrderState((state) => state.orderId)
+  const coupon = createOrderState((state) => state.coupon)
   const productsTotal = orderProducts.map((p) => {
     return {
       price: p.price,
@@ -20,6 +22,12 @@ export default function OrderResume() {
   const { total, subtotal, discount } = CalcSubToltalOrder({
     items: productsTotal,
   })
+  const calcDiscountCoupon = coupon
+    ? total - (total * coupon.discount) / 100
+    : total
+  const calcAmountCoupon = calcDiscountCoupon - total
+  const totalDiscount = discount + calcAmountCoupon
+
   return (
     <>
       <div className=" bg-zinc-50 border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
@@ -71,7 +79,7 @@ export default function OrderResume() {
             </ul>
           </div>
           <div className="mt-5 border-t border-zinc-300 px-2">
-            {orderProducts.length > 0 && (
+            {orderProducts.length > 0 && orderId && (
               <div className="py-5">
                 <RendeemCoupon />
               </div>
@@ -87,19 +95,30 @@ export default function OrderResume() {
                 })}
               </p>
             </li>
-            <li className=" flex justify-between text-sm text-red-500 font-semibold">
-              <p>Descuento:</p>
+            {coupon && (
+              <li className=" flex justify-between text-sm">
+                <p>Cupón aplicado:</p>
+                <p>
+                  {calcAmountCoupon.toLocaleString('es-HN', {
+                    style: 'currency',
+                    currency: 'HNL',
+                  })}
+                </p>
+              </li>
+            )}
+            <li className=" flex justify-between  text-red-500 font-semibold ">
+              <p>Descuento total:</p>
               <p>
-                {discount.toLocaleString('es-HN', {
+                {totalDiscount.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}
               </p>
             </li>
-            <li className=" flex justify-between font-bold mt-2 text-lg">
+            <li className=" flex justify-between font-bold mt-2 text-xl">
               <p>Total:</p>
               <p>
-                {total.toLocaleString('es-HN', {
+                {calcDiscountCoupon.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}

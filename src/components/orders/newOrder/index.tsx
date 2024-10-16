@@ -6,9 +6,24 @@ import OrderStatusBar from './orderStatusBar'
 import ContactOrder from './contactOrder'
 import ShippingOrderForm from './shippingForm'
 import FinishOrder from './finishOrder'
+import { useEffect, useState } from 'react'
+import getCookie from '@/utils/cookiesOperator'
+import { useQuery } from '@tanstack/react-query'
+import { persistOrderQuery } from '@/api/order'
 
 export default function NewOrder() {
+  const [isOrderSession, setIsOrderSession] = useState<
+    'pending' | 'empty' | 'exists'
+  >('pending')
   const statusOrder = createOrderState((state) => state.orderNavegation)
+  const { data, isPending } = useQuery({
+    queryKey: ['order', 'persist'],
+    queryFn: persistOrderQuery,
+    enabled: isOrderSession === 'exists',
+    retry: false,
+  })
+
+  console.log(data)
   const renderOrderStatus = (nav: string) => {
     switch (nav) {
       case 'details':
@@ -21,6 +36,11 @@ export default function NewOrder() {
         return <FinishOrder />
     }
   }
+  useEffect(() => {
+    const isSession = getCookie('O_session')
+    isSession ? setIsOrderSession('exists') : setIsOrderSession('empty')
+  }, [])
+
   return (
     <>
       <OrderStatusBar />

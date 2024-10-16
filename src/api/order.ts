@@ -119,3 +119,19 @@ export async function finishOrder({
     }
   }
 }
+
+export async function persistOrderQuery() {
+  try {
+    const { data } = await axiosInstance.get('/admin/order/persist/creating')
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al crear una orden nueva')
+    }
+  }
+}

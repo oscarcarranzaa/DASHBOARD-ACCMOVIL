@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import { ZProduct } from './products'
+import { ZCustomer } from './customer'
+import { ZCoupon } from './offers'
 
 export const ZOrderItems = z.object({
   id: z.string(),
@@ -110,7 +113,20 @@ export const ZCreateShippingInfo = ZShippingInfo.omit({
   reference: true,
 }).extend({ reference: z.string().optional() })
 
+export const ZOrderItemsProduct = ZOrderItems.merge(
+  z.object({
+    product: ZProduct.omit({ User: true }),
+  })
+)
+export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
+  z.object({
+    orderItems: z.array(ZOrderItemsProduct),
+    customer: ZCustomer.nullable(),
+    coupon: ZCoupon.nullable(),
+  })
+)
 export type orderSchema = z.infer<typeof ZOrder>
+export type orderDetailsSchema = z.infer<typeof ZOrderDetails>
 export type createShippingInfoSchema = z.infer<typeof ZCreateShippingInfo>
 export type createOrderSchema = z.infer<typeof ZCreateOrder>
 export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>

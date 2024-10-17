@@ -1,8 +1,10 @@
 import {
   createOrderSchema,
   createShippingInfoSchema,
+  orderDetailsSchema,
   orderSchema,
   ZOrder,
+  ZOrderDetails,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
@@ -122,10 +124,12 @@ export async function finishOrder({
 
 export async function persistOrderQuery() {
   try {
-    const { data } = await axiosInstance.get('/admin/order/persist/creating')
-    return data
+    const { data } = await axiosInstance.get<orderDetailsSchema>(
+      '/admin/order/persist/creating'
+    )
+    const validOrderData = ZOrderDetails.parse(data)
+    return validOrderData
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,

@@ -46,11 +46,11 @@ export default function ContactOrderForm() {
     lastName: contactOrder.lastName ?? '',
     email: contactOrder.email,
     phone: contactOrder.phone ?? '',
-    documentNumber: '',
-    rtn: '',
-    companyName: '',
-    companyPhone: '',
-    company: '',
+    documentNumber: contactOrder.documentNumber ?? '',
+    rtn: contactOrder.rtn ?? '',
+    companyName: contactOrder.companyName ?? '',
+    companyPhone: contactOrder.companyPhone ?? '',
+    company: contactOrder.company ?? '',
   }
   const {
     handleSubmit,

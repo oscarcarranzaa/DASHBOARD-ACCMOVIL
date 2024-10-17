@@ -6,9 +6,6 @@ import Smartphone from '@/components/icons/smartphone'
 import { createOrderState } from '@/store/order'
 
 export default function OrderStatusBar() {
-  const orderNavegation = createOrderState((state) => state.orderNavegation)
-  const productsOrder = createOrderState((state) => state.products)
-
   return (
     <>
       <div className="relative  dark:bg-zinc-950 bg-zinc-100 h-28 p-5 w-full rounded-2xl">

@@ -1,5 +1,6 @@
 'use client'
 
+import { orderDetailsSchema } from '@/types/order'
 import { MediaSchema } from '@/types/schemas'
 import { toast } from 'sonner'
 import { create } from 'zustand'
@@ -25,11 +26,11 @@ type ShippingAddress = {
   city: string
   zone: string
   street: string
-  reference?: string
+  reference?: string | null
   documentNumber: string | null
 }
 type contactOrder = {
-  customerId?: string
+  customerId?: string | null
   firstName?: string | null
   lastName?: string | null
   email: string
@@ -68,6 +69,7 @@ type Action = {
   setContact: (contact: contactOrder) => void
   setShippingInfo: (shpi: ShippingAddress) => void
   resetContact: () => void
+  setOrderData: (data: orderDetailsSchema) => void
   reset: () => void
 }
 
@@ -189,6 +191,7 @@ export const createOrderState = create<State & Action>((set) => ({
     set((state) => {
       return { ...state, contact }
     }),
+
   setShippingInfo: (shpi) =>
     set((state) => {
       return { ...state, shippingInfo: shpi }
@@ -237,4 +240,116 @@ export const createOrderState = create<State & Action>((set) => ({
         withRtn: false,
       },
     })),
+
+  // Setear los datos si la orden ya existe
+  setOrderData: (order) =>
+    set((stateOrder) => {
+      // Mapeamos los productos de la orden
+      const products = order.orderItems.map((p) => {
+        const {
+          id,
+          name,
+          price,
+          stock,
+          sku,
+          media,
+          discountPrice,
+          startDiscount,
+          endDiscount,
+        } = p.product
+        const quantity = p.quantity
+        return {
+          id,
+          name,
+          price,
+          stock,
+          sku,
+          media,
+          discountPrice,
+          startDiscount,
+          endDiscount,
+          quantity,
+        }
+      })
+
+      // Actualizamos los datos de contacto si existen
+      let contact = stateOrder.contact
+      if (order.billingInfo) {
+        const {
+          firstName,
+          email,
+          lastName,
+          documentNumber,
+          phone,
+          rtn,
+          companyPhone,
+          companyName,
+          company,
+        } = order.billingInfo
+        const customerId = order.customerId
+        const withRtn = !!rtn
+        const typeContact: 'customer' | 'guest' | 'empty' = customerId
+          ? 'customer'
+          : 'guest'
+        contact = {
+          customerId,
+          firstName,
+          email,
+          lastName,
+          documentNumber,
+          phone,
+          rtn,
+          companyPhone,
+          companyName,
+          company,
+          withRtn,
+          typeContact,
+        }
+      }
+      // Actualizamos los datos de envío si existen
+      let shippingInfo = stateOrder.shippingInfo
+      if (order.shippingInfo) {
+        const {
+          name,
+          phone,
+          country,
+          state,
+          city,
+          zone,
+          street,
+          reference,
+          documentNumber,
+        } = order.shippingInfo
+        const shippingDocumentNumber =
+          documentNumber ?? order.billingInfo?.documentNumber
+        shippingInfo = {
+          name,
+          phone,
+          country,
+          state,
+          city,
+          zone,
+          street,
+          reference,
+          documentNumber: shippingDocumentNumber,
+        }
+      }
+
+      // Actualizamos el cupón si existe
+      let coupon = stateOrder.coupon
+      if (order.coupon) {
+        const { code, discount, maximumExpense, minimumExpense } = order.coupon
+        coupon = { code, discount, maximumExpense, minimumExpense }
+      }
+
+      // Devolvemos el nuevo estado actualizado
+      return {
+        ...stateOrder,
+        products, // Actualizamos los productos
+        contact, // Actualizamos la información de contacto
+        shippingInfo, // Actualizamos la información de envío
+        coupon, // Actualizamos el cupón
+        orderId: order.id, // Actualizamos el ID de la orden
+      }
+    }),
 }))

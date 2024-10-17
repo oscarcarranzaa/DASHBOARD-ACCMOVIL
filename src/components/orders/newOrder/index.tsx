@@ -15,6 +15,7 @@ export default function NewOrder() {
   const [isOrderSession, setIsOrderSession] = useState<
     'pending' | 'empty' | 'exists'
   >('pending')
+  const setOrderData = createOrderState((state) => state.setOrderData)
   const statusOrder = createOrderState((state) => state.orderNavegation)
   const { data, isPending } = useQuery({
     queryKey: ['order', 'persist'],
@@ -23,7 +24,12 @@ export default function NewOrder() {
     retry: false,
   })
 
-  console.log(data)
+  useEffect(() => {
+    if (data) {
+      setOrderData(data)
+    }
+  }, [data, setOrderData])
+
   const renderOrderStatus = (nav: string) => {
     switch (nav) {
       case 'details':

@@ -30,7 +30,7 @@ export default function OrderResume() {
 
   return (
     <>
-      <div className=" bg-zinc-50 border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
+      <div className=" bg-white border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
         <div className="px-3">
           <div>
             <p className=" font-medium py-3 px-2">Resumen del pedido</p>

@@ -67,6 +67,7 @@ type Action = {
   incrementProduct: (id: string) => void
   decrementalProduct: (id: string) => void
   deletedProduct: (id: string) => void
+  setQuantity: (id: string, quantity: number) => void
   setContact: (contact: contactOrder) => void
   setShippingInfo: (shpi: ShippingAddress) => void
   resetContact: () => void
@@ -140,6 +141,29 @@ export const createOrderState = create<State & Action>((set) => ({
       return {
         ...state,
         completedNavegation: [...state.completedNavegation, nav],
+      }
+    }),
+  setQuantity: (id, q) =>
+    set((state) => {
+      const existingProduct = state.products.find(
+        (product) => product.id === id
+      )
+      if (existingProduct) {
+        const totalQuantity = q
+        if (totalQuantity > existingProduct.stock) {
+          toast.error('No hay suficiente stock disponible.')
+          return state
+        }
+        return {
+          products: state.products.map((product) =>
+            product.id === id
+              ? { ...product, quantity: totalQuantity }
+              : product
+          ),
+        }
+      } else {
+        toast.error('No se encontró el producto.')
+        return { products: state.products }
       }
     }),
   incrementProduct: (id) =>

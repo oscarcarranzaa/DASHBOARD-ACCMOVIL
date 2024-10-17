@@ -2,9 +2,12 @@ import {
   createOrderSchema,
   createShippingInfoSchema,
   orderDetailsSchema,
+  orderItemsSchema,
   orderSchema,
+  typeOrderItem,
   ZOrder,
   ZOrderDetails,
+  ZOrderItems,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
@@ -136,6 +139,46 @@ export async function persistOrderQuery() {
       })
     } else {
       throw new Error('Error al crear una orden nueva')
+    }
+  }
+}
+
+type TUpdateQuantityProductOrder = {
+  id: string
+  quantity: number
+}
+export async function updateProductOrder(product: TUpdateQuantityProductOrder) {
+  try {
+    const { data } = await axiosInstance.put<orderItemsSchema>(
+      '/admin/order/product/quantity/update',
+      product
+    )
+    const validOrderData = ZOrderItems.parse(data)
+    return validOrderData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al actualizar la cantidad.')
+    }
+  }
+}
+export async function deleteProductOrder(id: string) {
+  try {
+    const { data } = await axiosInstance.delete<typeOrderItem>(
+      `/admin/order/product/${id}`
+    )
+    const validOrderData = ZOrderItems.parse(data)
+    return validOrderData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al eliminar el producto.')
     }
   }
 }

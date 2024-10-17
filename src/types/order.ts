@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ZProduct } from './products'
+import { ZProduct, ZProductInfo } from './products'
 import { ZCustomer } from './customer'
 import { ZCoupon } from './offers'
 
@@ -89,7 +89,7 @@ export const ZOrder = z.object({
 
 const ZProductsOrder = z.object({
   id: z.string(),
-  quantity: z.number(),
+  quantity: z.number().min(1).nonnegative(),
 })
 const ZContactOrder = z.object({
   customerId: z.string().optional().nullable(),
@@ -126,6 +126,8 @@ export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
   })
 )
 export type orderSchema = z.infer<typeof ZOrder>
+export type orderItemsSchema = z.infer<typeof ZOrderItemsProduct>
+export type typeOrderItem = z.infer<typeof ZOrderItems>
 export type orderDetailsSchema = z.infer<typeof ZOrderDetails>
 export type createShippingInfoSchema = z.infer<typeof ZCreateShippingInfo>
 export type createOrderSchema = z.infer<typeof ZCreateOrder>

@@ -7,7 +7,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Button,
 } from '@nextui-org/react'
 import { productOrderList } from './rows'
 import { createOrderState } from '@/store/order'
@@ -16,7 +15,7 @@ import SquareImage from '@/components/squareImage'
 import DisplayPrice from '@/components/displayPrice'
 import { MediaSchema } from '@/types/schemas'
 import QuantityCounter from './quantityCounter'
-import TrashSVG from '@/components/icons/trahs'
+import DeleteProductOrder from './deleteProductOrder'
 
 type TProps = {
   id: string
@@ -31,7 +30,7 @@ type TProps = {
 }
 export default function ProductItems() {
   const orderProducts = createOrderState((state) => state.products)
-  const deletedProduct = createOrderState((state) => state.deletedProduct)
+
   const renderCell = useCallback(
     (orderProduct: TProps, columnKey: React.Key) => {
       const image = orderProduct.media
@@ -65,17 +64,7 @@ export default function ProductItems() {
                 startDate={orderProduct.startDiscount}
                 endDate={orderProduct.endDiscount}
               />
-              <Button
-                isIconOnly
-                variant="flat"
-                size="sm"
-                className="w-10 h-10"
-                onClick={() => deletedProduct(orderProduct.id)}
-              >
-                <span className="dark:stroke-white stroke-black">
-                  <TrashSVG size={16} />
-                </span>
-              </Button>
+              <DeleteProductOrder id={orderProduct.id} />
             </div>
           )
       }

@@ -1,6 +1,5 @@
-import AddShoppingCartIcon from '@/components/icons/addShoppingCartIcon'
 import EmptyOrder from './emptyOrder'
-import { Button } from '@nextui-org/button'
+import { Button } from '@nextui-org/react'
 import { useState } from 'react'
 import SelectProduct from '@/components/products/selectProduct'
 import { createOrderState } from '@/store/order'

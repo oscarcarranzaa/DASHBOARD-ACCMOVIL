@@ -19,10 +19,19 @@ import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 export default function ShippingOrderForm() {
-  const [stateSelect, setStateSelect] = useState<string>('')
-  const [citySelect, setCitySelect] = useState<string>('')
-  const [zoneSelect, setZoneSelect] = useState<string>('')
+  const shippingInfo = createOrderState((state) => state.shippingInfo)
+  const [stateSelect, setStateSelect] = useState<string>(
+    shippingInfo.state ?? ''
+  )
+  const [citySelect, setCitySelect] = useState<string>(shippingInfo.city ?? '')
+  const [zoneSelect, setZoneSelect] = useState<string>(shippingInfo.zone ?? '')
+
   const setOrderNavegation = createOrderState((state) => state.navegation)
+  const orderNavegation = createOrderState((state) => state.orderNavegation)
+  const setCompletedNavegation = createOrderState(
+    (state) => state.setCompletedNavegation
+  )
+
   const {
     mutate,
     isPending: savingShipping,
@@ -30,24 +39,24 @@ export default function ShippingOrderForm() {
   } = useMutation({
     mutationFn: addShippingData,
     onSuccess: (d) => {
+      setCompletedNavegation(orderNavegation)
       setOrderNavegation('finish')
     },
   })
-  console.log(error)
+
   const { data, isPending } = useQuery({
     queryFn: getCountry,
     queryKey: ['country'],
     refetchOnWindowFocus: false,
   })
 
-  const shippingInfo = createOrderState((state) => state.shippingInfo)
   const orderId = createOrderState((state) => state.orderId)
   const contactOrder = createOrderState((state) => state.contact)
   const setShippingInfo = createOrderState((state) => state.setShippingInfo)
+
   const clientName = contactOrder.firstName
     ? `${contactOrder.firstName} ${contactOrder.lastName}`
     : ''
-  console.log(shippingInfo, contactOrder)
 
   const defaultValues = {
     name: shippingInfo.name ?? clientName,
@@ -58,8 +67,8 @@ export default function ShippingOrderForm() {
     state: '',
     city: '',
     zone: '',
-    street: '',
-    reference: '',
+    street: shippingInfo.street ?? '',
+    reference: shippingInfo.reference ?? '',
   }
   const {
     handleSubmit,

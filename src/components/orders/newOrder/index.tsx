@@ -50,8 +50,8 @@ export default function NewOrder() {
   return (
     <>
       <OrderStatusBar />
-      <div className="grid grid-cols-6 gap-3 mt-5 items-start">
-        <div className="dark:bg-zinc-950 bg-zinc-50 p-5 rounded-xl col-span-4 border dark:border-zinc-700 border-zinc-300">
+      <div className="grid grid-cols-6 gap-3 mt-8 items-start">
+        <div className="dark:bg-zinc-950 bg-white shadow-xl p-5 rounded-xl col-span-4 border dark:border-zinc-700 border-zinc-300">
           {renderOrderStatus(statusOrder)}
         </div>
         <div className="col-span-2">

@@ -55,6 +55,7 @@ type State = {
   shippingInfo: ShippingAddress
   coupon?: couponCode
   orderNavegation: 'details' | 'contact' | 'shipping' | 'finish'
+  completedNavegation: string[]
   orderId?: string | null
 }
 type Action = {
@@ -69,12 +70,14 @@ type Action = {
   setContact: (contact: contactOrder) => void
   setShippingInfo: (shpi: ShippingAddress) => void
   resetContact: () => void
+  setCompletedNavegation: (nav: string) => void
   setOrderData: (data: orderDetailsSchema) => void
   reset: () => void
 }
 
 export const createOrderState = create<State & Action>((set) => ({
   products: [],
+  completedNavegation: ['details'],
   contact: {
     firstName: '',
     email: '',
@@ -126,6 +129,18 @@ export const createOrderState = create<State & Action>((set) => ({
   setOrderId: (id) =>
     set((state) => {
       return { ...state, orderId: id }
+    }),
+  setCompletedNavegation: (nav) =>
+    set((state) => {
+      const findNavegation = state.completedNavegation.find((n) => n === nav)
+
+      if (findNavegation) {
+        return { ...state }
+      }
+      return {
+        ...state,
+        completedNavegation: [...state.completedNavegation, nav],
+      }
     }),
   incrementProduct: (id) =>
     set((state) => {
@@ -245,6 +260,7 @@ export const createOrderState = create<State & Action>((set) => ({
   setOrderData: (order) =>
     set((stateOrder) => {
       // Mapeamos los productos de la orden
+      let completedNav: State['orderNavegation'][] | [] = ['details']
       const products = order.orderItems.map((p) => {
         const {
           id,
@@ -275,6 +291,7 @@ export const createOrderState = create<State & Action>((set) => ({
       // Actualizamos los datos de contacto si existen
       let contact = stateOrder.contact
       if (order.billingInfo) {
+        completedNav = [...completedNav, 'contact']
         const {
           firstName,
           email,
@@ -309,6 +326,7 @@ export const createOrderState = create<State & Action>((set) => ({
       // Actualizamos los datos de envío si existen
       let shippingInfo = stateOrder.shippingInfo
       if (order.shippingInfo) {
+        completedNav = [...completedNav, 'shipping']
         const {
           name,
           phone,
@@ -345,6 +363,7 @@ export const createOrderState = create<State & Action>((set) => ({
       // Devolvemos el nuevo estado actualizado
       return {
         ...stateOrder,
+        completedNavegation: completedNav,
         products, // Actualizamos los productos
         contact, // Actualizamos la información de contacto
         shippingInfo, // Actualizamos la información de envío

@@ -19,12 +19,18 @@ export default function ContactOrderForm() {
   const setNavegationOrder = createOrderState((state) => state.navegation)
   const setOrderId = createOrderState((state) => state.setOrderId)
   const resetContact = createOrderState((state) => state.resetContact)
+  const setCompletedNavegation = createOrderState(
+    (state) => state.setCompletedNavegation
+  )
+  const orderNavegation = createOrderState((state) => state.orderNavegation)
+
   const [withRtn, setWithRtn] = useState(false)
 
   const { data, mutate, isPending, error } = useMutation({
     mutationFn: createOrder,
     onSuccess: (data) => {
       setNavegationOrder('shipping')
+      setCompletedNavegation(orderNavegation)
       setOrderId(data.id)
     },
     onError: (err) => {
@@ -34,6 +40,7 @@ export default function ContactOrderForm() {
   const { mutate: upOrder, isPending: isUpdating } = useMutation({
     mutationFn: updateOrder,
     onSuccess: (data) => {
+      setCompletedNavegation(orderNavegation)
       setNavegationOrder('shipping')
     },
     onError: (err) => {

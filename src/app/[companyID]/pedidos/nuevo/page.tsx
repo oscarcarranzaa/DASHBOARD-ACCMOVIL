@@ -5,7 +5,7 @@ import NewOrder from '@/components/orders/newOrder'
 export default function NewOrderPage() {
   return (
     <>
-      <NavegationPages text="Nueva pedido" />
+      <NavegationPages text="Nuevo pedido" />
       <div className="w-full">
         <NewOrder />
       </div>

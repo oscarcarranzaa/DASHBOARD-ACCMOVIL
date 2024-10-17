@@ -10,7 +10,11 @@ export default function AddProductOrder() {
   const [openSelect, setOpenSelect] = useState(false)
   const setProduct = createOrderState((state) => state.addProduct)
   const productsInOrder = createOrderState((state) => state.products)
-  const orderNavegation = createOrderState((state) => state.navegation)
+  const setOrderNavegation = createOrderState((state) => state.navegation)
+  const orderNavegation = createOrderState((state) => state.orderNavegation)
+  const setCompletedNavegation = createOrderState(
+    (state) => state.setCompletedNavegation
+  )
   return (
     <>
       <div className="w-full">
@@ -30,7 +34,10 @@ export default function AddProductOrder() {
                 <Button
                   color="primary"
                   disabled={productsInOrder.length === 0}
-                  onClick={() => orderNavegation('contact')}
+                  onClick={() => {
+                    setOrderNavegation('contact')
+                    setCompletedNavegation(orderNavegation)
+                  }}
                 >
                   Continuar
                 </Button>

@@ -1,5 +1,5 @@
 'use client'
-import { createOrder, updateOrder } from '@/api/order'
+import { createOrder, updateContactOrder, updateOrder } from '@/api/order'
 import SaveDiskSVG from '@/components/icons/saveDisk'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
@@ -13,35 +13,34 @@ import { toast } from 'sonner'
 
 export default function ContactOrderForm() {
   const contactOrder = createOrderState((state) => state.contact)
-  const productsOrder = createOrderState((state) => state.products)
-  const orderId = createOrderState((state) => state.orderId)
   const setContactOrder = createOrderState((state) => state.setContact)
   const setNavegationOrder = createOrderState((state) => state.navegation)
-  const setOrderId = createOrderState((state) => state.setOrderId)
   const resetContact = createOrderState((state) => state.resetContact)
   const setCompletedNavegation = createOrderState(
     (state) => state.setCompletedNavegation
   )
   const orderNavegation = createOrderState((state) => state.orderNavegation)
 
-  const [withRtn, setWithRtn] = useState(false)
+  const [withRtn, setWithRtn] = useState(!!contactOrder.rtn)
 
-  const { data, mutate, isPending, error } = useMutation({
-    mutationFn: createOrder,
-    onSuccess: (data) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateContactOrder,
+    onSuccess: (success) => {
+      setContactOrder({
+        firstName: success.firstName,
+        email: success.email,
+        lastName: success.lastName,
+        documentNumber: success.documentNumber,
+        phone: success.phone,
+        rtn: success.rtn,
+        companyName: success.companyName,
+        companyPhone: success.companyPhone,
+        company: success.company,
+        withRtn,
+        typeContact: contactOrder.typeContact,
+      })
       setNavegationOrder('shipping')
       setCompletedNavegation(orderNavegation)
-      setOrderId(data.id)
-    },
-    onError: (err) => {
-      toast.error(err.message)
-    },
-  })
-  const { mutate: upOrder, isPending: isUpdating } = useMutation({
-    mutationFn: updateOrder,
-    onSuccess: (data) => {
-      setCompletedNavegation(orderNavegation)
-      setNavegationOrder('shipping')
     },
     onError: (err) => {
       toast.error(err.message)
@@ -59,20 +58,17 @@ export default function ContactOrderForm() {
     companyPhone: contactOrder.companyPhone ?? '',
     company: contactOrder.company ?? '',
   }
+
   const {
     handleSubmit,
     control,
-    reset,
-    setValue,
     formState: { errors },
   } = useForm<newBillingInfoSchema>({
     resolver: zodResolver(ZNewBillingInfo),
     defaultValues,
   })
+
   const submitForm = (form: newBillingInfoSchema) => {
-    const productsIds = productsOrder.map((p) => {
-      return { id: p.id, quantity: p.quantity }
-    })
     const billingInfo = {
       customerId: contactOrder.customerId,
       firstName: form.firstName ?? '',
@@ -85,19 +81,7 @@ export default function ContactOrderForm() {
       companyName: form.companyName,
       company: form.company,
     }
-    setContactOrder({
-      ...form,
-      withRtn,
-      typeContact: contactOrder.typeContact,
-    })
-    if (orderId) {
-      upOrder({
-        id: orderId,
-        orderData: { products: productsIds, billingInfo },
-      })
-      return
-    }
-    mutate({ products: productsIds, billingInfo })
+    mutate(billingInfo)
   }
 
   return (
@@ -249,7 +233,7 @@ export default function ContactOrderForm() {
             <Button onClick={() => resetContact()} className="mr-2">
               Regresar
             </Button>
-            <Button color="primary" type="submit">
+            <Button color="primary" type="submit" isDisabled={isPending}>
               {isPending ? (
                 <div className=" animate-spin">
                   <Spinner size={12} fill="#fff" />

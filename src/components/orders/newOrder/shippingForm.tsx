@@ -94,11 +94,8 @@ export default function ShippingOrderForm() {
       zone: zoneSelect,
     }
     setShippingInfo(shippingData)
-    if (!orderId) {
-      toast.error('No se encontro la orden.')
-      return
-    }
-    mutate({ id: orderId, form: shippingData })
+
+    mutate({ form: shippingData })
   }
   return (
     <>

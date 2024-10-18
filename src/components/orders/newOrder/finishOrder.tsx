@@ -66,10 +66,6 @@ export default function FinishOrder() {
   }
   const onSubmit: SubmitHandler<FormData> = (data) => {
     const formData = new FormData()
-    if (!orderId) {
-      toast.error('No se encontró la orden.')
-      return
-    }
     if (paymentMethod === 'BANK_TRANSFER' && !data.image) {
       toast.error('Agrega la foto del comprobante')
       return
@@ -78,7 +74,7 @@ export default function FinishOrder() {
       formData.append('file', data.image[0])
     }
     formData.append('paymentMethod', paymentMethod)
-    mutate({ id: orderId, form: formData })
+    mutate({ form: formData })
   }
 
   const checkClass = {

@@ -131,4 +131,6 @@ export type typeOrderItem = z.infer<typeof ZOrderItems>
 export type orderDetailsSchema = z.infer<typeof ZOrderDetails>
 export type createShippingInfoSchema = z.infer<typeof ZCreateShippingInfo>
 export type createOrderSchema = z.infer<typeof ZCreateOrder>
+export type contactOrderSchema = z.infer<typeof ZContactOrder>
 export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>
+export type billingInfoSchema = z.infer<typeof ZBillingInfo>

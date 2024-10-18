@@ -22,7 +22,8 @@ export default function QuantityCounter({
     (state) => state.decrementalProduct
   )
   const setQuantity = createOrderState((state) => state.setQuantity)
-  console.log(quantity, quantitySuccess)
+  const resetOrder = createOrderState((state) => state.reset)
+
   // Actualizar las cantidades en el servidor
   const { mutate, isPending } = useMutation({
     mutationFn: updateProductOrder,
@@ -30,6 +31,9 @@ export default function QuantityCounter({
       setQuantitySuccess(success.quantity)
     },
     onError: (err) => {
+      if (err.cause === 403) {
+        return resetOrder()
+      }
       setQuantity(id, quantitySuccess)
       toast.error(err.message)
     },

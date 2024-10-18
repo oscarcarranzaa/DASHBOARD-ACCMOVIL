@@ -4,6 +4,10 @@ import { useState } from 'react'
 import SelectProduct from '@/components/products/selectProduct'
 import { createOrderState } from '@/store/order'
 import ProductItems from './productItems'
+import { useMutation } from '@tanstack/react-query'
+import { addProductOrder } from '@/api/order'
+import { toast } from 'sonner'
+import Spinner from '@/components/icons/spinner'
 
 export default function AddProductOrder() {
   const [openSelect, setOpenSelect] = useState(false)
@@ -14,14 +18,31 @@ export default function AddProductOrder() {
   const setCompletedNavegation = createOrderState(
     (state) => state.setCompletedNavegation
   )
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: addProductOrder,
+    onSuccess: (success) => {
+      console.log(success)
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
   return (
     <>
       <div className="w-full">
         <div className="flex justify-between">
           <p className="font-semibold">Lista de productos</p>
-          <Button color="primary" onClick={() => setOpenSelect(!openSelect)}>
-            Agregar productos
-          </Button>
+          <div className=" flex items-center">
+            {isPending && (
+              <div className="mr-2">
+                <Spinner size={24} fill="#777" />
+              </div>
+            )}
+            <Button color="primary" onClick={() => setOpenSelect(!openSelect)}>
+              Agregar productos
+            </Button>
+          </div>
         </div>
         <div className="w-full mt-5">
           {productsInOrder.length === 0 ? (
@@ -48,7 +69,8 @@ export default function AddProductOrder() {
       {openSelect && (
         <SelectProduct
           open={setOpenSelect}
-          onSelectProduct={(value) =>
+          onSelectProduct={(value) => {
+            mutate(value.id)
             setProduct({
               id: value.id,
               name: value.name,
@@ -61,7 +83,7 @@ export default function AddProductOrder() {
               startDiscount: value.startDiscount,
               endDiscount: value.endDiscount,
             })
-          }
+          }}
         />
       )}
     </>

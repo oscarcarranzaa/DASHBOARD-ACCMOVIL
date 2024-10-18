@@ -246,6 +246,8 @@ export const createOrderState = create<State & Action>((set) => ({
   reset: () =>
     set(() => ({
       products: [],
+      completedNavegation: ['details'],
+      orderNavegation: 'details',
       contact: {
         firstName: '',
         email: '',
@@ -265,7 +267,6 @@ export const createOrderState = create<State & Action>((set) => ({
         street: '',
         reference: '',
       },
-      orderNavegation: 'details',
       orderId: null,
     })),
   resetContact: () =>

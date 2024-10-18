@@ -1,13 +1,17 @@
 import {
+  billingInfoSchema,
+  contactOrderSchema,
   createOrderSchema,
   createShippingInfoSchema,
   orderDetailsSchema,
   orderItemsSchema,
   orderSchema,
   typeOrderItem,
+  ZBillingInfo,
   ZOrder,
   ZOrderDetails,
   ZOrderItems,
+  ZOrderItemsProduct,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
@@ -33,6 +37,26 @@ export async function createOrder(orderData: createOrderSchema) {
   }
 }
 
+export async function updateContactOrder(orderData: contactOrderSchema) {
+  try {
+    const { data } = await axiosInstance.put<billingInfoSchema>(
+      '/admin/order/add/contact',
+      orderData
+    )
+    const validOrderData = ZBillingInfo.parse(data)
+    return validOrderData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al agregar la informacion de contacto.')
+    }
+  }
+}
+
 export async function updateOrder({
   orderData,
   id,
@@ -54,15 +78,13 @@ export async function updateOrder({
   }
 }
 export async function addShippingData({
-  id,
   form,
 }: {
-  id: string
   form: createShippingInfoSchema
 }) {
   try {
     const { data } = await axiosInstance.put(
-      `/admin/order/${id}/shippingData`,
+      '/admin/order/~/shippingData',
       form
     )
     return data
@@ -85,7 +107,6 @@ export async function getCountry() {
     const validCountry = ZGetCountry.parse(data)
     return validCountry
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error('Error al obtener las ciudades.', {
         cause: error.response.status,
@@ -95,16 +116,10 @@ export async function getCountry() {
     }
   }
 }
-export async function finishOrder({
-  id,
-  form,
-}: {
-  id: string
-  form: FormData
-}) {
+export async function finishOrder({ form }: { form: FormData }) {
   try {
     const { data } = await axiosInstance.put(
-      `/admin/order/${id}/finishOrder`,
+      `/admin/order/~/finishOrder`,
       form,
       {
         headers: {
@@ -171,6 +186,23 @@ export async function deleteProductOrder(id: string) {
       `/admin/order/product/${id}`
     )
     const validOrderData = ZOrderItems.parse(data)
+    return validOrderData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al eliminar el producto.')
+    }
+  }
+}
+export async function addProductOrder(id: string) {
+  try {
+    const { data } = await axiosInstance.post<orderItemsSchema>(
+      `/admin/order/product/${id}`
+    )
+    const validOrderData = ZOrderItemsProduct.parse(data)
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {

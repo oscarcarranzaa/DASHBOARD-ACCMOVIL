@@ -15,13 +15,16 @@ export default function NewOrder() {
   const [isOrderSession, setIsOrderSession] = useState<
     'pending' | 'empty' | 'exists'
   >('pending')
+
   const setOrderData = createOrderState((state) => state.setOrderData)
   const statusOrder = createOrderState((state) => state.orderNavegation)
+
   const { data, isPending } = useQuery({
     queryKey: ['order', 'persist'],
     queryFn: persistOrderQuery,
     enabled: isOrderSession === 'exists',
     retry: false,
+    refetchOnWindowFocus: false,
   })
 
   useEffect(() => {

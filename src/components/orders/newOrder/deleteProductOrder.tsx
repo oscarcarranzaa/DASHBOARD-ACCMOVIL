@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 
 export default function DeleteProductOrder({ id }: { id: string }) {
   const deletedProduct = createOrderState((state) => state.deletedProduct)
+  const resetOrder = createOrderState((state) => state.reset)
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteProductOrder,
@@ -16,6 +17,9 @@ export default function DeleteProductOrder({ id }: { id: string }) {
     },
     onError: (err) => {
       toast.error(err.message)
+      if (err.cause === 403) {
+        return resetOrder()
+      }
       if (err.cause === 404) {
         deletedProduct(id)
       }

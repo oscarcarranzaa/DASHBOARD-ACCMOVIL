@@ -8,7 +8,9 @@ import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {
   const orderProducts = createOrderState((state) => state.products)
-  const orderId = createOrderState((state) => state.orderId)
+  const completedNavegation = createOrderState(
+    (state) => state.completedNavegation
+  )
   const coupon = createOrderState((state) => state.coupon)
   const productsTotal = orderProducts.map((p) => {
     return {
@@ -28,6 +30,7 @@ export default function OrderResume() {
   const calcAmountCoupon = calcDiscountCoupon - total
   const totalDiscount = discount + calcAmountCoupon
 
+  const isCompletedContact = completedNavegation.find((n) => n === 'contact')
   return (
     <>
       <div className=" bg-white border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
@@ -79,7 +82,7 @@ export default function OrderResume() {
             </ul>
           </div>
           <div className="mt-5 border-t border-zinc-300 px-2">
-            {orderProducts.length > 0 && orderId && (
+            {orderProducts.length > 0 && isCompletedContact && (
               <div className="py-5">
                 <RendeemCoupon />
               </div>

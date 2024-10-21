@@ -3,7 +3,7 @@
 import DisplayPrice from '@/components/displayPrice'
 import { createOrderState } from '@/store/order'
 import CalcSubToltalOrder from '@/utils/calcSubTotalOrder'
-import { Avatar, Badge, Input } from '@nextui-org/react'
+import { Avatar, Badge, Input, Spinner } from '@nextui-org/react'
 import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {
@@ -50,8 +50,10 @@ export default function OrderResume() {
                   ? p.media.qualities[0].src
                   : '/static/product.webp'
                 return (
-                  <li key={p.id}>
-                    <div className=" flex p-2">
+                  <li key={p.id} className=" relative">
+                    <div
+                      className={` flex p-2${p.isSaved ? '' : ' select-none opacity-30 hover:cursor-not-allowed'}`}
+                    >
                       <div className="w-16 flex-none ">
                         <Badge
                           content={p.quantity}
@@ -66,6 +68,11 @@ export default function OrderResume() {
                           />
                         </Badge>
                       </div>
+                      {!p.isSaved && (
+                        <div className=" absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center">
+                          <Spinner />
+                        </div>
+                      )}
                       <div className="text-sm ml-1">
                         <p className=" font-medium line-clamp-2">{p.name}</p>
                         <DisplayPrice

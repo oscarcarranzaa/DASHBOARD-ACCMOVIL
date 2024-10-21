@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import Spinner from '@/components/icons/spinner'
 
 export default function AddProductOrder() {
+  const [productId, setProductId] = useState('')
   const [openSelect, setOpenSelect] = useState(false)
   const setProduct = createOrderState((state) => state.addProduct)
   const productsInOrder = createOrderState((state) => state.products)
@@ -18,13 +19,16 @@ export default function AddProductOrder() {
   const setCompletedNavegation = createOrderState(
     (state) => state.setCompletedNavegation
   )
+  const setIsSaveProduct = createOrderState((state) => state.setIsSaveProduct)
+  const deletedProduct = createOrderState((state) => state.deletedProduct)
 
   const { mutate, isPending } = useMutation({
     mutationFn: addProductOrder,
     onSuccess: (success) => {
-      console.log(success)
+      setIsSaveProduct(success.product.id)
     },
     onError: (error) => {
+      deletedProduct(productId)
       toast.error(error.message)
     },
   })
@@ -70,12 +74,17 @@ export default function AddProductOrder() {
         <SelectProduct
           open={setOpenSelect}
           onSelectProduct={(value) => {
-            mutate(value.id)
+            const findProduct = productsInOrder.find((p) => p.id === value.id)
+            if (!findProduct) {
+              mutate(value.id)
+            }
+            setProductId(value.id)
             setProduct({
               id: value.id,
               name: value.name,
               price: value.price,
               quantity: 1,
+              isSaved: false,
               stock: value.stock,
               sku: value.sku,
               media: value.media,

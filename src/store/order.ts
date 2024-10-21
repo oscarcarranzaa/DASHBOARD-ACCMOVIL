@@ -8,6 +8,7 @@ import { create } from 'zustand'
 type productOrder = {
   id: string
   name: string
+  isSaved: boolean
   price: number
   quantity: number
   stock: number
@@ -60,6 +61,7 @@ type State = {
 }
 type Action = {
   addProduct: (product: productOrder) => void
+  setIsSaveProduct: (id: string) => void
   navegation: (nav: State['orderNavegation']) => void
   addCoupon: (coupon: couponCode) => void
   removeCoupon: () => void
@@ -105,7 +107,6 @@ export const createOrderState = create<State & Action>((set) => ({
       const existingProduct = state.products.find(
         (product) => product.id === newProduct.id
       )
-
       if (existingProduct) {
         const totalQuantity = existingProduct.quantity + newProduct.quantity
         if (totalQuantity > newProduct.stock) {
@@ -130,6 +131,22 @@ export const createOrderState = create<State & Action>((set) => ({
   setOrderId: (id) =>
     set((state) => {
       return { ...state, orderId: id }
+    }),
+  setIsSaveProduct: (id) =>
+    set((state) => {
+      const existingProduct = state.products.find(
+        (product) => product.id === id
+      )
+      if (existingProduct) {
+        return {
+          products: state.products.map((product) =>
+            product.id === id ? { ...product, isSaved: true } : product
+          ),
+        }
+      } else {
+        toast.error('No se encontró el producto.')
+        return { products: state.products }
+      }
     }),
   setCompletedNavegation: (nav) =>
     set((state) => {
@@ -305,6 +322,7 @@ export const createOrderState = create<State & Action>((set) => ({
           price,
           stock,
           sku,
+          isSaved: true,
           media,
           discountPrice,
           startDiscount,

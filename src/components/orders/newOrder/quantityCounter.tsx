@@ -9,12 +9,12 @@ import { useDebouncedCallback } from 'use-debounce'
 
 export default function QuantityCounter({
   id,
-  stock,
   quantity,
+  isSaved,
 }: {
   id: string
   quantity: number
-  stock: number
+  isSaved: boolean
 }) {
   const [quantitySuccess, setQuantitySuccess] = useState(quantity)
   const incrementalProduct = createOrderState((state) => state.incrementProduct)
@@ -28,7 +28,7 @@ export default function QuantityCounter({
   const { mutate, isPending } = useMutation({
     mutationFn: updateProductOrder,
     onSuccess: (success) => {
-      setQuantitySuccess(success.quantity)
+      setQuantitySuccess(success.item.quantity)
     },
     onError: (err) => {
       if (err.cause === 403) {
@@ -48,7 +48,8 @@ export default function QuantityCounter({
     if (quantity !== quantitySuccess) {
       debounce()
     }
-  }, [quantity])
+  }, [quantity, debounce, quantitySuccess])
+
   return (
     <>
       <div className="flex min-w-36 items-center">
@@ -60,7 +61,7 @@ export default function QuantityCounter({
           onClick={() => {
             decrementalProduct(id)
           }}
-          isDisabled={disabledDecremental || isPending}
+          isDisabled={disabledDecremental || isPending || !isSaved}
         >
           -
         </Button>
@@ -70,7 +71,7 @@ export default function QuantityCounter({
           size="sm"
           className=" w-5 h-5"
           variant="faded"
-          isDisabled={isPending}
+          isDisabled={isPending || !isSaved}
           onClick={() => {
             incrementalProduct(id)
           }}

@@ -167,7 +167,7 @@ export default function ShippingOrderForm() {
             </Autocomplete>
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-2 gap-5">
+        <div className="mt-10 grid grid-cols-2 gap-7">
           <div className="grid gap-2">
             <Controller
               name="street"
@@ -201,9 +201,7 @@ export default function ShippingOrderForm() {
             />
           </div>
           <div>
-            <p className="text-sm font-semibold mb-2 ">
-              Contacto de quien recibe
-            </p>
+            <p className=" font-semibold mb-7 ">Contacto de quien recibe</p>
             <div className="grid gap-2">
               <Controller
                 name="name"

@@ -8,10 +8,8 @@ export const ZOrderItems = z.object({
   orderId: z.string(),
   productId: z.string(),
   quantity: z.number(),
-  price: z.number(),
+  price: z.number().nullable().optional(),
   discountPrice: z.number().nullable().optional(),
-  discount: z.number().nullable(),
-  total: z.number(),
 })
 
 export const ZTransaction = z.object({
@@ -67,6 +65,8 @@ export const ZOrder = z.object({
   orderId: z.string(),
   customerId: z.string().nullable(),
   totalAmount: z.number(),
+  subTotal: z.number(),
+  discountTotal: z.number(),
   couponDiscount: z.number().nullable(),
   pointsDiscount: z.number().nullable().optional(),
   status: z.enum([
@@ -85,6 +85,12 @@ export const ZOrder = z.object({
   billingInfo: ZBillingInfo.optional().nullable(),
   updatedAt: z.string(),
   createdAt: z.string(),
+})
+const ZOrderInfo = ZOrder.omit({
+  billingInfo: true,
+  shippingInfo: true,
+  orderItems: true,
+  transaction: true,
 })
 
 const ZProductsOrder = z.object({
@@ -118,6 +124,15 @@ export const ZOrderItemsProduct = ZOrderItems.merge(
     product: ZProduct.omit({ User: true }),
   })
 )
+export const ZAddProductOrder = z.object({
+  product: ZProductInfo,
+  order: ZOrderInfo,
+})
+
+export const ZOrderItemUpdate = z.object({
+  item: ZOrderItems,
+  order: ZOrderInfo,
+})
 export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
   z.object({
     orderItems: z.array(ZOrderItemsProduct),
@@ -134,3 +149,5 @@ export type createOrderSchema = z.infer<typeof ZCreateOrder>
 export type contactOrderSchema = z.infer<typeof ZContactOrder>
 export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>
 export type billingInfoSchema = z.infer<typeof ZBillingInfo>
+export type addProductOrderSchema = z.infer<typeof ZAddProductOrder>
+export type orderItemUpdatedSchema = z.infer<typeof ZOrderItemUpdate>

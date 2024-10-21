@@ -30,6 +30,7 @@ export default function FinishOrder() {
 
   const orderId = createOrderState((state) => state.orderId)
   const resetOrder = createOrderState((state) => state.reset)
+  const orderTotal = createOrderState((state)=> state.products)
   const { mutate, isPending } = useMutation({
     mutationFn: finishOrder,
     onSuccess: (sc) => {

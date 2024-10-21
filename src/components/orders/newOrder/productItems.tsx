@@ -21,6 +21,7 @@ type TProps = {
   id: string
   name: string
   media?: MediaSchema | null
+  isSaved: boolean
   price: number
   quantity: number
   stock: number
@@ -51,7 +52,7 @@ export default function ProductItems() {
             <QuantityCounter
               quantity={orderProduct.quantity}
               id={orderProduct.id}
-              stock={orderProduct.stock}
+              isSaved={orderProduct.isSaved}
             />
           )
 
@@ -64,7 +65,10 @@ export default function ProductItems() {
                 startDate={orderProduct.startDiscount}
                 endDate={orderProduct.endDiscount}
               />
-              <DeleteProductOrder id={orderProduct.id} />
+              <DeleteProductOrder
+                id={orderProduct.id}
+                isSaved={orderProduct.isSaved}
+              />
             </div>
           )
       }

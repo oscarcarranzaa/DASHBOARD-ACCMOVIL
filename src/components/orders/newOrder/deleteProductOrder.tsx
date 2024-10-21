@@ -6,14 +6,20 @@ import { Button } from '@nextui-org/react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-export default function DeleteProductOrder({ id }: { id: string }) {
+export default function DeleteProductOrder({
+  id,
+  isSaved,
+}: {
+  id: string
+  isSaved: boolean
+}) {
   const deletedProduct = createOrderState((state) => state.deletedProduct)
   const resetOrder = createOrderState((state) => state.reset)
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteProductOrder,
     onSuccess: (data) => {
-      deletedProduct(data.productId)
+      deletedProduct(data.item.productId)
     },
     onError: (err) => {
       toast.error(err.message)
@@ -32,6 +38,7 @@ export default function DeleteProductOrder({ id }: { id: string }) {
       size="sm"
       className="w-10 h-10"
       onClick={() => mutate(id)}
+      isDisabled={!isSaved}
     >
       <span className="dark:stroke-white stroke-black">
         {isPending ? <Spinner size={16} fill="#777" /> : <TrashSVG size={16} />}

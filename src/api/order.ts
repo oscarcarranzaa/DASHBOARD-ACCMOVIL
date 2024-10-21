@@ -1,17 +1,20 @@
 import {
+  addProductOrderSchema,
   billingInfoSchema,
   contactOrderSchema,
   createOrderSchema,
   createShippingInfoSchema,
   orderDetailsSchema,
   orderItemsSchema,
+  orderItemUpdatedSchema,
   orderSchema,
   typeOrderItem,
+  ZAddProductOrder,
   ZBillingInfo,
   ZOrder,
   ZOrderDetails,
   ZOrderItems,
-  ZOrderItemsProduct,
+  ZOrderItemUpdate,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
@@ -148,6 +151,7 @@ export async function persistOrderQuery() {
     const validOrderData = ZOrderDetails.parse(data)
     return validOrderData
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,
@@ -164,11 +168,11 @@ type TUpdateQuantityProductOrder = {
 }
 export async function updateProductOrder(product: TUpdateQuantityProductOrder) {
   try {
-    const { data } = await axiosInstance.put<orderItemsSchema>(
+    const { data } = await axiosInstance.put<orderItemUpdatedSchema>(
       '/admin/order/product/quantity/update',
       product
     )
-    const validOrderData = ZOrderItems.parse(data)
+    const validOrderData = ZOrderItemUpdate.parse(data)
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -182,10 +186,10 @@ export async function updateProductOrder(product: TUpdateQuantityProductOrder) {
 }
 export async function deleteProductOrder(id: string) {
   try {
-    const { data } = await axiosInstance.delete<typeOrderItem>(
+    const { data } = await axiosInstance.delete<orderItemUpdatedSchema>(
       `/admin/order/product/${id}`
     )
-    const validOrderData = ZOrderItems.parse(data)
+    const validOrderData = ZOrderItemUpdate.parse(data)
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -199,10 +203,10 @@ export async function deleteProductOrder(id: string) {
 }
 export async function addProductOrder(id: string) {
   try {
-    const { data } = await axiosInstance.post<orderItemsSchema>(
+    const { data } = await axiosInstance.post<addProductOrderSchema>(
       `/admin/order/product/${id}`
     )
-    const validOrderData = ZOrderItemsProduct.parse(data)
+    const validOrderData = ZAddProductOrder.parse(data)
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -210,7 +214,7 @@ export async function addProductOrder(id: string) {
         cause: error.response.status,
       })
     } else {
-      throw new Error('Error al eliminar el producto.')
+      throw new Error('Error al agregar producto a la orden.')
     }
   }
 }

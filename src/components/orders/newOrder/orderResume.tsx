@@ -11,26 +11,20 @@ export default function OrderResume() {
   const completedNavegation = createOrderState(
     (state) => state.completedNavegation
   )
+  const orderInfo = createOrderState((state) => state.orderInfo)
   const coupon = createOrderState((state) => state.coupon)
-  const productsTotal = orderProducts.map((p) => {
-    return {
-      price: p.price,
-      quantity: p.quantity,
-      startDiscount: p.startDiscount,
-      endDiscount: p.endDiscount,
-      discountPrice: p.discountPrice,
-    }
-  })
-  const { total, subtotal, discount } = CalcSubToltalOrder({
-    items: productsTotal,
-  })
-  const calcDiscountCoupon = coupon
-    ? total - (total * coupon.discount) / 100
-    : total
-  const calcAmountCoupon = calcDiscountCoupon - total
-  const totalDiscount = discount + calcAmountCoupon
 
   const isCompletedContact = completedNavegation.find((n) => n === 'contact')
+
+  const orderAmount = {
+    subTotal: orderInfo?.totalAmount ?? 0,
+    totalAmount: orderInfo?.totalAmount ?? 0,
+    discountTotal: orderInfo?.discountTotal ? -orderInfo.discountTotal : 0,
+    couponDiscount: orderInfo?.couponDiscount ? -orderInfo.couponDiscount : 0,
+    shippingCost: orderInfo?.shippingCost ?? 0,
+  }
+  const { subTotal, totalAmount, discountTotal, couponDiscount, shippingCost } =
+    orderAmount
   return (
     <>
       <div className=" bg-white border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
@@ -99,7 +93,16 @@ export default function OrderResume() {
             <li className="mt-2 flex justify-between text-sm">
               <p>Subtotal:</p>
               <p>
-                {subtotal.toLocaleString('es-HN', {
+                {orderInfo?.subTotal.toLocaleString('es-HN', {
+                  style: 'currency',
+                  currency: 'HNL',
+                })}
+              </p>
+            </li>
+            <li className="flex justify-between text-sm">
+              <p>Costo de envío:</p>
+              <p>
+                {shippingCost.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}
@@ -109,7 +112,7 @@ export default function OrderResume() {
               <li className=" flex justify-between text-sm">
                 <p>Cupón aplicado:</p>
                 <p>
-                  {calcAmountCoupon.toLocaleString('es-HN', {
+                  {couponDiscount.toLocaleString('es-HN', {
                     style: 'currency',
                     currency: 'HNL',
                   })}
@@ -119,7 +122,7 @@ export default function OrderResume() {
             <li className=" flex justify-between  text-red-500 font-semibold ">
               <p>Descuento total:</p>
               <p>
-                {totalDiscount.toLocaleString('es-HN', {
+                {discountTotal.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}
@@ -128,7 +131,7 @@ export default function OrderResume() {
             <li className=" flex justify-between font-bold mt-2 text-xl">
               <p>Total:</p>
               <p>
-                {calcDiscountCoupon.toLocaleString('es-HN', {
+                {orderInfo?.totalAmount.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}

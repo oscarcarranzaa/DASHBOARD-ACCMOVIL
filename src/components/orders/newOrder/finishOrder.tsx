@@ -30,7 +30,7 @@ export default function FinishOrder() {
 
   const orderId = createOrderState((state) => state.orderId)
   const resetOrder = createOrderState((state) => state.reset)
-  const orderTotal = createOrderState((state)=> state.products)
+  const orderInfo = createOrderState((state) => state.orderInfo)
   const { mutate, isPending } = useMutation({
     mutationFn: finishOrder,
     onSuccess: (sc) => {
@@ -65,7 +65,12 @@ export default function FinishOrder() {
       setValue('image', null)
     }
   }
+  const totalPaid = orderInfo?.totalAmount ?? 0
   const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (totalPaid < 1) {
+      toast.warning('No se puede procesar la orden en 0.')
+      return
+    }
     const formData = new FormData()
     if (paymentMethod === 'BANK_TRANSFER' && !data.image) {
       toast.error('Agrega la foto del comprobante')
@@ -87,7 +92,6 @@ export default function FinishOrder() {
     ),
     label: 'w-full',
   }
-
   const disabledButton = isPending || successTransact
   return (
     <div>
@@ -144,7 +148,7 @@ export default function FinishOrder() {
             ) : (
               <ClockSVG size={26} />
             )}
-            Dejar pendiente pago
+            Dejar pendiente pago <b>(HNL {totalPaid})</b>
           </Button>
         )}
         {paymentMethod === 'CASH' && (
@@ -160,7 +164,7 @@ export default function FinishOrder() {
             ) : (
               <Money size={26} />
             )}
-            Pagar en efectivo
+            Pagar en efectivo <b>(HNL {totalPaid})</b>
           </Button>
         )}
         {paymentMethod === 'BANK_TRANSFER' && (
@@ -203,7 +207,7 @@ export default function FinishOrder() {
               ) : (
                 <Bank size={26} />
               )}
-              Procesar transferencia
+              Procesar transferencia <b>(HNL {totalPaid})</b>
             </Button>
           </>
         )}

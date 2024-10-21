@@ -15,11 +15,13 @@ export default function DeleteProductOrder({
 }) {
   const deletedProduct = createOrderState((state) => state.deletedProduct)
   const resetOrder = createOrderState((state) => state.reset)
+  const setOrderInfo = createOrderState((state) => state.setOrderInfo)
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteProductOrder,
     onSuccess: (data) => {
       deletedProduct(data.item.productId)
+      setOrderInfo(data.order)
     },
     onError: (err) => {
       toast.error(err.message)

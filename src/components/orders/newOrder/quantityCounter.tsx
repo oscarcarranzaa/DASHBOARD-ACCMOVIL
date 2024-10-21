@@ -23,12 +23,14 @@ export default function QuantityCounter({
   )
   const setQuantity = createOrderState((state) => state.setQuantity)
   const resetOrder = createOrderState((state) => state.reset)
+  const setOrderInfo = createOrderState((state) => state.setOrderInfo)
 
   // Actualizar las cantidades en el servidor
   const { mutate, isPending } = useMutation({
     mutationFn: updateProductOrder,
     onSuccess: (success) => {
       setQuantitySuccess(success.item.quantity)
+      setOrderInfo(success.order)
     },
     onError: (err) => {
       if (err.cause === 403) {
@@ -42,13 +44,13 @@ export default function QuantityCounter({
 
   const debounce = useDebouncedCallback(() => {
     mutate({ id, quantity })
-  }, 800)
+  }, 400)
 
   useEffect(() => {
     if (quantity !== quantitySuccess) {
       debounce()
     }
-  }, [quantity, debounce, quantitySuccess])
+  }, [quantity, quantitySuccess])
 
   return (
     <>

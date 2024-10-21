@@ -12,6 +12,7 @@ import Spinner from '@/components/icons/spinner'
 export default function AddProductOrder() {
   const [productId, setProductId] = useState('')
   const [openSelect, setOpenSelect] = useState(false)
+
   const setProduct = createOrderState((state) => state.addProduct)
   const productsInOrder = createOrderState((state) => state.products)
   const setOrderNavegation = createOrderState((state) => state.navegation)
@@ -21,11 +22,13 @@ export default function AddProductOrder() {
   )
   const setIsSaveProduct = createOrderState((state) => state.setIsSaveProduct)
   const deletedProduct = createOrderState((state) => state.deletedProduct)
+  const setOrderInfo = createOrderState((state) => state.setOrderInfo)
 
   const { mutate, isPending } = useMutation({
     mutationFn: addProductOrder,
     onSuccess: (success) => {
       setIsSaveProduct(success.product.id)
+      setOrderInfo(success.order)
     },
     onError: (error) => {
       deletedProduct(productId)

@@ -77,6 +77,7 @@ export const ZOrder = z.object({
     'refund',
     'creating',
   ]),
+  shippingCost: z.number().nullable(),
   deliveryMethod: z.enum(['shipment', 'pickup']),
   note: z.string().nullable(),
   orderItems: z.array(ZOrderItems),

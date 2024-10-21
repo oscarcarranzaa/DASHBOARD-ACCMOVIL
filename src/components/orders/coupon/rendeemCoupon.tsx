@@ -18,6 +18,8 @@ export default function RendeemCoupon() {
   const addCoupon = createOrderState((state) => state.addCoupon)
   const removeCoupon = createOrderState((state) => state.removeCoupon)
   const coupon = createOrderState((state) => state.coupon)
+  const setOrderInfo = createOrderState((state) => state.setOrderInfo)
+
   const { handleSubmit, control, reset } = useForm<TCode>({
     defaultValues,
   })

@@ -30,6 +30,25 @@ type ShippingAddress = {
   reference?: string | null
   documentNumber: string | null
 }
+type OrderInfo = {
+  id: string
+  subTotal: number
+  discountTotal: number
+  totalAmount: number
+  updatedAt: string
+  createdAt: string
+  status:
+    | 'pending'
+    | 'processing'
+    | 'cancelled'
+    | 'completed'
+    | 'refund'
+    | 'creating'
+  deliveryMethod: 'shipment' | 'pickup'
+  shippingCost?: number | null
+  couponDiscount?: number | null
+  pointsDiscount?: number | null
+}
 type contactOrder = {
   customerId?: string | null
   firstName?: string | null
@@ -54,6 +73,7 @@ type State = {
   products: productOrder[]
   contact: contactOrder
   shippingInfo: ShippingAddress
+  orderInfo?: OrderInfo
   coupon?: couponCode
   orderNavegation: 'details' | 'contact' | 'shipping' | 'finish'
   completedNavegation: string[]
@@ -75,6 +95,7 @@ type Action = {
   resetContact: () => void
   setCompletedNavegation: (nav: string) => void
   setOrderData: (data: orderDetailsSchema) => void
+  setOrderInfo: (data: OrderInfo) => void
   reset: () => void
 }
 
@@ -260,10 +281,15 @@ export const createOrderState = create<State & Action>((set) => ({
     set((state) => {
       return { ...state, coupon: undefined }
     }),
+  setOrderInfo: (info) =>
+    set((state) => {
+      return { ...state, orderInfo: info }
+    }),
   reset: () =>
     set(() => ({
       products: [],
       completedNavegation: ['details'],
+      orderInfo: undefined,
       orderNavegation: 'details',
       contact: {
         firstName: '',
@@ -403,9 +429,23 @@ export const createOrderState = create<State & Action>((set) => ({
         coupon = { code, discount, maximumExpense, minimumExpense }
       }
 
+      const orderInfo = {
+        id: order.id,
+        subTotal: order.subTotal,
+        totalAmount: order.totalAmount,
+        discountTotal: order.discountTotal,
+        updatedAt: order.updatedAt,
+        createdAt: order.createdAt,
+        status: order.status,
+        deliveryMethod: order.deliveryMethod,
+        shippingCost: order.shippingCost,
+        couponDiscount: order.couponDiscount,
+        pointsDiscount: order.pointsDiscount,
+      }
       // Devolvemos el nuevo estado actualizado
       return {
         ...stateOrder,
+        orderInfo,
         completedNavegation: completedNav,
         products, // Actualizamos los productos
         contact, // Actualizamos la información de contacto

@@ -87,7 +87,7 @@ export const ZOrder = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
 })
-const ZOrderInfo = ZOrder.omit({
+export const ZOrderInfo = ZOrder.omit({
   billingInfo: true,
   shippingInfo: true,
   orderItems: true,
@@ -134,11 +134,15 @@ export const ZOrderItemUpdate = z.object({
   item: ZOrderItems,
   order: ZOrderInfo,
 })
+export const ZOrderCouponAdd = z.object({
+  coupon: ZCoupon,
+  order: ZOrderInfo,
+})
 export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
   z.object({
     orderItems: z.array(ZOrderItemsProduct),
     customer: ZCustomer.nullable(),
-    coupon: ZCoupon.nullable(),
+    coupon: ZCoupon.nullable().optional(),
   })
 )
 export type orderSchema = z.infer<typeof ZOrder>
@@ -152,3 +156,5 @@ export type newBillingInfoSchema = z.infer<typeof ZNewBillingInfo>
 export type billingInfoSchema = z.infer<typeof ZBillingInfo>
 export type addProductOrderSchema = z.infer<typeof ZAddProductOrder>
 export type orderItemUpdatedSchema = z.infer<typeof ZOrderItemUpdate>
+export type orderInfoSchema = z.infer<typeof ZOrderInfo>
+export type orderCouponAddSchema = z.infer<typeof ZOrderCouponAdd>

@@ -7,6 +7,12 @@ import {
   ZCoupon,
   ZGetListCoupon,
 } from '@/types/offers'
+import {
+  orderCouponAddSchema,
+  orderInfoSchema,
+  ZOrderCouponAdd,
+  ZOrderInfo,
+} from '@/types/order'
 import { FilterQueryUrl } from '@/utils/filterQueryUrl'
 import { isAxiosError } from 'axios'
 
@@ -85,10 +91,10 @@ export async function handleStateCoupon({
 
 export async function checkCouponCode({ code }: { code: string }) {
   try {
-    const { data } = await axiosInstance.get<couponSchema>(
+    const { data } = await axiosInstance.get<orderCouponAddSchema>(
       `/admin/offerts/coupon/check/${code}`
     )
-    const validCoupon = ZCoupon.parse(data)
+    const validCoupon = ZOrderCouponAdd.parse(data)
     return validCoupon
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -96,7 +102,24 @@ export async function checkCouponCode({ code }: { code: string }) {
         cause: error.response.status,
       })
     } else {
-      throw new Error('Error al cambiar el estado del cupon.')
+      throw new Error('Error al comprobar el cupon.')
+    }
+  }
+}
+export async function removeOrderCoupon() {
+  try {
+    const { data } = await axiosInstance.delete<orderInfoSchema>(
+      '/admin/offerts/coupon/remove'
+    )
+    const validCoupon = ZOrderInfo.parse(data)
+    return validCoupon
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al remover el cupon.')
     }
   }
 }

@@ -1,5 +1,6 @@
 import { getAllCustomer } from '@/api/customer'
 import CloseSVG from '@/components/icons/close'
+import { CustomerProfileSVG } from '@/components/icons/customerProfile'
 import Search from '@/components/UI/search'
 import useOutsideClick from '@/hooks/useOutSideClick'
 import { customerSchema } from '@/types/customer'
@@ -36,7 +37,7 @@ export default function SelectCustomer({
         className={`fixed w-screen h-screen top-0  bottom-0 left-0 right-0  z-50 ${openModal ? 'hidden' : ''}`}
         style={{
           backgroundColor: 'var(--box-opacity)',
-          backdropFilter: 'blur(8px)',
+          backdropFilter: 'blur(4px)',
         }}
       >
         <div
@@ -74,17 +75,18 @@ export default function SelectCustomer({
                             closeModal()
                           }}
                         >
-                          <div className="flex gap-2 dark:bg-zinc-950 p-3 rounded-md mt-1 border-2 border-transparent hover:border-primary text-left">
+                          <div className="flex gap-2 dark:bg-zinc-950 bg-white p-3 rounded-md mt-1 border-2 border-transparent hover:border-primary text-left">
                             <div className=" flex-none">
                               <Avatar
                                 src={results.avatar ?? undefined}
+                                icon={<CustomerProfileSVG size={50} />}
                                 isBordered
                                 showFallback
                               />
                             </div>
                             <div>
                               <p className="text-sm font-medium">{`${results.firstName} ${results.lastName}`}</p>
-                              <p className="text-xs opacity-60">
+                              <p className="text-xs opacity-70">
                                 {results.email}
                               </p>
                             </div>

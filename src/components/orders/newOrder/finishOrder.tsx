@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import SquareImage from '@/components/squareImage'
 import { toast } from 'sonner'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { finishOrder } from '@/api/order'
 import { createOrderState } from '@/store/order'
 import { useRouter } from 'next/navigation'
@@ -27,17 +27,19 @@ export default function FinishOrder() {
   >('PENDING')
 
   const router = useRouter()
+  const queryClient = useQueryClient()
 
-  const orderId = createOrderState((state) => state.orderId)
   const resetOrder = createOrderState((state) => state.reset)
   const orderInfo = createOrderState((state) => state.orderInfo)
+
   const { mutate, isPending } = useMutation({
     mutationFn: finishOrder,
     onSuccess: (sc) => {
       setSuccessTransact(true)
       resetOrder()
-      if (orderId) {
-        router.push(`${orderId}/finalizado`)
+      queryClient.invalidateQueries({ queryKey: ['order', 'persist'] })
+      if (orderInfo) {
+        router.push(`${orderInfo.id}/finalizado`)
       }
     },
     onError: () => {
@@ -66,6 +68,8 @@ export default function FinishOrder() {
     }
   }
   const totalPaid = orderInfo?.totalAmount ?? 0
+  const paidInCents = Math.round(totalPaid * 100) / 100
+
   const onSubmit: SubmitHandler<FormData> = (data) => {
     if (totalPaid < 1) {
       toast.warning('No se puede procesar la orden en 0.')
@@ -148,7 +152,7 @@ export default function FinishOrder() {
             ) : (
               <ClockSVG size={26} />
             )}
-            Dejar pendiente pago <b>(HNL {totalPaid})</b>
+            Dejar pendiente pago <b>(HNL {paidInCents})</b>
           </Button>
         )}
         {paymentMethod === 'CASH' && (
@@ -164,7 +168,7 @@ export default function FinishOrder() {
             ) : (
               <Money size={26} />
             )}
-            Pagar en efectivo <b>(HNL {totalPaid})</b>
+            Pagar en efectivo <b>(HNL {paidInCents})</b>
           </Button>
         )}
         {paymentMethod === 'BANK_TRANSFER' && (
@@ -207,7 +211,7 @@ export default function FinishOrder() {
               ) : (
                 <Bank size={26} />
               )}
-              Procesar transferencia <b>(HNL {totalPaid})</b>
+              Procesar transferencia <b>(HNL {paidInCents})</b>
             </Button>
           </>
         )}

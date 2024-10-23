@@ -1,6 +1,7 @@
-import { checkCouponCode } from '@/api/offerts'
+import { checkCouponCode, removeOrderCoupon } from '@/api/offerts'
 import ArrowSVG from '@/components/icons/arrow'
 import Coupon from '@/components/icons/coupon'
+import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
 import { Input, Button } from '@nextui-org/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -23,26 +24,39 @@ export default function RendeemCoupon() {
   const { handleSubmit, control, reset } = useForm<TCode>({
     defaultValues,
   })
-  const { mutate, error } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: checkCouponCode,
     onSuccess: (success) => {
       addCoupon({
-        code: success.code,
-        discount: success.discount,
-        minimumExpense: success.minimumExpense ?? null,
-        maximumExpense: success.maximumExpense ?? null,
+        code: success.coupon.code,
+        discount: success.coupon.discount,
+        minimumExpense: success.coupon.minimumExpense ?? null,
+        maximumExpense: success.coupon.maximumExpense ?? null,
       })
+      setOrderInfo(success.order)
       reset()
-      toast.success(`Se aplicó el código ${success.code} a su pedido.`)
+      toast.success(`Se aplicó el código ${success.coupon.code} a su pedido.`)
     },
     onError: () => {
       reset()
     },
   })
+  const { mutate: mutateCoupon, isPending: isPendingCoupon } = useMutation({
+    mutationFn: removeOrderCoupon,
+    onSuccess: (order) => {
+      setOrderInfo(order)
+      removeCoupon()
+    },
+    onError: (err) => {
+      toast.error(err.message)
+    },
+  })
   const submitCode = (form: TCode) => {
     mutate(form)
   }
-
+  const deleteCoupon = () => {
+    mutateCoupon()
+  }
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -67,10 +81,18 @@ export default function RendeemCoupon() {
                     type="submit"
                     className="  rounded-full w-8 h-8"
                     variant="flat"
+                    isDisabled={isPending}
+                    disabled={isPending}
                   >
-                    <div className="rotate-180">
-                      <ArrowSVG size={20} />
-                    </div>
+                    {isPending ? (
+                      <div>
+                        <Spinner size={18} fill="#777" />
+                      </div>
+                    ) : (
+                      <div className="rotate-180">
+                        <ArrowSVG size={20} />
+                      </div>
+                    )}
                   </Button>
                 }
               />
@@ -86,8 +108,18 @@ export default function RendeemCoupon() {
                   {coupon.code} (- {coupon.discount} %)
                 </p>
               </div>
-              <button className=" text-red-500 text-sm" onClick={removeCoupon}>
-                Remover
+              <button
+                className=" text-red-500 text-sm"
+                onClick={deleteCoupon}
+                disabled={isPendingCoupon}
+              >
+                {isPendingCoupon ? (
+                  <div>
+                    <Spinner size={18} fill="#777" />
+                  </div>
+                ) : (
+                  'Remover'
+                )}
               </button>
             </div>
           )}

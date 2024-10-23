@@ -25,6 +25,7 @@ export default function OrderResume() {
   }
   const { subTotal, totalAmount, discountTotal, couponDiscount, shippingCost } =
     orderAmount
+  console.log(discountTotal)
   return (
     <>
       <div className=" bg-white border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">
@@ -93,7 +94,7 @@ export default function OrderResume() {
             <li className="mt-2 flex justify-between text-sm">
               <p>Subtotal:</p>
               <p>
-                {orderInfo?.subTotal.toLocaleString('es-HN', {
+                {subTotal.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}
@@ -119,19 +120,21 @@ export default function OrderResume() {
                 </p>
               </li>
             )}
-            <li className=" flex justify-between  text-red-500 font-semibold ">
-              <p>Descuento total:</p>
-              <p>
-                {discountTotal.toLocaleString('es-HN', {
-                  style: 'currency',
-                  currency: 'HNL',
-                })}
-              </p>
-            </li>
+            {discountTotal < 0 && (
+              <li className=" flex justify-between  text-red-500 font-semibold ">
+                <p>Descuento total:</p>
+                <p>
+                  {discountTotal.toLocaleString('es-HN', {
+                    style: 'currency',
+                    currency: 'HNL',
+                  })}
+                </p>
+              </li>
+            )}
             <li className=" flex justify-between font-bold mt-2 text-xl">
               <p>Total:</p>
               <p>
-                {orderInfo?.totalAmount.toLocaleString('es-HN', {
+                {totalAmount.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}

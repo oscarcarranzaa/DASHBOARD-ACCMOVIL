@@ -1,7 +1,11 @@
+import OrderItemsSuccess from '@/components/orders/orderSuccess/orderItems'
+
 export default function FinishOrder() {
   return (
     <>
-      <div>Orden finalizada</div>
+      <div>
+        <OrderItemsSuccess />
+      </div>
     </>
   )
 }

@@ -1,14 +1,26 @@
 export const orderRows = [
   {
-    name: 'Nombre',
-    key: 'name',
+    name: 'Pedido',
+    key: 'order',
   },
   {
-    name: 'Correo/Teléfono',
-    key: 'email',
+    name: 'Cliente',
+    key: 'customer',
   },
   {
-    name: 'Estado/Genero',
+    name: 'Estado',
     key: 'status',
+  },
+  {
+    name: 'Total / Estado',
+    key: 'transaction',
+  },
+  {
+    name: 'Productos',
+    key: 'products',
+  },
+  {
+    name: 'Fecha',
+    key: 'date',
   },
 ]

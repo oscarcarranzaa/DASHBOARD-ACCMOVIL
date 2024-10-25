@@ -26,6 +26,7 @@ export interface IUploads {
   id: string
 }
 export type filterQueryType = {
+  status?: string
   page: string
   limit?: string
   q?: string

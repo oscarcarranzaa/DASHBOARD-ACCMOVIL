@@ -7,17 +7,21 @@ import {
   orderDetailsSchema,
   orderItemsSchema,
   orderItemUpdatedSchema,
+  orderListSchema,
   orderSchema,
   typeOrderItem,
   ZAddProductOrder,
   ZBillingInfo,
+  ZGetOrderList,
   ZOrder,
   ZOrderDetails,
   ZOrderItems,
   ZOrderItemUpdate,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
+import { filterQueryType } from '@/types'
 import { countrySchema, ZGetCountry } from '@/types/schemas'
+import { FilterQueryUrl } from '@/utils/filterQueryUrl'
 import { isAxiosError } from 'axios'
 
 export async function createOrder(orderData: createOrderSchema) {
@@ -209,6 +213,40 @@ export async function addProductOrder(id: string) {
     const validOrderData = ZAddProductOrder.parse(data)
     return validOrderData
   } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al agregar producto a la orden.')
+    }
+  }
+}
+export async function getAllsOrder({
+  page,
+  limit,
+  q,
+  startDate,
+  endDate,
+  status,
+}: filterQueryType) {
+  try {
+    const { filterUrl } = FilterQueryUrl({
+      page,
+      limit,
+      q,
+      startDate,
+      endDate,
+      status,
+    })
+    const { data } = await axiosInstance.get<orderListSchema>(
+      `/admin/order/all${filterUrl}`
+    )
+    console.log(data)
+    const validOrders = ZGetOrderList.parse(data)
+    return validOrders
+  } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,

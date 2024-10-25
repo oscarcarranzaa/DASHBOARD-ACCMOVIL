@@ -14,10 +14,19 @@ export const ZOrderItems = z.object({
 
 export const ZTransaction = z.object({
   id: z.string(),
-  paymentMethod: z.enum(['credit_card', 'bank_transfer']),
-  paymentStatus: z.enum(['paid', 'unpaid']),
+  paymentMethod: z.enum([
+    'CREDIT_CARD',
+    'PAYPAL',
+    'BANK_TRANSFER',
+    'CASH',
+    'OTHER',
+  ]),
+  totalPaid: z.string(),
+  paymentStatus: z.enum(['PENDING', 'COMPLETED', 'FAILED', 'CANCELLED']),
   paymentDate: z.string().nullable().optional(),
   orderId: z.string(),
+  reference: z.string().nullable().optional(),
+  voucherImage: z.string().nullable().optional(),
 })
 
 export const ZShippingInfo = z.object({
@@ -86,6 +95,7 @@ export const ZOrder = z.object({
   billingInfo: ZBillingInfo.optional().nullable(),
   updatedAt: z.string(),
   createdAt: z.string(),
+  completedAt: z.string().nullable().optional(),
 })
 export const ZOrderInfo = ZOrder.omit({
   billingInfo: true,
@@ -145,6 +155,17 @@ export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
     coupon: ZCoupon.nullable().optional(),
   })
 )
+
+/// Tipo para obtener la lista de las ordenes
+const getOrderCell = ZOrder.omit({ orderItems: true }).merge(ZOrderDetails)
+export const ZGetOrderList = z.object({
+  data: z.array(getOrderCell),
+  totalPages: z.number(),
+  limit: z.number(),
+  total: z.number(),
+  results: z.number(),
+  pageNumber: z.number(),
+})
 export type orderSchema = z.infer<typeof ZOrder>
 export type orderItemsSchema = z.infer<typeof ZOrderItemsProduct>
 export type typeOrderItem = z.infer<typeof ZOrderItems>
@@ -158,3 +179,5 @@ export type addProductOrderSchema = z.infer<typeof ZAddProductOrder>
 export type orderItemUpdatedSchema = z.infer<typeof ZOrderItemUpdate>
 export type orderInfoSchema = z.infer<typeof ZOrderInfo>
 export type orderCouponAddSchema = z.infer<typeof ZOrderCouponAdd>
+export type orderListSchema = z.infer<typeof ZGetOrderList>
+export type orderCellSchema = z.infer<typeof getOrderCell>

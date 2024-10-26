@@ -50,7 +50,6 @@ export default function ShippingOrderForm() {
     refetchOnWindowFocus: false,
   })
 
-  const orderId = createOrderState((state) => state.orderId)
   const contactOrder = createOrderState((state) => state.contact)
   const setShippingInfo = createOrderState((state) => state.setShippingInfo)
 

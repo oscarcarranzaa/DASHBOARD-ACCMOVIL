@@ -75,9 +75,9 @@ type State = {
   shippingInfo: ShippingAddress
   orderInfo?: OrderInfo
   coupon?: couponCode
-  orderNavegation: 'details' | 'contact' | 'shipping' | 'finish'
+  orderNavegation: 'details' | 'contact' | 'shipping' | 'finish' | 'finalice'
   completedNavegation: string[]
-  orderId?: string | null
+  orderSuccessId?: string | null
 }
 type Action = {
   addProduct: (product: productOrder) => void
@@ -85,7 +85,7 @@ type Action = {
   navegation: (nav: State['orderNavegation']) => void
   addCoupon: (coupon: couponCode) => void
   removeCoupon: () => void
-  setOrderId: (id: string) => void
+  setOrderSuccessId: (id: string) => void
   incrementProduct: (id: string) => void
   decrementalProduct: (id: string) => void
   deletedProduct: (id: string) => void
@@ -122,7 +122,6 @@ export const createOrderState = create<State & Action>((set) => ({
     reference: '',
   },
   orderNavegation: 'details',
-  orderId: null,
   addProduct: (newProduct) =>
     set((state) => {
       const existingProduct = state.products.find(
@@ -149,9 +148,9 @@ export const createOrderState = create<State & Action>((set) => ({
     set((state) => {
       return { ...state, orderNavegation: nav }
     }),
-  setOrderId: (id) =>
+  setOrderSuccessId: (id) =>
     set((state) => {
-      return { ...state, orderId: id }
+      return { ...state, orderSuccessId: id }
     }),
   setIsSaveProduct: (id) =>
     set((state) => {
@@ -310,7 +309,6 @@ export const createOrderState = create<State & Action>((set) => ({
         street: '',
         reference: '',
       },
-      orderId: null,
     })),
   resetContact: () =>
     set(() => ({

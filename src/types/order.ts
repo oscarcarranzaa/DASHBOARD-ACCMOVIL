@@ -155,7 +155,12 @@ export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
     coupon: ZCoupon.nullable().optional(),
   })
 )
+// Tipo para obtener la orden cuando finalice
 
+export const ZGetOrderSuccess = ZOrder.omit({
+  orderItems: true,
+  shippingInfo: true,
+})
 /// Tipo para obtener la lista de las ordenes
 const getOrderCell = ZOrder.omit({ orderItems: true }).merge(ZOrderDetails)
 export const ZGetOrderList = z.object({
@@ -181,3 +186,4 @@ export type orderInfoSchema = z.infer<typeof ZOrderInfo>
 export type orderCouponAddSchema = z.infer<typeof ZOrderCouponAdd>
 export type orderListSchema = z.infer<typeof ZGetOrderList>
 export type orderCellSchema = z.infer<typeof getOrderCell>
+export type orderSuccessSchema = z.infer<typeof ZGetOrderSuccess>

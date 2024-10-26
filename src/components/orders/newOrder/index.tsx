@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import getCookie from '@/utils/cookiesOperator'
 import { useQuery } from '@tanstack/react-query'
 import { persistOrderQuery } from '@/api/order'
+import FinaliceOrderDetail from './finaliceOrderDetails'
 
 export default function NewOrder() {
   const [isOrderSession, setIsOrderSession] = useState<
@@ -18,6 +19,8 @@ export default function NewOrder() {
 
   const setOrderData = createOrderState((state) => state.setOrderData)
   const statusOrder = createOrderState((state) => state.orderNavegation)
+  const successOrderId = createOrderState((state) => state.orderSuccessId)
+  const setNavegation = createOrderState((state) => state.navegation)
 
   const { data, isPending } = useQuery({
     queryKey: ['order', 'persist'],
@@ -49,7 +52,9 @@ export default function NewOrder() {
     const isSession = getCookie('O_session')
     isSession ? setIsOrderSession('exists') : setIsOrderSession('empty')
   }, [])
-
+  if (statusOrder == 'finalice') {
+    return <FinaliceOrderDetail id={successOrderId} />
+  }
   return (
     <>
       <OrderStatusBar />

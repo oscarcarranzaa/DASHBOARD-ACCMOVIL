@@ -31,6 +31,8 @@ export default function FinishOrder() {
 
   const resetOrder = createOrderState((state) => state.reset)
   const orderInfo = createOrderState((state) => state.orderInfo)
+  const setNavegation = createOrderState((state) => state.navegation)
+  const setOrderSuccessId = createOrderState((state) => state.setOrderSuccessId)
 
   const { mutate, isPending } = useMutation({
     mutationFn: finishOrder,
@@ -38,9 +40,8 @@ export default function FinishOrder() {
       setSuccessTransact(true)
       resetOrder()
       queryClient.invalidateQueries({ queryKey: ['order', 'persist'] })
-      if (orderInfo) {
-        router.push(`${orderInfo.id}/finalizado`)
-      }
+      setOrderSuccessId(sc.id)
+      setNavegation('finalice')
     },
     onError: () => {
       toast.error('Error al agregar pago a la orden.')

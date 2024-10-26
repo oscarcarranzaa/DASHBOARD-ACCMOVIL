@@ -4,7 +4,7 @@ import './globals.css'
 import { ReactQueryClientProvider } from '@/lib/reactQuery'
 
 const inter = Poppins({
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
 })
 

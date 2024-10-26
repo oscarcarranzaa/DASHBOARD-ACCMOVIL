@@ -123,10 +123,11 @@ export default function OrderList({ data, rows, isPending }: IProps) {
                     : '/static/product.webp'
                   return (
                     <Badge
-                      content="1"
+                      content={product.quantity}
                       color="danger"
                       placement="top-left"
                       size="sm"
+                      key={order.id}
                     >
                       <Avatar src={img}></Avatar>
                     </Badge>

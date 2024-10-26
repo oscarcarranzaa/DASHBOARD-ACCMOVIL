@@ -5,14 +5,15 @@ import {
   createOrderSchema,
   createShippingInfoSchema,
   orderDetailsSchema,
-  orderItemsSchema,
   orderItemUpdatedSchema,
   orderListSchema,
   orderSchema,
+  orderSuccessSchema,
   typeOrderItem,
   ZAddProductOrder,
   ZBillingInfo,
   ZGetOrderList,
+  ZGetOrderSuccess,
   ZOrder,
   ZOrderDetails,
   ZOrderItems,
@@ -20,7 +21,12 @@ import {
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
 import { filterQueryType } from '@/types'
-import { countrySchema, ZGetCountry } from '@/types/schemas'
+import {
+  countrySchema,
+  resposeIdSchema,
+  ZGetCountry,
+  ZResponseId,
+} from '@/types/schemas'
 import { FilterQueryUrl } from '@/utils/filterQueryUrl'
 import { isAxiosError } from 'axios'
 
@@ -125,7 +131,7 @@ export async function getCountry() {
 }
 export async function finishOrder({ form }: { form: FormData }) {
   try {
-    const { data } = await axiosInstance.put(
+    const { data } = await axiosInstance.put<resposeIdSchema>(
       `/admin/order/~/finishOrder`,
       form,
       {
@@ -135,7 +141,8 @@ export async function finishOrder({ form }: { form: FormData }) {
       }
     )
 
-    return data
+    const validData = ZResponseId.parse(data)
+    return validData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error('Error al finalizar pedido.', {
@@ -242,17 +249,33 @@ export async function getAllsOrder({
     const { data } = await axiosInstance.get<orderListSchema>(
       `/admin/order/all${filterUrl}`
     )
-    console.log(data)
+
     const validOrders = ZGetOrderList.parse(data)
     return validOrders
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,
       })
     } else {
       throw new Error('Error al agregar producto a la orden.')
+    }
+  }
+}
+export async function getOrderSuccess(id: string) {
+  try {
+    const { data } = await axiosInstance.get<orderSuccessSchema>(
+      `/admin/order/${id}/success`
+    )
+    const validOrderData = ZGetOrderSuccess.parse(data)
+    return validOrderData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al obtener los datos de la orden.')
     }
   }
 }

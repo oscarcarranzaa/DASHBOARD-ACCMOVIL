@@ -12,13 +12,11 @@ import {
   TableColumn,
   ChipProps,
   Chip,
-  User,
   Avatar,
   AvatarGroup,
   Badge,
 } from '@nextui-org/react'
 import { orderRows } from './rows'
-import Link from 'next/link'
 import VerifiedSVG from '@/components/icons/verified'
 import { useSearchParams } from 'next/navigation'
 import { customerSchema, getAllCustomerSchema } from '@/types/customer'
@@ -26,6 +24,7 @@ import { orderCellSchema, orderListSchema } from '@/types/order'
 import { CustomerProfileSVG } from '@/components/icons/customerProfile'
 import dayjs from 'dayjs'
 import formaFromNowDate from '@/utils/formatFromNowDate'
+import Link from 'next/link'
 
 interface IProps {
   data?: orderListSchema
@@ -63,7 +62,11 @@ export default function OrderList({ data, rows, isPending }: IProps) {
     (order: orderCellSchema, columnKey: React.Key) => {
       switch (columnKey) {
         case 'order':
-          return <p>#{order.orderId}</p>
+          return (
+            <Link className=" hover:underline" href={`pedidos/${order.id}`}>
+              #{order.orderId}
+            </Link>
+          )
         case 'customer':
           return (
             <div className=" flex items-center">
@@ -85,13 +88,15 @@ export default function OrderList({ data, rows, isPending }: IProps) {
           )
         case 'status':
           return (
-            <Chip
-              className="capitalize"
-              color={statusColorMap[order.status]}
-              variant="dot"
-            >
-              {orderStatus[order.status]}
-            </Chip>
+            <Link href={`pedidos/${order.id}`}>
+              <Chip
+                className="capitalize"
+                color={statusColorMap[order.status]}
+                variant="dot"
+              >
+                {orderStatus[order.status]}
+              </Chip>
+            </Link>
           )
         case 'transaction':
           const isPaid =
@@ -127,7 +132,7 @@ export default function OrderList({ data, rows, isPending }: IProps) {
                       color="danger"
                       placement="top-left"
                       size="sm"
-                      key={order.id}
+                      key={product.id}
                     >
                       <Avatar src={img}></Avatar>
                     </Badge>

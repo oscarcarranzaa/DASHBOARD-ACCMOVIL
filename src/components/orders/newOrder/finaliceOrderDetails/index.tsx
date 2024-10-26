@@ -27,7 +27,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
                 title="Regresar"
                 onClick={() => setNavegation('details')}
               >
-                <div className=" rotate-90">
+                <div className=" rotate-90 dark:stroke-white">
                   <ArrowAngleSVG size={24} />
                 </div>
               </Button>
@@ -126,6 +126,8 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
               color="success"
               variant="bordered"
               isDisabled={!data}
+              href={data?.id}
+              as={Link}
               onClick={() => setNavegation('details')}
             >
               Detalles

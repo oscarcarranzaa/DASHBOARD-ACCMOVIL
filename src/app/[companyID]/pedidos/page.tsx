@@ -24,7 +24,6 @@ export default function CustomersHome() {
         limit: ROWS.toString(),
         q: search,
       }),
-    refetchOnWindowFocus: false,
   })
 
   return (

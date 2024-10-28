@@ -121,17 +121,19 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
             >
               Pedidos
             </Button>
-            <Button
-              className=" w-full mt-3"
-              color="success"
-              variant="bordered"
-              isDisabled={!data}
-              href={data?.id}
-              as={Link}
-              onClick={() => setNavegation('details')}
-            >
-              Detalles
-            </Button>
+            {data && (
+              <Button
+                className=" w-full mt-3"
+                color="success"
+                variant="bordered"
+                isDisabled={!data}
+                href={data.id}
+                as={Link}
+                onClick={() => setNavegation('details')}
+              >
+                Detalles
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -3,12 +3,7 @@ import { createCoupon } from '@/api/offerts'
 import Spinner from '@/components/icons/spinner'
 import { createCouponSchema, ZCreateCoupon } from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  DateValue,
-  getLocalTimeZone,
-  parseAbsolute,
-  parseDate,
-} from '@internationalized/date'
+import { DateValue, getLocalTimeZone } from '@internationalized/date'
 import {
   Button,
   DatePicker,
@@ -21,7 +16,7 @@ import {
   Tabs,
   useDisclosure,
 } from '@nextui-org/react'
-import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
@@ -52,7 +47,6 @@ export default function CouponEditor() {
     control,
     reset,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm<createCouponFormSchema>({
     resolver: zodResolver(ZCreateCoupon),

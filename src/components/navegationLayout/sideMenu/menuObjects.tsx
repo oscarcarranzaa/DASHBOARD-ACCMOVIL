@@ -24,14 +24,14 @@ export const menuItems = [
     permissionKeys: [],
     items: [
       {
+        name: 'Nuevo pedido',
+        href: '/dash/pedidos/nuevo',
+        permissionKeys: ['order.create'],
+      },
+      {
         name: 'Ver pedidos',
         href: '/dash/pedidos/',
         permissionKeys: ['order.view'],
-      },
-      {
-        name: 'Historial',
-        href: '/dash/pedidos/historial',
-        permissionKeys: ['order.history'],
       },
     ],
   },

@@ -2,8 +2,7 @@
 
 import DisplayPrice from '@/components/displayPrice'
 import { createOrderState } from '@/store/order'
-import CalcSubToltalOrder from '@/utils/calcSubTotalOrder'
-import { Avatar, Badge, Input, Spinner } from '@nextui-org/react'
+import { Avatar, Badge, Spinner } from '@nextui-org/react'
 import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {
@@ -25,7 +24,7 @@ export default function OrderResume() {
   }
   const { subTotal, totalAmount, discountTotal, couponDiscount, shippingCost } =
     orderAmount
-  console.log(discountTotal)
+
   return (
     <>
       <div className=" bg-white border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-950 rounded-lg">

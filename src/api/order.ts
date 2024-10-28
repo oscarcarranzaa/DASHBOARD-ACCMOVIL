@@ -4,7 +4,9 @@ import {
   contactOrderSchema,
   createOrderSchema,
   createShippingInfoSchema,
+  orderDetailsRead,
   orderDetailsSchema,
+  orderEditShema,
   orderItemUpdatedSchema,
   orderListSchema,
   orderSchema,
@@ -16,6 +18,7 @@ import {
   ZGetOrderSuccess,
   ZOrder,
   ZOrderDetails,
+  ZOrderDetailsRead,
   ZOrderItems,
   ZOrderItemUpdate,
 } from './../types/order'
@@ -276,6 +279,62 @@ export async function getOrderSuccess(id: string) {
       })
     } else {
       throw new Error('Error al obtener los datos de la orden.')
+    }
+  }
+}
+export async function getOrderDetails(id: string) {
+  try {
+    const { data } = await axiosInstance.get<orderDetailsRead>(
+      `/admin/order/${id}/details`
+    )
+    const validOrderData = ZOrderDetailsRead.parse(data)
+    return validOrderData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al obtener los datos de la orden.')
+    }
+  }
+}
+
+export async function updateTrackUrl({ id, url }: { id: string; url: string }) {
+  try {
+    const { data } = await axiosInstance.put(`/admin/order/${id}/trackUrl`, {
+      url,
+    })
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al actualizar la URL de seguimiento.')
+    }
+  }
+}
+type TUpdateOrder = {
+  id: string
+  orderUpdate: orderEditShema
+}
+export async function updateOrderData({ id, orderUpdate }: TUpdateOrder) {
+  try {
+    const { data } = await axiosInstance.put(
+      `/admin/order/${id}/update`,
+      orderUpdate
+    )
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al actualizar el pedido.')
     }
   }
 }

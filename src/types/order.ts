@@ -11,7 +11,23 @@ export const ZOrderItems = z.object({
   price: z.number().nullable().optional(),
   discountPrice: z.number().nullable().optional(),
 })
-
+export const ZOrderHistoryChanges = z.object({
+  id: z.string(),
+  orderId: z.string(),
+  status: z.enum([
+    'pending',
+    'processing',
+    'cancelled',
+    'completed',
+    'refund',
+    'creating',
+  ]),
+  type: z.enum(['STATUS', 'MESSAGE', 'IMAGE', 'PDF', 'INFO']),
+  message: z.string().nullable().optional(),
+  url: z.string().nullable().optional(),
+  changedBy: z.string().nullable().optional(),
+  createdAt: z.string(),
+})
 export const ZTransaction = z.object({
   id: z.string(),
   paymentMethod: z.enum([
@@ -36,6 +52,7 @@ export const ZShippingInfo = z.object({
   phone: z.string(),
   country: z.string(),
   state: z.string(),
+  orderTrackingUrl: z.string().nullable().optional(),
   documentNumber: z.string(),
   city: z.string(),
   zone: z.string(),
@@ -155,6 +172,10 @@ export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
     coupon: ZCoupon.nullable().optional(),
   })
 )
+
+export const ZOrderDetailsRead = ZOrderDetails.merge(
+  z.object({ OrderHistory: z.array(ZOrderHistoryChanges) })
+)
 // Tipo para obtener la orden cuando finalice
 
 export const ZGetOrderSuccess = ZOrder.omit({
@@ -170,6 +191,13 @@ export const ZGetOrderList = z.object({
   total: z.number(),
   results: z.number(),
   pageNumber: z.number(),
+})
+export const ZUpdateTrackUrl = z.object({
+  url: z.string().url('Debe ser un enlace válido.').trim(),
+})
+export const ZOrderEdit = z.object({
+  shippingInfo: ZCreateShippingInfo,
+  billingInfo: ZNewBillingInfo,
 })
 export type orderSchema = z.infer<typeof ZOrder>
 export type orderItemsSchema = z.infer<typeof ZOrderItemsProduct>
@@ -187,3 +215,6 @@ export type orderCouponAddSchema = z.infer<typeof ZOrderCouponAdd>
 export type orderListSchema = z.infer<typeof ZGetOrderList>
 export type orderCellSchema = z.infer<typeof getOrderCell>
 export type orderSuccessSchema = z.infer<typeof ZGetOrderSuccess>
+export type orderDetailsRead = z.infer<typeof ZOrderDetailsRead>
+export type shippingInfoSchema = z.infer<typeof ZShippingInfo>
+export type orderEditShema = z.infer<typeof ZOrderEdit>

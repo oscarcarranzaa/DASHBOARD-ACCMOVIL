@@ -33,7 +33,7 @@ export default function CustomersHome() {
         <div className="mb-3 flex justify-between">
           <Search placeHolder="Buscar pedidos..." />
           <Button color="primary" href="/dash/pedidos/nuevo" as={Link}>
-            Crear pedido
+            Nuevo pedido
           </Button>
         </div>
         <div className="mb-16">

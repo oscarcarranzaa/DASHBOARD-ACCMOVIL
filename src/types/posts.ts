@@ -97,3 +97,4 @@ export type VariationsAndAttributes = z.infer<typeof ZVariationsPost>
 export type PostSchema = z.infer<typeof ZGetPost>
 export type SavePostSchema = z.infer<typeof ZSavePost>
 export type SaveNewPostSchema = z.infer<typeof ZSaveGetPost>
+export type getOneListPostSchema = z.infer<typeof ZGetOneListPost>

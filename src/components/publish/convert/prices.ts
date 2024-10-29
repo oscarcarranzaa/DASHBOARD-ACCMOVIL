@@ -1,10 +1,10 @@
-import { productInfoType, productSchema } from '@/types/products'
-import { PostSchema } from '@/types/posts'
+import { productInfoType } from '@/types/products'
+import { getOneListPostSchema } from '@/types/posts'
 import validDiscountPrice from '@/utils/validationDateDiscountPrice'
 
 type TProps = {
   product?: productInfoType | null
-  variations?: PostSchema['variations']
+  variations?: getOneListPostSchema['variations']
   type: 'simple' | 'variable'
 }
 

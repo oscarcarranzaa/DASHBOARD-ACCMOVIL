@@ -39,7 +39,7 @@ export default function DescriptionPost() {
           modules={modules}
           formats={formats}
           placeholder={PLACEHOLDER}
-          value={description}
+          value={description ?? undefined}
           onChange={(text) => setDescription(text)}
         />
       </div>

@@ -10,7 +10,7 @@ export default function EmbedVideo() {
     ? 'https://www.youtube.com/watch?v=' + youtubeVideoId
     : ''
 
-  const [videoID, setVideoID] = useState<string>()
+  const [videoID, setVideoID] = useState<string | null>()
   const [url, setUrl] = useState<string>(defaultUrl)
   const [error, setError] = useState<string>('')
 

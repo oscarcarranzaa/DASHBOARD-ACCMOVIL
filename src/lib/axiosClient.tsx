@@ -2,13 +2,11 @@ import axios, { isAxiosError } from 'axios'
 import { decodeJwt } from 'jose'
 import dayjs from 'dayjs'
 import { useAuthStore } from '@/store/auth'
-import api from './axios'
+import api, { BASE_URL } from './axios'
 import { tokenAuthSchema, ZTokenAuth } from '@/types/schemas'
 
-const baseURL = 'http://localhost:4000/api/v1'
-
 const axiosInstance = axios.create({
-  baseURL: baseURL,
+  baseURL: BASE_URL,
   withCredentials: true,
 })
 

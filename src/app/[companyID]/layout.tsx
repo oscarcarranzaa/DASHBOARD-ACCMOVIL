@@ -1,4 +1,4 @@
-import { ThemeProvider, useTheme } from 'next-themes'
+import { ThemeProvider } from 'next-themes'
 import { NextUIProvider } from '@nextui-org/system'
 import NavegationLayout from '@/components/navegationLayout'
 import { Toaster } from 'sonner'

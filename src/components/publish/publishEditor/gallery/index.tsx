@@ -14,8 +14,11 @@ import { usePublishStore } from '@/store/publish'
 export default function Gallery() {
   const { gallery } = usePublishStore((state) => state.postData)
   const setGallery = usePublishStore((state) => state.setGallery)
-
+  const [defaultGallery, setDefaultGallery] = useState<IUploads[] | undefined>(
+    gallery || []
+  )
   const [isModalMedia, setIsModalMedia] = useState(false)
+
   useEffect(() => {
     if (isModalMedia) {
       document.body.classList.add('overflow-hidden')
@@ -37,7 +40,6 @@ export default function Gallery() {
 
     setGallery(newItems)
   }
-  console.log(gallery)
   return (
     <>
       <div className="w-full min-h-24 flex justify-center items-center border border-zinc-500 rounded-xl dark:bg-zinc-900 transition-colors overflow-hidden p-2">

@@ -123,38 +123,11 @@ export const menuItems = [
         href: '/dash/ofertas/cupones',
         permissionKeys: ['offers.coupons'],
       },
+
       {
-        name: 'Descuentos',
-        href: '/dash/ofertas/descuentos',
-        permissionKeys: ['offers.discounts'],
-      },
-      {
-        name: 'Puntos',
+        name: 'Puntos (Muy pronto)',
         href: '/dash/ofertas/puntos',
         permissionKeys: ['offers.points'],
-      },
-    ],
-  },
-  {
-    name: 'Sitio',
-    icon: <WorldSVG size={iconSize} />,
-    urlKey: '/dash/sitio',
-    permissionKeys: [],
-    items: [
-      {
-        name: 'Análisis',
-        href: '/dash/sitio/analisis',
-        permissionKeys: [],
-      },
-      {
-        name: 'Personalización',
-        href: '/dash/sitio/personalizacion',
-        permissionKeys: [],
-      },
-      {
-        name: 'Configuración',
-        href: '/dash/sitio/configuracion',
-        permissionKeys: [],
       },
     ],
   },

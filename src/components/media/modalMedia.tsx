@@ -32,7 +32,7 @@ export default function ModalMedia({
   useEffect(() => {
     const value = defaultMedias ?? undefined
     setMediaSelect(defaultMedias)
-    // setSelectedMedia(value)
+    setSelectedMedia(value)
   }, [defaultMedias])
 
   const handleSelect = () => {

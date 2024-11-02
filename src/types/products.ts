@@ -15,7 +15,7 @@ export const ZProduct = z.object({
   endDiscount: z.string().optional().nullable(),
   image: z.string().nullable().optional(),
   stock: z.number(),
-  minStock: z.number().optional(),
+  minStock: z.number().optional().nullable(),
   salesNote: z.string().nullable().optional(),
   userId: z.string(),
   media: media.optional().nullable(),
@@ -24,14 +24,34 @@ export const ZProduct = z.object({
   createdAt: z.string(),
 })
 export const ZProductInfo = ZProduct.omit({ User: true, media: true })
-export const ZProductNew = ZProduct.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  userId: true,
-  media: true,
-  User: true,
-})
+
+export const ZProductNew = z
+  .object({
+    sku: z.string().optional(),
+    barCode: z.string().optional(),
+    price: z.string(),
+    discountPrice: z.string().optional(),
+    startDiscount: z.string().optional(),
+    endDiscount: z.string().optional(),
+    stock: z.string().optional(),
+    image: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.discountPrice &&
+        parseFloat(data.discountPrice) > parseFloat(data.price)
+      ) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'El precio de descuento no puede ser mayor que el precio',
+      path: ['discountPrice'],
+    }
+  )
+
 export const ZGetProducts = z.object({
   data: z.array(ZProduct),
   totalPages: z.number(),

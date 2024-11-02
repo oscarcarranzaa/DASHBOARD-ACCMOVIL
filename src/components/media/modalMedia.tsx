@@ -30,10 +30,6 @@ export default function ModalMedia({
   const { data, totalPages } = useGetMedia()
 
   useEffect(() => {
-    const value = defaultMedias ?? undefined
-    if (value && !selectedMedia) {
-      setSelectedMedia(value)
-    }
     setMediaSelect(defaultMedias)
   }, [defaultMedias, selectedMedia])
 
@@ -60,7 +56,7 @@ export default function ModalMedia({
         className={`fixed  top-0 bottom-0 left-0 right-0 min-w-full z-50 p-10 ${openModal ? 'flex' : 'hidden'} justify-center`}
         style={{
           backgroundColor: 'var(--box-opacity)',
-          backdropFilter: 'blur(10px)',
+          backdropFilter: 'blur(2px)',
         }}
       >
         <div

@@ -25,7 +25,7 @@ export default function DisplayGroupVariations({
     <>
       <div className="">
         <div
-          className={` border-2 hover:border-primary border-zinc-200 dark:border-zinc-700   mt-2 cursor-pointer bg-zinc-50 dark:bg-transparent dark:bg-zinc-900" ${open ? 'rounded-t-2xl' : 'rounded-2xl'}`}
+          className={`p-3 border-2 hover:border-primary border-zinc-200 dark:border-zinc-700   mt-2 cursor-pointer bg-zinc-50 dark:bg-transparent dark:bg-zinc-900" ${open ? 'rounded-t-2xl' : 'rounded-2xl'}`}
           onClick={() => setOpen(!open)}
         >
           <div className=" p-3 flex justify-between items-center">

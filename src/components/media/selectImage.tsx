@@ -6,7 +6,7 @@ import GallerySVG from '../icons/gallery'
 
 interface IProps extends TSelectMedia {
   iconSize: number
-  setValue: Dispatch<SetStateAction<IUploads[] | undefined>>
+  setValue: (val: IUploads[] | undefined) => void
   defaultMedias?: IUploads[]
 }
 export default function SelectImage({
@@ -14,11 +14,11 @@ export default function SelectImage({
   iconSize,
   defaultMedias,
 }: IProps) {
-  const [selecMedia, setSelectMedia] = useState<IUploads[] | undefined>()
+  const [selectMedia, setSelectMedia] = useState<IUploads[] | undefined>(
+    defaultMedias
+  )
   const [isModalMedia, setIsModalMedia] = useState(false)
-  useEffect(() => {
-    setValue(selecMedia)
-  }, [selecMedia])
+
   return (
     <>
       <div
@@ -37,10 +37,10 @@ export default function SelectImage({
               left: '50%',
             }}
           >
-            {selecMedia && selecMedia.length > 0 ? (
+            {selectMedia && selectMedia.length > 0 ? (
               <picture>
                 <img
-                  src={selecMedia[0].imgURI}
+                  src={selectMedia[0].imgURI}
                   loading="lazy"
                   decoding="async"
                   alt="Imagen de covertor"
@@ -49,7 +49,7 @@ export default function SelectImage({
               </picture>
             ) : (
               <div className="flex justify-center flex-col">
-                <div className="flex justify-center">
+                <div className="flex justify-center  stroke-zinc-600 dark:stroke-zinc-400">
                   <GallerySVG size={iconSize} />
                 </div>
               </div>
@@ -58,11 +58,14 @@ export default function SelectImage({
         </div>
       </div>
       <ModalMedia
-        setValue={setSelectMedia}
+        setValue={(media) => {
+          setSelectMedia(media)
+          setValue(media)
+        }}
         closeModal={() => setIsModalMedia(false)}
         openModal={isModalMedia}
         select="only"
-        defaultMedias={defaultMedias}
+        defaultMedias={selectMedia}
       />
     </>
   )

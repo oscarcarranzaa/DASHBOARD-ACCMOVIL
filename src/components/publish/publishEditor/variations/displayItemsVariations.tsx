@@ -106,22 +106,10 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
                 return (
                   <div key={term.id} className="flex">
                     <p>{term.name}</p>
-                    {index === terms.length - 1 ? null : (
-                      <span className="px-2"> • </span>
-                    )}
                   </div>
                 )
               })}
             </div>
-            {product && (
-              <div className="flex items-center ml-2 ">
-                <p className="text-xs  line-clamp-1">{product.name}</p>
-                <span className="px-1"> • </span>
-                <p className="text-xs text-green-500 line-clamp-1">
-                  {product.sku ?? 'N/D'}
-                </p>
-              </div>
-            )}
           </div>
         </div>
         <button

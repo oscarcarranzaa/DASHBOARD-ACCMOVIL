@@ -112,7 +112,7 @@ export default function VariationsValues() {
 
   return (
     <div className="mt-5">
-      <p>Variaciones:</p>
+      <p className=" font-semibold text-sm">Variaciones:</p>
       <div className={isChildTerms ? ' rounded-md mt-2' : ''}>
         <p className={!groupAtt ? 'text-xs text-zinc-500' : 'hidden'}>
           Comienza agregando atributos para generar las variaciones.

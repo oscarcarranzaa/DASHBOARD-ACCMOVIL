@@ -8,6 +8,8 @@ import { Key } from '@react-types/shared'
 import { useSortable } from '@dnd-kit/sortable'
 import ChipItems from '@/components/UI/chip'
 import { usePublishStore } from '@/store/publish'
+import DragSVG from '@/components/icons/drag'
+import ArrowAngleSVG from '@/components/icons/arrowAngle'
 
 type AttributeValuesProps = {
   name: string
@@ -96,38 +98,46 @@ export default function AttributeValues({
         className="w-full mt-1 dark:bg-zinc-950 bg-white rounded-xl border border-zinc-200 dark:border-zinc-800"
         style={style}
       >
-        <div
-          className="flex justify-between items-center dark:bg-zinc-900 p-3 px-5  rounded-xl cursor-move"
-          ref={setNodeRef}
-          {...attributes}
-          {...listeners}
-        >
-          <div>
-            <p>{name}:</p>
+        <div className="flex justify-between items-center dark:bg-zinc-900  rounded-xl px-3">
+          <div className=" flex items-center w-full">
             <div
-              className={open ? 'hidden' : 'flex text-xs gap-1 mt-1 flex-wrap'}
+              className="mr-3 cursor-move p-1 "
+              ref={setNodeRef}
+              {...attributes}
+              {...listeners}
             >
-              {valueItems.map((att, index) => {
-                return (
-                  <Chip
-                    key={index}
-                    size="sm"
-                    variant="bordered"
-                    className="  border-zinc-600"
-                  >
-                    {att?.name}
-                  </Chip>
-                )
-              })}
+              <DragSVG size={20} />
+            </div>
+            <div
+              className="flex justify-between w-full items-center p-3 cursor-pointer"
+              onClick={() => setOpen(!open)}
+            >
+              <div>
+                <p>{name}:</p>
+                <div
+                  className={
+                    open ? 'hidden' : 'flex text-xs gap-1 mt-1 flex-wrap'
+                  }
+                >
+                  {valueItems.map((att, index) => {
+                    return (
+                      <Chip
+                        key={index}
+                        size="sm"
+                        variant="bordered"
+                        className="  border-zinc-600"
+                      >
+                        {att?.name}
+                      </Chip>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className={open ? 'rotate-180' : ''}>
+                <ArrowAngleSVG size={18} />
+              </div>
             </div>
           </div>
-          <Button
-            size="sm"
-            onClick={() => setOpen(!open)}
-            className={open ? 'hidden' : 'block'}
-          >
-            Editar
-          </Button>
         </div>
 
         <div

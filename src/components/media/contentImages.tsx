@@ -78,7 +78,7 @@ export default function ContentImages({
       onClick={handleSelect}
     >
       <div
-        className={`p-3  rounded-md relative border select-none ${select && isSelect ? ' bg-zinc-100 dark:bg-zinc-700 border-zinc-400 dark:border-zinc-600' : 'border-transparent'} ${style.media_container}`}
+        className={`p-3  rounded-md relative border select-none ${select && isSelect ? ' bg-zinc-100 dark:bg-zinc-700 border-zinc-400 dark:border-zinc-800' : 'border-transparent'} ${style.media_container}`}
       >
         {isSelect ? (
           <div className="absolute z-10 right-3 top-3 p-1 rounded-md">
@@ -104,7 +104,7 @@ export default function ContentImages({
           </div>
         )}
         <div
-          className="rounded-md overflow-hidden relative border"
+          className="rounded-md overflow-hidden relative border dark:border-zinc-700 border-zinc-200"
           style={{ paddingTop: '100%' }}
         >
           <div

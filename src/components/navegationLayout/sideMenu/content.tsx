@@ -92,7 +92,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
                     >
                       <Link
                         href={menu.href}
-                        className={`flex ${style.activeVibrate} flex-wrap mt-1 p-2 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'}`}
+                        className={`flex ${style.activeVibrate} flex-wrap mt-1 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'}`}
                         onClick={() => toggleMenu(index)}
                       >
                         <div
@@ -138,7 +138,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
                     >
                       <div>
                         <button
-                          className={`${style.activeVibrate} flex w-full flex-wrap mt-2 p-2 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'}`}
+                          className={`${style.activeVibrate} flex w-full flex-wrap mt-2 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'}`}
                           onClick={() => toggleMenu(index)}
                         >
                           <div className="flex">

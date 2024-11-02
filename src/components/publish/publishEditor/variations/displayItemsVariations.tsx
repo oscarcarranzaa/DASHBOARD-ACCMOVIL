@@ -3,6 +3,9 @@ import SquareImage from '@/components/squareImage'
 import { usePublishStore } from '@/store/publish'
 import { productSchema } from '@/types/products'
 import { useEffect, useState, useCallback } from 'react'
+import ProductEditor from '../productEditor'
+import TrashSVG from '@/components/icons/trahs'
+import { Button } from '@nextui-org/react'
 
 type TProps = {
   terms: {
@@ -72,52 +75,24 @@ export default function DisplayItemsVariations({ terms, termGroupID }: TProps) {
       }) ?? []
     setVariations(changeStatus)
   }, [terms, getVariations])
+
+  const termName = terms.map((term, index) => term.name).join('/')
+
   return (
     <>
-      {openSelect && (
-        <SelectProduct
-          open={setOpenSelect}
-          selectedProduct={product ? product : undefined}
-          onSelectProduct={(value) => {
-            saveProduct(value)
-          }}
-          title={terms.map((term) => term.name).join(' • ')}
-        />
-      )}
-      <div className="dark:bg-zinc-800 dark:hover:bg-zinc-900 hover:bg-zinc-100 p-3  flex  justify-between items-center">
-        <div
-          className="flex  cursor-pointer w-full"
-          onClick={() => setOpenSelect(true)}
-        >
-          <div className="w-12 h-12">
-            {product?.media?.qualities ? (
-              <SquareImage src={product.media.qualities[0].src} />
-            ) : (
-              <SquareImage src="/static/product.webp" />
-            )}
-          </div>
-          <div>
-            <div className="ml-2 flex items-center">
-              {terms.map((term, index) => {
-                const isGroupTerm = term.id === termGroupID
-                if (isGroupTerm) {
-                  return null
-                }
-                return (
-                  <div key={term.id} className="flex">
-                    <p>{term.name}</p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-        <button
-          className="text-sm text-red-500 hover:cursor-pointer hover:underline p-2"
+      <div className="dark:bg-zinc-800 p-3  flex  justify-between items-center">
+        <ProductEditor name={termName} />
+        <Button
+          className="text-sm text-red-500 hover:cursor-pointer   stroke-red-500 ml-1"
           onClick={() => handleDeleteVariation()}
+          isIconOnly
+          size="sm"
+          variant="flat"
+          color="danger"
+          title="Eliminar variación"
         >
-          Eliminar
-        </button>
+          <TrashSVG size={18} />
+        </Button>
       </div>
     </>
   )

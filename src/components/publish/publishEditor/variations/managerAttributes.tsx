@@ -138,6 +138,7 @@ export default function ManagerAttributes() {
         </div>
       </div>
       <div className=" mt-5">
+        <p className=" font-semibold text-sm mb-2">Atributos:</p>
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}

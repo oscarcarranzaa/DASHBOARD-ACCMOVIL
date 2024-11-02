@@ -1,5 +1,7 @@
+import UpdateSVG from '@/components/icons/update'
 import SquareImage from '@/components/squareImage'
 import { ItemsVariations, usePublishStore } from '@/store/publish'
+import { Button } from '@nextui-org/button'
 
 type TProps = {
   termGroupID: string
@@ -31,30 +33,17 @@ export default function DisplayDeleteItemsVariations({
       setVariations([...getVariations, getDelete])
     }
   }
-
+  const termName = termsValue.map((term, index) => term.name).join('/')
   return (
     <>
-      <div className="dark:bg-zinc-800 dark:hover:bg-zinc-900 bg-zinc-50 hover:bg-zinc-100 p-2  flex  justify-between items-center">
+      <div className="dark:bg-zinc-800 bg-zinc-100 p-2  flex  justify-between items-center">
         <div className="flex   w-full">
           <div className="w-8 h-8">
             <SquareImage src="/static/trash-icon.jpg" />
           </div>
           <div>
             <div className="ml-2 flex items-center">
-              {termsValue.map((term, index) => {
-                const isGroupTerm = term.id === termGroupID
-                if (isGroupTerm) {
-                  return null
-                }
-                return (
-                  <div key={term.id} className="flex line-through text-sm">
-                    <p>{term.name}</p>
-                    {index === termsValue.length - 1 ? null : (
-                      <span className="px-2"> • </span>
-                    )}
-                  </div>
-                )
-              })}
+              <p className="flex line-through text-sm">{termName}</p>
             </div>
             <div className="flex items-center ml-2 ">
               <p className="text-xs  line-clamp-1">
@@ -63,12 +52,17 @@ export default function DisplayDeleteItemsVariations({
             </div>
           </div>
         </div>
-        <button
-          className="text-sm text-zinc-500 hover:cursor-pointer hover:underline p-2"
+        <Button
+          className="text-sm text-zinc-500 hover:cursor-pointer fill-zinc-500"
+          variant="bordered"
+          size="sm"
           onClick={restoreVariation}
         >
-          Restaurar
-        </button>
+          <div>
+            <UpdateSVG size={18} />
+          </div>
+          <p className="text-sm">Restaurar</p>
+        </Button>
       </div>
     </>
   )

@@ -2,6 +2,7 @@ import { Tab, Tabs } from '@nextui-org/react'
 import SearchProductLabel from './searchProductLabel'
 import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
+import ProductForm from '../productEditor/productForm'
 
 export default function Variations() {
   const { type, Product } = usePublishStore((state) => state.postData)
@@ -29,10 +30,7 @@ export default function Variations() {
             >
               <Tab key="simple" title="Simple">
                 <div className="w-full ">
-                  <SearchProductLabel
-                    seleted={Product}
-                    onSelect={(value) => setProduct(value)}
-                  />
+                  <ProductForm />
                 </div>
               </Tab>
               <Tab key="variable" title="Variable">

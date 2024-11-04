@@ -38,6 +38,7 @@ export default function ProductModalEditor({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="bottom-center"
+        isDismissable={false}
         size="xl"
       >
         <ModalContent>

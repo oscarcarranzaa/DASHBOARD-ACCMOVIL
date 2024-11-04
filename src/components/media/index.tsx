@@ -1,6 +1,5 @@
 'use client'
 import DragMedia from '@/components/media/upload/drag'
-import useGetMedia from '@/hooks/useGetMedias'
 
 const selectOp = {
   ONLY: 'only',
@@ -12,6 +11,5 @@ export type TSelectMedia = {
 }
 
 export default function Media({ select }: TSelectMedia) {
-  const { data, totalPages } = useGetMedia()
-  return <DragMedia select={select} dataMedia={data} totalPages={totalPages} />
+  return <DragMedia select={select} />
 }

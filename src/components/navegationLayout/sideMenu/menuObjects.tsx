@@ -38,24 +38,6 @@ export const menuItems = [
   {
     name: 'Productos',
     icon: <ProductSVG size={iconSize} />,
-    urlKey: '/dash/productos',
-    permissionKeys: [],
-    items: [
-      {
-        name: 'Nuevo',
-        href: '/dash/productos/nuevo',
-        permissionKeys: ['product.create'],
-      },
-      {
-        name: 'Ver productos',
-        href: '/dash/productos/',
-        permissionKeys: ['product.view'],
-      },
-    ],
-  },
-  {
-    name: 'Posts',
-    icon: <PublishSVG size={iconSize} />,
     urlKey: '/dash/posts',
     permissionKeys: [],
     items: [
@@ -65,7 +47,7 @@ export const menuItems = [
         permissionKeys: ['posts.create'],
       },
       {
-        name: 'Ver posts',
+        name: 'Ver productos',
         href: '/dash/posts/',
         permissionKeys: [],
       },

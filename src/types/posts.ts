@@ -1,5 +1,5 @@
 import { string, z } from 'zod'
-import { ZProduct, ZProductInfo } from './products'
+import { ZProduct, ZProductInfo, ZProductNew } from './products'
 import { ZAttributes, ZTerms } from './attributes'
 import { ZCategory } from './category'
 import { media } from './schemas'
@@ -60,7 +60,7 @@ export const ZGetOneListPost = ZGetPost.pick({
 })
 
 export const ZVariatiosSave = z.object({
-  productId: z.string().nullable(),
+  product: ZProductNew.optional().nullable(),
   attributes: z.string().array(),
 })
 
@@ -71,7 +71,7 @@ export const ZSavePost = z.object({
   shortDescription: z.string().optional().nullable(),
   specifications: z.string().optional(),
   status: z.enum(['publish', 'draft']),
-  productId: z.string().nullable().optional(),
+  product: ZProductNew.optional().nullable(),
   type: z.enum(['variable', 'simple']),
   gallery: z.string().array().optional(),
   variations: z.array(ZVariatiosSave).optional(),

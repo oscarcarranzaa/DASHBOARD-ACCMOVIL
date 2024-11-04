@@ -24,11 +24,11 @@ export default function NewPublish() {
     shortDescription: postData.shortDescription,
     status: postData.status,
     type: postData.type,
-    productId: postData?.Product?.id,
+    product: postData?.product,
     gallery: postData.gallery?.map((g) => g.id),
     variations: variations?.map((v) => ({
       attributes: v.attributesTerms.map((t) => t.id),
-      productId: v.productId ?? null,
+      product: v.product ?? null,
     })),
     youtubeVideoId: postData.youtubeVideoId,
   }

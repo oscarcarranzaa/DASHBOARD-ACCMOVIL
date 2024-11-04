@@ -35,11 +35,11 @@ export default function EditPublish() {
     shortDescription: postData.shortDescription,
     status: postData.status,
     type: postData.type,
-    productId: postData.productId,
+    product: postData.product,
     gallery: postData.gallery?.map((g) => g.id),
     variations: variations?.map((v) => ({
       attributes: v.attributesTerms.map((t) => t.id),
-      productId: v.productId ?? null,
+      product: v.product ?? null,
     })),
     youtubeVideoId: postData.youtubeVideoId,
   }
@@ -54,6 +54,7 @@ export default function EditPublish() {
       toast.error('Error al actualizar.')
     },
   })
+
   const handleSave = (action: 'publish' | 'draft') => {
     const savePostStatus = { ...post, status: action }
     setIsSaving(true)

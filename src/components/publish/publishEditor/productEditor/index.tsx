@@ -20,11 +20,15 @@ export default function ProductEditor({ name, value, variationId }: TProps) {
   const setPriceDiscount = usePublishStore((state) => state.setPriceDiscount)
 
   const image = value?.image && [value.image]
+  const priceProps = value?.price ?? ''
+  const discountPriceProps = value?.discountPrice ?? ''
+
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>(
     image
   )
   const [price, setPrice] = useState(value?.price ?? '')
   const [discountPrice, setDiscountPrice] = useState(value?.discountPrice ?? '')
+
   useEffect(() => {
     const imageId = image ? image[0].id : undefined
     const defaultId = defaultImage ? defaultImage[0].id : undefined
@@ -33,6 +37,14 @@ export default function ProductEditor({ name, value, variationId }: TProps) {
       setDefaultImage(image)
     }
   }, [image])
+
+  useEffect(() => {
+    setPrice(priceProps)
+    setDiscountPrice(discountPriceProps)
+  }, [priceProps, discountPriceProps])
+
+  const invalidDiscount = Number(discountPrice) > Number(price)
+
   return (
     <>
       <div className="grid grid-cols-2 justify-between items-center max-w-3xl w-full bg-zinc-50 dark:bg-zinc-950 p-2 rounded-lg">
@@ -84,15 +96,20 @@ export default function ProductEditor({ name, value, variationId }: TProps) {
             size="sm"
             type="number"
             placeholder="0.00"
+            isInvalid={invalidDiscount}
             startContent={<p>L</p>}
             value={discountPrice}
             onBlur={() => {
+              if (invalidDiscount) {
+                setDiscountPrice('')
+                return
+              }
               if (variationId) {
                 setPriceDiscount({ discount: discountPrice, variationId })
               }
             }}
             onChange={(e) => setDiscountPrice(e.target.value)}
-            label="Descuento"
+            label="P. Descuento"
             labelPlacement="outside"
           />
         </div>

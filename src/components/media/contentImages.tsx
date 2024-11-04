@@ -132,7 +132,7 @@ export default function ContentImages({
               style={{ background: 'rgba(0,0,0,0.7)' }}
             >
               <CircularProgress
-                value={load}
+                value={load === 100 ? undefined : load}
                 aria-label="Loading..."
                 size="lg"
                 color="success"

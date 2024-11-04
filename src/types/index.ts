@@ -18,13 +18,13 @@ export type TSVG = {
   size: number
   color?: string
 }
-export interface IUploads {
-  imgURI: string
-  urlMedia: string
-  name: string
-  progress?: number
-  id: string
-}
+export const ZIUploads = z.object({
+  imgURI: z.string(),
+  urlMedia: z.string(),
+  name: z.string(),
+  progress: z.number().optional(),
+  id: z.string(),
+})
 export type filterQueryType = {
   status?: string
   page: string
@@ -34,4 +34,5 @@ export type filterQueryType = {
   endDate?: string
 }
 export type TAuth = {}
+export type IUploads = z.infer<typeof ZIUploads>
 export type LoginSchema = z.infer<typeof login>

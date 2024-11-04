@@ -1,7 +1,7 @@
 'use client'
 import { selectCategory } from '@/components/category/displayCategory'
 import { IUploads } from '@/types'
-import { productSchema } from '@/types/products'
+import { newProductSchema, productSchema } from '@/types/products'
 import { PostSchema, VariationsAndAttributes } from '@/types/posts'
 import { create } from 'zustand'
 
@@ -15,25 +15,21 @@ export type TPostData = {
   youtubeVideoId?: string | null
   categories?: selectCategory[]
   shortDescription?: string | null
-  productId?: string | null
-  Product?: productSchema | null
+  product?: newProductSchema | null
 }
 export type TVariations = {
   id: string
-  productId?: string | null
-  Product?: productSchema | null
+  product?: newProductSchema | null
+  isDeleted?: boolean
   attributesTerms: {
     id: string
     name: string
   }[]
 }
-export interface ItemsVariations extends TVariations {
-  status: 'draft' | 'new'
-}
 
 export type StatePublish = {
   variations?: TVariations[]
-  deletedVariations?: ItemsVariations[]
+
   attributes:
     | {
         id: string
@@ -49,7 +45,6 @@ export type StatePublish = {
 
 const initialState: StatePublish = {
   variations: [],
-  deletedVariations: [],
   attributes: null,
   postData: {
     id: 'new',
@@ -107,16 +102,45 @@ type Action = {
   reset: () => void
   setData: (data: PostSchema) => void
   setVariation: (variations: StatePublish['variations']) => void
-  setDeleteVariations: (deletedVariations?: ItemsVariations[]) => void
   setAttributes: (attributes: StatePublish['attributes']) => void
   setPostData: (postData: StatePublish['postData']) => void
   setType: (type: 'simple' | 'variable') => void
   setGallery: (gallery: IUploads[] | undefined) => void
   setTitle: (title: string) => void
+  deleteVariation: (id: string) => void
+  restoreVariation: (id: string) => void
   setDescription: (description: string) => void
   setShortDescription: (description: string) => void
+  setPriceVariation: ({
+    price,
+    variationId,
+  }: {
+    price: string
+    variationId: string
+  }) => void
+  setPriceDiscount: ({
+    discount,
+    variationId,
+  }: {
+    discount: string
+    variationId: string
+  }) => void
   setCagories: (categories: selectCategory[]) => void
   setVideo: (video?: string) => void
+  setProductVariation: ({
+    product,
+    variationId,
+  }: {
+    product: TVariations['product']
+    variationId: string
+  }) => void
+  setVariationImage: ({
+    image,
+    variationId,
+  }: {
+    image?: IUploads
+    variationId: string
+  }) => void
   setProductId: (productId?: productSchema) => void
 }
 
@@ -148,7 +172,23 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
         })),
         productId: data.productId,
         youtubeVideoId: data.youtubeVideoId,
-        Product: data.Product,
+        product: {
+          sku: data.Product?.sku ?? '',
+          barCode: data.Product?.barCode ?? '',
+          price: data.Product?.price.toString() ?? '',
+          discountPrice: data.Product?.discountPrice?.toString() ?? '',
+          startDiscount: data.Product?.startDiscount ?? '',
+          endDiscount: data.Product?.endDiscount ?? '',
+          stock: data.Product?.stock.toString() ?? '',
+          image: data.Product?.media
+            ? {
+                id: data.Product.media.id,
+                urlMedia: data.Product.media.url,
+                imgURI: data.Product.media.qualities[0].src,
+                name: data.Product.media.title,
+              }
+            : undefined,
+        },
       },
       attributes: data.variations
         ? extractAttributesAndTerms(data.variations)
@@ -156,8 +196,25 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
       variations:
         data.variations?.map((v) => ({
           id: v.id,
+          isDeleted: false,
           productId: v.productId,
-          Product: v.Product ?? null,
+          product: {
+            sku: v.Product?.sku ?? '',
+            barCode: v.Product?.barCode ?? '',
+            price: v.Product?.price.toString() ?? '',
+            discountPrice: v.Product?.discountPrice?.toString() ?? '',
+            startDiscount: v.Product?.startDiscount ?? '',
+            endDiscount: v.Product?.endDiscount ?? '',
+            stock: v.Product?.stock.toString() ?? '',
+            image: v.Product?.media
+              ? {
+                  id: v.Product.media.id,
+                  urlMedia: v.Product.media.url,
+                  imgURI: v.Product.media.qualities[1].src,
+                  name: v.Product.media.title,
+                }
+              : undefined,
+          },
           attributesTerms: v.attributes.map((at) => ({
             id: at.id,
             name: at.name,
@@ -167,8 +224,7 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
   setProductId: (Product) =>
     set((state) => ({ postData: { ...state.postData, Product } })),
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),
-  setDeleteVariations: (deletedVariations) =>
-    set(() => ({ deletedVariations: deletedVariations })),
+
   setAttributes: (newAttributes) => set(() => ({ attributes: newAttributes })),
   setPostData: (newPostData) => set(() => ({ postData: newPostData })),
   setType: (type) =>
@@ -181,8 +237,74 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
     set((state) => ({ postData: { ...state.postData, shortDescription } })),
   setDescription: (description) =>
     set((state) => ({ postData: { ...state.postData, description } })),
+  setProductVariation: ({ product, variationId }) =>
+    set((state) => {
+      const { variations } = state
+      const saveVariation = variations?.map((v) => {
+        const isVariation = v.id === variationId
+        if (isVariation) {
+          return { ...v, product: product }
+        }
+        return v
+      })
+      return { ...state, variations: saveVariation }
+    }),
+  setVariationImage: ({ variationId, image }) =>
+    set((state) => {
+      const { variations } = state
+      const variation = variations?.map((v) => {
+        const isVariation = v.id === variationId
+
+        const productImage = { ...v.product, image }
+        if (isVariation) {
+          return { ...v, product: productImage }
+        }
+        return v
+      })
+      return { ...state, variations: variation }
+    }),
+  setPriceVariation: ({ price, variationId }) =>
+    set((state) => ({
+      ...state,
+      variations: state.variations?.map((v) =>
+        v.id === variationId ? { ...v, product: { ...v.product, price } } : v
+      ),
+    })),
+  setPriceDiscount: ({ discount, variationId }) =>
+    set((state) => ({
+      ...state,
+      variations: state.variations?.map((v) =>
+        v.id === variationId
+          ? { ...v, product: { ...v.product, discountPrice: discount } }
+          : v
+      ),
+    })),
   setCagories: (categories) =>
     set((state) => ({ postData: { ...state.postData, categories } })),
+  deleteVariation: (id) =>
+    set((state) => {
+      const { variations } = state
+      const delVariation = variations?.map((v) => {
+        const isDraft = v.id === id
+        if (isDraft) {
+          return { ...v, isDeleted: isDraft }
+        }
+        return v
+      })
+      return { ...state, variations: delVariation }
+    }),
+  restoreVariation: (id) =>
+    set((state) => {
+      const { variations } = state
+      const restoreVariation = variations?.map((v) => {
+        const isDraft = v.id === id
+        if (isDraft) {
+          return { ...v, isDeleted: !isDraft }
+        }
+        return v
+      })
+      return { ...state, variations: restoreVariation }
+    }),
   setVideo: (youtubeVideoId) =>
     set((state) => ({ postData: { ...state.postData, youtubeVideoId } })),
 }))

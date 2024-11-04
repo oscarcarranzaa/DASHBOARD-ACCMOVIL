@@ -9,13 +9,18 @@ import {
 import ProductEditor from '.'
 import { ReactNode } from 'react'
 import ProductForm from './productForm'
+import { newProductSchema } from '@/types/products'
 
 export default function ProductModalEditor({
   children,
   title,
+  value,
+  variationId,
 }: {
   children?: ReactNode
   title?: string
+  value?: newProductSchema | null
+  variationId?: string
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
@@ -40,7 +45,11 @@ export default function ProductModalEditor({
             <>
               <ModalHeader>Editar {title}</ModalHeader>
               <div className="p-5">
-                <ProductForm />
+                <ProductForm
+                  value={value}
+                  variationId={variationId}
+                  onClose={onClose}
+                />
                 <Button className="w-full mt-2" onClick={onClose}>
                   Cancelar
                 </Button>

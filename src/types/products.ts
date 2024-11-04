@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { media, user } from './schemas'
+import { ZIUploads } from '.'
 
 /** Productos */
 
@@ -29,18 +30,19 @@ export const ZProductNew = z
   .object({
     sku: z.string().optional(),
     barCode: z.string().optional(),
-    price: z.string(),
+    price: z.string().optional(),
     discountPrice: z.string().optional(),
     startDiscount: z.string().optional(),
     endDiscount: z.string().optional(),
     stock: z.string().optional(),
-    image: z.string().optional(),
+    image: ZIUploads.optional(),
   })
   .refine(
     (data) => {
       if (
         data.discountPrice &&
-        parseFloat(data.discountPrice) > parseFloat(data.price)
+        parseFloat(data.discountPrice) >
+          parseFloat(data?.price ? data.price : '0')
       ) {
         return false
       }

@@ -1,13 +1,18 @@
+'use client'
+import dynamic from 'next/dynamic'
 import CloseSVG from '@/components/icons/close'
 import { TSelectMedia } from '@/components/media/'
 import { useEffect, useRef, useState } from 'react'
-import DragMedia from './upload/drag'
 import { Button } from '@nextui-org/button'
 import { IUploads } from '@/types'
 import useOutsideClick from '@/hooks/useOutSideClick'
 import Search from '../UI/search'
 import useGetMedia from '@/hooks/useGetMedias'
 
+const DragMedia = dynamic(() => import('./upload/drag'), {
+  ssr: false,
+  loading: () => <p>Cargando medios...</p>,
+})
 interface IProps extends TSelectMedia {
   setValue: (media: IUploads[] | undefined) => void
   closeModal: () => void
@@ -27,7 +32,6 @@ export default function ModalMedia({
   )
 
   const ref = useRef<HTMLElement>(null)
-  const { data, totalPages } = useGetMedia()
 
   useEffect(() => {
     setMediaSelect(defaultMedias)
@@ -47,6 +51,7 @@ export default function ModalMedia({
 
   useEffect(() => {
     setValue(selectedMedia)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMedia])
 
   useOutsideClick(ref, () => closeModal())
@@ -82,13 +87,13 @@ export default function ModalMedia({
             />
             <div className="overflow-y-scroll max-h-screen mt-5">
               <div className="mb-60 pb-1">
-                <DragMedia
-                  select={select}
-                  dataMedia={data}
-                  mediaSelect={mediaSelect}
-                  totalPages={totalPages}
-                  setMediasSelect={setMediaSelect}
-                />
+                {openModal && (
+                  <DragMedia
+                    select={select}
+                    mediaSelect={mediaSelect}
+                    setMediasSelect={setMediaSelect}
+                  />
+                )}
               </div>
             </div>
           </div>

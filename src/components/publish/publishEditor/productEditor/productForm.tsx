@@ -8,27 +8,46 @@ import { useState } from 'react'
 import { RangeValue } from '@react-types/shared'
 import { DateValue } from '@react-types/datepicker'
 import { Controller, useForm } from 'react-hook-form'
-import { getLocalTimeZone } from '@internationalized/date'
+import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
+import { usePublishStore } from '@/store/publish'
 
 type TProps = {
-  type?: 'simple' | 'variation'
+  variationId?: string
+  value?: newProductSchema | null
+  onClose?: () => void
 }
-export default function ProductForm({ type }: TProps) {
-  const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>()
-  const [openClock, setOpenClock] = useState(false)
+export default function ProductForm({ variationId, value, onClose }: TProps) {
+  const startDate = value?.startDiscount
+  const endDate = value?.endDiscount
+  const defaultDateCalendar =
+    startDate && endDate
+      ? {
+          start: parseAbsoluteToLocal(startDate),
+          end: parseAbsoluteToLocal(endDate),
+        }
+      : undefined
+
+  const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>(
+    value?.image && [value.image]
+  )
+  const [openClock, setOpenClock] = useState(!!value?.startDiscount)
   const [calendarDate, setCalendarDate] = useState<
     RangeValue<DateValue> | undefined
-  >()
+  >(defaultDateCalendar)
+
+  const setProductVariation = usePublishStore(
+    (state) => state.setProductVariation
+  )
 
   const defaultValues = {
-    sku: '',
-    barCode: '',
-    price: '',
-    discountPrice: '',
-    startDiscount: '',
-    endDiscount: '',
-    stock: '',
-    image: '',
+    sku: value?.sku ?? '',
+    barCode: value?.barCode ?? '',
+    price: value?.price ?? '',
+    discountPrice: value?.discountPrice ?? '',
+    startDiscount: value?.startDiscount ?? '',
+    endDiscount: value?.endDiscount ?? '',
+    stock: value?.stock ?? '',
+    image: value?.image,
   }
 
   const {
@@ -63,7 +82,13 @@ export default function ProductForm({ type }: TProps) {
     }
   }
   const sendProduct = (form: newProductSchema) => {
-    console.log(form)
+    if (onClose) {
+      onClose()
+    }
+    if (variationId) {
+      setProductVariation({ variationId, product: form })
+      return
+    }
   }
   return (
     <>
@@ -72,11 +97,11 @@ export default function ProductForm({ type }: TProps) {
         <div className=" grid grid-cols-2 gap-10 border-t border-zinc-500 pt-5">
           <div className="max-w-40 max-h-40 min-w-28 flex-none">
             <SelectImage
-              select="only"
               iconSize={60}
+              defaultMedias={defaultImage}
               setValue={(val) => {
                 if (val) {
-                  setValue('image', val[0].id)
+                  setValue('image', val[0])
                   return
                 }
                 setValue('image', undefined)
@@ -142,14 +167,19 @@ export default function ProductForm({ type }: TProps) {
               hideTimeZone
               onChange={(d) => {
                 setCalendarDate(d)
-                setValue(
-                  'startDiscount',
-                  d.start.toDate(getLocalTimeZone()).toISOString()
-                )
-                setValue(
-                  'endDiscount',
-                  d.end.toDate(getLocalTimeZone()).toISOString()
-                )
+                if (d) {
+                  setValue(
+                    'startDiscount',
+                    d.start.toDate(getLocalTimeZone()).toISOString()
+                  )
+                  setValue(
+                    'endDiscount',
+                    d.end.toDate(getLocalTimeZone()).toISOString()
+                  )
+                  return
+                }
+                unregister('startDiscount')
+                unregister('endDiscount')
               }}
               value={calendarDate}
               calendarWidth={320}
@@ -201,6 +231,7 @@ export default function ProductForm({ type }: TProps) {
                   autoComplete="off"
                   label="Cantidad"
                   placeholder="0.00"
+                  type="number"
                   labelPlacement="outside"
                   variant="bordered"
                   endContent={<p className=" text-zinc-500 text-sm">UNI</p>}

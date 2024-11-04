@@ -19,6 +19,9 @@ export default function SelectImage({
   )
   const [isModalMedia, setIsModalMedia] = useState(false)
 
+  useEffect(() => {
+    setSelectMedia(defaultMedias)
+  }, [defaultMedias])
   return (
     <>
       <div

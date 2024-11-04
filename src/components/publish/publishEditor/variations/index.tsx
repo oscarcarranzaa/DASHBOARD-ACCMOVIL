@@ -1,14 +1,11 @@
 import { Tab, Tabs } from '@nextui-org/react'
-import SearchProductLabel from './searchProductLabel'
 import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
 import ProductForm from '../productEditor/productForm'
 
 export default function Variations() {
-  const { type, Product } = usePublishStore((state) => state.postData)
+  const { type, product } = usePublishStore((state) => state.postData)
   const setType = usePublishStore((state) => state.setType)
-  const setProduct = usePublishStore((state) => state.setProductId)
-
   return (
     <>
       <section className=" p-2 py-5 rounded-lg border border-zinc-500 bg-white dark:bg-black">
@@ -30,7 +27,7 @@ export default function Variations() {
             >
               <Tab key="simple" title="Simple">
                 <div className="w-full ">
-                  <ProductForm />
+                  <ProductForm value={product} />
                 </div>
               </Tab>
               <Tab key="variable" title="Variable">

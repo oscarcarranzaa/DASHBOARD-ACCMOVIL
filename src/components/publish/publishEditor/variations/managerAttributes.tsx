@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { getAllAttributes } from '@/api/attributes'
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
@@ -9,7 +10,9 @@ import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { usePublishStore } from '@/store/publish'
 import VariationsValues from './variationsValues'
+import SearchSVG from '@/components/icons/search'
 
+const MAX_ATT = 3
 export default function ManagerAttributes() {
   //// Store
   const setAttribute = usePublishStore((state) => state.setAttributes)
@@ -109,11 +112,56 @@ export default function ManagerAttributes() {
     setAttribute(attStoreValue)
   }
 
+  const maxAtt = attribute && attribute.length >= MAX_ATT
   return (
     <div className=" mt-5">
+      <p className=" font-semibold text-sm mb-2">Atributos:</p>
       <div className="flex items-center">
         <Autocomplete
-          label="Selecciona un atributo"
+          isDisabled={maxAtt}
+          classNames={{
+            base: 'max-w-xs',
+            listboxWrapper: 'max-h-[320px]',
+            selectorButton: 'text-default-500',
+          }}
+          inputProps={{
+            classNames: {
+              input: 'ml-1',
+              inputWrapper: 'h-[48px]',
+            },
+          }}
+          listboxProps={{
+            hideSelectedIcon: true,
+            itemClasses: {
+              base: [
+                'rounded-medium',
+                'text-default-500',
+                'transition-opacity',
+                'data-[hover=true]:text-foreground',
+                'dark:data-[hover=true]:bg-default-50',
+                'data-[pressed=true]:opacity-70',
+                'data-[hover=true]:bg-default-200',
+                'data-[selectable=true]:focus:bg-default-100',
+                'data-[focus-visible=true]:ring-default-500',
+              ],
+            },
+          }}
+          aria-label="Selecciona un atributo"
+          placeholder="Selecciona un atributo"
+          popoverProps={{
+            offset: 10,
+            classNames: {
+              base: 'rounded-large',
+              content: 'p-1 border-small border-default-100 bg-background',
+            },
+          }}
+          startContent={
+            <div className="dark:fill-white fill-black">
+              <SearchSVG size={20} />
+            </div>
+          }
+          radius="full"
+          variant="bordered"
           disabledKeys={selectedAttributes.map((att) => att.toString())}
           className="max-w-xs"
           size="sm"
@@ -138,7 +186,9 @@ export default function ManagerAttributes() {
         </div>
       </div>
       <div className=" mt-5">
-        <p className=" font-semibold text-sm mb-2">Atributos:</p>
+        <p className=" text-xs ml-2 opacity-65">
+          {attribute ? attribute.length : '0'}/{MAX_ATT} atributos
+        </p>
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}

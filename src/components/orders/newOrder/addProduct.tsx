@@ -1,7 +1,6 @@
 import EmptyOrder from './emptyOrder'
 import { Button } from '@nextui-org/react'
 import { useState } from 'react'
-import SelectProduct from '@/components/products/selectProduct'
 import { createOrderState } from '@/store/order'
 import ProductItems from './productItems'
 import { useMutation } from '@tanstack/react-query'
@@ -73,31 +72,6 @@ export default function AddProductOrder() {
           )}
         </div>
       </div>
-      {openSelect && (
-        <SelectProduct
-          open={setOpenSelect}
-          onSelectProduct={(value) => {
-            const findProduct = productsInOrder.find((p) => p.id === value.id)
-            if (!findProduct) {
-              mutate(value.id)
-            }
-            setProductId(value.id)
-            setProduct({
-              id: value.id,
-              name: value.name,
-              price: value.price,
-              quantity: 1,
-              isSaved: false,
-              stock: value.stock,
-              sku: value.sku,
-              media: value.media,
-              discountPrice: value.discountPrice,
-              startDiscount: value.startDiscount,
-              endDiscount: value.endDiscount,
-            })
-          }}
-        />
-      )}
     </>
   )
 }

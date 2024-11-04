@@ -10,27 +10,25 @@ import { IUploads } from '@/types'
 import SkeletonImage from '../skeletonImage'
 import PaginationPage from '@/components/UI/pagination'
 import EmptyMedia from './emptyMedias'
+import useGetMedia from '@/hooks/useGetMedias'
 interface IMutation {
   formFile: FormData
   index: number
 }
 interface IProps extends TSelectMedia {
   children?: React.ReactNode
-  dataMedia: IUploads[] | null
   mediaSelect?: IUploads[]
-  totalPages?: number
   setMediasSelect?: React.Dispatch<SetStateAction<IUploads[] | undefined>>
 }
 export default function DragMedia({
   select,
-  dataMedia,
   mediaSelect,
-  totalPages,
   setMediasSelect,
 }: IProps) {
   const [dragOver, setDragOver] = useState(false)
   const [upload, setUpload] = useState<IUploads[] | null>(null)
   const [totalPageDefine, setTotalPageDefine] = useState(0)
+  const { data: dataMedia, totalPages } = useGetMedia()
 
   useEffect(() => {
     if (totalPages) {

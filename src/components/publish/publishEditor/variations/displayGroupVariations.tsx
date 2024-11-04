@@ -1,17 +1,16 @@
-import { ItemsVariations, TVariations, usePublishStore } from '@/store/publish'
 import { useState } from 'react'
 import DisplayItemsVariations from './displayItemsVariations'
 import DisplayDeleteItemsVariations from './displayDeleteItemsVariations'
 import ArrowAngleSVG from '@/components/icons/arrowAngle'
+import { TVariations } from '@/store/publish'
 
 type TProps = {
-  variations?: ItemsVariations[]
+  variations?: TVariations[]
   termGroup: {
     id: string
     name: string
   }
 }
-
 export default function DisplayGroupVariations({
   termGroup,
   variations,
@@ -19,8 +18,9 @@ export default function DisplayGroupVariations({
   const [open, setOpen] = useState(false)
   const totalVariations =
     variations?.filter((att) => {
-      return att.attributesTerms[0].id === termGroup.id && att.status === 'new'
+      return att.attributesTerms[0].id === termGroup.id && !att.isDeleted
     }) ?? []
+
   return (
     <>
       <div className="">
@@ -46,28 +46,36 @@ export default function DisplayGroupVariations({
           {variations?.map((att, index) => {
             const isTerm = att.attributesTerms[0].id === termGroup.id
             if (!isTerm || att.attributesTerms.length === 1) return null
-            const termsValue = att.attributesTerms.map((term) => {
-              return {
-                id: term.id,
-                name: term.name,
-              }
-            })
-            if (att.status === 'new') {
+            const terName = att.attributesTerms
+              .map((term) => term.name)
+              .join('/')
+            if (!att.isDeleted) {
               return (
                 <DisplayItemsVariations
                   key={index}
-                  terms={termsValue}
-                  termGroupID={termGroup.id}
+                  variation={att}
+                  termName={terName}
                 />
               )
             }
-            return (
-              <DisplayDeleteItemsVariations
-                key={index}
-                variation={att}
-                termGroupID={termGroup.id}
-              />
-            )
+            return null
+          })}
+          {variations?.map((att, index) => {
+            const isTerm = att.attributesTerms[0].id === termGroup.id
+            if (!isTerm || att.attributesTerms.length === 1) return null
+            const terName = att.attributesTerms
+              .map((term) => term.name)
+              .join('/')
+            if (att.isDeleted) {
+              return (
+                <DisplayDeleteItemsVariations
+                  key={index}
+                  variationId={att.id}
+                  termName={terName}
+                />
+              )
+            }
+            return null
           })}
         </div>
       </div>

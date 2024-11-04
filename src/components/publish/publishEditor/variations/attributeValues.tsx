@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { getOneAttribute } from '@/api/attributes'
 import { Button } from '@nextui-org/button'
 import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Key } from '@react-types/shared'
 import { useSortable } from '@dnd-kit/sortable'
 import ChipItems from '@/components/UI/chip'
@@ -25,8 +26,11 @@ export default function AttributeValues({
 }: AttributeValuesProps) {
   const getAtt = usePublishStore((state) => state.attributes)
 
-  const initialSelected =
-    getAtt?.find((att) => att.id === id)?.terms?.map((att) => att.id) ?? []
+  const initialSelected = useMemo(
+    () =>
+      getAtt?.find((att) => att.id === id)?.terms?.map((att) => att.id) ?? [],
+    [getAtt, id]
+  )
 
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Key | null | undefined>(null)
@@ -34,7 +38,7 @@ export default function AttributeValues({
 
   useEffect(() => {
     setValueSelected(initialSelected)
-  }, [getAtt])
+  }, [initialSelected])
 
   const { data, isPending } = useQuery({
     queryKey: ['oneAtt', id],
@@ -59,18 +63,17 @@ export default function AttributeValues({
   }
   /******* Store **********/
   const setAtt = usePublishStore((state) => state.setAttributes)
-  const selectSucces = () => {
+  const selectSucces = useCallback(() => {
     if (!data || getAtt === null) return
 
-    const values = valueSelected.map((att) => {
-      return data.terms.find((a) => a.id === att)
-    })
-    const attStoreValue = values.map((att) => {
-      return {
-        id: att?.id ?? '',
-        name: att?.name ?? '',
-      }
-    })
+    const values = valueSelected.map((att) =>
+      data.terms.find((a) => a.id === att)
+    )
+    const attStoreValue = values.map((att) => ({
+      id: att?.id ?? '',
+      name: att?.name ?? '',
+    }))
+
     const addTerms = getAtt.map((att) => {
       if (att.id === id) {
         return {
@@ -81,9 +84,15 @@ export default function AttributeValues({
       }
       return att
     })
+
+    const thisTerm = addTerms.find((t) => t.id === id)
+    if (thisTerm && thisTerm.terms.length == 0) {
+      deleteAtt(id)
+      return
+    }
     setAtt(addTerms)
-    setOpen(!open)
-  }
+    setOpen(false)
+  }, [data, getAtt, id, valueSelected, setAtt])
 
   // Sortable Drag
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -98,10 +107,10 @@ export default function AttributeValues({
         className="w-full mt-1 dark:bg-zinc-950 bg-white rounded-xl border border-zinc-200 dark:border-zinc-800"
         style={style}
       >
-        <div className="flex justify-between items-center dark:bg-zinc-900  rounded-xl px-3">
+        <div className="flex justify-between items-center dark:bg-zinc-900  rounded-xl">
           <div className=" flex items-center w-full">
             <div
-              className="mr-3 cursor-move p-1 "
+              className="mr-3 ml-3 cursor-move p-1 dark:stroke-white dark:fill-white stroke-black fill-black "
               ref={setNodeRef}
               {...attributes}
               {...listeners}
@@ -113,7 +122,10 @@ export default function AttributeValues({
               onClick={() => setOpen(!open)}
             >
               <div>
-                <p>{name}:</p>
+                <p className=" font-medium">{name}:</p>
+                <p className="text-xs opacity-60">
+                  {open && 'Presione para cerrar'}
+                </p>
                 <div
                   className={
                     open ? 'hidden' : 'flex text-xs gap-1 mt-1 flex-wrap'
@@ -131,9 +143,12 @@ export default function AttributeValues({
                       </Chip>
                     )
                   })}
+                  {valueItems.length < 1 && 'Presione para agregar una opción'}
                 </div>
               </div>
-              <div className={open ? 'rotate-180' : ''}>
+              <div
+                className={`${open ? 'rotate-180' : ''} dark:stroke-white dark:fill-white stroke-black fill-black`}
+              >
                 <ArrowAngleSVG size={18} />
               </div>
             </div>

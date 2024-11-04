@@ -1,39 +1,18 @@
 import UpdateSVG from '@/components/icons/update'
 import SquareImage from '@/components/squareImage'
-import { ItemsVariations, usePublishStore } from '@/store/publish'
+import { usePublishStore } from '@/store/publish'
 import { Button } from '@nextui-org/button'
 
 type TProps = {
-  termGroupID: string
-  variation: ItemsVariations
+  variationId: string
+  termName: string
 }
-const VariationStatus = {
-  NEW: 'new',
-  DRAFT: 'draft',
-} as const
 
 export default function DisplayDeleteItemsVariations({
-  termGroupID,
-  variation,
+  variationId,
+  termName,
 }: TProps) {
-  const getVariations = usePublishStore((state) => state.variations)
-  const setVariations = usePublishStore((state) => state.setVariation)
-
-  const termsValue = variation.attributesTerms.map((term) => {
-    return {
-      id: term.id,
-      name: term.name,
-    }
-  })
-
-  const restoreVariation = () => {
-    const { status, ...getDelete } = variation
-
-    if (getVariations) {
-      setVariations([...getVariations, getDelete])
-    }
-  }
-  const termName = termsValue.map((term, index) => term.name).join('/')
+  const restoreVariation = usePublishStore((state) => state.restoreVariation)
   return (
     <>
       <div className="dark:bg-zinc-800 bg-zinc-100 p-2  flex  justify-between items-center">
@@ -43,11 +22,11 @@ export default function DisplayDeleteItemsVariations({
           </div>
           <div>
             <div className="ml-2 flex items-center">
-              <p className="flex line-through text-sm">{termName}</p>
+              <p className="flex line-through text-sm">{termName.toString()}</p>
             </div>
             <div className="flex items-center ml-2 ">
               <p className="text-xs  line-clamp-1">
-                Esta variación no se creará
+                Esta variación fué eliminada
               </p>
             </div>
           </div>
@@ -56,7 +35,7 @@ export default function DisplayDeleteItemsVariations({
           className="text-sm text-zinc-500 hover:cursor-pointer fill-zinc-500"
           variant="bordered"
           size="sm"
-          onClick={restoreVariation}
+          onClick={() => restoreVariation(variationId)}
         >
           <div>
             <UpdateSVG size={18} />

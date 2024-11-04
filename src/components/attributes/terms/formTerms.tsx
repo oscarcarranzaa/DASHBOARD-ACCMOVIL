@@ -33,6 +33,7 @@ export default function FormTerms({ type, id }: TProps) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['oneAtt', id] })
       reset()
+      setImage(undefined)
     },
   })
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function FormTerms({ type, id }: TProps) {
   const submitTerm = (termData: newTermSchema) => {
     mutate({ formData: termData, id: id })
   }
+  console.log(image)
   return (
     <>
       <p className="mb-3 text-lg font-semibold">Crear nuevo término</p>
@@ -99,7 +101,11 @@ export default function FormTerms({ type, id }: TProps) {
               <p className="text-sm dark:text-zinc-300 text-zinc-600 mb-1">
                 Imagen (obligatorio)
               </p>
-              <SelectImage iconSize={100} setValue={setImage} />
+              <SelectImage
+                iconSize={100}
+                defaultMedias={image}
+                setValue={setImage}
+              />
             </div>
           )}
           {type === 'color' && (

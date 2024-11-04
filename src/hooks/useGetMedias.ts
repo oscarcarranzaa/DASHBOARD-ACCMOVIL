@@ -23,6 +23,7 @@ export default function useGetMedia() {
           urlMedia: urlImage,
           name: i.title,
           id: i.id,
+          progress: undefined,
         }
       })
     : null

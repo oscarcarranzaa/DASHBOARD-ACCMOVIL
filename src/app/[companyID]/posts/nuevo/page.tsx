@@ -26,11 +26,16 @@ export default function NewPublish() {
     type: postData.type,
     product: postData?.product,
     gallery: postData.gallery?.map((g) => g.id),
-    variations: variations?.map((v) => ({
-      id: v.id,
-      attributes: v.attributesTerms.map((t) => t.id),
-      product: v.product ?? null,
-    })),
+    variations: variations
+      ?.map((v) => {
+        if (v.isDeleted) return null
+        return {
+          id: v.id,
+          attributes: v.attributesTerms.map((t) => t.id),
+          product: v.product ?? null,
+        }
+      })
+      .filter((v) => v !== null),
     youtubeVideoId: postData.youtubeVideoId,
   }
   const { data: response, mutate } = useMutation({

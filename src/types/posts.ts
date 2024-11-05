@@ -34,11 +34,11 @@ export const ZGetPost = z.object({
   specifications: z.string().optional().nullable(),
   slug: z.string(),
   status: z.enum(['publish', 'draft']),
-  product: ZProduct.nullable().optional(),
+  product: ZProductInfo.nullable().optional(),
   productId: z.string().nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.array(media).optional(),
-  variations: z.array(ZVariationsPost).optional(),
+  variations: z.array(ZVariationsInfoPost).optional(),
   youtubeVideoId: z.string().optional().nullable(),
   createdAt: z.string(),
 })

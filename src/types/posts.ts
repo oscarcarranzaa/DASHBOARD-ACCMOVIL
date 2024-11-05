@@ -7,7 +7,7 @@ import { media } from './schemas'
 export const ZVariationsPost = z.object({
   id: z.string(),
   productId: z.string().optional().nullable(),
-  Product: ZProduct.optional().nullable(),
+  product: ZProduct.optional().nullable(),
   attributes: z.array(
     ZTerms.pick({ id: true, option: true, image: true, name: true }).extend({
       attribute: ZAttributes.pick({ id: true, type: true, name: true }),
@@ -17,7 +17,7 @@ export const ZVariationsPost = z.object({
 export const ZVariationsInfoPost = z.object({
   id: z.string(),
   productId: z.string().optional().nullable(),
-  Product: ZProduct.omit({ User: true }).optional().nullable(),
+  product: ZProduct.omit({ User: true }).optional().nullable(),
   attributes: z.array(
     ZTerms.pick({ id: true, option: true, image: true, name: true }).extend({
       attribute: ZAttributes.pick({ id: true, type: true, name: true }),
@@ -34,7 +34,7 @@ export const ZGetPost = z.object({
   specifications: z.string().optional().nullable(),
   slug: z.string(),
   status: z.enum(['publish', 'draft']),
-  Product: ZProduct.nullable().optional(),
+  product: ZProduct.nullable().optional(),
   productId: z.string().nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.array(media).optional(),
@@ -55,11 +55,12 @@ export const ZGetOneListPost = ZGetPost.pick({
   createdAt: true,
 }).extend({
   gallery: z.array(string()),
-  Product: ZProductInfo.nullable().optional(),
+  product: ZProductInfo.nullable().optional(),
   variations: z.array(ZVariationsInfoPost).optional(),
 })
 
 export const ZVariatiosSave = z.object({
+  id: z.string(),
   product: ZProductNew.optional().nullable(),
   attributes: z.string().array(),
 })

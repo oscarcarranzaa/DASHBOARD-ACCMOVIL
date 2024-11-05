@@ -15,7 +15,7 @@ export default function ConvertPricePost({
 }: TProps) {
   const priceVariations = variations?.map((varia) => {
     if (varia.productId) {
-      const { Product: productVariation } = varia
+      const { product: productVariation } = varia
       return {
         price: productVariation?.price,
         discount: productVariation?.discountPrice,

@@ -173,19 +173,19 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
         productId: data.productId,
         youtubeVideoId: data.youtubeVideoId,
         product: {
-          sku: data.Product?.sku ?? '',
-          barCode: data.Product?.barCode ?? '',
-          price: data.Product?.price.toString() ?? '',
-          discountPrice: data.Product?.discountPrice?.toString() ?? '',
-          startDiscount: data.Product?.startDiscount ?? '',
-          endDiscount: data.Product?.endDiscount ?? '',
-          stock: data.Product?.stock.toString() ?? '',
-          image: data.Product?.media
+          sku: data.product?.sku ?? '',
+          barCode: data.product?.barCode ?? '',
+          price: data.product?.price.toString() ?? '',
+          discountPrice: data.product?.discountPrice?.toString() ?? '',
+          startDiscount: data.product?.startDiscount ?? '',
+          endDiscount: data.product?.endDiscount ?? '',
+          stock: data.product?.stock.toString() ?? '',
+          image: data.product?.media
             ? {
-                id: data.Product.media.id,
-                urlMedia: data.Product.media.url,
-                imgURI: data.Product.media.qualities[0].src,
-                name: data.Product.media.title,
+                id: data.product.media.id,
+                urlMedia: data.product.media.url,
+                imgURI: data.product.media.qualities[0].src,
+                name: data.product.media.title,
               }
             : undefined,
         },
@@ -199,19 +199,19 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
           isDeleted: false,
           productId: v.productId,
           product: {
-            sku: v.Product?.sku ?? '',
-            barCode: v.Product?.barCode ?? '',
-            price: v.Product?.price.toString() ?? '',
-            discountPrice: v.Product?.discountPrice?.toString() ?? '',
-            startDiscount: v.Product?.startDiscount ?? '',
-            endDiscount: v.Product?.endDiscount ?? '',
-            stock: v.Product?.stock.toString() ?? '',
-            image: v.Product?.media
+            sku: v.product?.sku ?? '',
+            barCode: v.product?.barCode ?? '',
+            price: v.product?.price.toString() ?? '',
+            discountPrice: v.product?.discountPrice?.toString() ?? '',
+            startDiscount: v.product?.startDiscount ?? '',
+            endDiscount: v.product?.endDiscount ?? '',
+            stock: v.product?.stock.toString() ?? '',
+            image: v.product?.media
               ? {
-                  id: v.Product.media.id,
-                  urlMedia: v.Product.media.url,
-                  imgURI: v.Product.media.qualities[1].src,
-                  name: v.Product.media.title,
+                  id: v.product.media.id,
+                  urlMedia: v.product.media.url,
+                  imgURI: v.product.media.qualities[1].src,
+                  name: v.product.media.title,
                 }
               : undefined,
           },

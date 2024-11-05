@@ -27,6 +27,7 @@ export default function NewPublish() {
     product: postData?.product,
     gallery: postData.gallery?.map((g) => g.id),
     variations: variations?.map((v) => ({
+      id: v.id,
       attributes: v.attributesTerms.map((t) => t.id),
       product: v.product ?? null,
     })),

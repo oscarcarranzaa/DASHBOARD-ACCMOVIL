@@ -22,7 +22,7 @@ export default function Categories() {
   return (
     <>
       <NavegationPages text="Categorías" />
-      {user && <CategoryEditor />}
+      {<CategoryEditor />}
     </>
   )
 }

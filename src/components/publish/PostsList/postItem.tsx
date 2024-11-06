@@ -5,7 +5,6 @@ import { Button } from '@nextui-org/button'
 import Link from 'next/link'
 import { useMutation } from '@tanstack/react-query'
 import { duplicatePost } from '@/api/posts'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Spinner from '@/components/icons/spinner'
 import { toast } from 'sonner'
@@ -37,7 +36,7 @@ export default function PostItem({
   const { mutate, isPending: isDuplicating } = useMutation({
     mutationFn: duplicatePost,
     onSuccess: (res) => {
-      router.push(`/dash/posts/${res.id}`)
+      router.push(`/dash/producto/${res.id}`)
     },
     onError: (err) => {
       toast.error(err.message ?? 'Ocurrió un error al duplicar el producto.')
@@ -80,7 +79,7 @@ export default function PostItem({
           <Button
             color="primary"
             size="sm"
-            href={`/dash/posts/${id}`}
+            href={`/dash/producto/${id}`}
             as={Link}
           >
             Editar

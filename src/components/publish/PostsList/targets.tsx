@@ -23,7 +23,7 @@ export default function PostsListTarget({
   return (
     <>
       <Link
-        href={`/dash/posts${query ? `?status=${query}` : ''}`}
+        href={`/dash/producto${query ? `?status=${query}` : ''}`}
         className={`max-w-60 hover:cursor-pointer border-b-5 ${q === query ? ' border-primary' : 'border-transparent opacity-60'}`}
       >
         <div className="   p-1 px-3">

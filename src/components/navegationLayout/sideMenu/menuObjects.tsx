@@ -38,27 +38,27 @@ export const menuItems = [
   {
     name: 'Productos',
     icon: <ProductSVG size={iconSize} />,
-    urlKey: '/dash/posts',
+    urlKey: '/dash/producto',
     permissionKeys: [],
     items: [
       {
         name: 'Nuevo',
-        href: '/dash/posts/nuevo',
+        href: '/dash/producto/nuevo',
         permissionKeys: ['posts.create'],
       },
       {
         name: 'Ver productos',
-        href: '/dash/posts/',
+        href: '/dash/producto/',
         permissionKeys: [],
       },
       {
         name: 'Categorías',
-        href: '/dash/posts/categories',
+        href: '/dash/producto/categorias',
         permissionKeys: ['posts.categoriesAllActions'],
       },
       {
         name: 'Atributos',
-        href: '/dash/posts/atributos',
+        href: '/dash/producto/atributos',
         permissionKeys: ['posts.attributesAllActions'],
       },
     ],

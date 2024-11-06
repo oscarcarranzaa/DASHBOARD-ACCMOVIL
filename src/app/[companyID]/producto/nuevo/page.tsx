@@ -40,7 +40,7 @@ export default function NewPublish() {
     mutationFn: createPost,
     onSuccess: (res) => {
       reset()
-      router.push(`/dash/posts/${res.id}`)
+      router.push(`/dash/producto/${res.id}`)
     },
     onError: (err) => {
       setIsSaving(false)

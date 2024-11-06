@@ -60,7 +60,7 @@ export default function PostsList() {
           color="primary"
           className="fill-white"
           as={Link}
-          href="/dash/posts/nuevo"
+          href="/dash/producto/nuevo"
         >
           Agregar Nuevo <PlusSVG size={20} />
         </Button>

@@ -37,7 +37,9 @@ export default function PublishEditor({
     if (!data && id !== 'new') {
       reset()
       setDataSuccess(true)
+      return
     }
+    setDataSuccess(true)
   }, [data, setData, id, reset])
 
   return (

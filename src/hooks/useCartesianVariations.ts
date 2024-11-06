@@ -33,13 +33,17 @@ const createVariationMap = (variations?: TVariations[]) => {
 export const useCartesianVariations = ({ terms, variations }: TProps) => {
   const cartesianVariations = useMemo(() => {
     if (!terms || terms.length === 0) return []
-    const isDeleted = variations?.every((v) => v.isNew === false)
 
     // Generar el producto cartesiano de los términos
     const cartesianProduct = createCartesianProduct(terms)
 
     // Crear un mapa de las variaciones existentes para búsqueda rápida
     const variationMap = createVariationMap(variations)
+
+    const isDeleted =
+      variations && variations.length > 0
+        ? variations.every((v) => v.isNew === false)
+        : false
 
     // Generar variaciones finales
     return cartesianProduct.map((attributesTerms) => {
@@ -51,7 +55,13 @@ export const useCartesianVariations = ({ terms, variations }: TProps) => {
 
       return existingVariation
         ? { ...existingVariation, attributesTerms }
-        : { id: key, product: null, isNew: true, isDeleted, attributesTerms }
+        : {
+            id: key,
+            product: null,
+            isNew: true,
+            isDeleted,
+            attributesTerms,
+          }
     })
   }, [terms, variations])
 

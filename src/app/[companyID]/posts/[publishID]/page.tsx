@@ -5,6 +5,7 @@ import NotFound from '@/components/errorsPages/notFound'
 import Spinner from '@/components/icons/spinner'
 import NavegationPages from '@/components/navegationPages'
 import PublishEditor from '@/components/publish/publishEditor/'
+import PublishEditorSkeleton from '@/components/publish/publishEditor/skeleton'
 import { usePublishStore } from '@/store/publish'
 import { Button } from '@nextui-org/button'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -24,7 +25,7 @@ export default function EditPublish() {
     queryFn: () => getPost(publishID),
     refetchOnWindowFocus: false,
   })
-  const title = data ? data.title : 'Cargando...'
+  const title = data ? data.title : 'Cargando resultado...'
 
   const postData = usePublishStore((state) => state.postData)
   const variations = usePublishStore((state) => state.variations)
@@ -38,15 +39,12 @@ export default function EditPublish() {
     product: postData.product,
     gallery: postData.gallery?.map((g) => g.id),
     variations: variations
-      ?.map((v) => {
-        if (v.isDeleted) return null
-        return {
-          id: v.id,
-          attributes: v.attributesTerms.map((t) => t.id),
-          product: v.product ?? null,
-        }
-      })
-      .filter((v) => v !== null),
+      ?.filter((v) => !v.isDeleted)
+      .map((v) => ({
+        id: v.id,
+        attributes: v.attributesTerms.map((t) => t.id),
+        product: v.product ?? undefined,
+      })),
     youtubeVideoId: postData.youtubeVideoId,
   }
   const { data: response, mutate } = useMutation({
@@ -82,7 +80,7 @@ export default function EditPublish() {
         <Toaster richColors theme="dark" />
       </div>
 
-      {data && (
+      {data ? (
         <PublishEditor data={data} action={handleSave}>
           <Button
             color="primary"
@@ -112,6 +110,8 @@ export default function EditPublish() {
             </Button>
           ) : null}
         </PublishEditor>
+      ) : (
+        <PublishEditorSkeleton />
       )}
     </>
   )

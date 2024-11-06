@@ -1,8 +1,9 @@
 type TProps = {
   src: string
+  isDisabled?: boolean
 }
 
-export default function SquareImage({ src }: TProps) {
+export default function SquareImage({ src, isDisabled }: TProps) {
   return (
     <div
       className=" rounded-md  overflow-hidden relative "
@@ -22,7 +23,7 @@ export default function SquareImage({ src }: TProps) {
             loading="lazy"
             decoding="async"
             alt="Imagen de covertor"
-            className="  rounded-md w-full  h-full object-contain m-auto"
+            className={`rounded-md w-full  h-full object-contain m-auto ${isDisabled && 'grayscale'}`}
           />
         </picture>
       </div>

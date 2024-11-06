@@ -37,6 +37,7 @@ export default function PostsList() {
   return (
     <>
       <div className="flex gap-3 border-b border-zinc-500">
+        <PostsListTarget title="Todos" icon={<PublishSVG size={24} />} />
         <PostsListTarget
           title="Publicados"
           query="publish"
@@ -48,7 +49,7 @@ export default function PostsList() {
           icon={<TrashSVG size={24} />}
         />
         <PostsListTarget
-          title="Tus publicaciones"
+          title="Subido por ti"
           query="me"
           icon={<UserCheckSVG size={24} />}
         />
@@ -80,6 +81,7 @@ export default function PostsList() {
                     title,
                     type,
                     gallery,
+                    status,
                     variations,
                     product,
                     totalStock,
@@ -101,6 +103,7 @@ export default function PostsList() {
                       }
                       name={title}
                       image={gallery[0]}
+                      isDraft={status === 'draft'}
                       outStock={outStock}
                       key={id}
                     />

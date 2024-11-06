@@ -70,7 +70,7 @@ export default function ProductEditor() {
       )
     }
   }
-  console.log('ll')
+
   useEffect(() => {
     const suscribeWatch = watch((data) => {
       const discoutPriceValid =

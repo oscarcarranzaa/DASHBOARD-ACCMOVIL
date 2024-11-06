@@ -61,7 +61,7 @@ export const ZGetOneListPost = ZGetPost.pick({
 
 export const ZVariatiosSave = z.object({
   id: z.string(),
-  product: ZProductNew.optional().nullable(),
+  product: ZProductNew.optional(),
   attributes: z.string().array(),
 })
 

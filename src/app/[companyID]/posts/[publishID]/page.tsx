@@ -53,11 +53,12 @@ export default function EditPublish() {
     mutationFn: updatePost,
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: [publishID] })
-      toast.success('Catálogo actualizado...')
+      toast.success('Producto atualizado')
       setIsSaving(false)
     },
     onError: (err) => {
-      toast.error('Error al actualizar.')
+      setIsSaving(false)
+      toast.error('Ocurrio un error')
     },
   })
 

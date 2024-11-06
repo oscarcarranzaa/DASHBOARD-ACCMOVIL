@@ -21,6 +21,7 @@ export type TVariations = {
   id: string
   product?: newProductSchema | null
   isDeleted?: boolean
+  isNew?: boolean
   attributesTerms: {
     id: string
     name: string
@@ -29,7 +30,6 @@ export type TVariations = {
 
 export type StatePublish = {
   variations?: TVariations[]
-
   attributes:
     | {
         id: string
@@ -141,7 +141,7 @@ type Action = {
     image?: IUploads
     variationId: string
   }) => void
-  setProductId: (productId?: productSchema) => void
+  setProduct: (product?: newProductSchema | null) => void
 }
 
 export const usePublishStore = create<StatePublish & Action>((set) => ({
@@ -197,6 +197,7 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
         data.variations?.map((v) => ({
           id: v.id,
           isDeleted: false,
+          isNew: false,
           productId: v.productId,
           product: {
             sku: v.product?.sku ?? '',
@@ -221,8 +222,8 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
           })),
         })) ?? [],
     })),
-  setProductId: (Product) =>
-    set((state) => ({ postData: { ...state.postData, Product } })),
+  setProduct: (product) =>
+    set((state) => ({ postData: { ...state.postData, product } })),
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),
 
   setAttributes: (newAttributes) => set(() => ({ attributes: newAttributes })),

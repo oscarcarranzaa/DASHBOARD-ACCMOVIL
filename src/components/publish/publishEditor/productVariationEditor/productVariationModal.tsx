@@ -6,12 +6,11 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@nextui-org/react'
-import ProductEditor from '.'
 import { ReactNode } from 'react'
-import ProductForm from './productForm'
+import ProductVariationForm from './productVariationForm'
 import { newProductSchema } from '@/types/products'
 
-export default function ProductModalEditor({
+export default function ProductVariationEditorModal({
   children,
   title,
   value,
@@ -46,7 +45,7 @@ export default function ProductModalEditor({
             <>
               <ModalHeader>Editar {title}</ModalHeader>
               <div className="p-5">
-                <ProductForm
+                <ProductVariationForm
                   value={value}
                   variationId={variationId}
                   onClose={onClose}

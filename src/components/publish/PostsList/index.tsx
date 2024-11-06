@@ -88,7 +88,7 @@ export default function PostsList() {
                   const outStock = totalStock === 0
                   const prices = ConvertPricePost({
                     variations,
-                    product: product,
+                    product,
                     type,
                   })
                   return (

@@ -1,5 +1,5 @@
 import { string, z } from 'zod'
-import { ZProduct, ZProductInfo, ZProductNew } from './products'
+import { ZProduct, ZProductData, ZProductInfo, ZProductNew } from './products'
 import { ZAttributes, ZTerms } from './attributes'
 import { ZCategory } from './category'
 import { media } from './schemas'
@@ -34,7 +34,7 @@ export const ZGetPost = z.object({
   specifications: z.string().optional().nullable(),
   slug: z.string(),
   status: z.enum(['publish', 'draft']),
-  product: ZProductInfo.nullable().optional(),
+  product: ZProductData.nullable().optional(),
   productId: z.string().nullable().optional(),
   type: z.enum(['variable', 'simple']),
   gallery: z.array(media).optional(),
@@ -94,7 +94,7 @@ export const getLisPosts = z.object({
   pageNumber: z.number(),
 })
 export type getLisPostsSchema = z.infer<typeof getLisPosts>
-export type VariationsAndAttributes = z.infer<typeof ZVariationsPost>
+export type VariationsAndAttributes = z.infer<typeof ZVariationsInfoPost>
 export type PostSchema = z.infer<typeof ZGetPost>
 export type SavePostSchema = z.infer<typeof ZSavePost>
 export type SaveNewPostSchema = z.infer<typeof ZSaveGetPost>

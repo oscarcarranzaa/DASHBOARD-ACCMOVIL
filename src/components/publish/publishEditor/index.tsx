@@ -9,7 +9,7 @@ import { usePublishStore } from '@/store/publish'
 import ShortDescriptionPost from './textEditor/shortDescription'
 import DescriptionPost from './textEditor/description'
 import { PostSchema } from '@/types/posts'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 export default function PublishEditor({
   data,
@@ -23,6 +23,7 @@ export default function PublishEditor({
   const { title, categories, id, status } = usePublishStore(
     (state) => state.postData
   )
+  const [dataSuccess, setDataSuccess] = useState(false)
   const isNew = id === 'new'
   const isPublish = status === 'publish'
 
@@ -31,9 +32,11 @@ export default function PublishEditor({
   useEffect(() => {
     if (data) {
       setData(data)
+      setDataSuccess(true)
     }
     if (!data && id !== 'new') {
       reset()
+      setDataSuccess(true)
     }
   }, [data, setData, id, reset])
 
@@ -58,7 +61,7 @@ export default function PublishEditor({
           </div>
           <div className="mt-10 w-full">
             <p className="text-sm mb-2">Agregar productos</p>
-            <Variations />
+            {dataSuccess && <Variations />}
           </div>
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción</p>

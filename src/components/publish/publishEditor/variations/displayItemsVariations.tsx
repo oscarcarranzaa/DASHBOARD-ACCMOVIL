@@ -1,5 +1,5 @@
 import { TVariations, usePublishStore } from '@/store/publish'
-import ProductEditor from '../productEditor'
+import ProductVariationEditor from '../productVariationEditor'
 import TrashSVG from '@/components/icons/trahs'
 import { Button } from '@nextui-org/react'
 
@@ -17,7 +17,7 @@ export default function DisplayItemsVariations({
   return (
     <>
       <div className="dark:bg-zinc-950 p-1 flex  justify-between items-center border-t dark:border-zinc-700 border-zinc-300 ">
-        <ProductEditor
+        <ProductVariationEditor
           name={termName}
           value={variation.product}
           variationId={variation.id}

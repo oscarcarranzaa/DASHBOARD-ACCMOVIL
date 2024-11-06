@@ -25,6 +25,7 @@ export const ZProduct = z.object({
   createdAt: z.string(),
 })
 export const ZProductInfo = ZProduct.omit({ User: true, media: true })
+export const ZProductData = ZProduct.omit({ User: true })
 
 export const ZProductNew = z
   .object({
@@ -53,7 +54,32 @@ export const ZProductNew = z
       path: ['discountPrice'],
     }
   )
-
+export const ZNewProductSingle = z
+  .object({
+    sku: z.string().optional(),
+    barCode: z.string().optional(),
+    price: z.string().optional(),
+    discountPrice: z.string().optional(),
+    startDiscount: z.string().optional(),
+    endDiscount: z.string().optional(),
+    stock: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.discountPrice &&
+        parseFloat(data.discountPrice) >
+          parseFloat(data?.price ? data.price : '0')
+      ) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'El precio de descuento no puede ser mayor que el precio',
+      path: ['discountPrice'],
+    }
+  )
 export const ZGetProducts = z.object({
   data: z.array(ZProduct),
   totalPages: z.number(),
@@ -66,3 +92,4 @@ export type productSchema = z.infer<typeof ZProduct>
 export type productInfoType = z.infer<typeof ZProductInfo>
 export type getProductsSchema = z.infer<typeof ZGetProducts>
 export type newProductSchema = z.infer<typeof ZProductNew>
+export type newProductSingleSchema = z.infer<typeof ZNewProductSingle>

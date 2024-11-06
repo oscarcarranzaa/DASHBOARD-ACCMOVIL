@@ -16,7 +16,11 @@ type TProps = {
   value?: newProductSchema | null
   onClose?: () => void
 }
-export default function ProductForm({ variationId, value, onClose }: TProps) {
+export default function ProductVariationForm({
+  variationId,
+  value,
+  onClose,
+}: TProps) {
   const startDate = value?.startDiscount
   const endDate = value?.endDiscount
   const defaultDateCalendar =
@@ -51,11 +55,9 @@ export default function ProductForm({ variationId, value, onClose }: TProps) {
   }
 
   const {
-    register,
     handleSubmit,
     setValue,
     unregister,
-    getValues,
     control,
     formState: { errors },
   } = useForm<newProductSchema>({
@@ -85,10 +87,7 @@ export default function ProductForm({ variationId, value, onClose }: TProps) {
     if (onClose) {
       onClose()
     }
-    if (variationId) {
-      setProductVariation({ variationId, product: form })
-      return
-    }
+    if (variationId) setProductVariation({ variationId, product: form })
   }
   return (
     <>
@@ -240,6 +239,7 @@ export default function ProductForm({ variationId, value, onClose }: TProps) {
             />
           </div>
         </div>
+
         <div className="mt-5 w-full">
           <Button type="submit" color="primary" className="w-full">
             Listo

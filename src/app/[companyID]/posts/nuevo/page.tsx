@@ -8,6 +8,7 @@ import { Button } from '@nextui-org/button'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function NewPublish() {
   const [isSaving, setIsSaving] = useState(false)
@@ -43,6 +44,10 @@ export default function NewPublish() {
     onSuccess: (res) => {
       reset()
       router.push(`/dash/posts/${res.id}`)
+    },
+    onError: (err) => {
+      setIsSaving(false)
+      toast.error('Ocurrio un error')
     },
   })
   const handleSave = (action: 'publish' | 'draft') => {

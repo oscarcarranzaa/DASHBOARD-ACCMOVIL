@@ -1,10 +1,11 @@
 import { Tab, Tabs } from '@nextui-org/react'
 import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
-import ProductForm from '../productEditor/productForm'
+
+import ProductEditor from '../productEditor'
 
 export default function Variations() {
-  const { type, product } = usePublishStore((state) => state.postData)
+  const { type } = usePublishStore((state) => state.postData)
   const setType = usePublishStore((state) => state.setType)
   return (
     <>
@@ -27,7 +28,7 @@ export default function Variations() {
             >
               <Tab key="simple" title="Simple">
                 <div className="w-full ">
-                  <ProductForm value={product} />
+                  <ProductEditor />
                 </div>
               </Tab>
               <Tab key="variable" title="Variable">

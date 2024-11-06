@@ -36,7 +36,7 @@ export default function VariationsValues() {
   useEffect(() => {
     setVariation(variationsCart)
   }, [attributes])
-  console.log(variations)
+
   return (
     <div className="mt-5">
       <p className=" font-semibold text-sm">Variaciones:</p>

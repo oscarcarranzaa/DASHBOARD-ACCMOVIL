@@ -5,17 +5,31 @@ import DownloadSVG from '@/components/icons/download'
 import FireSVG from '@/components/icons/fire'
 import LinkSVG from '@/components/icons/link'
 import useClipboard from '@/hooks/useClipBoard'
-import { Button, Image, Input } from '@nextui-org/react'
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Image,
+  Input,
+} from '@nextui-org/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import NavegationPages from '@/components/navegationPages'
+import { toast } from 'sonner'
+import SendSVG from '@/components/icons/send'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Settings from '@/components/icons/settings'
 
 interface IEditMedia {
   title: string
 }
+const ZMediaName = z.object({
+  title: z.string().min(3, { message: 'Nombre muy corto (min: 3)' }),
+})
 
 export default function MediaID() {
   const { isCopied, copyToClipboard } = useClipboard()
@@ -36,15 +50,29 @@ export default function MediaID() {
       console.log(data)
     },
   })
-  const { mutate: editMutate, data: editData } = useMutation({
-    mutationFn: editOneMedia,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medias'] })
-    },
-  })
-  const { register, handleSubmit, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { isDirty, errors },
+  } = useForm<z.infer<typeof ZMediaName>>({
+    resolver: zodResolver(ZMediaName),
     defaultValues: {
       title: '',
+    },
+  })
+
+  const { mutate: editMutate } = useMutation({
+    mutationFn: editOneMedia,
+    onSuccess: (da) => {
+      queryClient.invalidateQueries({ queryKey: ['medias'] })
+      reset({ title: getValues('title') })
+      toast.success(da ?? 'Nombre actualizado')
+    },
+    onError: () => {
+      toast.error('Ocurrio un error')
     },
   })
 
@@ -52,7 +80,7 @@ export default function MediaID() {
     setValue('title', data ? data.title : '')
   }, [data, setValue])
 
-  const fileName = data?.key.split('/').pop() ?? 'Cargando'
+  const fileName = data?.title ?? 'Medios'
   // si no hay datos retornamos que no hay datos
   if (isFetching) return 'Cargando...'
   if (!data) {
@@ -72,13 +100,15 @@ export default function MediaID() {
       mediaID: data.id,
       title: formData.title,
     }
-    editMutate(dataMedia)
+    if (isDirty) {
+      editMutate(dataMedia)
+    }
   }
   return (
     <>
       <NavegationPages text="Previsualizar medio" />
       <h2 className="text-xl mt-5 font-semibold pl-5">{fileName}</h2>
-      <div className="grid grid-cols-6 mt-2 gap-8">
+      <div className="grid grid-cols-3 md:grid-cols-6 mt-2 gap-8">
         <section className="w-full col-span-3 p-5 justify-center">
           {data && (
             <Image
@@ -89,27 +119,57 @@ export default function MediaID() {
             />
           )}
         </section>
-        <section className="col-span-2 pt-5">
-          <h3 className="text-xl font-semibold mb-3">Editar</h3>
-
+        <section className="col-span-3 pt-5 max-w-2xl">
           <form onSubmit={handleSubmit(handleForm)}>
-            <div className="flex flex-col justify-end items-end">
+            <div className="flex gap-4   justify-center">
               <Input
                 size="md"
-                label={'Nombre'}
+                label="Editar Nombre"
                 variant="bordered"
+                className="w-full"
+                placeholder="Ingrese el nombre"
+                labelPlacement="outside"
+                isInvalid={!!errors.title}
+                errorMessage={errors.title?.message}
                 {...register('title')}
               />
-              <div className="mt-2 flex justify-between items-center w-full">
-                <p className="text-xs text-green-600">{editData}</p>
-                <Button size="sm" color="primary" type="submit">
-                  Guardar
+              <div className="mt-6">
+                <Button
+                  color={isDirty ? 'primary' : 'default'}
+                  type="submit"
+                  disabled={!isDirty}
+                >
+                  <div className=" stroke-white">
+                    <SendSVG size={24} />
+                  </div>
                 </Button>
               </div>
             </div>
           </form>
-
-          <h3 className="text-xl font-semibold mb-2 mt-8">Información</h3>
+          <section className="col-span-1 pt-5">
+            <div className="flex gap-5">
+              <Button className="w-full" onClick={handleCopy(data.url)}>
+                <span className="stroke-black dark:stroke-white">
+                  <LinkSVG size={20} />
+                </span>
+                {isCopied ? 'Enlace copiado' : 'Copiar enlace'}
+              </Button>
+              <div className="w-full flex ">
+                <a
+                  href={data.url}
+                  download
+                  className="w-full bg-blue-600 flex justify-center items-center p-2 rounded-xl text-white"
+                  target="_blank"
+                >
+                  <span className="stroke-white fill-white  ">
+                    <DownloadSVG size={20} />
+                  </span>
+                  <p className="text-sm">Descargar</p>
+                </a>
+              </div>
+            </div>
+          </section>
+          <h3 className=" font-medium mb-2 mt-8">Información</h3>
           <ul className="text-sm">
             <li className="pb-1">
               <span className="font-semibold">ID: </span>
@@ -125,7 +185,13 @@ export default function MediaID() {
             </li>
             <li className="pb-1">
               <span className="font-semibold pr-1">URL:</span>
-              {data?.url}
+              <a
+                href={data?.url ?? '#'}
+                target="_blank"
+                className="hover:underline text-primary line-clamp-1"
+              >
+                {data?.url}
+              </a>
             </li>
             <li className="pb-1">
               <span className="font-semibold">Tamaño: </span>
@@ -142,61 +208,8 @@ export default function MediaID() {
                 : ''}
             </li>
           </ul>
-
-          <div className="w-full mt-10 border border-dashed border-zinc-400 rounded-xl min-h-32 flex justify-center items-center flex-col p-2">
-            <h4 className="font-semibold">Medio subido por:</h4>
-            <div className="w-16 h-16 rounded-full overflow-hidden mt-3">
-              <img src={avatar} />
-            </div>
-            <p className="text-sm font-semibold">{data.user.firstName}</p>
-          </div>
-          <div className="mt-20 text-red-600">
-            <h3 className="font-semibold text-xl ">Zona peligrosa</h3>
-            <p className="text-sm text-rose-500">
-              ¡Cuidado! esta acción eliminará de forma permanente este elemento,
-              piénsalo 2 veces.
-            </p>
-            <div className="flex justify-end w-full mt-10">
-              <Button
-                color="danger"
-                className="bg-red-600 rounded-xl focus:outline-none"
-                onClick={() => mutate(data.id)}
-              >
-                <span className=" stroke-white">
-                  <FireSVG size={20} />
-                </span>
-                Eliminar
-              </Button>
-            </div>
-          </div>
-        </section>
-        <section className="col-span-1 pt-5">
-          <h3 className="text-xl font-semibold mb-3 ">Acciones</h3>
-          <div>
-            <Button className="w-full" onClick={handleCopy(data.url)}>
-              <span className="stroke-black dark:stroke-white">
-                <LinkSVG size={20} />
-              </span>
-              {isCopied ? 'Enlace copiado' : 'Copiar enlace'}
-            </Button>
-            <div className="w-full flex mt-3 ">
-              <a
-                href={data.url}
-                download
-                className="w-full bg-blue-600 flex justify-center items-center p-3 rounded-lg text-white"
-                target="_blank"
-              >
-                <span className="stroke-white fill-white pr-1 ">
-                  <DownloadSVG size={20} />
-                </span>
-                <p className="text-sm">Descargar</p>
-              </a>
-            </div>
-          </div>
-          <h3 className="text-xl font-semibold mb-3 mt-10">
-            Recursos optimizados
-          </h3>
-          <div className="flex  flex-col-reverse">
+          <h3 className=" font-medium mb-3 mt-10">Recursos optimizados</h3>
+          <div className="grid grid-cols-2 gap-1 gap-x-3 ">
             {data.qualities
               ? data.qualities.map((img) => {
                   return (
@@ -209,6 +222,42 @@ export default function MediaID() {
                   )
                 })
               : 'No se encontraron resultados'}
+          </div>
+          <div className="w-full mt-10 border border-dashed border-zinc-400 rounded-xl min-h-32 flex justify-center items-center flex-col p-2">
+            <h4 className="font-semibold">Medio subido por:</h4>
+            <div className="w-16 h-16 rounded-full overflow-hidden mt-3">
+              <img src={avatar} />
+            </div>
+            <p className="text-sm font-semibold">{data.user.firstName}</p>
+          </div>
+          <div className="dark:fill-zinc-200 mt-10 mb-20 ">
+            <Accordion variant="bordered" itemClasses={{ title: 'text-sm' }}>
+              <AccordionItem
+                title="Ajustes"
+                startContent={<Settings size={18} />}
+                key={1}
+              >
+                <div className="mt-5 text-red-600">
+                  <h3 className="font-semibold text-xl ">Zona peligrosa</h3>
+                  <p className="text-sm text-rose-500">
+                    ¡Cuidado! esta acción eliminará de forma permanente este
+                    elemento, piénsalo 2 veces.
+                  </p>
+                  <div className="flex justify-end w-full mt-10">
+                    <Button
+                      color="danger"
+                      className="bg-red-600 rounded-xl focus:outline-none"
+                      onClick={() => mutate(data.id)}
+                    >
+                      <span className=" stroke-white">
+                        <FireSVG size={20} />
+                      </span>
+                      Eliminar
+                    </Button>
+                  </div>
+                </div>
+              </AccordionItem>
+            </Accordion>
           </div>
         </section>
       </div>

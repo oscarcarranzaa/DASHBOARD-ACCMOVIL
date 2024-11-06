@@ -39,13 +39,14 @@ export default function FormTerms({ type, id }: TProps) {
   useEffect(() => {
     setValue('image', image ? image[0].id : undefined)
   }, [image, setValue])
+
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setColorType(e.target.value)
   }
   const submitTerm = (termData: newTermSchema) => {
     mutate({ formData: termData, id: id })
   }
-  console.log(image)
+
   return (
     <>
       <p className="mb-3 text-lg font-semibold">Crear nuevo término</p>

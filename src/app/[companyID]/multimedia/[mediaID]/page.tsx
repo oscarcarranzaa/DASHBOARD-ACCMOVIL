@@ -38,7 +38,7 @@ export default function MediaID() {
   const param = useParams()
   const id = param.mediaID.toString()
   const { data, isLoading } = useQuery({
-    queryKey: ['oneMedia'],
+    queryKey: ['oneMedia', id],
     queryFn: () => getOneMedia(id),
     refetchOnWindowFocus: false,
   })

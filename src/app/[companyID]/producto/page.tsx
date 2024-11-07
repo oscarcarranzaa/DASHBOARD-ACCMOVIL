@@ -5,7 +5,7 @@ import PostsList from '@/components/publish/PostsList'
 export default function Posts() {
   return (
     <>
-      <NavegationPages text="Ver posts" />
+      <NavegationPages text="Ver productos" />
       <PostsList />
     </>
   )

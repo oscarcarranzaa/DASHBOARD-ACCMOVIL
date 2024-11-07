@@ -57,7 +57,7 @@ export default function NewPublish() {
   }
   return (
     <>
-      <NavegationPages text="Nueva publicación" />
+      <NavegationPages text="Nuevo producto" />
       <PublishEditor action={handleSave}>
         <Button
           color="primary"

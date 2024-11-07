@@ -68,7 +68,7 @@ export default function EditPublish() {
   }
 
   if (isError) {
-    return <NotFound message="No se pudo encontrar el post." />
+    return <NotFound message="No se pudo encontrar el producto." />
   }
 
   const isPublish = data?.status === 'publish'

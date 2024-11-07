@@ -127,7 +127,7 @@ export default function ContentImages({
               ) : (
                 <Link
                   href={`/dash/multimedia/${load && load <= 100 ? '' : mediaID}`}
-                  className="text-xs line-clamp-1 hover:underline"
+                  className="w-full h-full"
                 >
                   <img
                     src={image}

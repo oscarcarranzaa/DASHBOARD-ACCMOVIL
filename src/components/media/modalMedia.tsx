@@ -6,8 +6,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { IUploads } from '@/types'
 import useOutsideClick from '@/hooks/useOutSideClick'
-import Search from '../UI/search'
-import useGetMedia from '@/hooks/useGetMedias'
 
 const DragMedia = dynamic(() => import('./upload/drag'), {
   ssr: false,
@@ -68,7 +66,7 @@ export default function ModalMedia({
           className="bg-white dark:bg-zinc-900 overflow-hidden  dark:fill-white w-11/12 rounded-2xl relative max-w-6xl border border-zinc-300 dark:border-zinc-600 "
           ref={ref as React.MutableRefObject<HTMLDivElement>}
         >
-          <div className="mb-10 flex justify-between items-center bg-zinc-100 dark:bg-black p-5 py-3">
+          <div className="mb-1 flex justify-between items-center bg-zinc-100 dark:bg-black p-5 pb-2 py-2">
             <p className=" font-semibold">Selector de medios</p>
             <button
               onClick={() => closeModal()}
@@ -80,12 +78,7 @@ export default function ModalMedia({
             </button>
           </div>
           <div className="px-3">
-            <Search
-              searchName="searchMedia"
-              pageName="pageMedia"
-              placeHolder="Buscar medio..."
-            />
-            <div className="overflow-y-scroll max-h-screen mt-5">
+            <div className="overflow-y-scroll max-h-screen">
               <div className="mb-60 pb-1">
                 {openModal && (
                   <DragMedia
@@ -104,7 +97,7 @@ export default function ModalMedia({
                   className=" text-sky-600 hover:underline"
                   onClick={clearSelect}
                 >
-                  Limpiar selección
+                  Limpiar
                 </button>
               ) : null}
             </div>

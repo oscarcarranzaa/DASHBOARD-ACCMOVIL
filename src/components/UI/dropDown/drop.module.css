@@ -1,0 +1,6 @@
+.drop_menu {
+  display: none;
+}
+.drop_container:hover > .drop_menu {
+  display: block;
+}

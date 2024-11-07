@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import DragFiles from '@/components/media/upload/dragFIles'
-import { SetStateAction, useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useRef, useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
 import ContentImages from '../contentImages'
 import style from './style.module.css'
@@ -11,6 +11,10 @@ import SkeletonImage from '../skeletonImage'
 import PaginationPage from '@/components/UI/pagination'
 import EmptyMedia from './emptyMedias'
 import useGetMedia from '@/hooks/useGetMedias'
+import Search from '@/components/UI/search'
+import { Button } from '@nextui-org/react'
+import PlusSVG from '@/components/icons/plus'
+import UploadSVG from '@/components/icons/upload'
 interface IMutation {
   formFile: FormData
   index: number
@@ -35,6 +39,11 @@ export default function DragMedia({
       setTotalPageDefine(totalPages)
     }
   }, [totalPages])
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click()
+  }
 
   const { mutate } = useMutation({
     mutationFn: async ({ formFile, index }: IMutation) => {
@@ -120,6 +129,26 @@ export default function DragMedia({
     e.stopPropagation()
     setDragOver(false)
   }
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    if (event.target.files) {
+      const files = event.target.files
+      let isImage = true
+      Array.from(files).map((file, i) => {
+        if (file.type.startsWith('image/') === false) {
+          isImage = false
+          return
+        }
+      })
+      if (isImage) {
+        uploadFile(files).then((results) => {
+          const upValue = !upload ? results : results.concat(upload)
+          setUpload(upValue)
+        })
+      }
+    }
+  }
   // Subir los archivos
   const uploadFile = (files: FileList) => {
     return Promise.all<IUploads>(
@@ -162,7 +191,29 @@ export default function DragMedia({
       >
         <DragFiles />
       </div>
+      <div className=" flex justify-between dark:fill-white px-3 mb-3 pt-2">
+        <Search
+          searchName="searchMedia"
+          pageName="pageMedia"
+          placeHolder="Buscar medio..."
+        />
 
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          multiple
+          ref={fileInputRef}
+          className="hidden"
+        />
+        <Button
+          color="primary"
+          className="w-40 rounded"
+          onClick={handleButtonClick}
+        >
+          <UploadSVG size={24} /> Cargar
+        </Button>
+      </div>
       <div className={style.mediaContent}>
         {upload?.map((e) => {
           const checkSelect = mediaSelect?.find((s) => s.id == e.id)

@@ -27,7 +27,7 @@ export default function DropDown({ label, children }: TProps) {
           className="stroke-none  dark:fill-white  bg-zinc-200 dark:bg-zinc-600 right-5  p-1 rounded-md hover:fill-white hover:bg-primary "
           onClick={() => setOpenActions(!openActions)}
         >
-          <MenuDotsSVG size={20} />
+          <MenuDotsSVG size={16} />
         </button>
       </div>
     </>

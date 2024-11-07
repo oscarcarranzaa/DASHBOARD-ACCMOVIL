@@ -4,3 +4,12 @@
 .media_container:hover > .media_menu {
   display: block;
 }
+.zoom_image {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.zoom_image:hover {
+  transform: scale(1.03);
+}

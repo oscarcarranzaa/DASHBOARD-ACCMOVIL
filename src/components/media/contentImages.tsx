@@ -108,7 +108,7 @@ export default function ContentImages({
           style={{ paddingTop: '100%' }}
         >
           <div
-            className="absolute h-full w-full overflow-hidden"
+            className="absolute h-full w-full overflow-hidden rounded-md"
             style={{
               transform: 'translate(-50%, -50%)',
               top: '50%',
@@ -116,13 +116,28 @@ export default function ContentImages({
             }}
           >
             <picture>
-              <img
-                src={image}
-                loading="lazy"
-                decoding="async"
-                alt="Imagen de covertor"
-                className="rounded-md w-full h-full object-contain m-auto"
-              />
+              {isSelect ? (
+                <img
+                  src={image}
+                  loading="lazy"
+                  decoding="async"
+                  alt="Imagen de covertor"
+                  className={` w-full h-full object-contain m-auto ${style.zoom_image}`}
+                />
+              ) : (
+                <Link
+                  href={`/dash/multimedia/${load && load <= 100 ? '' : mediaID}`}
+                  className="text-xs line-clamp-1 hover:underline"
+                >
+                  <img
+                    src={image}
+                    loading="lazy"
+                    decoding="async"
+                    alt="Imagen de covertor"
+                    className={` w-full h-full object-contain m-auto ${style.zoom_image}`}
+                  />
+                </Link>
+              )}
             </picture>
           </div>
 
@@ -134,8 +149,8 @@ export default function ContentImages({
               <CircularProgress
                 value={load === 100 ? undefined : load}
                 aria-label="Loading..."
-                size="lg"
                 color="success"
+                label={load === 100 && 'Procesando'}
                 showValueLabel={true}
               />
             </div>

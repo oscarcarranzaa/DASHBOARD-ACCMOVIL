@@ -1,9 +1,10 @@
 type TProps = {
-  src: string
+  src?: string
   isDisabled?: boolean
 }
 
 export default function SquareImage({ src, isDisabled }: TProps) {
+  const image = src ?? '/static/image-not-found.webp'
   return (
     <div
       className=" rounded-md  overflow-hidden relative "
@@ -19,7 +20,7 @@ export default function SquareImage({ src, isDisabled }: TProps) {
       >
         <picture>
           <img
-            src={src}
+            src={image}
             loading="lazy"
             decoding="async"
             alt="Imagen de covertor"

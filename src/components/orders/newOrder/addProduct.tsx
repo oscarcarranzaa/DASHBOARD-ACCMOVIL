@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query'
 import { addProductOrder } from '@/api/order'
 import { toast } from 'sonner'
 import Spinner from '@/components/icons/spinner'
+import ProductSelect from '@/components/publish/selectProduct'
 
 export default function AddProductOrder() {
   const [productId, setProductId] = useState('')
@@ -71,6 +72,29 @@ export default function AddProductOrder() {
             </>
           )}
         </div>
+        <ProductSelect
+          openModal={openSelect}
+          closeModal={() => setOpenSelect(false)}
+          setValue={(p) => {
+            if (p) {
+              mutate(p.id)
+              setProductId(p.id)
+              setProduct({
+                id: p.id,
+                name: p.name,
+                isSaved: false,
+                price: p.price,
+                quantity: 1,
+                stock: p.stock,
+                sku: p.sku,
+                media: p.media,
+                discountPrice: p.discountPrice,
+                startDiscount: p.startDiscount,
+                endDiscount: p.endDiscount,
+              })
+            }
+          }}
+        />
       </div>
     </>
   )

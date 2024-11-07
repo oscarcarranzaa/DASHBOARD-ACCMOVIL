@@ -39,7 +39,7 @@ export default function DisplayPrice({
             <ClockSVG size={18} />
           </span>
           <p
-            className={`${validDiscount || (discountPrice && !startDate && !endDate) ? ' font-bold' : ''} ${!isNotFinish && endDate ? 'hidden' : 'text-red-500'} ${!isInit && startDate ? 'line-through text-zinc-600' : ''}`}
+            className={`${validDiscount || (discountPrice && !startDate && !endDate) ? ' font-semibold' : ''} ${!isNotFinish && endDate ? 'hidden' : 'text-red-500'} ${!isInit && startDate ? 'line-through text-zinc-600' : ''}`}
           >
             {discountPrice?.toLocaleString('es-HN', {
               style: 'currency',

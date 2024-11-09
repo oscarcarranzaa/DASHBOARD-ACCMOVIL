@@ -48,21 +48,33 @@ input {
 }
 
 .menu-content::-webkit-scrollbar {
-  width: 5px;
-  background-color: #333333;
+  width: 7px;
+  background-color: #dadada;
   border-radius: 3px;
 }
-.scrollbar:hover::-webkit-scrollbar {
-  width: 40px; /* Ajusta el ancho según sea necesario */
+.dark .menu-content::-webkit-scrollbar {
+  background-color: #474747;
 }
-
-.menu-content::-webkit-scrollbar-thumb {
-  background-color: #9d9d9d;
+.dark .menu-content::-webkit-scrollbar-thumb {
+  background-color: #dbdbdb;
   overflow: hidden;
   border-radius: 5px;
 }
+.scrollbar:hover::-webkit-scrollbar {
+  width: 40px;
+}
+
+.menu-content::-webkit-scrollbar-thumb {
+  background-color: #494949;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.dark .menu-content::-webkit-scrollbar-thumb:hover {
+  background-color: #ffffff;
+  width: 8px;
+}
 
 .menu-content::-webkit-scrollbar-thumb:hover {
-  background-color: #bfbfbf;
+  background-color: #000000;
   width: 8px;
 }

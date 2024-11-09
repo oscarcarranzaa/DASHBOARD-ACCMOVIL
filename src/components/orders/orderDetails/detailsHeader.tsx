@@ -47,12 +47,7 @@ export default function OrderDetailsHeader({
         <div className=" flex gap-1 mt-5">
           {completedAt && (
             <Chip variant="flat" className=" text-xs">
-              Completado: {dayjs(completedAt).format('DD/MM/YY hh:mm A')}
-            </Chip>
-          )}
-          {paymentAt && (
-            <Chip variant="flat" className=" text-xs">
-              Pagado: {dayjs(paymentAt).format('DD/MM/YY hh:mm A')}
+              Creada: {dayjs(completedAt).format('DD/MM/YY hh:mm A')}
             </Chip>
           )}
           {updatedAt && (
@@ -60,6 +55,14 @@ export default function OrderDetailsHeader({
               Ult. actualización: {dayjs(updatedAt).format('DD/MM/YY hh:mm A')}
             </Chip>
           )}
+          <Chip variant="flat" className=" text-xs">
+            <p>
+              Pagado:{' '}
+              {paymentAt
+                ? dayjs(paymentAt).format('DD/MM/YY hh:mm A')
+                : 'Pendiente'}
+            </p>
+          </Chip>
         </div>
       </div>
     </>

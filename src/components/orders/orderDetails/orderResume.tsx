@@ -45,24 +45,26 @@ export default function OrderProductsResume({
           return (
             <div>
               <div className={` font-bold text-lg"`}>
+                {order.discountPrice && (
+                  <p className=" text-red-500">
+                    {order.discountPrice?.toLocaleString('es-HN', {
+                      style: 'currency',
+                      currency: 'HNL',
+                    })}
+                  </p>
+                )}
+              </div>
+              <p className={order.discountPrice ? ' line-through text-xs' : ''}>
                 {order.price?.toLocaleString('es-HN', {
                   style: 'currency',
                   currency: 'HNL',
                 })}
-              </div>
-              {order.discountPrice && (
-                <p className=" text-xs opacity-60">
-                  {order.discountPrice?.toLocaleString('es-HN', {
-                    style: 'currency',
-                    currency: 'HNL',
-                  })}
-                </p>
-              )}
+              </p>
             </div>
           )
 
         case 'quantity':
-          return <p>{order.quantity}</p>
+          return <p>*{order.quantity}</p>
       }
     },
     []

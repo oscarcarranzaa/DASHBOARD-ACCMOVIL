@@ -69,22 +69,24 @@ export default function OrderList({ data, rows, isPending }: IProps) {
           )
         case 'customer':
           return (
-            <div className=" flex items-center">
-              <Avatar
-                src={order?.customer?.avatar ?? undefined}
-                icon={<CustomerProfileSVG size={50} />}
-                showFallback
-              />
-              <div className=" ml-2">
-                <p className="font-medium">
-                  {order.billingInfo?.firstName} {order.billingInfo?.lastName}{' '}
-                  {!order.customer && '(Invitado)'}
-                </p>
-                <p className=" text-sm opacity-70">
-                  {order.billingInfo?.email}
-                </p>
+            <Link href={`pedidos/${order.id}`}>
+              <div className=" flex items-center">
+                <Avatar
+                  src={order?.customer?.avatar ?? undefined}
+                  icon={<CustomerProfileSVG size={50} />}
+                  showFallback
+                />
+                <div className=" ml-2">
+                  <p className="font-medium">
+                    {order.billingInfo?.firstName} {order.billingInfo?.lastName}{' '}
+                    {!order.customer && '(Invitado)'}
+                  </p>
+                  <p className=" text-sm opacity-70">
+                    {order.billingInfo?.email}
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
           )
         case 'status':
           return (
@@ -104,7 +106,7 @@ export default function OrderList({ data, rows, isPending }: IProps) {
               ? 'text-success'
               : 'text-warning'
           return (
-            <div>
+            <Link className=" hover:underline" href={`pedidos/${order.id}`}>
               <div className={`${isPaid} font-bold text-lg"`}>
                 {order.totalAmount.toLocaleString('es-HN', {
                   style: 'currency',
@@ -116,7 +118,7 @@ export default function OrderList({ data, rows, isPending }: IProps) {
                   ? paidStatus[order.transaction.paymentStatus]
                   : 'Esperando transacción'}
               </p>
-            </div>
+            </Link>
           )
         case 'products':
           return (

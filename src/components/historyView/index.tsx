@@ -1,54 +1,63 @@
 'use client'
+import { SelectProps } from '@nextui-org/react'
 import HistoryItem from './historyItems'
 
 type user = {
   name: string
-  avatar?: string
+  avatar?: string | null
   id: string
 }
 export type TPropsHistory = {
-  type: 'STATUS' | 'MESSAGE' | 'IMAGE' | 'PDF' | 'INFO'
-  image?: string
-  message?: string
-  status?: string
-  pdf?: string
-  info?: string
-  date: string
-  user?: user
+  id: string
+  orderId: string
+  type: 'STATUS' | 'MESSAGE' | 'IMAGE' | 'FILE' | 'INFO'
+  image?: string | null
+  message?: string | null
+  status?: string | null
+  file?: string | null
+  info?: string | null
+  date: string | null
+  user?: user | null
+}
+export const statusColorMap: Record<string, SelectProps['color']> = {
+  COMPLETADO: 'success',
+  PROCESANDO: 'primary',
+  CANCELADO: 'default',
+  FALLIDO: 'danger',
+  REEMBOLSADO: 'danger',
+  PENDIENTE: 'warning',
+}
+type TProps = {
+  history?: TPropsHistory[]
 }
 
-export default function HistortyView() {
+export default function HistortyView({ history }: TProps) {
   return (
     <>
-      <div className="p-3 mb-5">
-        <HistoryItem
-          type="MESSAGE"
-          message="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-          date="2024-11-07T22:08:36.831Z"
-        />
-        <HistoryItem
-          type="MESSAGE"
-          message="Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-Why do we use it?
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved "
-          date="2024-11-07T22:08:36.831Z"
-        />
-        <HistoryItem
-          type="IMAGE"
-          image="/static/bot-default.webp"
-          date="2024-11-07T22:08:36.831Z"
-        />
-        <HistoryItem
-          type="STATUS"
-          status="COMPLETADA"
-          date="2024-11-07T22:08:36.831Z"
-        />
-        <HistoryItem
-          type="INFO"
-          info="Correo de confirmacion de compra fue enviado con exito"
-          date="2024-11-07T22:08:36.831Z"
-        />
+      <div className="mt-10 mb-20">
+        {history && history.length > 0
+          ? history?.map((h) => {
+              return (
+                <div className="relative">
+                  <div
+                    className={`h-full w-[2px] top-5 ${h.status && `bg-${statusColorMap[h.status]}`} absolute`}
+                  ></div>
+                  <div className="w-full">
+                    <HistoryItem
+                      key={h.id}
+                      orderId={h.orderId}
+                      id={h.id}
+                      status={h.status}
+                      type={h.type}
+                      message={h.message}
+                      date={h.date}
+                      user={h.user}
+                    />
+                  </div>
+                </div>
+              )
+            })
+          : 'No hay registros'}
       </div>
     </>
   )

@@ -1,7 +1,7 @@
 import SquareImage from '@/components/squareImage'
 
 type TProps = {
-  imageUrl?: string
+  imageUrl?: string | null
 }
 export default function HistoryImage({ imageUrl }: TProps) {
   return (
@@ -13,7 +13,7 @@ export default function HistoryImage({ imageUrl }: TProps) {
           download
           title="Descargar imagen"
         >
-          <SquareImage src={imageUrl} />
+          <SquareImage src={imageUrl ?? undefined} />
         </a>
       </div>
     </>

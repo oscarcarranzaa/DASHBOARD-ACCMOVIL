@@ -11,7 +11,6 @@ import {
   orderListSchema,
   orderSchema,
   orderSuccessSchema,
-  typeOrderItem,
   ZAddProductOrder,
   ZBillingInfo,
   ZGetOrderList,
@@ -19,7 +18,6 @@ import {
   ZOrder,
   ZOrderDetails,
   ZOrderDetailsRead,
-  ZOrderItems,
   ZOrderItemUpdate,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
@@ -317,6 +315,66 @@ export async function updateTrackUrl({ id, url }: { id: string; url: string }) {
     }
   }
 }
+
+export async function addCommentFromOrder({
+  id,
+  comment,
+}: {
+  id: string
+  comment: string
+}) {
+  try {
+    const { data } = await axiosInstance.put(`/admin/order/${id}/comment`, {
+      comment,
+    })
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al enviar el comentario')
+    }
+  }
+}
+export async function deleteCommentFromOrder(id: string) {
+  try {
+    const { data } = await axiosInstance.delete(`/admin/order/${id}/comment`)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al eliminar el comentario')
+    }
+  }
+}
+export async function updateOrderState({
+  id,
+  status,
+}: {
+  id: string
+  status: string
+}) {
+  try {
+    const { data } = await axiosInstance.put(`/admin/order/${id}/status`, {
+      status,
+    })
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al cambiar el estado de la orden.')
+    }
+  }
+}
+
 type TUpdateOrder = {
   id: string
   orderUpdate: orderEditShema

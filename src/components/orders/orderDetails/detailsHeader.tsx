@@ -1,45 +1,116 @@
 import { CustomerProfileSVG } from '@/components/icons/customerProfile'
-import { Avatar, Button, Chip } from '@nextui-org/react'
+import {
+  Avatar,
+  Button,
+  Chip,
+  Select,
+  SelectItem,
+  SelectProps,
+  Selection,
+} from '@nextui-org/react'
 import dayjs from 'dayjs'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
+import { ORDER_STATUS } from './orderStatus'
+import { orderInfoSchema } from '@/types/order'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateOrderState } from '@/api/order'
+import { toast } from 'sonner'
 
 type TProps = {
+  orderId: string
   orderNumber: string
   completedAt?: string | null
   paymentAt?: string | null
   updatedAt?: string | null
   avatar?: string | null
+  status: orderInfoSchema['status']
   name: string
   email: string | undefined
   children?: ReactNode
 }
-
+export const statusColorMap: Record<string, SelectProps['color']> = {
+  completed: 'success',
+  processing: 'primary',
+  cancelled: 'default',
+  failed: 'danger',
+  refund: 'danger',
+  pending: 'warning',
+}
 export default function OrderDetailsHeader({
+  orderId,
   orderNumber,
   completedAt,
   paymentAt,
   avatar,
   updatedAt,
   name,
+  status,
   email,
   children,
 }: TProps) {
+  const [statusSelect, setStatusSelect] = useState<Selection>(new Set([status]))
+  const disabledKeys = new Set([status])
+  const currentStatus = Array.from(statusSelect)[0]
+
+  const queryClient = useQueryClient()
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateOrderState,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
+    },
+    onError: (err) => {
+      toast.error(err.message ?? 'Error al cambiar el estado')
+    },
+  })
+  const sendStatus = (st?: string) => {
+    if (st && st !== currentStatus) {
+      mutate({ id: orderId, status: st })
+    }
+  }
   return (
     <>
       <div className="border dark:border-zinc-700 border-zinc-300 p-5 rounded-xl ">
         <div className="flex justify-between ">
-          <div>
-            <p className=" text-2xl font-bold">Pedido #{orderNumber}</p>
-            <div className=" flex gap-2 mt-3">
-              <Avatar
-                src={avatar ?? undefined}
-                icon={<CustomerProfileSVG size={50} />}
-                showFallback
-              />
-              <div>
-                <p className=" font-semibold">{name}</p>
-                <p className=" text-xs opacity-80 ">{email}</p>
+          <div className="flex gap-x-5">
+            <div>
+              <p className=" text-2xl font-bold">Pedido #{orderNumber}</p>
+              <div className=" flex gap-2 mt-3">
+                <Avatar
+                  src={avatar ?? undefined}
+                  icon={<CustomerProfileSVG size={50} />}
+                  showFallback
+                />
+                <div>
+                  <p className=" font-semibold">{name}</p>
+                  <p className=" text-xs opacity-80 ">{email}</p>
+                </div>
               </div>
+            </div>
+            <div className="w-60">
+              <Select
+                variant="flat"
+                label="Cambiar Estado"
+                isLoading={isPending}
+                isDisabled={isPending}
+                placeholder="Selecciona el estado"
+                disabledKeys={disabledKeys}
+                color={statusColorMap[currentStatus]}
+                labelPlacement="outside"
+                selectedKeys={statusSelect}
+                onSelectionChange={(val) => {
+                  if (val) {
+                    setStatusSelect(val)
+                    if (val.currentKey) {
+                      sendStatus(val.currentKey)
+                    }
+                  }
+                }}
+                className="max-w-xs"
+              >
+                {ORDER_STATUS.map((animal) => (
+                  <SelectItem key={animal.key}>{animal.label}</SelectItem>
+                ))}
+              </Select>
             </div>
           </div>
           <div className=" flex gap-4">{children}</div>

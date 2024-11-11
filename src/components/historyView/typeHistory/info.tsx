@@ -1,7 +1,7 @@
 import InformationSVG from '@/components/icons/information'
 
 type TProps = {
-  info?: string
+  info?: string | null
 }
 export default function HistoryInfo({ info }: TProps) {
   return (

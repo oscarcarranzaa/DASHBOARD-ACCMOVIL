@@ -37,6 +37,7 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   processing: 'primary',
   pending: 'warning',
   refund: 'danger',
+  failed: 'danger',
 }
 const orderStatus: Record<string, string> = {
   completed: 'Completado',
@@ -44,6 +45,7 @@ const orderStatus: Record<string, string> = {
   processing: 'Procesando',
   pending: 'Pendiente',
   refund: 'Reembolsado',
+  failed: 'Fallido',
 }
 const paidStatus: Record<string, string> = {
   PENDING: 'Pendiente pago',

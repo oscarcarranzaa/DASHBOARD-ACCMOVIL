@@ -1,14 +1,23 @@
+import { SelectProps } from '@nextui-org/react'
+
 type TProps = {
-  status?: string
-  color?: 'danger' | 'warning' | 'primary' | 'success'
+  status?: string | null
 }
-export default function HistoryStatus({ status, color }: TProps) {
-  const statusColor = color ? `bg-${color}` : 'bg-zinc-700 '
+export const statusColorMap: Record<string, SelectProps['color']> = {
+  COMPLETADO: 'success',
+  PROCESANDO: 'primary',
+  CANCELADO: 'default',
+  FALLIDO: 'danger',
+  REEMBOLSADO: 'danger',
+  PENDIENTE: 'warning',
+}
+export default function HistoryStatus({ status }: TProps) {
   return (
     <>
-      <div className={` ${statusColor} rounded-lg p-2 text-white`}>
-        <p className="text-center text-sm">El estado de la orden cambió a</p>
-        <p className="text-2xl font-bold text-center">{status}</p>
+      <div
+        className={` bg-${status && statusColorMap[status]} rounded-lg  px-2 text-white inline-block`}
+      >
+        <p className="text-sm font-medium inline-block ">{status}</p>
       </div>
     </>
   )

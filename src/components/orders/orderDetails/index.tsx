@@ -20,10 +20,12 @@ export default function OrderDetails() {
 
   return (
     <>
-      <div className="mb-10">
-        {data && (
+      {data && (
+        <div className="mb-10">
           <OrderDetailsHeader
+            orderId={data.id}
             orderNumber={data.orderId}
+            status={data.status}
             completedAt={data.completedAt}
             updatedAt={data.updatedAt}
             paymentAt={data.transaction?.paymentDate}
@@ -39,25 +41,22 @@ export default function OrderDetails() {
               billingInfo={data.billingInfo}
             />
           </OrderDetailsHeader>
-        )}
-        <div className="mt-5 grid grid-cols-6 gap-5">
-          <div className=" col-span-4">
-            {data && (
-              <>
-                <OrderProductsResume
-                  orderItems={data.orderItems}
-                  order={data}
-                  coupon={data.coupon}
-                />
-                <OrderTrackDetails shippingInfo={data?.shippingInfo} />
-              </>
-            )}
-          </div>
-          <div className=" col-span-2">
-            <OrderHistory />
+
+          <div className="mt-5 grid grid-cols-6 gap-5">
+            <div className=" col-span-4">
+              <OrderProductsResume
+                orderItems={data.orderItems}
+                order={data}
+                coupon={data.coupon}
+              />
+              <OrderTrackDetails shippingInfo={data.shippingInfo} />
+            </div>
+            <div className=" col-span-2">
+              <OrderHistory history={data.OrderHistory} orderId={data.id} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   )
 }

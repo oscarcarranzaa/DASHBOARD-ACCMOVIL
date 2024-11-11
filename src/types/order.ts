@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { ZProduct, ZProductInfo } from './products'
 import { ZCustomer } from './customer'
 import { ZCoupon } from './offers'
+import { ZUser } from './users'
 
 export const ZOrderItems = z.object({
   id: z.string(),
@@ -14,18 +15,31 @@ export const ZOrderItems = z.object({
 export const ZOrderHistoryChanges = z.object({
   id: z.string(),
   orderId: z.string(),
-  status: z.enum([
-    'pending',
-    'processing',
-    'cancelled',
-    'completed',
-    'refund',
-    'creating',
-  ]),
-  type: z.enum(['STATUS', 'MESSAGE', 'IMAGE', 'PDF', 'INFO']),
+  userId: z.string().nullable().optional(),
+  status: z
+    .enum([
+      'pending',
+      'processing',
+      'cancelled',
+      'completed',
+      'refund',
+      'creating',
+      'failed',
+    ])
+    .nullable()
+    .optional(),
+  type: z.enum(['STATUS', 'MESSAGE', 'IMAGE', 'FILE', 'INFO']),
   message: z.string().nullable().optional(),
   url: z.string().nullable().optional(),
-  changedBy: z.string().nullable().optional(),
+  user: ZUser.pick({
+    id: true,
+    firstName: true,
+    lastName: true,
+    avatar: true,
+    username: true,
+  })
+    .nullable()
+    .optional(),
   createdAt: z.string(),
 })
 export const ZTransaction = z.object({
@@ -102,6 +116,7 @@ export const ZOrder = z.object({
     'completed',
     'refund',
     'creating',
+    'failed',
   ]),
   shippingCost: z.number().nullable(),
   deliveryMethod: z.enum(['shipment', 'pickup']),

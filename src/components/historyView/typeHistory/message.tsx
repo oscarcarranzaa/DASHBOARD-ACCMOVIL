@@ -1,14 +1,12 @@
 import React from 'react'
 
 type TProps = {
-  message?: string
+  message?: string | null
 }
 
 export default function HistoryMessage({ message }: TProps) {
-  // Expresión regular para detectar URLs
   const urlPattern = /(https?:\/\/[^\s]+)/g
 
-  // Comprobar si el mensaje contiene un enlace
   const renderMessage = () => {
     if (!message) return 'Mensaje no disponible'
 

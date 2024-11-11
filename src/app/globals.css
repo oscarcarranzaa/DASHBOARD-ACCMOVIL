@@ -78,3 +78,9 @@ input {
   background-color: #000000;
   width: 8px;
 }
+.childContainerHover {
+  display: none;
+}
+.containerHover:hover .childContainerHover {
+  display: block;
+}

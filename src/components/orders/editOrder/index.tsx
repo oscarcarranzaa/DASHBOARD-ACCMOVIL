@@ -119,8 +119,8 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
   }
   return (
     <div>
-      <Button color="primary" onPress={onOpen}>
-        Editar
+      <Button color="primary" variant="flat" onPress={onOpen}>
+        Editar pedido
       </Button>
       <Modal
         backdrop="opaque"

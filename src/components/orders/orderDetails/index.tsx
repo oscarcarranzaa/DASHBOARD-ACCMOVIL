@@ -33,17 +33,14 @@ export default function OrderDetails() {
             avatar={data.customer?.avatar}
             email={data.billingInfo?.email}
           >
-            <Button color="danger" variant="bordered">
-              Reembolsar
-            </Button>
             <OrderEdit
               shippingInfo={data.shippingInfo}
               billingInfo={data.billingInfo}
             />
           </OrderDetailsHeader>
 
-          <div className="mt-5 grid grid-cols-6 gap-5">
-            <div className=" col-span-4">
+          <div className="mt-5 grid grid-cols-12 gap-5">
+            <div className=" col-span-8">
               <OrderProductsResume
                 orderItems={data.orderItems}
                 order={data}
@@ -51,7 +48,7 @@ export default function OrderDetails() {
               />
               <OrderTrackDetails shippingInfo={data.shippingInfo} />
             </div>
-            <div className=" col-span-2">
+            <div className=" col-span-4">
               <OrderHistory history={data.OrderHistory} orderId={data.id} />
             </div>
           </div>

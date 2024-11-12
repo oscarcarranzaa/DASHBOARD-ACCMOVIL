@@ -34,20 +34,21 @@ type TProps = {
 export default function HistortyView({ history }: TProps) {
   return (
     <>
-      <div className="mt-10 mb-20">
+      <div className="mt-10 mb-10 px-1">
         {history && history.length > 0
           ? history?.map((h) => {
               return (
-                <div className="relative">
+                <div className="relative" key={h.id}>
                   <div
-                    className={`h-full w-[2px] top-5 ${h.status && `bg-${statusColorMap[h.status]}`} absolute`}
+                    className={`h-full w-[2px] top-4  ${h.status && `bg-${statusColorMap[h.status]}`} absolute z-10`}
                   ></div>
                   <div className="w-full">
                     <HistoryItem
-                      key={h.id}
                       orderId={h.orderId}
                       id={h.id}
+                      image={h.image}
                       status={h.status}
+                      info={h.message}
                       type={h.type}
                       message={h.message}
                       date={h.date}

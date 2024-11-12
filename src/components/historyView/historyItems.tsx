@@ -70,9 +70,9 @@ export default function HistoryItem({
   }
   return (
     <>
-      <div className="flex justify-between mb-3 border border-transparent containerHover px-3 py-1 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+      <div className="flex justify-between pt-2 pb-1 border border-transparent containerHover px-3 py-1 hover:bg-zinc-50 dark:hover:bg-zinc-900">
         <div className="w-full  ">
-          <div className="w-10/12">{renderHistoty()}</div>
+          <div className="w-11/12">{renderHistoty()}</div>
           <div className="flex gap-1 mt-1 ">
             {user && (
               <Avatar

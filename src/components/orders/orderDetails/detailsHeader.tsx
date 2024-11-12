@@ -10,7 +10,7 @@ import {
 } from '@nextui-org/react'
 import dayjs from 'dayjs'
 import { ReactNode, useState } from 'react'
-import { ORDER_STATUS } from './orderStatus'
+import { getDisabledKeys, ORDER_STATUS } from './orderStatus'
 import { orderInfoSchema } from '@/types/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateOrderState } from '@/api/order'
@@ -49,7 +49,7 @@ export default function OrderDetailsHeader({
   children,
 }: TProps) {
   const [statusSelect, setStatusSelect] = useState<Selection>(new Set([status]))
-  const disabledKeys = new Set([status])
+  // const disabledKeys = new Set([status])
   const currentStatus = Array.from(statusSelect)[0]
 
   const queryClient = useQueryClient()
@@ -67,73 +67,79 @@ export default function OrderDetailsHeader({
       mutate({ id: orderId, status: st })
     }
   }
+  const disabledKeys = currentStatus
+    ? getDisabledKeys(currentStatus.toString())
+    : ''
   return (
     <>
       <div className="border dark:border-zinc-700 border-zinc-300 p-5 rounded-xl ">
         <div className="flex justify-between ">
-          <div className="flex gap-x-5">
+          <div className="flex flex-col gap-x-5">
             <div>
               <p className=" text-2xl font-bold">Pedido #{orderNumber}</p>
-              <div className=" flex gap-2 mt-3">
-                <Avatar
-                  src={avatar ?? undefined}
-                  icon={<CustomerProfileSVG size={50} />}
-                  showFallback
-                />
-                <div>
-                  <p className=" font-semibold">{name}</p>
-                  <p className=" text-xs opacity-80 ">{email}</p>
+              <div className="flex gap-5">
+                <div className=" flex gap-2 mt-3">
+                  <Avatar
+                    src={avatar ?? undefined}
+                    icon={<CustomerProfileSVG size={50} />}
+                    showFallback
+                  />
+                  <div>
+                    <p className=" font-semibold">{name}</p>
+                    <p className=" text-xs opacity-80 ">{email}</p>
+                  </div>
                 </div>
+                <div className=" flex gap-4">{children}</div>
               </div>
             </div>
-            <div className="w-60">
-              <Select
-                variant="flat"
-                label="Cambiar Estado"
-                isLoading={isPending}
-                isDisabled={isPending}
-                placeholder="Selecciona el estado"
-                disabledKeys={disabledKeys}
-                color={statusColorMap[currentStatus]}
-                labelPlacement="outside"
-                selectedKeys={statusSelect}
-                onSelectionChange={(val) => {
-                  if (val) {
-                    setStatusSelect(val)
-                    if (val.currentKey) {
-                      sendStatus(val.currentKey)
-                    }
-                  }
-                }}
-                className="max-w-xs"
-              >
-                {ORDER_STATUS.map((animal) => (
-                  <SelectItem key={animal.key}>{animal.label}</SelectItem>
-                ))}
-              </Select>
+            <div className=" flex gap-1 mt-5">
+              {completedAt && (
+                <Chip variant="flat" className=" text-xs">
+                  Creada: {dayjs(completedAt).format('DD/MM/YY hh:mm A')}
+                </Chip>
+              )}
+              {updatedAt && (
+                <Chip variant="flat" className=" text-xs">
+                  Ult. actualización:{' '}
+                  {dayjs(updatedAt).format('DD/MM/YY hh:mm A')}
+                </Chip>
+              )}
+              <Chip variant="flat" className=" text-xs">
+                <p>
+                  Pagado:{' '}
+                  {paymentAt
+                    ? dayjs(paymentAt).format('DD/MM/YY hh:mm A')
+                    : 'Pendiente'}
+                </p>
+              </Chip>
             </div>
           </div>
-          <div className=" flex gap-4">{children}</div>
-        </div>
-        <div className=" flex gap-1 mt-5">
-          {completedAt && (
-            <Chip variant="flat" className=" text-xs">
-              Creada: {dayjs(completedAt).format('DD/MM/YY hh:mm A')}
-            </Chip>
-          )}
-          {updatedAt && (
-            <Chip variant="flat" className=" text-xs">
-              Ult. actualización: {dayjs(updatedAt).format('DD/MM/YY hh:mm A')}
-            </Chip>
-          )}
-          <Chip variant="flat" className=" text-xs">
-            <p>
-              Pagado:{' '}
-              {paymentAt
-                ? dayjs(paymentAt).format('DD/MM/YY hh:mm A')
-                : 'Pendiente'}
-            </p>
-          </Chip>
+          <div className="w-60">
+            <Select
+              variant="flat"
+              label="Cambiar Estado"
+              isLoading={isPending}
+              isDisabled={isPending}
+              placeholder="Selecciona el estado"
+              disabledKeys={disabledKeys}
+              color={statusColorMap[currentStatus]}
+              labelPlacement="outside"
+              selectedKeys={statusSelect}
+              onSelectionChange={(val) => {
+                if (val) {
+                  setStatusSelect(val)
+                  if (val.currentKey) {
+                    sendStatus(val.currentKey)
+                  }
+                }
+              }}
+              className="max-w-xs"
+            >
+              {ORDER_STATUS.map((animal) => (
+                <SelectItem key={animal.key}>{animal.label}</SelectItem>
+              ))}
+            </Select>
+          </div>
         </div>
       </div>
     </>

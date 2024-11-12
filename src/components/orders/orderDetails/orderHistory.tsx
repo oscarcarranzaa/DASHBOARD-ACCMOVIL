@@ -79,7 +79,7 @@ export default function OrderHistory({ history, orderId }: TProps) {
   return (
     <>
       <div>
-        <div className="border-2 rounded-xl relative overflow-hidden bg-white dark:bg-zinc-950">
+        <div className="border-2 dark:border-zinc-700 rounded-xl relative overflow-hidden bg-white dark:bg-zinc-950">
           <div
             className="h-[580px] menu-content overflow-y-scroll scroll-smooth"
             ref={ref as React.MutableRefObject<HTMLDivElement>}

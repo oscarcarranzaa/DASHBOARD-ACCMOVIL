@@ -101,11 +101,6 @@ export default function OrderHistory({ history, orderId }: TProps) {
                     autoComplete="off"
                     {...field}
                     placeholder="Escribir comentario"
-                    endContent={
-                      <button className=" rounded-full p-1 dark:fill-white">
-                        <ClipSVG size={20} />
-                      </button>
-                    }
                   />
                 )}
               />

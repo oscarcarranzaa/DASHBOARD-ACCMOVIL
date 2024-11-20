@@ -163,7 +163,6 @@ export async function persistOrderQuery() {
     const validOrderData = ZOrderDetails.parse(data)
     return validOrderData
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,
@@ -393,6 +392,55 @@ export async function updateOrderData({ id, orderUpdate }: TUpdateOrder) {
       })
     } else {
       throw new Error('Error al actualizar el pedido.')
+    }
+  }
+}
+type TPaidByCash = {
+  id: string
+  totalAmount: number
+}
+export async function orderPaidByCash({ id, totalAmount }: TPaidByCash) {
+  try {
+    const { data } = await axiosInstance.put(`/admin/order/${id}/paidByCash`, {
+      totalAmount,
+    })
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al pagar en efectivo.')
+    }
+  }
+}
+export async function orderPaidByTransfer({
+  form,
+  id,
+}: {
+  form: FormData
+  id: string
+}) {
+  try {
+    const { data } = await axiosInstance.put(
+      `/admin/order/${id}/paidByTransfer`,
+      form,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error('Error al finalizar pedido.', {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al pagar con transferencia.')
     }
   }
 }

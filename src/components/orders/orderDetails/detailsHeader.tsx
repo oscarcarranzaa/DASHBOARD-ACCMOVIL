@@ -9,7 +9,7 @@ import {
   Selection,
 } from '@nextui-org/react'
 import dayjs from 'dayjs'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { getDisabledKeys, ORDER_STATUS } from './orderStatus'
 import { orderInfoSchema } from '@/types/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -49,16 +49,18 @@ export default function OrderDetailsHeader({
   children,
 }: TProps) {
   const [statusSelect, setStatusSelect] = useState<Selection>(new Set([status]))
-  // const disabledKeys = new Set([status])
+  const [prevKey, setPrevKey] = useState<Selection>(new Set([status]))
   const currentStatus = Array.from(statusSelect)[0]
 
   const queryClient = useQueryClient()
   const { mutate, isPending } = useMutation({
     mutationFn: updateOrderState,
     onSuccess: () => {
+      setPrevKey(statusSelect)
       queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
     },
     onError: (err) => {
+      setStatusSelect(prevKey)
       toast.error(err.message ?? 'Error al cambiar el estado')
     },
   })
@@ -70,6 +72,9 @@ export default function OrderDetailsHeader({
   const disabledKeys = currentStatus
     ? getDisabledKeys(currentStatus.toString())
     : ''
+  useEffect(() => {
+    setStatusSelect(new Set([status]))
+  }, [status])
   return (
     <>
       <div className="border dark:border-zinc-700 border-zinc-300 p-5 rounded-xl ">

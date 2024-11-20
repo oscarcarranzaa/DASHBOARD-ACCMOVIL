@@ -8,6 +8,7 @@ import { getOrderDetails } from '@/api/order'
 import OrderTrackDetails from './orderTrack'
 import { Button } from '@nextui-org/react'
 import OrderEdit from '../editOrder'
+import OrderTransaction from './transaction'
 
 export default function OrderDetails() {
   const params = useParams()
@@ -41,12 +42,24 @@ export default function OrderDetails() {
 
           <div className="mt-5 grid grid-cols-12 gap-5">
             <div className=" col-span-8">
-              <OrderProductsResume
-                orderItems={data.orderItems}
-                order={data}
-                coupon={data.coupon}
-              />
-              <OrderTrackDetails shippingInfo={data.shippingInfo} />
+              <div className="grid grid-cols-2 gap-3  border dark:border-zinc-700 border-zinc-300 rounded-xl p-5">
+                <OrderTrackDetails
+                  shippingInfo={data.shippingInfo}
+                  orderId={data.id}
+                />
+                <OrderTransaction
+                  totalAmount={data.totalAmount}
+                  orderId={data.id}
+                  transaction={data.transaction}
+                />
+              </div>
+              <div className="mt-5">
+                <OrderProductsResume
+                  orderItems={data.orderItems}
+                  order={data}
+                  coupon={data.coupon}
+                />
+              </div>
             </div>
             <div className=" col-span-4">
               <OrderHistory history={data.OrderHistory} orderId={data.id} />

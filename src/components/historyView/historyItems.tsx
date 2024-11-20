@@ -87,7 +87,7 @@ export default function HistoryItem({
                 {user?.id === userSession?.id && ' (Tú)'}
               </p>
               <p className=" text-xs opacity-70">
-                {dayjs(date).format('h:mm A')}
+                {dayjs(date).format('DD/MM/YY h:mm A')}
               </p>
             </div>
           </div>

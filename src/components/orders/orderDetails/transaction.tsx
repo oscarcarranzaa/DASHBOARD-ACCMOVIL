@@ -2,11 +2,13 @@ import { orderDetailsRead } from '@/types/order'
 import PaidOrder from './paid'
 import dayjs from 'dayjs'
 import { Chip } from '@nextui-org/react'
+import { DeniedRedSVG } from '@/components/icons/deniedRed'
 
 type TProps = {
   transaction?: orderDetailsRead['transaction'] | null
   orderId: string
   totalAmount: number
+  orderStatus: orderDetailsRead['status']
 }
 const paymentMethods = {
   BANK_TRANSFER: 'Transferencia Bancaria Directa',
@@ -28,28 +30,48 @@ const paymentStatus = {
     description: 'Enhorabuena esta orden esta',
   },
   FAILED: {
-    name: 'Fallida',
+    name: 'FALLIDA',
     cls: 'danger',
     description: 'Ocurrió un error en el pago',
   },
   CANCELLED: {
-    name: 'Fallida',
+    name: 'CANCELEDO',
     cls: 'default',
     description: 'Se canceló la transacción',
+  },
+  REFUND: {
+    name: 'REEMBOLSADO',
+    cls: 'danger',
+    description: 'Se reembolsó la trasacción.',
   },
 } as const
 export default function OrderTransaction({
   transaction,
   totalAmount,
   orderId,
+  orderStatus,
 }: TProps) {
   const totalPaid = Number(transaction?.totalPaid ?? 0)
-
+  const isDisabled = orderStatus === 'cancelled' || orderStatus === 'failed'
   return (
     <>
       <div>
         {!transaction ? (
-          <PaidOrder totalAmount={totalAmount} orderId={orderId} />
+          isDisabled ? (
+            <div className="border border-red-600 border-dashed rounded-lg h-full flex justify-center items-center flex-col">
+              <div>
+                <DeniedRedSVG size={42} />
+              </div>
+              <p className="text-sm">Ya no se puede agregar una transacción</p>
+              <p className="text-xs w-10/12 text-center opacity-70">
+                Tu orden pasó a estar en un estado donde ya no se puede agregar
+                un pago porque, si fue un error te invitamos a crear un nuevo
+                pedido.
+              </p>
+            </div>
+          ) : (
+            <PaidOrder totalAmount={totalAmount} orderId={orderId} />
+          )
         ) : (
           <div>
             <p className=" font-semibold mb-1">Trasacción:</p>

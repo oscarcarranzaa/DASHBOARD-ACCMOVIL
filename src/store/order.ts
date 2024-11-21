@@ -44,6 +44,7 @@ type OrderInfo = {
     | 'completed'
     | 'refund'
     | 'creating'
+    | 'failed'
   deliveryMethod: 'shipment' | 'pickup'
   shippingCost?: number | null
   couponDiscount?: number | null

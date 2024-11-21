@@ -6,22 +6,32 @@ import OrderProductsResume from './orderResume'
 import { useParams } from 'next/navigation'
 import { getOrderDetails } from '@/api/order'
 import OrderTrackDetails from './orderTrack'
-import { Button } from '@nextui-org/react'
 import OrderEdit from '../editOrder'
 import OrderTransaction from './transaction'
+import OrderDetailSkeleton from './skeleton'
+import ErrorsPages from '@/components/errorsPages'
+import NavegationPages from '@/components/navegationPages'
 
 export default function OrderDetails() {
   const params = useParams()
   const id = params.orderId
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ['order', id.toString(), 'details'],
     queryFn: () => getOrderDetails(id.toString()),
     refetchOnWindowFocus: false,
   })
-
+  if (error) {
+    return (
+      <ErrorsPages
+        errorRef={error.cause}
+        message="Ocurrio un error con tu pedido, es posible que se haya eliminado o que no este disponible."
+      />
+    )
+  }
   return (
     <>
-      {data && (
+      <NavegationPages text="Detallles del pedido" />
+      {data ? (
         <div className="mb-10">
           <OrderDetailsHeader
             orderId={data.id}
@@ -44,10 +54,12 @@ export default function OrderDetails() {
             <div className=" col-span-8">
               <div className="grid grid-cols-2 gap-3  border dark:border-zinc-700 border-zinc-300 rounded-xl p-5">
                 <OrderTrackDetails
+                  orderStatus={data.status}
                   shippingInfo={data.shippingInfo}
                   orderId={data.id}
                 />
                 <OrderTransaction
+                  orderStatus={data.status}
                   totalAmount={data.totalAmount}
                   orderId={data.id}
                   transaction={data.transaction}
@@ -66,6 +78,8 @@ export default function OrderDetails() {
             </div>
           </div>
         </div>
+      ) : (
+        <OrderDetailSkeleton />
       )}
     </>
   )

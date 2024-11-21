@@ -1,11 +1,13 @@
 import api from '@/lib/axios'
 import { LoginSchema } from '@/types'
+import { loginSchema, ZLoginSchema } from '@/types/login'
 import { isAxiosError } from 'axios'
 
 export async function loginUser(formData: LoginSchema) {
   try {
-    const { data } = await api.post('/admin/auth/login', formData)
-    return data
+    const { data } = await api.post<loginSchema>('/admin/auth/login', formData)
+    const validLogin = ZLoginSchema.parse(data)
+    return validLogin
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       const err = error.response.data?.response

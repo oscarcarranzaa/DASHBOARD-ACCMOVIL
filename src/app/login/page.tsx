@@ -30,9 +30,11 @@ export default function Login() {
   })
 
   const setToken = useAuthStore((state) => state.setToken)
+  const setUser = useAuthStore((state) => state.setUser)
   useEffect(() => {
     if (data) {
       setToken(data.data.token)
+      setUser(data.data.user)
     }
   }, [data, setToken])
 

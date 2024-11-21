@@ -17,12 +17,9 @@ import {
   Badge,
 } from '@nextui-org/react'
 import { orderRows } from './rows'
-import VerifiedSVG from '@/components/icons/verified'
 import { useSearchParams } from 'next/navigation'
-import { customerSchema, getAllCustomerSchema } from '@/types/customer'
 import { orderCellSchema, orderListSchema } from '@/types/order'
 import { CustomerProfileSVG } from '@/components/icons/customerProfile'
-import dayjs from 'dayjs'
 import formaFromNowDate from '@/utils/formatFromNowDate'
 import Link from 'next/link'
 
@@ -52,6 +49,7 @@ const paidStatus: Record<string, string> = {
   COMPLETED: 'Pagado',
   FAILED: 'Pago fallido',
   CANCELLED: 'Pago cancelado',
+  REFUND: 'Pago reembolsado',
 }
 export default function OrderList({ data, rows, isPending }: IProps) {
   const [totalPages, setTotalPages] = useState(0)
@@ -65,7 +63,10 @@ export default function OrderList({ data, rows, isPending }: IProps) {
       switch (columnKey) {
         case 'order':
           return (
-            <Link className=" hover:underline" href={`pedidos/${order.id}`}>
+            <Link
+              className=" hover:underline font-medium"
+              href={`pedidos/${order.id}`}
+            >
               #{order.orderId}
             </Link>
           )
@@ -103,10 +104,19 @@ export default function OrderList({ data, rows, isPending }: IProps) {
             </Link>
           )
         case 'transaction':
+          const isPending =
+            order.status === 'pending'
+              ? 'Esperando transacción'
+              : `Pago ${orderStatus[order.status]}`
           const isPaid =
             order.transaction?.paymentStatus === 'COMPLETED'
               ? 'text-success'
-              : 'text-warning'
+              : order.transaction?.paymentStatus == 'REFUND' ||
+                  order.transaction?.paymentStatus === 'FAILED' ||
+                  order.transaction?.paymentStatus === 'CANCELLED' ||
+                  !order.transaction
+                ? 'text-danger'
+                : 'text-warning'
           return (
             <Link className=" hover:underline" href={`pedidos/${order.id}`}>
               <div className={`${isPaid} font-bold text-lg"`}>
@@ -118,31 +128,33 @@ export default function OrderList({ data, rows, isPending }: IProps) {
               <p className=" text-xs opacity-60">
                 {order.transaction
                   ? paidStatus[order.transaction.paymentStatus]
-                  : 'Esperando transacción'}
+                  : isPending}
               </p>
             </Link>
           )
         case 'products':
           return (
             <div>
-              <AvatarGroup max={3}>
-                {order.orderItems.map((product) => {
-                  const img = product.product.media?.qualities
-                    ? product.product.media.qualities[0].src
-                    : '/static/product.webp'
-                  return (
-                    <Badge
-                      content={product.quantity}
-                      color="danger"
-                      placement="top-left"
-                      size="sm"
-                      key={product.id}
-                    >
-                      <Avatar src={img}></Avatar>
-                    </Badge>
-                  )
-                })}
-              </AvatarGroup>
+              <Link href={`pedidos/${order.id}`}>
+                <AvatarGroup max={3}>
+                  {order.orderItems.map((product) => {
+                    const img = product.product.media?.qualities
+                      ? product.product.media.qualities[0].src
+                      : '/static/product.webp'
+                    return (
+                      <Badge
+                        content={product.quantity}
+                        color="danger"
+                        placement="top-left"
+                        size="sm"
+                        key={product.id}
+                      >
+                        <Avatar src={img}></Avatar>
+                      </Badge>
+                    )
+                  })}
+                </AvatarGroup>
+              </Link>
             </div>
           )
         case 'date':

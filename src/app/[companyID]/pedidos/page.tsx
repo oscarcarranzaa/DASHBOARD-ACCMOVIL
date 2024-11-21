@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
-const ROWS = 20
+const ROWS = 15
 export default function CustomersHome() {
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('p')) || 1

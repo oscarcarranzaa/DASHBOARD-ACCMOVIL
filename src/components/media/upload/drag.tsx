@@ -208,7 +208,7 @@ export default function DragMedia({
         />
         <Button
           color="primary"
-          className="w-40 rounded"
+          className="w-40 rounded fill-white"
           onClick={handleButtonClick}
         >
           <UploadSVG size={24} /> Cargar

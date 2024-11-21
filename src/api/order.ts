@@ -287,7 +287,6 @@ export async function getOrderDetails(id: string) {
     const validOrderData = ZOrderDetailsRead.parse(data)
     return validOrderData
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,

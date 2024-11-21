@@ -19,8 +19,9 @@ const disabledKeysMap: Record<string, string[]> = {
   completed: keys.filter((k) => k !== 'refund'),
   refund: keys,
   pending: ['refund', 'pending'],
-  cancelled: ['refund', 'cancelled'],
+  cancelled: keys,
   processing: ['pending', 'processing'],
+  failed: keys,
 }
 
 export const getDisabledKeys = (key: string): string[] | string => {

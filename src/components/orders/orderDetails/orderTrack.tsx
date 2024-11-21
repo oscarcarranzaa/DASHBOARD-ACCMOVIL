@@ -16,11 +16,16 @@ type TProps = {
   shippingInfo?: shippingInfoSchema | null
   trackUrl?: string | null
   orderId: string
+  orderStatus: string
 }
 type TUrl = {
   url: string
 }
-export default function OrderTrackDetails({ shippingInfo, orderId }: TProps) {
+export default function OrderTrackDetails({
+  shippingInfo,
+  orderId,
+  orderStatus,
+}: TProps) {
   const [trackingUrl, setTrackingUrl] = useState(shippingInfo?.orderTrackingUrl)
   const [updatedUrl, setUpdatedUrl] = useState<string>()
   const [openEditor, setOpenEditor] = useState(!shippingInfo?.orderTrackingUrl)
@@ -58,6 +63,7 @@ export default function OrderTrackDetails({ shippingInfo, orderId }: TProps) {
       setUpdatedUrl(url)
     }
   }
+  const isDisabled = orderStatus !== 'completed'
   return (
     <div>
       <div className="">
@@ -126,9 +132,10 @@ export default function OrderTrackDetails({ shippingInfo, orderId }: TProps) {
                 <Input
                   isRequired
                   {...field}
+                  isDisabled={isDisabled}
                   variant="bordered"
                   placeholder="http://acme.com/tracking/"
-                  label="URL"
+                  label={isDisabled ? 'Primero completa el pedido' : 'URL'}
                   isInvalid={!!errors.url}
                   errorMessage={errors.url?.message}
                   labelPlacement="outside"
@@ -138,7 +145,7 @@ export default function OrderTrackDetails({ shippingInfo, orderId }: TProps) {
             <div className="mt-6 stroke-black ">
               <Button
                 color="success"
-                disabled={!shippingInfo && isPending}
+                disabled={(!shippingInfo && isPending) || isDisabled}
                 type="submit"
               >
                 {isPending ? (

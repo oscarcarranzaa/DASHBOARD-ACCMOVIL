@@ -114,7 +114,7 @@ export default function OrderDetailsHeader({
                   Pagado:{' '}
                   {paymentAt
                     ? dayjs(paymentAt).format('DD/MM/YY hh:mm A')
-                    : 'Pendiente'}
+                    : 'NO'}
                 </p>
               </Chip>
             </div>

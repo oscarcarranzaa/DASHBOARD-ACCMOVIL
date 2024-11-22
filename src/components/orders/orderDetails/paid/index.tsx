@@ -44,7 +44,7 @@ export default function PaidOrder({ totalAmount, orderId }: TProps) {
   )
   const checkClass = {
     base: cn(
-      'inline-flex max-w-md bg-zinc-50 m-0',
+      'inline-flex max-w-md bg-zinc-50 dark:bg-zinc-950 m-0',
       'hover:bg-zinc-100 dark:hover:bg-zinc-800 items-center justify-start',
       'cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent',
       'data-[selected=true]:border-primary'

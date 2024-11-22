@@ -43,12 +43,12 @@ export default function OrderCash({ orderId, totalAmount, onClose }: TProps) {
             onClick={handlePaid}
             isDisabled={isPending}
           >
+            {isPending ? (
+              <Spinner fill="#000" size={26} />
+            ) : (
+              <Money size={26} />
+            )}
             <p className="font-semibold">
-              {isPending ? (
-                <Spinner fill="#000" size={26} />
-              ) : (
-                <Money size={26} />
-              )}
               Pagar{' '}
               {totalAmount.toLocaleString('es-HN', {
                 style: 'currency',

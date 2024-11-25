@@ -39,14 +39,14 @@ export default function SideMenuContent({ startMenu }: TProps) {
       >
         <div>
           <Tooltip
-            content="Expandir"
+            content="Abrir menú"
             placement="right"
             offset={8}
             className="dark:bg-black"
             isDisabled={!isOpen}
           >
             <button
-              className="p-2 w-full text-start flex items-center gap-2 mb-10 bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-700 dark:stroke-white  hover:bg-zinc-200 rounded-md fill-black stroke-black"
+              className="p-2 w-full text-start flex items-center gap-2 mb-10 bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-200 rounded-md fill-black stroke-black"
               onClick={() => {
                 setIsOpen(!isOpen)
               }}

@@ -46,6 +46,7 @@ export const user = z.object({
   gender: z.enum(['female', 'male', 'others']).nullable(),
   job: z.string().nullable(),
   role: role.nullable(),
+  documentNumber: z.string().optional().nullable(),
   avatar: z.string().nullable(),
   createdAt: z.string(),
 })

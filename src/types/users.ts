@@ -54,6 +54,7 @@ export const ZUser = z.object({
   documentNumber: z.string().nullable(),
   createdAt: z.string(),
 })
+
 export const ZRolePermissions = ZRole.merge(
   z.object({
     permissions: z.array(ZPermissions),
@@ -132,6 +133,22 @@ export const ZPassword = z.object({
   job: z.string(),
   roleId: z.string().nullable(),
 })
+export const ZEditProfileInfo = ZPassword.pick({
+  firstName: true,
+  lastName: true,
+  username: true,
+}).merge(
+  z.object({
+    birthDate: z.string().optional().nullable(),
+    phone: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^[0-9]{8}$/.test(val), {
+        message: 'El número de teléfono debe tener exactamente 8 dígitos.',
+      }),
+    documentNumber: z.string().optional(),
+  })
+)
 export const ZCreateUser = ZUser.pick({
   email: true,
 }).merge(ZPassword)
@@ -145,3 +162,4 @@ export type newRoleType = z.infer<typeof ZNewRole>
 export type CreateUserSchema = z.infer<typeof ZCreateUser>
 export type AllUsersSchema = z.infer<typeof ZAllUsers>
 export type UserSchema = z.infer<typeof ZUser>
+export type editProfileInfoSchema = z.infer<typeof ZEditProfileInfo>

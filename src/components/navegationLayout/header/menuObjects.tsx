@@ -1,11 +1,11 @@
-import ClientSVG from '@/components/icons/client'
+import UserSVG from '@/components/icons/user'
 
 const iconSize = 22
 
 export const profileItems = [
   {
-    name: 'Mi perfil',
-    icon: <ClientSVG size={iconSize} />,
-    href: '/dash',
+    name: 'Configuración de la cuenta',
+    icon: <UserSVG size={iconSize} />,
+    href: '/dash/account',
   },
 ]

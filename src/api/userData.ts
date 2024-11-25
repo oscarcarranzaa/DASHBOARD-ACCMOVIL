@@ -35,3 +35,23 @@ export async function updateUserInfo(userInfo: editProfileInfoSchema) {
     }
   }
 }
+export async function updateUserAvatar(formData: FormData) {
+  try {
+    const { data } = await axiosInstance.patch(
+      '/admin/user/update-avatar',
+      formData
+    )
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(
+        error.response?.data?.response?.msg || 'Error desconocido',
+        {
+          cause: error.response.status,
+        }
+      )
+    } else {
+      throw new Error('Error al actualizar la foto de perfil.')
+    }
+  }
+}

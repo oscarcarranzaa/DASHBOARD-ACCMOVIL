@@ -14,7 +14,9 @@ export default function ProfileMenu({ data }: IProps) {
 
   useOutsideClick(ref, () => setOpenProfile(false))
 
-  const avatar = data.avatar || '/static/default-profile.png'
+  const avatar = data.avatar
+    ? data.avatar + '-thumb.webp'
+    : '/static/default-profile.png'
   const name = `${data.firstName.split(' ')[0]} ${data.lastName.split(' ')[0]}`
   return (
     <div

@@ -28,7 +28,9 @@ export default function AccountLayout({ children }: TProps) {
   const user = useAuthStore((store) => store.user)
   const path = usePathname()
 
-  const image = user?.avatar || '/static/default-profile.png'
+  const image = user?.avatar
+    ? user.avatar + '-thumb.webp'
+    : '/static/default-profile.png'
   return (
     <>
       <NavegationPages text="Configuracion de la cuenta" />

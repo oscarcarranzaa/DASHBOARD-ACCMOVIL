@@ -153,6 +153,35 @@ export const ZCreateUser = ZUser.pick({
   email: true,
 }).merge(ZPassword)
 
+export const ZChangePassword = z
+  .object({
+    currentPass: z
+      .string()
+      .min(8, 'Contraseña muy corta.')
+      .max(32, 'Contraseña muy larga.')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+        'La contraseña debe tener al menos una letra minúscula, una letra mayúscula y un número.'
+      ),
+    newPass: z
+      .string()
+      .min(8, 'Contraseña muy corta.')
+      .max(32, 'Contraseña muy larga.')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+        'La contraseña debe tener al menos una letra minúscula, una letra mayúscula y un número.'
+      ),
+  })
+  .refine(
+    (data) => {
+      return data.currentPass !== data.newPass
+    },
+    {
+      message: 'La nueva contraseña no debe ser igual a la anterior.',
+      path: ['newPass'],
+    }
+  )
+export type changePassSchema = z.infer<typeof ZChangePassword>
 export type getPermissionsType = z.infer<typeof ZGetPermissions>
 export type userPermissionsType = z.infer<typeof ZUserPermissions>
 export type roleType = z.infer<typeof ZRole>

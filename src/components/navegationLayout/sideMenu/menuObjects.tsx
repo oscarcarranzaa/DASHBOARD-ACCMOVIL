@@ -1,4 +1,5 @@
 import ClientSVG from '@/components/icons/client'
+import FunnnelSVG from '@/components/icons/funnel'
 import MediaImageSVG from '@/components/icons/mediaImage'
 import MenuSquareSVG from '@/components/icons/menuSquare'
 import OfferSVG from '@/components/icons/offer'
@@ -70,11 +71,40 @@ export const menuItems = [
     href: '/dash/multimedia',
   },
   {
+    name: 'Cliente Potencial',
+    icon: <FunnnelSVG size={iconSize} />,
+    urlKey: '/dash/pipe',
+    permissionKeys: [],
+    items: [
+      {
+        name: 'Prospectos',
+        href: '/dash/pipe/leads',
+        permissionKeys: [],
+      },
+      {
+        name: 'Tratos',
+        href: '/dash/pipe/deals',
+        permissionKeys: [],
+      },
+    ],
+  },
+  {
     name: 'Clientes',
     icon: <TeamSVG size={iconSize} />,
     urlKey: '/dash/clientes',
-    href: '/dash/clientes',
     permissionKeys: ['users.add'],
+    items: [
+      {
+        name: 'Clientes Web',
+        href: '/dash/clientes',
+        permissionKeys: ['team.view'],
+      },
+      {
+        name: 'Contactos',
+        href: '/dash/clientes/contactos',
+        permissionKeys: [],
+      },
+    ],
   },
   {
     name: 'Usuarios',

@@ -10,7 +10,7 @@ export default function NavegationLayout({
   return (
     <>
       <Header />
-      <div className="bg-zinc-50 dark:bg-zinc-900 flex">
+      <div className="bg-zinc-50 dark:bg-zinc-950 flex">
         <SideMenu />
         {children}
       </div>

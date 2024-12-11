@@ -82,7 +82,7 @@ export const menuItems = [
         permissionKeys: [],
       },
       {
-        name: 'Tratos',
+        name: 'Negociaciones',
         href: '/dash/pipe/deals',
         permissionKeys: [],
       },

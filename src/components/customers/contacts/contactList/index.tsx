@@ -60,15 +60,13 @@ export default function ContactList({ data, rows, isPending }: IProps) {
                   name: contact.firstName.toUpperCase(),
                   className: 'bg-blue-200 dark:bg-blue-700',
                 }}
-                description={contact.email}
+                description={`Se unió ${formaFromNowDate(contact.createdAt)}`}
                 name={
                   <div className="flex gap-x-2 line-clamp-1">
                     <p>{name}</p>
                   </div>
                 }
-              >
-                {formaFromNowDate(contact.createdAt)}
-              </User>
+              ></User>
             </Link>
           )
         case 'email':
@@ -78,7 +76,7 @@ export default function ContactList({ data, rows, isPending }: IProps) {
                 <div className="dark:stroke-white">
                   <EmailSVG size={18} />
                 </div>
-                <p>{contact.email}</p>
+                <p>{contact.email || 'N/D'}</p>
               </div>
               <div className="flex gap-x-2">
                 <div className="dark:stroke-white">

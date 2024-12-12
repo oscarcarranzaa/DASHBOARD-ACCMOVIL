@@ -77,6 +77,11 @@ export const menuItems = [
     permissionKeys: [],
     items: [
       {
+        name: 'Contactos',
+        href: '/dash/clientes/contactos',
+        permissionKeys: [],
+      },
+      {
         name: 'Prospectos',
         href: '/dash/pipe/leads',
         permissionKeys: [],
@@ -98,11 +103,6 @@ export const menuItems = [
         name: 'Clientes Web',
         href: '/dash/clientes',
         permissionKeys: ['team.view'],
-      },
-      {
-        name: 'Contactos',
-        href: '/dash/clientes/contactos',
-        permissionKeys: [],
       },
     ],
   },

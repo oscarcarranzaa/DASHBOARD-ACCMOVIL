@@ -3,7 +3,7 @@ import { createCoupon } from '@/api/offerts'
 import Spinner from '@/components/icons/spinner'
 import { createCouponSchema, ZCreateCoupon } from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DateValue, getLocalTimeZone } from '@internationalized/date'
+import { getLocalTimeZone } from '@internationalized/date'
 import {
   Button,
   DatePicker,
@@ -15,6 +15,7 @@ import {
   Tab,
   Tabs,
   useDisclosure,
+  DateValue,
 } from '@nextui-org/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -41,6 +42,7 @@ const defaultValues = {
 export default function CouponEditor() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
   const [expires, setExpires] = useState<DateValue | null>()
+
   const queryClient = useQueryClient()
   const {
     handleSubmit,
@@ -56,6 +58,7 @@ export default function CouponEditor() {
     mutationFn: createCoupon,
     onSuccess: (data) => {
       reset()
+      setExpires(undefined)
       queryClient.invalidateQueries({ queryKey: ['coupons'] })
       onClose()
     },
@@ -90,6 +93,7 @@ export default function CouponEditor() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="bottom-center"
+        isDismissable={false}
         size="xl"
       >
         <ModalContent>
@@ -121,7 +125,6 @@ export default function CouponEditor() {
                               placeholder="Ej: PROMO1"
                               maxLength={20}
                               variant="bordered"
-                              isClearable
                               isRequired
                               required
                             />
@@ -152,7 +155,7 @@ export default function CouponEditor() {
                             onChange={(val) => {
                               setValue(
                                 'expiresAt',
-                                val.toDate(getLocalTimeZone()).toISOString()
+                                val?.toDate(getLocalTimeZone()).toISOString()
                               )
                               setExpires(val)
                             }}

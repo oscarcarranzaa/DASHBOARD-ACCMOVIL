@@ -1,8 +1,8 @@
 'use client'
 import { editProfileInfoSchema, ZEditProfileInfo } from '@/types/users'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DateValue, getLocalTimeZone, parseDate } from '@internationalized/date'
-import { Button, DatePicker, Input } from '@nextui-org/react'
+import { getLocalTimeZone, parseDate } from '@internationalized/date'
+import { Button, DatePicker, Input, DateValue } from '@nextui-org/react'
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { UserSchema } from '@/types/schemas'
@@ -14,7 +14,7 @@ type TProps = {
   user: UserSchema
 }
 export default function AccountInformationForm({ user }: TProps) {
-  const [dateValue, setDateValue] = useState<DateValue>()
+  const [dateValue, setDateValue] = useState<DateValue | null>()
   const queryClient = useQueryClient()
   const defaultValues = {
     firstName: user.firstName,
@@ -29,7 +29,6 @@ export default function AccountInformationForm({ user }: TProps) {
     control,
     reset,
     setValue,
-    getValues,
     formState: { errors, isDirty },
   } = useForm<editProfileInfoSchema>({
     resolver: zodResolver(ZEditProfileInfo),

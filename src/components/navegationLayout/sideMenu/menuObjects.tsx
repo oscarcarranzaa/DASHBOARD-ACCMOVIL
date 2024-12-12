@@ -78,7 +78,7 @@ export const menuItems = [
     items: [
       {
         name: 'Contactos',
-        href: '/dash/clientes/contactos',
+        href: '/dash/pipe/contactos',
         permissionKeys: [],
       },
       {

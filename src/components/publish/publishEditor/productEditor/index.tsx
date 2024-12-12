@@ -2,30 +2,39 @@
 
 import ClockSVG from '@/components/icons/clock'
 import { newProductSchema, newProductSingleSchema } from '@/types/products'
-import { Button, DateRangePicker, Input, Tooltip } from '@nextui-org/react'
+import {
+  Button,
+  DateRangePicker,
+  Input,
+  Tooltip,
+  DateValue,
+  RangeValue,
+} from '@nextui-org/react'
 import { useEffect, useState } from 'react'
-import { RangeValue } from '@react-types/shared'
-import { DateValue } from '@react-types/datepicker'
 import { Controller, useForm } from 'react-hook-form'
-import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
+import {
+  getLocalTimeZone,
+  parseAbsoluteToLocal,
+  parseDate,
+} from '@internationalized/date'
 import { usePublishStore } from '@/store/publish'
 
 export default function ProductEditor() {
   const { product } = usePublishStore((state) => state.postData)
   const startDate = product?.startDiscount
   const endDate = product?.endDiscount
-  const defaultDateCalendar =
+
+  const defaultDateCalendar: RangeValue<DateValue> | null =
     startDate && endDate
       ? {
           start: parseAbsoluteToLocal(startDate),
           end: parseAbsoluteToLocal(endDate),
         }
-      : undefined
+      : null
 
   const [openClock, setOpenClock] = useState(!!product?.startDiscount)
-  const [calendarDate, setCalendarDate] = useState<
-    RangeValue<DateValue> | undefined
-  >(defaultDateCalendar)
+  const [calendarDate, setCalendarDate] =
+    useState<RangeValue<DateValue> | null>(defaultDateCalendar)
 
   const setProduct = usePublishStore((state) => state.setProduct)
 
@@ -132,7 +141,7 @@ export default function ProductEditor() {
             <Tooltip content="Temporizador" size="sm">
               <Button
                 isIconOnly
-                onClick={handleSetDateDiscount}
+                onPress={handleSetDateDiscount}
                 color={openClock ? 'primary' : 'default'}
               >
                 <ClockSVG size={24} />

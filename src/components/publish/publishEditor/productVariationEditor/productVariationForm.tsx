@@ -3,10 +3,15 @@ import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { newProductSchema, ZProductNew } from '@/types/products'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, DateRangePicker, Input, Tooltip } from '@nextui-org/react'
+import {
+  Button,
+  DateRangePicker,
+  Input,
+  Tooltip,
+  DateValue,
+  RangeValue,
+} from '@nextui-org/react'
 import { useState } from 'react'
-import { RangeValue } from '@react-types/shared'
-import { DateValue } from '@react-types/datepicker'
 import { Controller, useForm } from 'react-hook-form'
 import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
 import { usePublishStore } from '@/store/publish'
@@ -23,21 +28,20 @@ export default function ProductVariationForm({
 }: TProps) {
   const startDate = value?.startDiscount
   const endDate = value?.endDiscount
-  const defaultDateCalendar =
+  const defaultDateCalendar: RangeValue<DateValue> | null =
     startDate && endDate
       ? {
           start: parseAbsoluteToLocal(startDate),
           end: parseAbsoluteToLocal(endDate),
         }
-      : undefined
+      : null
 
   const [defaultImage, setDefaultImage] = useState<IUploads[] | undefined>(
     value?.image && [value.image]
   )
   const [openClock, setOpenClock] = useState(!!value?.startDiscount)
-  const [calendarDate, setCalendarDate] = useState<
-    RangeValue<DateValue> | undefined
-  >(defaultDateCalendar)
+  const [calendarDate, setCalendarDate] =
+    useState<RangeValue<DateValue> | null>(defaultDateCalendar)
 
   const setProductVariation = usePublishStore(
     (state) => state.setProductVariation
@@ -148,7 +152,7 @@ export default function ProductVariationForm({
                 <Tooltip content="Temporizador" size="sm">
                   <Button
                     isIconOnly
-                    onClick={handleSetDateDiscount}
+                    onPress={handleSetDateDiscount}
                     color={openClock ? 'primary' : 'default'}
                   >
                     <ClockSVG size={24} />

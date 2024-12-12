@@ -51,7 +51,7 @@ export default function ContactList({ data, rows, isPending }: IProps) {
           return (
             <Link
               className="hover:underline flex"
-              href={`/dash/clientes/contactos/${contact.id}`}
+              href={`/dash/pipe/contactos/${contact.id}`}
             >
               <User
                 avatarProps={{

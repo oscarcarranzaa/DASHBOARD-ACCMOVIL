@@ -115,6 +115,7 @@ export default function HistoryItem({
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem
+                    key="Eliminar"
                     onClick={() => sendDeleteComment(id)}
                     startContent={
                       <div className="stroke-red-500">

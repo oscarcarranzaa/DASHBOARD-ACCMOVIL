@@ -5,6 +5,7 @@ import {
   createCustomerSchema,
   getAllContactSchema,
   getAllCustomerSchema,
+  updateDataContactSchema,
   ZAllContacts,
   ZAllCustomer,
   ZContact,
@@ -57,6 +58,31 @@ export async function getOneContact(id: string) {
   try {
     const { data } = await axiosInstance.get<contactSchema>(
       `/admin/contact/${id}`
+    )
+
+    const validContact = ZContact.parse(data)
+    return validContact
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Ocurrió un error en la transmición de datos.')
+    }
+  }
+}
+export async function updateContactData({
+  contact,
+  id,
+}: {
+  id: string
+  contact: {
+    [key: string]: string | undefined
+  }
+}) {
+  try {
+    const { data } = await axiosInstance.put<contactSchema>(
+      `/admin/contact/${id}`,
+      contact
     )
 
     const validContact = ZContact.parse(data)

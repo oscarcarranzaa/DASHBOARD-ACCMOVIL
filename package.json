@@ -20,7 +20,7 @@
     "@nextui-org/system": "2.2.6",
     "@nextui-org/theme": "^2.2.3",
     "@tanstack/react-query": "5.29.2",
-    "axios": "1.6.8",
+    "axios": "^1.7.9",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.14.1",
     "jose": "5.2.4",

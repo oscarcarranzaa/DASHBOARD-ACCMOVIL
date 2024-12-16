@@ -12,7 +12,7 @@ const Ubication = ({ size }: TSVG) => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth="2"
+      strokeWidth="1.5"
       d="M12.816 20.608C16.85 18.55 20 15.143 20 11a8 8 0 1 0-16 0c0 4.143 3.15 7.55 7.184 9.608.513.261 1.12.261 1.632 0z"
     />
     <path

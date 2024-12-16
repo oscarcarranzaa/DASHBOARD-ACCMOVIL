@@ -1,0 +1,6 @@
+.edit_icon_field {
+  display: none;
+}
+.fiel_contaier:hover > .edit_icon_field {
+  display: block;
+}

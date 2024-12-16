@@ -2,7 +2,6 @@ import { contactSchema } from '@/types/customer'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
-import ContactProfile from './profile'
 import ContactEmails from './emails'
 import ContactOrders from './orders'
 import ContactLead from './leads'
@@ -17,8 +16,6 @@ export default function ContactNavegation({
 
   const renderNavegationItems = useCallback(() => {
     switch (path) {
-      case 'profile':
-        return <ContactProfile contact={contact} />
       case 'emails':
         return <ContactEmails />
       case 'orders':
@@ -26,15 +23,11 @@ export default function ContactNavegation({
       case 'lead':
         return <ContactLead />
       default:
-        return <ContactProfile contact={contact} />
+        return <ContactEmails />
     }
   }, [path])
 
   const navegationItems = [
-    {
-      name: 'Perfil',
-      path: 'profile',
-    },
     {
       name: 'Correos',
       path: 'emails',
@@ -74,7 +67,7 @@ export default function ContactNavegation({
           })}
         </ul>
       </div>
-      <div className="mt-5">{renderNavegationItems()}</div>
+      <div className="mt-5 min-h-96">{renderNavegationItems()}</div>
     </>
   )
 }

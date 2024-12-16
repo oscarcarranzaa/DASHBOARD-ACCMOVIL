@@ -47,16 +47,16 @@ export const ZCreateCustomer = z
 
 export const ZContact = z.object({
   id: z.string(),
-  firstName: z.string(),
-  lastName: z.string().optional().nullable(),
-  labelId: z.string().optional().nullable(),
-  avatar: z.string().optional().nullable(),
-  phone: z.string().optional().nullable(),
+  firstName: z.string().min(3, 'Nombre muy corto'),
+  lastName: z.string().nullable().optional(),
+  labelId: z.string().nullable().optional(),
+  avatar: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
   status: z.enum(['SUBSCRIBED', 'UNSUBSCRIBED', 'BOUNCED']),
-  email: z.string().email().optional().nullable(),
+  email: z.string().email().nullable().optional(),
   dateOfBirth: z.string().nullable().optional(),
   isSuscribed: z.boolean(),
-  address: z.string().optional().nullable(),
+  address: z.string().nullable().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
 })
@@ -97,6 +97,26 @@ export const ZCreateContact = ZContact.pick({
     address: z.string().optional(),
   })
 )
+export const ZContactSummary = ZCreateContact.pick({
+  email: true,
+  phone: true,
+  address: true,
+})
+export const ZContactDetails = ZCreateContact.pick({
+  firstName: true,
+  lastName: true,
+}).merge(
+  z.object({
+    dateOfBirth: z.string().optional(),
+  })
+)
+export const ZUpdateDataContact = z.object({
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+})
 export const ZAllContacts = z.object({
   data: z.array(ZContact),
   totalPages: z.number(),
@@ -105,9 +125,13 @@ export const ZAllContacts = z.object({
   results: z.number(),
   pageNumber: z.number(),
 })
+
 export type customerSchema = z.infer<typeof ZCustomer>
 export type getAllCustomerSchema = z.infer<typeof ZAllCustomer>
 export type createCustomerSchema = z.infer<typeof ZCreateCustomer>
 export type createContactSchema = z.infer<typeof ZCreateContact>
 export type contactSchema = z.infer<typeof ZContact>
 export type getAllContactSchema = z.infer<typeof ZAllContacts>
+export type contactSummarySchema = z.infer<typeof ZContactSummary>
+export type contactDetailsSchema = z.infer<typeof ZContactDetails>
+export type updateDataContactSchema = z.infer<typeof ZUpdateDataContact>

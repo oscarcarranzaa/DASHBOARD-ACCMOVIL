@@ -17,7 +17,7 @@ export default function ViewContact({ contactID }: { contactID: string }) {
   return (
     <div>
       <ContactHeader contact={data} />
-      <div className="grid grid-cols-9 mt-5 gap-3">
+      <div className="grid grid-cols-9 mt-5 gap-3 items-start">
         <div className=" col-span-6 border border-zinc-300 dark:border-zinc-700 rounded-lg p-3">
           <ContactNavegation contact={data} />
         </div>

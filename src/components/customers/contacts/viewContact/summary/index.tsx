@@ -2,7 +2,7 @@ import { updateContactData } from '@/api/contact'
 import EmailSVG from '@/components/icons/email'
 import PhoneSVG from '@/components/icons/phone'
 import UbicationSVG from '@/components/icons/ubication'
-import EditableFields from '@/components/UI/editableFields'
+import InputField from '@/components/UI/editableFields/input'
 import {
   contactSchema,
   contactSummarySchema,
@@ -69,7 +69,7 @@ export default function ContactSummary({
           name="email"
           control={control}
           render={({ field }) => (
-            <EditableFields
+            <InputField
               startContent={<EmailSVG size={24} />}
               placeholder="example@correo.com"
               value={field.value}
@@ -85,7 +85,7 @@ export default function ContactSummary({
           name="phone"
           control={control}
           render={({ field }) => (
-            <EditableFields
+            <InputField
               startContent={<PhoneSVG size={24} />}
               placeholder="98158066"
               value={field.value}
@@ -101,7 +101,7 @@ export default function ContactSummary({
           name="address"
           control={control}
           render={({ field }) => (
-            <EditableFields
+            <InputField
               startContent={<UbicationSVG size={24} />}
               placeholder="EJ: Av. 70 NW"
               type="text"

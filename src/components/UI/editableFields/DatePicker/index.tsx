@@ -1,6 +1,7 @@
 import Edit from '@/components/icons/edit'
-import { Input } from '@nextui-org/react'
-import { ReactNode, useEffect, useState } from 'react'
+import { DatePicker } from '@nextui-org/react'
+import { DateValue, parseDate, getLocalTimeZone } from '@internationalized/date'
+import { ReactNode, useState } from 'react'
 import style from './field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
 
@@ -15,7 +16,7 @@ type EditableFieldProps = {
   startContent?: ReactNode
 }
 
-export default function EditableFields({
+export default function InputField({
   value,
   onValueChange,
   onBlur,
@@ -26,11 +27,12 @@ export default function EditableFields({
   startContent,
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false)
-  const [internalValue, setInternalValue] = useState<string | undefined>(value)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInternalValue(e.target.value)
-    onValueChange(e.target.value)
+  const [internalValue, setInternalValue] = useState<DateValue | null>()
+
+  const handleChange = (e: DateValue) => {
+    setInternalValue(e)
+    //onValueChange(e)
   }
   const handleBlur = () => {
     setIsEditing(false)
@@ -56,24 +58,20 @@ export default function EditableFields({
         >
           {startContent}
         </button>
-        <div className="w-full">
+        <div className={isEditing ? 'w-full' : ''}>
           <label>
             <div className={`flex items-center ${style.fiel_contaier}`}>
               {isEditing ? (
-                <Input
-                  type={type}
+                <DatePicker
                   value={internalValue}
-                  onChange={handleChange}
+                  onChange={(v) => {
+                    if (!v) return
+                    handleChange(v)
+                  }}
                   onBlur={handleBlur}
                   autoFocus
-                  classNames={{
-                    innerWrapper: ['px-0'],
-                    inputWrapper: ['px-0'],
-                    input: ['px-3'],
-                  }}
                   variant="bordered"
                   errorMessage={error}
-                  placeholder={placeholder}
                   aria-label={label}
                   aria-describedby={error ? 'error-message' : undefined}
                   onKeyDown={handleKeyDown}

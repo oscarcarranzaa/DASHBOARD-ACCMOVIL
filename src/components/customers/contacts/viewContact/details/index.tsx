@@ -1,15 +1,14 @@
 import { updateContactData } from '@/api/contact'
-import EmailSVG from '@/components/icons/email'
-import PhoneSVG from '@/components/icons/phone'
-import UbicationSVG from '@/components/icons/ubication'
-import EditableFields from '@/components/UI/editableFields'
+import InputField from '@/components/UI/editableFields/input'
 import {
   contactDetailsSchema,
   contactSchema,
   ZContactDetails,
 } from '@/types/customer'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { DateInput, DatePicker, DateValue } from '@nextui-org/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -18,6 +17,7 @@ export default function ContactDetails({
 }: {
   contact: contactSchema
 }) {
+  const [expires, setExpires] = useState<DateValue | null>()
   const queryClient = useQueryClient()
 
   const defaultValues = {
@@ -70,7 +70,7 @@ export default function ContactDetails({
           name="firstName"
           control={control}
           render={({ field }) => (
-            <EditableFields
+            <InputField
               startContent={<p className="text-sm ">Nombres:</p>}
               placeholder="Ej: Juan Jose"
               type="text"
@@ -86,7 +86,7 @@ export default function ContactDetails({
           name="lastName"
           control={control}
           render={({ field }) => (
-            <EditableFields
+            <InputField
               value={field.value}
               startContent={<p className="text-sm ">Apellidos:</p>}
               placeholder="Ej: Martinez"
@@ -97,6 +97,14 @@ export default function ContactDetails({
               error={errors.lastName?.message}
             />
           )}
+        />
+
+        <DatePicker
+          showMonthAndYearPickers
+          variant="bordered"
+          className="mt-5"
+          label="Nacimiento"
+          labelPlacement="outside-left"
         />
       </div>
     </>

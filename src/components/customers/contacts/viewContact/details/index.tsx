@@ -1,4 +1,5 @@
 import { updateContactData } from '@/api/contact'
+import DatePickerField from '@/components/UI/editableFields/DatePicker'
 import InputField from '@/components/UI/editableFields/input'
 import {
   contactDetailsSchema,
@@ -6,7 +7,12 @@ import {
   ZContactDetails,
 } from '@/types/customer'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DateInput, DatePicker, DateValue } from '@nextui-org/react'
+import {
+  DateInput,
+  DateInputField,
+  DatePicker,
+  DateValue,
+} from '@nextui-org/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -98,13 +104,18 @@ export default function ContactDetails({
             />
           )}
         />
-
-        <DatePicker
-          showMonthAndYearPickers
-          variant="bordered"
-          className="mt-5"
-          label="Nacimiento"
-          labelPlacement="outside-left"
+        <Controller
+          name="dateOfBirth"
+          control={control}
+          render={({ field }) => (
+            <DatePickerField
+              label="Nacimiento"
+              startContent={<p className="text-sm ">Nacimiento:</p>}
+              onValueChange={(e) => field.onChange(e)}
+              value={field.value}
+              onBlur={() => handleAutoSubmit(field.name)}
+            />
+          )}
         />
       </div>
     </>

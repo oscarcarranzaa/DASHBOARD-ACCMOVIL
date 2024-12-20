@@ -1,43 +1,45 @@
 import Edit from '@/components/icons/edit'
 import { DatePicker } from '@nextui-org/react'
 import { DateValue, parseDate, getLocalTimeZone } from '@internationalized/date'
-import { ReactNode, useState } from 'react'
-import style from './field.module.css'
+import { ReactNode, useRef, useState } from 'react'
+import style from '../input/field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
+import dayjs from 'dayjs'
+import useOutsideClick from '@/hooks/useOutSideClick'
 
 type EditableFieldProps = {
   value?: string
   onValueChange: (newValue: string | undefined) => void
   onBlur?: (newValue: string | undefined) => void
-  type?: 'text' | 'number' | 'email'
   placeholder?: string
   label?: string
   error?: string
   startContent?: ReactNode
 }
 
-export default function InputField({
+export default function DatePickerField({
   value,
   onValueChange,
   onBlur,
-  type = 'text',
-  placeholder,
   error,
   label = 'Haz clic para editar',
   startContent,
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false)
-
-  const [internalValue, setInternalValue] = useState<DateValue | null>()
-
+  const [internalValue, setInternalValue] = useState<DateValue | null>(
+    value ? parseDate(value) : null
+  )
+  const ref = useRef(null)
   const handleChange = (e: DateValue) => {
     setInternalValue(e)
-    //onValueChange(e)
+    onValueChange(e?.toDate(getLocalTimeZone()).toISOString().split('T')[0])
   }
   const handleBlur = () => {
     setIsEditing(false)
     if (onBlur) {
-      onBlur(internalValue)
+      onBlur(
+        internalValue?.toDate(getLocalTimeZone()).toISOString().split('T')[0]
+      )
     }
   }
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -45,6 +47,7 @@ export default function InputField({
       handleBlur()
     }
   }
+  useOutsideClick(ref, () => handleBlur())
   return (
     <>
       <div
@@ -62,20 +65,23 @@ export default function InputField({
           <label>
             <div className={`flex items-center ${style.fiel_contaier}`}>
               {isEditing ? (
-                <DatePicker
-                  value={internalValue}
-                  onChange={(v) => {
-                    if (!v) return
-                    handleChange(v)
-                  }}
-                  onBlur={handleBlur}
-                  autoFocus
-                  variant="bordered"
-                  errorMessage={error}
-                  aria-label={label}
-                  aria-describedby={error ? 'error-message' : undefined}
-                  onKeyDown={handleKeyDown}
-                />
+                <div>
+                  <DatePicker
+                    ref={ref}
+                    value={internalValue}
+                    showMonthAndYearPickers
+                    onChange={(v) => {
+                      if (!v) return
+                      handleChange(v)
+                    }}
+                    autoFocus
+                    variant="bordered"
+                    errorMessage={error}
+                    aria-label={label}
+                    aria-describedby={error ? 'error-message' : undefined}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
               ) : (
                 <>
                   <span
@@ -86,7 +92,13 @@ export default function InputField({
                     <p
                       className={`${!error ? 'text-blue-500' : 'text-red-500'} line-clamp-2 text-sm`}
                     >
-                      {internalValue || label}
+                      {internalValue
+                        ? dayjs(
+                            internalValue
+                              .toDate(getLocalTimeZone())
+                              .toISOString()
+                          ).format('DD/MM/YYYY')
+                        : label}
                     </p>
                   </span>
                   <button

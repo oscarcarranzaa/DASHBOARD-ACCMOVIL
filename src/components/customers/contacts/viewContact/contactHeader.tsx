@@ -5,7 +5,7 @@ import { User, Select, SelectItem } from '@nextui-org/react'
 import { contactStatusOption } from '../newContact/contactStatusOptions'
 
 export default function ContactHeader({ contact }: { contact: contactSchema }) {
-  const name = `${contact.firstName} ${contact.lastName}`
+  const name = `${contact.firstName} ${contact.lastName ?? ''}`
   return (
     <>
       <div className="border p-5 rounded-xl border-zinc-300 dark:border-zinc-700 flex justify-between items-center">

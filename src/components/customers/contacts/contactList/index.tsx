@@ -47,7 +47,7 @@ export default function ContactList({ data, rows, isPending }: IProps) {
     (contact: contactSchema, columnKey: React.Key) => {
       switch (columnKey) {
         case 'name':
-          const name = `${contact.firstName?.split(' ')[0]} ${contact.lastName?.split(' ')[0]}`
+          const name = `${contact.firstName?.split(' ')[0]} ${contact.lastName?.split(' ')[0] ?? ''}`
           return (
             <Link
               className="hover:underline flex"

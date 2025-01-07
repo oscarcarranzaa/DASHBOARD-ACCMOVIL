@@ -1,16 +1,37 @@
+'use client'
 import FireSVG from '@/components/icons/fire'
 import { contactSchema } from '@/types/customer'
-import formaFromNowDate from '@/utils/formatFromNowDate'
-import { Accessibility } from '@dnd-kit/core/dist/components/Accessibility'
+import formatFromNowDate from '@/utils/formatFromNowDate'
 import { Accordion, AccordionItem, Button } from '@nextui-org/react'
 import ContactSummary from './summary'
 import ContactDetails from './details'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteOneContact } from '@/api/contact'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 export default function SideInformationContact({
   contact,
 }: {
   contact: contactSchema
 }) {
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteOneContact,
+    onSuccess: (succ) => {
+      queryClient.invalidateQueries({ queryKey: ['contact'] })
+      toast.success(succ)
+      router.push('/dash/pipe/contactos')
+    },
+    onError: (err) => {
+      toast.error(err.message)
+    },
+  })
+  const handleDeleteContact = () => {
+    mutate(contact.id)
+  }
   return (
     <>
       <div className="">
@@ -34,11 +55,11 @@ export default function SideInformationContact({
               <ul className="grid grid-cols-2 text-sm gap-y-3 mb-10">
                 <li>
                   <p className=" font-medium ">Se unió</p>
-                  <p>{formaFromNowDate(contact.createdAt)}</p>
+                  <p>{formatFromNowDate(contact.createdAt)}</p>
                 </li>
                 <li>
                   <p className=" font-medium ">Ultima actualización</p>
-                  <p>{formaFromNowDate(contact.updatedAt)}</p>
+                  <p>{formatFromNowDate(contact.updatedAt)}</p>
                 </li>
                 <li>
                   <p className=" font-medium ">¿Está sucrito(a)?</p>
@@ -52,7 +73,7 @@ export default function SideInformationContact({
                   Esta acción eliminará este contacto de forma permanente.
                 </p>
                 <div className=" stroke-white mt-3 float-right">
-                  <Button color="danger">
+                  <Button color="danger" onPress={handleDeleteContact}>
                     <FireSVG size={20} /> Eliminar
                   </Button>
                 </div>

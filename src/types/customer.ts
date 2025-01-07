@@ -83,6 +83,7 @@ export const ZCreateContact = ZContact.pick({
       .transform((val) => (val === '' ? undefined : val)),
     email: z
       .string()
+      .email('Correo no es válido.')
       .optional()
       .superRefine((val, ctx) => {
         if (val === '') return

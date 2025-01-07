@@ -28,6 +28,7 @@ export default function ContactSummary({
     control,
     trigger,
     resetField,
+    reset,
     formState: { errors, dirtyFields },
     getValues,
   } = useForm<contactSummarySchema>({
@@ -47,6 +48,7 @@ export default function ContactSummary({
       toast.success('Contacto actualizado')
     },
     onError: (err) => {
+      reset(defaultValues)
       toast.error(err.message || 'Ocurrió un error desconocido')
     },
   })
@@ -55,7 +57,7 @@ export default function ContactSummary({
     if (!dirtyFields[fieldName]) return
     const isValid = await trigger(fieldName)
     if (!isValid) {
-      toast.warning(`Error en los datos [field: ${fieldName}] `)
+      toast.warning(`Error en los datos [Input: ${fieldName}] `)
       return
     }
     const value = getValues(fieldName)

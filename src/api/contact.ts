@@ -2,12 +2,8 @@ import axiosInstance from '@/lib/axiosClient'
 import {
   contactSchema,
   createContactSchema,
-  createCustomerSchema,
   getAllContactSchema,
-  getAllCustomerSchema,
-  updateDataContactSchema,
   ZAllContacts,
-  ZAllCustomer,
   ZContact,
 } from '@/types/customer'
 import { isAxiosError } from 'axios'
@@ -89,9 +85,21 @@ export async function updateContactData({
     return validContact
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg)
+      throw new Error(error.response.data.response?.msg ?? 'Error desconocido.')
     } else {
       throw new Error('Ocurrió un error en la transmición de datos.')
+    }
+  }
+}
+export async function deleteOneContact(id: string) {
+  try {
+    const { data } = await axiosInstance.delete(`/admin/contact/${id}`)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg ?? 'Error inesperado')
+    } else {
+      throw new Error('Ocurrió un error al eliminar un contacto.')
     }
   }
 }

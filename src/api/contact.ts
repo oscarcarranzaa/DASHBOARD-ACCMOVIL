@@ -1,6 +1,7 @@
 import axiosInstance from '@/lib/axiosClient'
 import {
   contactSchema,
+  contactStatusSchema,
   createContactSchema,
   getAllContactSchema,
   ZAllContacts,
@@ -79,6 +80,29 @@ export async function updateContactData({
     const { data } = await axiosInstance.put<contactSchema>(
       `/admin/contact/${id}`,
       contact
+    )
+
+    const validContact = ZContact.parse(data)
+    return validContact
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg ?? 'Error desconocido.')
+    } else {
+      throw new Error('Ocurrió un error en la transmición de datos.')
+    }
+  }
+}
+export async function updateContactStatus({
+  status,
+  id,
+}: {
+  id: string
+  status: contactStatusSchema['status']
+}) {
+  try {
+    const { data } = await axiosInstance.put<contactSchema>(
+      `/admin/contact/${id}/status`,
+      { status }
     )
 
     const validContact = ZContact.parse(data)

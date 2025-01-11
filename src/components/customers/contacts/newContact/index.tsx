@@ -42,7 +42,7 @@ export default function CreateContact() {
     onSuccess: () => {
       reset()
       onClose()
-      queryClient.invalidateQueries({ queryKey: ['contacts'] })
+      queryClient.invalidateQueries({ queryKey: ['contact'] })
     },
   })
 

@@ -1,11 +1,42 @@
 import EmailSVG from '@/components/icons/email'
 import PhoneSVG from '@/components/icons/phone'
-import { contactSchema } from '@/types/customer'
+import { contactSchema, contactStatusSchema } from '@/types/customer'
 import { User, Select, SelectItem } from '@nextui-org/react'
 import { contactStatusOption } from '../newContact/contactStatusOptions'
+import { toast } from 'sonner'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateContactStatus } from '@/api/contact'
+
+const statusContactMap: Record<string, contactStatusSchema['status']> = {
+  SUBSCRIBED: 'SUBSCRIBED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED',
+  BOUNCED: 'BOUNCED',
+}
 
 export default function ContactHeader({ contact }: { contact: contactSchema }) {
   const name = `${contact.firstName} ${contact.lastName ?? ''}`
+
+  const queryClient = useQueryClient()
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateContactStatus,
+    onSuccess: (succ) => {
+      toast.success('Estado actualizado')
+      queryClient.invalidateQueries({ queryKey: ['contact', succ.id] })
+    },
+    onError: (err) => {
+      toast.error(err.message ?? 'Error al actualizar el estado')
+    },
+  })
+
+  const handleContactStatus = (op: string | undefined) => {
+    if (!op) return
+    const option = statusContactMap[op]
+    if (!option) {
+      toast.warning('Este estado no esta disponible.')
+    }
+    mutate({ status: option, id: contact.id })
+  }
   return (
     <>
       <div className="border p-5 rounded-xl border-zinc-300 dark:border-zinc-700 flex justify-between items-center">
@@ -44,8 +75,10 @@ export default function ContactHeader({ contact }: { contact: contactSchema }) {
             variant="flat"
             label="Estado de marketing"
             placeholder="Selecciona un estado"
+            isLoading={isPending}
             labelPlacement="outside"
             className="max-w-xs"
+            onSelectionChange={(e) => handleContactStatus(e.anchorKey)}
             selectedKeys={[contact.status]}
           >
             {contactStatusOption.map((cont) => (

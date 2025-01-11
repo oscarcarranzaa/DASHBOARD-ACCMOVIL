@@ -16,13 +16,8 @@ import {
 } from '@nextui-org/react'
 import { contactRows } from './rows'
 import Link from 'next/link'
-import VerifiedSVG from '@/components/icons/verified'
 import { useSearchParams } from 'next/navigation'
-import {
-  contactSchema,
-  customerSchema,
-  getAllContactSchema,
-} from '@/types/customer'
+import { contactSchema, getAllContactSchema } from '@/types/customer'
 import formaFromNowDate from '@/utils/formatFromNowDate'
 import EmailSVG from '@/components/icons/email'
 import PhoneSVG from '@/components/icons/phone'
@@ -36,6 +31,11 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   SUBSCRIBED: 'success',
   UNSUBSCRIBED: 'warning',
   BOUNCED: 'danger',
+}
+const statusContactMap = {
+  SUBSCRIBED: 'SUBSCRITO',
+  UNSUBSCRIBED: 'DE BAJA',
+  BOUNCED: 'REBOTADO',
 }
 export default function ContactList({ data, rows, isPending }: IProps) {
   const [totalPages, setTotalPages] = useState(0)
@@ -98,7 +98,7 @@ export default function ContactList({ data, rows, isPending }: IProps) {
                 size="sm"
                 variant="dot"
               >
-                {contact.status}
+                {statusContactMap[contact.status]}
               </Chip>
               <p className="text-zinc-600 dark:text-zinc-400 text-xs">
                 {contact.address || 'N/D'}

@@ -60,6 +60,7 @@ export const ZContact = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
 })
+export const ZContactStatus = ZContact.pick({ status: true })
 export const ZCreateContact = ZContact.pick({
   firstName: true,
   status: true,
@@ -128,6 +129,7 @@ export const ZAllContacts = z.object({
 })
 
 export type customerSchema = z.infer<typeof ZCustomer>
+export type contactStatusSchema = z.infer<typeof ZContactStatus>
 export type getAllCustomerSchema = z.infer<typeof ZAllCustomer>
 export type createCustomerSchema = z.infer<typeof ZCreateCustomer>
 export type createContactSchema = z.infer<typeof ZCreateContact>

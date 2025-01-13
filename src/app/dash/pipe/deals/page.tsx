@@ -1,7 +1,9 @@
+import NavegationPages from '@/components/navegationPages'
+
 export default function Deals() {
   return (
     <div>
-      <p>Deals</p>
+      <NavegationPages text="Negociaciones de clientes" />
     </div>
   )
 }

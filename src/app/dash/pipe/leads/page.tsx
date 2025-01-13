@@ -1,7 +1,9 @@
+import NavegationPages from '@/components/navegationPages'
+
 export default function Leads() {
   return (
     <div>
-      <p>Leadss</p>
+      <NavegationPages text="Clientes prospectos" />
     </div>
   )
 }

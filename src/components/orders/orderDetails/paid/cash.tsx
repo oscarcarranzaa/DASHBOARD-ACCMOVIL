@@ -1,7 +1,7 @@
 import { orderPaidByCash } from '@/api/order'
 import Money from '@/components/icons/money'
 import Spinner from '@/components/icons/spinner'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -40,7 +40,7 @@ export default function OrderCash({ orderId, totalAmount, onClose }: TProps) {
           <Button
             color="success"
             className="w-full stroke-black stroke-2"
-            onClick={handlePaid}
+            onPress={handlePaid}
             isDisabled={isPending}
           >
             {isPending ? (

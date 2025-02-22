@@ -7,7 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { productOrderList } from './rows'
 import { createOrderState } from '@/store/order'
 import { useCallback } from 'react'

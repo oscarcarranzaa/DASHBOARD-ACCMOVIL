@@ -1,4 +1,4 @@
-import { CircularProgress, Skeleton } from '@nextui-org/react'
+import { CircularProgress, Skeleton } from "@heroui/react"
 
 export default function PublishEditorSkeleton() {
   return (

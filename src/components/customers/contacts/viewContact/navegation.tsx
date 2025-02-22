@@ -55,7 +55,7 @@ export default function ContactNavegation({
                   : 'border-transparent'
 
             return (
-              <li key={n.path}>
+              <li key={n.path} className="list-none">
                 <Link
                   href={`?path=${n.path}`}
                   className={`py-3 px-2 text-sm border-b-2 ${active} hover:text-primary`}

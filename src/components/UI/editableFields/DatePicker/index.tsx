@@ -1,5 +1,5 @@
 import Edit from '@/components/icons/edit'
-import { DatePicker } from '@nextui-org/react'
+import { DatePicker } from "@heroui/react"
 import { DateValue, parseDate, getLocalTimeZone } from '@internationalized/date'
 import { ReactNode, useRef, useState } from 'react'
 import style from '../input/field.module.css'

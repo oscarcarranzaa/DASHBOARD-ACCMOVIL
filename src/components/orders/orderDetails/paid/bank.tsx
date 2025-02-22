@@ -2,7 +2,7 @@ import { orderPaidByTransfer } from '@/api/order'
 import Bank from '@/components/icons/bank'
 import Spinner from '@/components/icons/spinner'
 import SquareImage from '@/components/squareImage'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 
@@ -99,7 +99,7 @@ export default function OrderBank({ orderId, totalAmount, onClose }: TProps) {
         </div>
         {error && <p className=" text-xs font-medium text-danger">{error}</p>}
         <div className="mt-5 w-full">
-          <Button color="success" className="w-full" onClick={onSubmit}>
+          <Button color="success" className="w-full" onPress={onSubmit}>
             {isPending ? <Spinner fill="#000" size={26} /> : <Bank size={26} />}
             <p className="font-semibold">
               Pagar{' '}

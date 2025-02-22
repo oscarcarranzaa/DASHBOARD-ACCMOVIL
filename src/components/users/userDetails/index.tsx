@@ -1,6 +1,6 @@
 import VerifiedSVG from '@/components/icons/verified'
 import { UserSchema } from '@/types/users'
-import { User, ChipProps } from '@nextui-org/react'
+import { User, ChipProps } from "@heroui/react"
 
 type IProps = {
   user: UserSchema

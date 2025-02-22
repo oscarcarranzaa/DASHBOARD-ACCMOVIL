@@ -9,7 +9,7 @@ import useOutsideClick from '@/hooks/useOutSideClick'
 import { customerSchema } from '@/types/customer'
 import { addProductOrderSchema } from '@/types/order'
 import { productSchema } from '@/types/products'
-import { Avatar, Spinner } from '@nextui-org/react'
+import { Avatar, Spinner } from "@heroui/react"
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'

@@ -6,7 +6,7 @@ import UserCheckSVG from '@/components/icons/userCheck'
 import PostsListTarget from '@/components/publish/PostsList/targets'
 import PostItem from './postItem'
 import Search from '@/components/UI/search'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import Link from 'next/link'
 import PlusSVG from '@/components/icons/plus'
 import { useQuery } from '@tanstack/react-query'

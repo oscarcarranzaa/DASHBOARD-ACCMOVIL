@@ -3,7 +3,7 @@ import { getOrderSuccess } from '@/api/order'
 import ArrowAngleSVG from '@/components/icons/arrowAngle'
 import SuccessAnimation from '@/components/icons/successAnimation'
 import { createOrderState } from '@/store/order'
-import { Button, Skeleton } from '@nextui-org/react'
+import { Button, Skeleton } from '@heroui/react'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 
@@ -25,7 +25,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
                 isIconOnly
                 variant="bordered"
                 title="Regresar"
-                onClick={() => setNavegation('details')}
+                onPress={() => setNavegation('details')}
               >
                 <div className=" rotate-90 dark:stroke-white">
                   <ArrowAngleSVG size={24} />
@@ -117,7 +117,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
               color="success"
               href="/dash/pedidos"
               as={Link}
-              onClick={() => setNavegation('details')}
+              onPress={() => setNavegation('details')}
             >
               Pedidos
             </Button>
@@ -129,7 +129,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
                 isDisabled={!data}
                 href={data.id}
                 as={Link}
-                onClick={() => setNavegation('details')}
+                onPress={() => setNavegation('details')}
               >
                 Detalles
               </Button>

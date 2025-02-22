@@ -1,6 +1,6 @@
 'use client'
 import SearchSVG from '@/components/icons/search'
-import { Input } from '@nextui-org/react'
+import { Input } from "@heroui/react"
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'

@@ -1,7 +1,7 @@
 import UpdateSVG from '@/components/icons/update'
 import SquareImage from '@/components/squareImage'
 import { usePublishStore } from '@/store/publish'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 
 type TProps = {
   variationId: string
@@ -35,7 +35,7 @@ export default function DisplayDeleteItemsVariations({
           className="text-sm text-zinc-500 hover:cursor-pointer fill-zinc-500"
           variant="bordered"
           size="sm"
-          onClick={() => restoreVariation(variationId)}
+          onPress={() => restoreVariation(variationId)}
         >
           <div>
             <UpdateSVG size={18} />

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { getOneAttribute } from '@/api/attributes'
-import { Button } from '@nextui-org/button'
-import { Autocomplete, AutocompleteItem, Chip } from '@nextui-org/react'
+import { Button } from '@heroui/button'
+import { Autocomplete, AutocompleteItem, Chip } from '@heroui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Key } from '@react-types/shared'
@@ -198,14 +198,14 @@ export default function AttributeValues({
             <Button
               size="sm"
               color="danger"
-              onClick={() => {
+              onPress={() => {
                 deleteAtt(id)
               }}
             >
               Elminar
             </Button>
             <Button
-              onClick={selectSucces}
+              onPress={selectSucces}
               size="sm"
               className=""
               color="primary"

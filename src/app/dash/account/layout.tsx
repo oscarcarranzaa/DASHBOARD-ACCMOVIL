@@ -3,7 +3,7 @@ import LockSVG from '@/components/icons/lock'
 import UserSVG from '@/components/icons/user'
 import NavegationPages from '@/components/navegationPages'
 import { useAuthStore } from '@/store/auth'
-import { Avatar } from '@nextui-org/react'
+import { Avatar } from "@heroui/react"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'

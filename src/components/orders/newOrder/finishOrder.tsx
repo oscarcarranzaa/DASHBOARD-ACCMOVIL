@@ -2,7 +2,7 @@
 import Bank from '@/components/icons/bank'
 import ClockSVG from '@/components/icons/clock'
 import Money from '@/components/icons/money'
-import { Checkbox, cn, Button } from '@nextui-org/react'
+import { Checkbox, cn, Button } from "@heroui/react"
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import SquareImage from '@/components/squareImage'

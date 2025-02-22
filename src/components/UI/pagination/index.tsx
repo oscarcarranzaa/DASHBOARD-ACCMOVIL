@@ -1,5 +1,5 @@
 'use client'
-import { Pagination } from '@nextui-org/react'
+import { Pagination } from "@heroui/react"
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 

@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectProps,
   Selection,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import dayjs from 'dayjs'
 import { ReactNode, useEffect, useState } from 'react'
 import { getDisabledKeys, ORDER_STATUS } from './orderStatus'

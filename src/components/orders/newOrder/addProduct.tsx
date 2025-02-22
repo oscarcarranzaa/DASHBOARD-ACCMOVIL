@@ -1,5 +1,5 @@
 import EmptyOrder from './emptyOrder'
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 import { useState } from 'react'
 import { createOrderState } from '@/store/order'
 import ProductItems from './productItems'
@@ -46,7 +46,7 @@ export default function AddProductOrder() {
                 <Spinner size={24} fill="#777" />
               </div>
             )}
-            <Button color="primary" onClick={() => setOpenSelect(!openSelect)}>
+            <Button color="primary" onPress={() => setOpenSelect(!openSelect)}>
               Agregar productos
             </Button>
           </div>
@@ -61,7 +61,7 @@ export default function AddProductOrder() {
                 <Button
                   color="primary"
                   disabled={productsInOrder.length === 0}
-                  onClick={() => {
+                  onPress={() => {
                     setOrderNavegation('contact')
                     setCompletedNavegation(orderNavegation)
                   }}

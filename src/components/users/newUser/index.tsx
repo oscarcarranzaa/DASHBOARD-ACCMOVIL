@@ -14,7 +14,7 @@ import {
   ModalFooter,
   Autocomplete,
   AutocompleteItem,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'

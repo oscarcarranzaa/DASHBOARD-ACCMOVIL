@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { getAllAttributes } from '@/api/attributes'
-import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, Button } from '@heroui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Key } from '@react-types/shared'
@@ -179,7 +179,7 @@ export default function ManagerAttributes() {
           <Button
             disabled={selected === null}
             color={selected === null ? 'default' : 'primary'}
-            onClick={handleAddAttribute}
+            onPress={handleAddAttribute}
           >
             agregar
           </Button>

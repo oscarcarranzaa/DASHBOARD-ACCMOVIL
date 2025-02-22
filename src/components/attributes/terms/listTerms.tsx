@@ -9,7 +9,7 @@ import {
   TableRow,
   TableCell,
   Spinner,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { ZOneAttributeSchema, ZTermsSchema } from '@/types/attributes'
 import { useCallback } from 'react'
 

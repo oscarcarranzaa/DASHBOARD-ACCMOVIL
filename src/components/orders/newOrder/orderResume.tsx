@@ -2,7 +2,7 @@
 
 import DisplayPrice from '@/components/displayPrice'
 import { createOrderState } from '@/store/order'
-import { Avatar, Badge, Spinner } from '@nextui-org/react'
+import { Avatar, Badge, Spinner } from "@heroui/react"
 import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {

@@ -1,7 +1,7 @@
 import { TVariations, usePublishStore } from '@/store/publish'
 import ProductVariationEditor from '../productVariationEditor'
 import TrashSVG from '@/components/icons/trahs'
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 
 type TProps = {
   variation: TVariations
@@ -26,7 +26,7 @@ export default function DisplayItemsVariations({
           className="text-sm text-red-500 hover:cursor-pointer   stroke-red-500 ml-1"
           isIconOnly
           size="sm"
-          onClick={() => deleteVariation(variation.id)}
+          onPress={() => deleteVariation(variation.id)}
           variant="flat"
           color="danger"
           title="Eliminar variación"

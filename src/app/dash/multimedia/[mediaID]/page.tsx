@@ -5,13 +5,7 @@ import DownloadSVG from '@/components/icons/download'
 import FireSVG from '@/components/icons/fire'
 import LinkSVG from '@/components/icons/link'
 import useClipboard from '@/hooks/useClipBoard'
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Image,
-  Input,
-} from '@nextui-org/react'
+import { Accordion, AccordionItem, Button, Image, Input } from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
@@ -36,10 +30,10 @@ export default function MediaID() {
   const queryClient = useQueryClient()
   const router = useRouter()
   const param = useParams()
-  const id = param.mediaID.toString()
+  const id = param?.mediaID?.toString()
   const { data, isLoading } = useQuery({
     queryKey: ['oneMedia', id],
-    queryFn: () => getOneMedia(id),
+    queryFn: () => getOneMedia(id ?? ''),
     refetchOnWindowFocus: false,
   })
   const { mutate } = useMutation({
@@ -151,7 +145,7 @@ export default function MediaID() {
               </form>
               <section className="col-span-1 pt-5">
                 <div className="flex gap-5">
-                  <Button className="w-full" onClick={handleCopy(data.url)}>
+                  <Button className="w-full" onPress={handleCopy(data.url)}>
                     <span className="stroke-black dark:stroke-white">
                       <LinkSVG size={20} />
                     </span>
@@ -253,7 +247,7 @@ export default function MediaID() {
                         <Button
                           color="danger"
                           className="bg-red-600 rounded-xl focus:outline-none"
-                          onClick={() => mutate(data.id)}
+                          onPress={() => mutate(data.id)}
                         >
                           <span className=" stroke-white">
                             <FireSVG size={20} />

@@ -16,7 +16,7 @@ import {
   Tabs,
   useDisclosure,
   DateValue,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'

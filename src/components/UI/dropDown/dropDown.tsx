@@ -11,7 +11,7 @@ export default function DropDown({ label, children }: TProps) {
   useOutsideClick(ref, () => setOpenActions(false))
   return (
     <>
-      <div ref={ref as React.MutableRefObject<HTMLDivElement>}>
+      <div ref={ref as React.RefObject<HTMLDivElement>}>
         <div
           className={`absolute right-0 z-10 top-8 ${openActions ? '' : 'hidden'}`}
         >

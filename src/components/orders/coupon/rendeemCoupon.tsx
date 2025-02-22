@@ -3,7 +3,7 @@ import ArrowSVG from '@/components/icons/arrow'
 import Coupon from '@/components/icons/coupon'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
-import { Input, Button } from '@nextui-org/react'
+import { Input, Button } from "@heroui/react"
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'

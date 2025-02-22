@@ -2,7 +2,7 @@
 import { editProfileInfoSchema, ZEditProfileInfo } from '@/types/users'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone, parseDate } from '@internationalized/date'
-import { Button, DatePicker, Input, DateValue } from '@nextui-org/react'
+import { Button, DatePicker, Input, DateValue } from "@heroui/react"
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { UserSchema } from '@/types/schemas'

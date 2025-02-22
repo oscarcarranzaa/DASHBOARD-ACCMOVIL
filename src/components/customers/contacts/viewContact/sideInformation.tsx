@@ -2,7 +2,7 @@
 import FireSVG from '@/components/icons/fire'
 import { contactSchema } from '@/types/customer'
 import formatFromNowDate from '@/utils/formatFromNowDate'
-import { Accordion, AccordionItem, Button } from '@nextui-org/react'
+import { Accordion, AccordionItem, Button } from "@heroui/react"
 import ContactSummary from './summary'
 import ContactDetails from './details'
 import { useMutation, useQueryClient } from '@tanstack/react-query'

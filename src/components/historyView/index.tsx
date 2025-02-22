@@ -1,5 +1,5 @@
 'use client'
-import { SelectProps } from '@nextui-org/react'
+import { SelectProps } from "@heroui/react"
 import HistoryItem from './historyItems'
 
 type user = {

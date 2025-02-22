@@ -4,7 +4,7 @@ import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { newTermSchema, ZNewTerm } from '@/types/attributes'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Select, SelectItem } from '@nextui-org/react'
+import { Button, Input, Select, SelectItem } from "@heroui/react"
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'

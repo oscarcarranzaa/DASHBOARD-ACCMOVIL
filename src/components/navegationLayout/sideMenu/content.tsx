@@ -8,7 +8,7 @@ import style from './sideMenu.module.css'
 import Link from 'next/link'
 import CollapseArrowLeftSVG from '@/components/icons/collapseArrowLeft'
 import CollapseArrowRightSVG from '@/components/icons/collapseArrowRight'
-import { Tooltip } from '@nextui-org/react'
+import { Tooltip } from '@heroui/react'
 import { verifyAccess } from '@/lib/verifyAccess'
 import { useAuthStore } from '@/store/auth'
 import useUserInfo from '@/hooks/useUserInfo'
@@ -35,7 +35,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
   return (
     <>
       <nav
-        className={`bg-white z-50 dark:bg-[#131315] ${isOpen ? 'w-16' : ' w-56 overflow-y-scroll'} p-2 pt-5 border-r border-gray-200 dark:border-gray-600  ${style.menuContent}`}
+        className={`${isOpen ? 'w-16' : ' w-56 overflow-y-scroll'} p-2 pt-5  border-r h-full border-gray-200 dark:border-gray-600  ${style.menuContent}`}
       >
         <div>
           <Tooltip
@@ -46,7 +46,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
             isDisabled={!isOpen}
           >
             <button
-              className="p-2 w-full text-start flex items-center gap-2 mb-10 bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-200 rounded-md fill-black stroke-black"
+              className="p-2 w-full text-start flex items-center gap-2 mb-10 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-300 rounded-md fill-black stroke-black"
               onClick={() => {
                 setIsOpen(!isOpen)
               }}
@@ -82,7 +82,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
               if (!isView) return null
               if (menu.href) {
                 return (
-                  <li key={index}>
+                  <li key={index} className=" list-none">
                     <Tooltip
                       content={menu.name}
                       placement="right"
@@ -92,7 +92,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
                     >
                       <Link
                         href={menu.href}
-                        className={`flex ${style.activeVibrate} flex-wrap mt-1 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'}`}
+                        className={`flex ${style.activeVibrate} flex-wrap mt-1 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-white dark:hover:bg-zinc-800'}`}
                         onClick={() => toggleMenu(index)}
                       >
                         <div
@@ -111,7 +111,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
                 )
               } else {
                 return (
-                  <li key={index}>
+                  <li key={index} className=" list-none">
                     <Tooltip
                       placement="right-start"
                       offset={8}
@@ -138,7 +138,7 @@ export default function SideMenuContent({ startMenu }: TProps) {
                     >
                       <div>
                         <button
-                          className={`${style.activeVibrate} flex w-full flex-wrap mt-2 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800'}`}
+                          className={`${style.activeVibrate} flex w-full flex-wrap mt-2 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-white dark:hover:bg-zinc-800'}`}
                           onClick={() => toggleMenu(index)}
                         >
                           <div className="flex">

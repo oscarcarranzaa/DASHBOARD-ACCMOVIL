@@ -4,7 +4,7 @@ import { CustomerProfileSVG } from '@/components/icons/customerProfile'
 import Search from '@/components/UI/search'
 import useOutsideClick from '@/hooks/useOutSideClick'
 import { customerSchema } from '@/types/customer'
-import { Avatar, Spinner } from '@nextui-org/react'
+import { Avatar, Spinner } from "@heroui/react"
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { useRef } from 'react'

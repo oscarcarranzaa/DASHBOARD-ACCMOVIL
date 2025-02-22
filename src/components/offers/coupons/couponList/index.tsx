@@ -14,7 +14,7 @@ import {
   Chip,
   User,
   Switch,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { couponsRows } from './rows'
 import Link from 'next/link'
 import VerifiedSVG from '@/components/icons/verified'

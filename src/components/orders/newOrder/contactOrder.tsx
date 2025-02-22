@@ -1,7 +1,7 @@
 import UserCirclePluskSVG from '@/components/icons/userCirclePlus'
 import SelectUser from '@/components/customers/selectCustomer'
 import { createOrderState } from '@/store/order'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from '@heroui/react'
 import { useState } from 'react'
 import ContactOrderForm from './contactOrderForm'
 
@@ -29,13 +29,13 @@ export default function ContactOrder() {
               <div className=" flex justify-center gap-4 mt-3 mb-5">
                 <Button
                   color="primary"
-                  onClick={() => setOpenSelectUser(false)}
+                  onPress={() => setOpenSelectUser(false)}
                 >
                   Seleccionar
                 </Button>
                 <Button
                   variant="flat"
-                  onClick={() =>
+                  onPress={() =>
                     setContactOrder({ ...contactOrder, typeContact: 'guest' })
                   }
                 >

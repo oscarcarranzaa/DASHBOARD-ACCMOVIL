@@ -13,7 +13,7 @@ import {
   ChipProps,
   Chip,
   User,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { contactRows } from './rows'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'

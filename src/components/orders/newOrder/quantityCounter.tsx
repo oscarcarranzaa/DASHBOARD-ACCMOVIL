@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { updateProductOrder } from '@/api/order'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -60,7 +61,7 @@ export default function QuantityCounter({
           size="sm"
           className=" w-5 h-5"
           variant="faded"
-          onClick={() => {
+          onPress={() => {
             decrementalProduct(id)
           }}
           isDisabled={disabledDecremental || isPending || !isSaved}
@@ -74,7 +75,7 @@ export default function QuantityCounter({
           className=" w-5 h-5"
           variant="faded"
           isDisabled={isPending || !isSaved}
-          onClick={() => {
+          onPress={() => {
             incrementalProduct(id)
           }}
         >

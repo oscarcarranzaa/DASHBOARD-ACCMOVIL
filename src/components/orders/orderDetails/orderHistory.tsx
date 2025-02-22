@@ -5,7 +5,7 @@ import SendMessageSVG from '@/components/icons/sendMessage'
 import { historyCommentSchema, ZComment } from '@/types/history'
 import { orderDetailsRead } from '@/types/order'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from "@heroui/react"
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'

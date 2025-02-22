@@ -1,6 +1,6 @@
 import { handleStateCoupon } from '@/api/offerts'
 import Spinner from '@/components/icons/spinner'
-import { Switch } from '@nextui-org/react'
+import { Switch } from "@heroui/react"
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'

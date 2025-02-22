@@ -10,7 +10,7 @@ import {
   TableCell,
   Spinner,
   Avatar,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { productsOrderRows } from './rows'
 import { useCallback } from 'react'
 

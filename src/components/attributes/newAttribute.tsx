@@ -12,7 +12,7 @@ import {
   Select,
   SelectItem,
   ModalFooter,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import Spinner from '../icons/spinner'

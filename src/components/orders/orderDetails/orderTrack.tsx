@@ -6,7 +6,7 @@ import Spinner from '@/components/icons/spinner'
 import UbicationSVG from '@/components/icons/ubication'
 import { shippingInfoSchema, ZUpdateTrackUrl } from '@/types/order'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -115,7 +115,7 @@ export default function OrderTrackDetails({
                 isIconOnly
                 variant="ghost"
                 size="sm"
-                onClick={() => setOpenEditor(!openEditor)}
+                onPress={() => setOpenEditor(!openEditor)}
                 title="Editar Url de seguimiento"
               >
                 <Edit size={16} />

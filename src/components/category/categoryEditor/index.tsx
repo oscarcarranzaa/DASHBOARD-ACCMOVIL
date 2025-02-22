@@ -1,6 +1,6 @@
 'use client'
 
-import { Tab, Tabs } from '@nextui-org/react'
+import { Tab, Tabs } from "@heroui/react"
 import NewCategoryForm from './newCategoryForm'
 import DisplayCategory, { selectCategory } from '../displayCategory'
 import { useEffect, useState } from 'react'

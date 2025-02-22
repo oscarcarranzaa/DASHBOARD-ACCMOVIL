@@ -5,7 +5,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { ReactNode } from 'react'
 import ProductVariationForm from './productVariationForm'
 import { newProductSchema } from '@/types/products'
@@ -50,7 +50,7 @@ export default function ProductVariationEditorModal({
                   variationId={variationId}
                   onClose={onClose}
                 />
-                <Button className="w-full mt-2" onClick={onClose}>
+                <Button className="w-full mt-2" onPress={onClose}>
                   Cancelar
                 </Button>
               </div>

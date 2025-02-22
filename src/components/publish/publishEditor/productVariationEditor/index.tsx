@@ -4,7 +4,7 @@
 import SelectImage from '@/components/media/selectImage'
 
 import ProductVariationEditorModal from './productVariationModal'
-import { Input } from '@nextui-org/react'
+import { Input } from "@heroui/react"
 import { newProductSchema } from '@/types/products'
 import { useEffect, useState } from 'react'
 import { IUploads } from '@/types'

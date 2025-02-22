@@ -15,7 +15,7 @@ import {
   Avatar,
   AvatarGroup,
   Badge,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { orderRows } from './rows'
 import { useSearchParams } from 'next/navigation'
 import { orderCellSchema, orderListSchema } from '@/types/order'

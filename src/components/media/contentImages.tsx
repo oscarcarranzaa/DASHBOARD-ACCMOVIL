@@ -7,9 +7,9 @@ import {
   useState,
 } from 'react'
 import MediaAction from './mediaActions'
-import { CircularProgress } from '@nextui-org/progress'
+import { CircularProgress } from "@heroui/progress"
 import Link from 'next/link'
-import { Checkbox } from '@nextui-org/react'
+import { Checkbox } from "@heroui/react"
 import DropDown from '../UI/dropDown/dropDown'
 import { IUploads } from '@/types'
 import style from './style.module.css'

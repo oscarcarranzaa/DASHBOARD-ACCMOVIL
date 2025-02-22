@@ -1,4 +1,4 @@
-import { SelectProps } from '@nextui-org/react'
+import { SelectProps } from "@heroui/react"
 
 type TProps = {
   status?: string | null

@@ -7,14 +7,13 @@ import NavegationPages from '@/components/navegationPages'
 import PublishEditor from '@/components/publish/publishEditor/'
 import PublishEditorSkeleton from '@/components/publish/publishEditor/skeleton'
 import { usePublishStore } from '@/store/publish'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { toast, Toaster } from 'sonner'
 
 export default function EditPublish() {
-  const [isSaving, setIsSaving] = useState(false)
   const [buttonAction, setButtonAction] = useState<'draft' | 'publish'>()
 
   const params = useParams()
@@ -25,46 +24,53 @@ export default function EditPublish() {
     queryFn: () => getPost(publishID),
     refetchOnWindowFocus: false,
   })
-  const title = data ? data.title : 'Cargando resultado...'
 
-  const postData = usePublishStore((state) => state.postData)
-  const variations = usePublishStore((state) => state.variations)
-  const post = {
-    title: postData.title,
-    categories: postData.categories?.map((c) => c.id),
-    description: postData.description,
-    shortDescription: postData.shortDescription,
-    status: postData.status,
-    type: postData.type,
-    product: postData.product,
-    gallery: postData.gallery?.map((g) => g.id),
-    variations: variations
-      ?.filter((v) => !v.isDeleted)
-      .map((v) => ({
-        id: v.id,
-        attributes: v.attributesTerms.map((t) => t.id),
-        product: v.product ?? undefined,
-      })),
-    youtubeVideoId: postData.youtubeVideoId,
-  }
-  const { data: response, mutate } = useMutation({
+  const {
+    data: response,
+    mutate,
+    isPending,
+  } = useMutation({
     mutationFn: updatePost,
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: [publishID] })
       toast.success('Producto atualizado')
-      setIsSaving(false)
     },
     onError: (err) => {
-      setIsSaving(false)
       toast.error('Ocurrio un error')
     },
   })
 
+  const title = data ? data.title : 'Cargando resultado...'
+
+  const postData = usePublishStore((state) => state.postData)
+  const variations = usePublishStore((state) => state.variations)
+
+  const post = useMemo(
+    () => ({
+      title: postData.title,
+      categories: postData.categories?.map((c) => c.id),
+      description: postData.description,
+      shortDescription: postData.shortDescription,
+      status: postData.status,
+      type: postData.type,
+      product: postData.product,
+      gallery: postData.gallery?.map((g) => g.id),
+      variations: variations
+        ?.filter((v) => !v.isDeleted)
+        .map((v) => ({
+          id: v.id,
+          attributes: v.attributesTerms.map((t) => t.id),
+          product: v.product ?? undefined,
+        })),
+      youtubeVideoId: postData.youtubeVideoId,
+    }),
+    [postData, variations]
+  )
+
   const handleSave = (action: 'publish' | 'draft') => {
-    const savePostStatus = { ...post, status: action }
-    setIsSaving(true)
-    mutate({ postID: publishID, formData: savePostStatus })
     setButtonAction(action)
+    const savePostStatus = { ...post, status: action }
+    mutate({ postID: publishID, formData: savePostStatus })
   }
 
   if (isError) {
@@ -84,11 +90,11 @@ export default function EditPublish() {
         <PublishEditor data={data} action={handleSave}>
           <Button
             color="primary"
-            onClick={() => handleSave('publish')}
+            onPress={() => handleSave('publish')}
             type="submit"
-            disabled={isSaving}
+            disabled={isPending}
           >
-            {buttonAction === 'publish' && isSaving ? (
+            {buttonAction === 'publish' && isPending ? (
               <div className=" animate-spin">
                 <Spinner size={24} fill="#fff" />
               </div>
@@ -99,8 +105,8 @@ export default function EditPublish() {
             )}
           </Button>
           {!isPublish ? (
-            <Button onClick={() => handleSave('draft')} disabled={isSaving}>
-              {buttonAction === 'draft' && isSaving ? (
+            <Button onPress={() => handleSave('draft')} disabled={isPending}>
+              {buttonAction === 'draft' && isPending ? (
                 <div className=" animate-spin">
                   <Spinner size={24} fill="#fff" />
                 </div>

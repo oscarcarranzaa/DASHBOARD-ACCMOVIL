@@ -10,7 +10,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { useState } from 'react'
 import OrderCash from './cash'
 import OrderBank from './bank'
@@ -130,7 +130,7 @@ export default function PaidOrder({ totalAmount, orderId }: TProps) {
                     <Button
                       className=" min-w-32"
                       color="primary"
-                      onClick={() => setNavegationPay('method')}
+                      onPress={() => setNavegationPay('method')}
                     >
                       Siguiente
                     </Button>
@@ -142,8 +142,10 @@ export default function PaidOrder({ totalAmount, orderId }: TProps) {
                   <div className="px-3 mt-1 mb-3">
                     <Button
                       className="w-full"
-                      onPress={onClose}
-                      onClick={() => setNavegationPay('select')}
+                      onPress={() => {
+                        setNavegationPay('select')
+                        onClose()
+                      }}
                     >
                       Cancelar
                     </Button>

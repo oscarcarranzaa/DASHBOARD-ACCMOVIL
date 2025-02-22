@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Button,
-} from '@nextui-org/react'
+} from '@heroui/react'
 import { TPropsHistory } from '.'
 import HistoryImage from './typeHistory/image'
 import HistoryInfo from './typeHistory/info'
@@ -116,7 +116,7 @@ export default function HistoryItem({
                 <DropdownMenu>
                   <DropdownItem
                     key="Eliminar"
-                    onClick={() => sendDeleteComment(id)}
+                    onPress={() => sendDeleteComment(id)}
                     startContent={
                       <div className="stroke-red-500">
                         <TrashSVG size={20} />

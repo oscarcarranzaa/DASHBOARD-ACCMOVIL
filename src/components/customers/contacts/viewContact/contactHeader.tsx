@@ -1,7 +1,7 @@
 import EmailSVG from '@/components/icons/email'
 import PhoneSVG from '@/components/icons/phone'
 import { contactSchema, contactStatusSchema } from '@/types/customer'
-import { User, Select, SelectItem } from '@nextui-org/react'
+import { User, Select, SelectItem } from "@heroui/react"
 import { contactStatusOption } from '../newContact/contactStatusOptions'
 import { toast } from 'sonner'
 import { useMutation, useQueryClient } from '@tanstack/react-query'

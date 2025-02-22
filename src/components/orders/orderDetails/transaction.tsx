@@ -1,7 +1,7 @@
 import { orderDetailsRead } from '@/types/order'
 import PaidOrder from './paid'
 import dayjs from 'dayjs'
-import { Chip } from '@nextui-org/react'
+import { Chip } from "@heroui/react"
 import { DeniedRedSVG } from '@/components/icons/deniedRed'
 
 type TProps = {

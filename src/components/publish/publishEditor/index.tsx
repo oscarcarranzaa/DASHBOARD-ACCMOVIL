@@ -1,15 +1,14 @@
 'use client'
 
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from '@heroui/react'
 import Variations from './variations'
 import Gallery from './gallery'
 import DisplayCategory from '@/components/category/displayCategory'
 import EmbedVideo from './embedVideo'
 import { usePublishStore } from '@/store/publish'
-import ShortDescriptionPost from './textEditor/shortDescription'
-import DescriptionPost from './textEditor/description'
 import { PostSchema } from '@/types/posts'
 import { ReactNode, useEffect, useState } from 'react'
+import TextEditor from '@/components/UI/textEditor/editor'
 
 export default function PublishEditor({
   data,
@@ -26,21 +25,39 @@ export default function PublishEditor({
   const [dataSuccess, setDataSuccess] = useState(false)
   const isNew = id === 'new'
   const isPublish = status === 'publish'
+  const description = usePublishStore((state) => state.postData.description)
+  const shortDescription = usePublishStore(
+    (state) => state.postData.shortDescription
+  )
 
-  const { setTitle, setCagories, reset, setData } = usePublishStore()
+  const {
+    setTitle,
+    setCagories,
+    reset,
+    setData,
+    setShortDescription,
+    setDescription,
+  } = usePublishStore()
 
   useEffect(() => {
     if (data) {
       setData(data)
-      setDataSuccess(true)
-    }
-    if (!data && id !== 'new') {
+    } else if (id !== 'new') {
       reset()
-      setDataSuccess(true)
-      return
     }
     setDataSuccess(true)
   }, [data, setData, id, reset])
+
+  const handleShortDescription = (newContent: string) => {
+    if (newContent !== shortDescription) {
+      setShortDescription(newContent)
+    }
+  }
+  const handleDescription = (newContent: string) => {
+    if (newContent !== description) {
+      setDescription(newContent)
+    }
+  }
 
   return (
     <>
@@ -55,19 +72,28 @@ export default function PublishEditor({
           />
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción corta</p>
-            <ShortDescriptionPost />
+            <TextEditor
+              onChange={handleShortDescription}
+              initialValue={data?.shortDescription}
+            />
           </div>
+
           <div className="mt-5">
             <p className="text-sm mb-1">Galería</p>
             <Gallery />
           </div>
+
           <div className="mt-10 w-full">
             <p className="text-sm mb-2">Agregar productos</p>
             {dataSuccess && <Variations />}
           </div>
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción</p>
-            <DescriptionPost />
+
+            <TextEditor
+              onChange={handleDescription}
+              initialValue={data?.description}
+            />
           </div>
         </div>
         <div className=" col-span-5">

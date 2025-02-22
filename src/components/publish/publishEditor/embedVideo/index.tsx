@@ -1,6 +1,6 @@
 import CheckSVG from '@/components/icons/check'
 import { usePublishStore } from '@/store/publish'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from '@heroui/react'
 import { useEffect, useState } from 'react'
 
 export default function EmbedVideo() {
@@ -68,7 +68,7 @@ export default function EmbedVideo() {
             errorMessage={error}
           />
           <Button
-            onClick={handleVideo}
+            onPress={handleVideo}
             className="w-full mt-2 rounded-md"
             color={
               youtubeVideoId && youtubeVideoId.length > 1

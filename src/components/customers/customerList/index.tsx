@@ -13,7 +13,7 @@ import {
   ChipProps,
   Chip,
   User,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { userRows } from './rows'
 import Link from 'next/link'
 import VerifiedSVG from '@/components/icons/verified'

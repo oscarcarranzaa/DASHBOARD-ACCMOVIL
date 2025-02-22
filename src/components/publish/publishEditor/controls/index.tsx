@@ -1,5 +1,5 @@
-import { Button } from '@nextui-org/button'
-import { Select, SelectItem } from '@nextui-org/react'
+import { Button } from "@heroui/button"
+import { Select, SelectItem } from "@heroui/react"
 
 export default function ControlsPost() {
   const statusOptions = [

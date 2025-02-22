@@ -14,7 +14,7 @@ import {
   ChipProps,
   Chip,
   User,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { userRows } from './rows'
 import { UserSchema } from '@/types/users'
 import Link from 'next/link'

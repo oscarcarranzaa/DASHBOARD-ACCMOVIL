@@ -1,5 +1,5 @@
 'use client'
-import { Tooltip } from '@nextui-org/react'
+import { Tooltip } from "@heroui/react"
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { ReactNode } from 'react'

@@ -1,6 +1,6 @@
 'use client'
 import { updateUserAvatar } from '@/api/userData'
-import { Skeleton, Spinner } from '@nextui-org/react'
+import { Skeleton, Spinner } from "@heroui/react"
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

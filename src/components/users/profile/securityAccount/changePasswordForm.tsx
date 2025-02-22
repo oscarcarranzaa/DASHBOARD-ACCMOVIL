@@ -4,7 +4,7 @@ import EyeInvisibleSVG from '@/components/icons/eyeInvisible'
 import Spinner from '@/components/icons/spinner'
 import { changePassSchema, ZChangePassword } from '@/types/users'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from "@heroui/react"
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'

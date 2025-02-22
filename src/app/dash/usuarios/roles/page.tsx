@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getAllRoles } from '@/api/users'
 import NavegationPages from '@/components/navegationPages'
 import RoleList from '@/components/users/roles/roleItems'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { useQuery } from '@tanstack/react-query'
 import ErrorsPages from '@/components/errorsPages'
 

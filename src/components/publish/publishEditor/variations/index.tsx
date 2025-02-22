@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@nextui-org/react'
+import { Tab, Tabs } from "@heroui/react"
 import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
 

@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Button } from '@nextui-org/react'
+import { Accordion, AccordionItem, Button } from '@heroui/react'
 import Settings from '@/components/icons/settings'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteCategory } from '@/api/category'
@@ -40,7 +40,7 @@ export default function AdvancedSettings({
           </p>
           <Button
             color="danger"
-            onClick={() => {
+            onPress={() => {
               mutate(categoryID)
             }}
           >

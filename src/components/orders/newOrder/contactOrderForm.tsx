@@ -5,7 +5,7 @@ import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
 import { newBillingInfoSchema, ZNewBillingInfo } from '@/types/order'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Switch } from '@nextui-org/react'
+import { Button, Input, Switch } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -230,7 +230,7 @@ export default function ContactOrderForm() {
         </div>
         <div className=" flex justify-end items-end flex-col  fill-white">
           <div>
-            <Button onClick={() => resetContact()} className="mr-2">
+            <Button onPress={() => resetContact()} className="mr-2">
               Regresar
             </Button>
             <Button color="primary" type="submit" isDisabled={isPending}>

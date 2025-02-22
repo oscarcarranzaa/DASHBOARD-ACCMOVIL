@@ -5,7 +5,7 @@ import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import OrderList from '@/components/orders/orderList'
 import Search from '@/components/UI/search'
-import { Button } from '@nextui-org/button'
+import { Button } from "@heroui/button"
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'

@@ -2,7 +2,7 @@ import { deleteProductOrder } from '@/api/order'
 import Spinner from '@/components/icons/spinner'
 import TrashSVG from '@/components/icons/trahs'
 import { createOrderState } from '@/store/order'
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -39,7 +39,7 @@ export default function DeleteProductOrder({
       variant="flat"
       size="sm"
       className="w-10 h-10"
-      onClick={() => mutate(id)}
+      onPress={() => mutate(id)}
       isDisabled={!isSaved}
     >
       <span className="dark:stroke-white stroke-black">

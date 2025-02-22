@@ -7,14 +7,9 @@ import DisplayDeleteItemsVariations from './displayDeleteItemsVariations'
 import { useCartesianVariations } from '@/hooks/useCartesianVariations'
 
 export default function VariationsValues() {
-  const { id, attributes, variations, setVariation } = usePublishStore(
-    (state) => ({
-      id: state.postData.id,
-      attributes: state.attributes,
-      variations: state.variations,
-      setVariation: state.setVariation,
-    })
-  )
+  const attributes = usePublishStore((state) => state.attributes)
+  const variations = usePublishStore((state) => state.variations)
+  const setVariation = usePublishStore((state) => state.setVariation)
 
   const groupAtt = attributes ? attributes[0] : null
   const childAtt = attributes ? attributes[1] : null

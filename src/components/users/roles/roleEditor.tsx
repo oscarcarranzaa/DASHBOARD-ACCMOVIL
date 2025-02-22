@@ -16,7 +16,7 @@ import {
   Tabs,
   User,
   cn,
-} from '@nextui-org/react'
+} from "@heroui/react"
 import { useEffect } from 'react'
 
 type TProps = {

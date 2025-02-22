@@ -1,5 +1,5 @@
 import { ThemeProvider } from 'next-themes'
-import { NextUIProvider } from '@nextui-org/system'
+import { HeroUIProvider } from "@heroui/system"
 import NavegationLayout from '@/components/navegationLayout'
 import { Toaster } from 'sonner'
 
@@ -10,7 +10,7 @@ export default function DashLayout({
 }>) {
   return (
     <>
-      <NextUIProvider>
+      <HeroUIProvider>
         <ThemeProvider attribute="class">
           <NavegationLayout>
             <main className="flex justify-center w-full">
@@ -21,7 +21,7 @@ export default function DashLayout({
             </main>
           </NavegationLayout>
         </ThemeProvider>
-      </NextUIProvider>
+      </HeroUIProvider>
     </>
   )
 }

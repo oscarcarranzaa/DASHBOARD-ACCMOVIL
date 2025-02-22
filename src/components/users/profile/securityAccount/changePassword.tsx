@@ -1,13 +1,8 @@
 'use client'
 import ArrowAngleSVG from '@/components/icons/arrowAngle'
 import ChangePasswordForm from './changePasswordForm'
-import { Button } from '@nextui-org/button'
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from '@nextui-org/react'
+import { Button } from '@heroui/button'
+import { Modal, ModalContent, ModalHeader, useDisclosure } from '@heroui/react'
 
 export default function ChangePassword() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -37,7 +32,7 @@ export default function ChangePassword() {
               <ModalHeader>Cambiar contraseña</ModalHeader>
               <div className="p-5">
                 <ChangePasswordForm onSuccessForm={onClose} />
-                <Button className="w-full mt-2" onClick={onClose}>
+                <Button className="w-full mt-2" onPress={onClose}>
                   Cancelar
                 </Button>
               </div>

@@ -5,7 +5,8 @@ import InvoiceCheck from '@/components/icons/invoiceCheck'
 import Shipping from '@/components/icons/shipping'
 import Smartphone from '@/components/icons/smartphone'
 import { createOrderState } from '@/store/order'
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
+import { JSX } from 'react'
 
 type TOptions = {
   name: string
@@ -58,7 +59,7 @@ export default function OrderStatusBar() {
                   <Button
                     isIconOnly
                     color={active || isSelect ? 'primary' : 'default'}
-                    onClick={() => setNavegation(op.key)}
+                    onPress={() => setNavegation(op.key)}
                     isDisabled={!active}
                     className={`rounded-full w-14 h-14 flex justify-center items-center opacity-100 hover:opacity-100 `}
                   >

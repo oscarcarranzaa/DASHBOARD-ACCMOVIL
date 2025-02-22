@@ -1,7 +1,7 @@
 import DisplayPrice from '@/components/displayPrice'
 import style from './posts.module.css'
 import SquareImage from '@/components/squareImage'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import { useMutation } from '@tanstack/react-query'
 import { duplicatePost } from '@/api/posts'
@@ -49,7 +49,7 @@ export default function PostItem({
 
   return (
     <li
-      className={`${style.boxParent} px-2 py-2 rounded-lg border-transparent hover:dark:border-zinc-600 border`}
+      className={`${style.boxParent} list-none px-2 py-2 rounded-lg border-transparent hover:dark:border-zinc-600 border`}
     >
       <div className={style.boxChild}>
         <div className="relative">
@@ -89,7 +89,7 @@ export default function PostItem({
             variant="bordered"
             className="rounded-full"
             size="sm"
-            onClick={handleDuplicate}
+            onPress={handleDuplicate}
             disabled={isDuplicating}
           >
             {isDuplicating ? (

@@ -1,5 +1,5 @@
 'use client'
-import { Chip } from '@nextui-org/react'
+import { Chip } from "@heroui/react"
 import Link from 'next/link'
 
 type TProps = {

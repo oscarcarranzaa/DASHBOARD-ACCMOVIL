@@ -1,5 +1,5 @@
 import Edit from '@/components/icons/edit'
-import { Input } from '@nextui-org/react'
+import { Input } from "@heroui/react"
 import { ReactNode, useState } from 'react'
 import style from './field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'

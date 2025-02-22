@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import CloseSVG from '@/components/icons/close'
 import { TSelectMedia } from '@/components/media/'
 import { useEffect, useRef, useState } from 'react'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import { IUploads } from '@/types'
 import useOutsideClick from '@/hooks/useOutSideClick'
 
@@ -102,10 +102,10 @@ export default function ModalMedia({
               ) : null}
             </div>
             <div className="flex gap-3">
-              <Button onClick={handleSelect} color="primary">
+              <Button onPress={handleSelect} color="primary">
                 Seleccionar
               </Button>
-              <Button onClick={cancelSelect}>Cancelar</Button>
+              <Button onPress={cancelSelect}>Cancelar</Button>
             </div>
           </div>
         </div>

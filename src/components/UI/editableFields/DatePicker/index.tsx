@@ -1,6 +1,6 @@
 import Edit from '@/components/icons/edit'
-import { DatePicker } from "@heroui/react"
-import { DateValue, parseDate, getLocalTimeZone } from '@internationalized/date'
+import { DatePicker, DateValue } from '@heroui/react'
+import { parseDate, getLocalTimeZone } from '@internationalized/date'
 import { ReactNode, useRef, useState } from 'react'
 import style from '../input/field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
@@ -27,7 +27,7 @@ export default function DatePickerField({
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [internalValue, setInternalValue] = useState<DateValue | null>(
-    value ? parseDate(value) : null
+    value ? (parseDate(value) as unknown as DateValue) : null
   )
   const ref = useRef(null)
   const handleChange = (e: DateValue) => {

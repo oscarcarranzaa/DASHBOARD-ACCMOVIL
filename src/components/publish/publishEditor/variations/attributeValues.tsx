@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import { getOneAttribute } from '@/api/attributes'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 import { Autocomplete, AutocompleteItem, Chip } from '@heroui/react'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -170,9 +170,7 @@ export default function AttributeValues({
               selectedKey={selected}
             >
               {options.map((att) => (
-                <AutocompleteItem key={att.id} value={att.id}>
-                  {att.label}
-                </AutocompleteItem>
+                <AutocompleteItem key={att.id}>{att.label}</AutocompleteItem>
               ))}
             </Autocomplete>
             <div className="mt-3 flex flex-wrap gap-y-2">

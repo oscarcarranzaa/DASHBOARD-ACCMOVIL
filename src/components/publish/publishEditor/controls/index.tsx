@@ -1,5 +1,4 @@
-import { Button } from "@heroui/button"
-import { Select, SelectItem } from "@heroui/react"
+import { Select, SelectItem } from '@heroui/react'
 
 export default function ControlsPost() {
   const statusOptions = [

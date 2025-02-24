@@ -12,7 +12,7 @@ import {
   Button,
   Input,
   Textarea,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -117,9 +117,7 @@ export default function ShippingOrderForm() {
               isRequired
             >
               {states.map((st) => (
-                <AutocompleteItem key={st} value={st}>
-                  {st}
-                </AutocompleteItem>
+                <AutocompleteItem key={st}>{st}</AutocompleteItem>
               ))}
             </Autocomplete>
           </div>
@@ -138,9 +136,7 @@ export default function ShippingOrderForm() {
               isRequired
             >
               {cities.map((st) => (
-                <AutocompleteItem key={st} value={st}>
-                  {st}
-                </AutocompleteItem>
+                <AutocompleteItem key={st}>{st}</AutocompleteItem>
               ))}
             </Autocomplete>
           </div>
@@ -159,9 +155,7 @@ export default function ShippingOrderForm() {
               isRequired
             >
               {zones.map((st) => (
-                <AutocompleteItem key={st} value={st}>
-                  {st}
-                </AutocompleteItem>
+                <AutocompleteItem key={st}>{st}</AutocompleteItem>
               ))}
             </Autocomplete>
           </div>

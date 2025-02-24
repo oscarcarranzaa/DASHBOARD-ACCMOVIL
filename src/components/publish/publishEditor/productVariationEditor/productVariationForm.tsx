@@ -10,7 +10,7 @@ import {
   Tooltip,
   DateValue,
   RangeValue,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
@@ -28,7 +28,7 @@ export default function ProductVariationForm({
 }: TProps) {
   const startDate = value?.startDiscount
   const endDate = value?.endDiscount
-  const defaultDateCalendar: RangeValue<DateValue> | null =
+  const defaultDateCalendar =
     startDate && endDate
       ? {
           start: parseAbsoluteToLocal(startDate),
@@ -41,7 +41,9 @@ export default function ProductVariationForm({
   )
   const [openClock, setOpenClock] = useState(!!value?.startDiscount)
   const [calendarDate, setCalendarDate] =
-    useState<RangeValue<DateValue> | null>(defaultDateCalendar)
+    useState<RangeValue<DateValue> | null>(
+      defaultDateCalendar as RangeValue<DateValue> | null
+    )
 
   const setProductVariation = usePublishStore(
     (state) => state.setProductVariation

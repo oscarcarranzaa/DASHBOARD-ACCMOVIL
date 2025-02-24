@@ -1,22 +1,18 @@
 'use client'
 
 import ClockSVG from '@/components/icons/clock'
-import { newProductSchema, newProductSingleSchema } from '@/types/products'
+import { newProductSingleSchema } from '@/types/products'
 import {
   Button,
   DateRangePicker,
-  Input,
-  Tooltip,
   DateValue,
+  Input,
   RangeValue,
-} from "@heroui/react"
+  Tooltip,
+} from '@heroui/react'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import {
-  getLocalTimeZone,
-  parseAbsoluteToLocal,
-  parseDate,
-} from '@internationalized/date'
+import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
 import { usePublishStore } from '@/store/publish'
 
 export default function ProductEditor() {
@@ -24,7 +20,7 @@ export default function ProductEditor() {
   const startDate = product?.startDiscount
   const endDate = product?.endDiscount
 
-  const defaultDateCalendar: RangeValue<DateValue> | null =
+  const defaultDateCalendar =
     startDate && endDate
       ? {
           start: parseAbsoluteToLocal(startDate),
@@ -33,8 +29,11 @@ export default function ProductEditor() {
       : null
 
   const [openClock, setOpenClock] = useState(!!product?.startDiscount)
+
   const [calendarDate, setCalendarDate] =
-    useState<RangeValue<DateValue> | null>(defaultDateCalendar)
+    useState<RangeValue<DateValue> | null>(
+      defaultDateCalendar as RangeValue<DateValue> | null
+    )
 
   const setProduct = usePublishStore((state) => state.setProduct)
 

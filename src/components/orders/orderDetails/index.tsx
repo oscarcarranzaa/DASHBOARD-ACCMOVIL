@@ -12,12 +12,16 @@ import OrderDetailSkeleton from './skeleton'
 import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 
+type paramsID = {
+  orderId: string
+}
 export default function OrderDetails() {
-  const params = useParams()
+  const params: paramsID = useParams()
   const id = params.orderId
+
   const { data, error } = useQuery({
-    queryKey: ['order', id.toString(), 'details'],
-    queryFn: () => getOrderDetails(id.toString()),
+    queryKey: ['order', id, 'details'],
+    queryFn: () => getOrderDetails(id),
     refetchOnWindowFocus: false,
   })
   if (error) {

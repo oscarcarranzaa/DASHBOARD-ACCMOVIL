@@ -23,7 +23,7 @@ import {
   Tabs,
   Textarea,
   useDisclosure,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -309,9 +309,7 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
                             isRequired
                           >
                             {states.map((st) => (
-                              <AutocompleteItem key={st} value={st}>
-                                {st}
-                              </AutocompleteItem>
+                              <AutocompleteItem key={st}>{st}</AutocompleteItem>
                             ))}
                           </Autocomplete>
                         </div>
@@ -330,9 +328,7 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
                             isRequired
                           >
                             {cities.map((st) => (
-                              <AutocompleteItem key={st} value={st}>
-                                {st}
-                              </AutocompleteItem>
+                              <AutocompleteItem key={st}>{st}</AutocompleteItem>
                             ))}
                           </Autocomplete>
                         </div>
@@ -351,9 +347,7 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
                             isRequired
                           >
                             {zones.map((st) => (
-                              <AutocompleteItem key={st} value={st}>
-                                {st}
-                              </AutocompleteItem>
+                              <AutocompleteItem key={st}>{st}</AutocompleteItem>
                             ))}
                           </Autocomplete>
                         </div>

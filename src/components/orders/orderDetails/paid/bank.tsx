@@ -2,7 +2,7 @@ import { orderPaidByTransfer } from '@/api/order'
 import Bank from '@/components/icons/bank'
 import Spinner from '@/components/icons/spinner'
 import SquareImage from '@/components/squareImage'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 

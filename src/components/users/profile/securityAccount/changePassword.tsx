@@ -1,7 +1,7 @@
 'use client'
 import ArrowAngleSVG from '@/components/icons/arrowAngle'
 import ChangePasswordForm from './changePasswordForm'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 import { Modal, ModalContent, ModalHeader, useDisclosure } from '@heroui/react'
 
 export default function ChangePassword() {

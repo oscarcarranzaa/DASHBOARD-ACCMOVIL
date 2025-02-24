@@ -1,7 +1,7 @@
 import useOutsideClick from '@/hooks/useOutSideClick'
 import { useRef, useState } from 'react'
 import { HexColorPicker } from 'react-colorful'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 type TProps = {
   color: string
   onChange: (color: string) => void

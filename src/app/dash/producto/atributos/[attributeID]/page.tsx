@@ -7,13 +7,16 @@ import NavegationPages from '@/components/navegationPages'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 
+type paramsID = {
+  attributeID: string
+}
 export default function AttributeID() {
-  const params = useParams()
+  const params: paramsID = useParams()
   const ID = params.attributeID
-  console.log(ID)
+
   const { data, isPending } = useQuery({
     queryKey: ['oneAtt', ID],
-    queryFn: () => getOneAttribute(ID.toString()),
+    queryFn: () => getOneAttribute(ID),
     refetchOnWindowFocus: false,
   })
   return (

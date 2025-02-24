@@ -2,7 +2,13 @@
 import { editProfileInfoSchema, ZEditProfileInfo } from '@/types/users'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone, parseDate } from '@internationalized/date'
-import { Button, DatePicker, Input, DateValue } from "@heroui/react"
+import {
+  Button,
+  DatePicker,
+  Input,
+  DateValue,
+  CalendarDate,
+} from '@heroui/react'
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { UserSchema } from '@/types/schemas'
@@ -54,7 +60,8 @@ export default function AccountInformationForm({ user }: TProps) {
   })
   useEffect(() => {
     if (user.birthDate) {
-      setDateValue(parseDate(user.birthDate.split('T')[0]))
+      const parseDateBirth = parseDate(user.birthDate.split('T')[0])
+      setDateValue(parseDateBirth as unknown as CalendarDate)
     }
   }, [user])
 

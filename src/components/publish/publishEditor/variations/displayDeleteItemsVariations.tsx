@@ -1,7 +1,7 @@
 import UpdateSVG from '@/components/icons/update'
 import SquareImage from '@/components/squareImage'
 import { usePublishStore } from '@/store/publish'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 
 type TProps = {
   variationId: string

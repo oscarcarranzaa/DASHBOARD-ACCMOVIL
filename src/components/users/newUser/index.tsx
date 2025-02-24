@@ -14,7 +14,7 @@ import {
   ModalFooter,
   Autocomplete,
   AutocompleteItem,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -145,7 +145,7 @@ export default function NewUserForm() {
                         }
                       >
                         {optionsRoles.map((role) => (
-                          <AutocompleteItem key={role.id} value={role.id}>
+                          <AutocompleteItem key={role.id}>
                             {role.name}
                           </AutocompleteItem>
                         ))}

@@ -1,7 +1,7 @@
 import DisplayPrice from '@/components/displayPrice'
 import style from './posts.module.css'
 import SquareImage from '@/components/squareImage'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 import Link from 'next/link'
 import { useMutation } from '@tanstack/react-query'
 import { duplicatePost } from '@/api/posts'

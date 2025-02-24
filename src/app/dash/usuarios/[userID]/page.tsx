@@ -5,12 +5,15 @@ import UserDetails from '@/components/users/userDetails'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 
+type paramsID = {
+  userID: string
+}
 export default function ClientSee() {
-  const params = useParams()
+  const params: paramsID = useParams()
   const ID = params.userID
   const { data, isPending } = useQuery({
     queryKey: ['user', ID],
-    queryFn: () => getOneUser(ID.toString()),
+    queryFn: () => getOneUser(ID),
     refetchOnWindowFocus: false,
   })
   const name = data && `${data?.firstName} ${data?.lastName}`

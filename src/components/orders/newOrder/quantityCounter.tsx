@@ -2,7 +2,7 @@
 import { updateProductOrder } from '@/api/order'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'

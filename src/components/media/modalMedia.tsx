@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import CloseSVG from '@/components/icons/close'
 import { TSelectMedia } from '@/components/media/'
 import { useEffect, useRef, useState } from 'react'
-import { Button } from '@heroui/button'
+import { Button } from '@heroui/react'
 import { IUploads } from '@/types'
 import useOutsideClick from '@/hooks/useOutSideClick'
 

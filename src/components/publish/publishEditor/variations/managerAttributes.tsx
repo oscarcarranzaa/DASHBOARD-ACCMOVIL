@@ -170,9 +170,7 @@ export default function ManagerAttributes() {
           onSelectionChange={setSelected}
         >
           {options.map((att) => (
-            <AutocompleteItem key={att.id} value={att.id}>
-              {att.label}
-            </AutocompleteItem>
+            <AutocompleteItem key={att.id}>{att.label}</AutocompleteItem>
           ))}
         </Autocomplete>
         <div className="ml-5">

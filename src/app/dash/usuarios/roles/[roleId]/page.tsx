@@ -7,13 +7,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { toast, Toaster } from 'sonner'
 
+type paramsID = {
+  roleId: string
+}
 export default function AdminRolPage() {
-  const params = useParams()
+  const params: paramsID = useParams()
   const ID = params.roleId
+
   const queryClient = useQueryClient()
   const { data, error } = useQuery({
     queryKey: ['roles', ID],
-    queryFn: () => getOneRol(ID.toString()),
+    queryFn: () => getOneRol(ID),
     refetchOnWindowFocus: false,
     retry: false,
   })

@@ -9,6 +9,7 @@ import { usePublishStore } from '@/store/publish'
 import { PostSchema } from '@/types/posts'
 import { ReactNode, useEffect, useState } from 'react'
 import TextEditor from '@/components/UI/textEditor/editor'
+import RichTextEditor from '@/components/UI/RichTextEditor'
 
 export default function PublishEditor({
   data,
@@ -94,6 +95,9 @@ export default function PublishEditor({
               onChange={handleDescription}
               initialValue={data?.description}
             />
+            <div className="mt-5">
+              <RichTextEditor placeholder="Comienza agregar una descripcion" />
+            </div>
           </div>
         </div>
         <div className=" col-span-5">

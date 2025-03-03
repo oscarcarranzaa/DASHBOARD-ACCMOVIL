@@ -254,7 +254,6 @@ export default function TipTapToolbar({ editor }: TProps) {
       editor.off('selectionUpdate', updateBlockType)
     }
   }, [editor])
-  console.log(typeBlock)
 
   return (
     <>

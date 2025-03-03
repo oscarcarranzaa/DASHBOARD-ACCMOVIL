@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Input } from '@heroui/react'
+import { Input } from '@heroui/react'
 import Variations from './variations'
 import Gallery from './gallery'
 import DisplayCategory from '@/components/category/displayCategory'
@@ -8,7 +8,6 @@ import EmbedVideo from './embedVideo'
 import { usePublishStore } from '@/store/publish'
 import { PostSchema } from '@/types/posts'
 import { ReactNode, useEffect, useState } from 'react'
-import TextEditor from '@/components/UI/textEditor/editor'
 import RichTextEditor from '@/components/UI/RichTextEditor'
 
 export default function PublishEditor({
@@ -73,9 +72,10 @@ export default function PublishEditor({
           />
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción corta</p>
-            <TextEditor
+            <RichTextEditor
               onChange={handleShortDescription}
-              initialValue={data?.shortDescription}
+              placeholder="Agrega una descripcion corta del producto"
+              content={data?.shortDescription}
             />
           </div>
 
@@ -91,12 +91,12 @@ export default function PublishEditor({
           <div className="mt-5">
             <p className="text-sm mb-1">Descripción</p>
 
-            <TextEditor
-              onChange={handleDescription}
-              initialValue={data?.description}
-            />
             <div className="mt-5">
-              <RichTextEditor placeholder="Comienza agregar una descripcion" />
+              <RichTextEditor
+                placeholder="Comienza agregar una descripcion"
+                content={data?.description}
+                onChange={handleDescription}
+              />
             </div>
           </div>
         </div>

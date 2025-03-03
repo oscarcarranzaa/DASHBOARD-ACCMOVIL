@@ -155,6 +155,8 @@ export default function ProductEditor() {
             labelPlacement="outside"
             isDisabled={!openClock}
             hideTimeZone
+            aria-label="Programar fecha de descuento"
+            aria-labelledby="Programar fecha de descuento"
             onChange={(d) => {
               setCalendarDate(d)
               if (d) {

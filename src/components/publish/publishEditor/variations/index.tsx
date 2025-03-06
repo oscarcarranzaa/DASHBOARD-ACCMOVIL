@@ -1,11 +1,11 @@
-import { Tab, Tabs } from "@heroui/react"
+import { Tab, Tabs } from '@heroui/react'
 import ManagerAttributes from './managerAttributes'
 import { usePublishStore } from '@/store/publish'
 
 import ProductEditor from '../productEditor'
 
 export default function Variations() {
-  const { type } = usePublishStore((state) => state.postData)
+  const type = usePublishStore((state) => state.type)
   const setType = usePublishStore((state) => state.setType)
   return (
     <>

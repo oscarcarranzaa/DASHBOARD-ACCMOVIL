@@ -9,74 +9,39 @@ import { usePublishStore } from '@/store/publish'
 import { PostSchema } from '@/types/posts'
 import { ReactNode, useEffect, useState } from 'react'
 import RichTextEditor from '@/components/UI/RichTextEditor'
+import ProductTitleInput from './title/page'
+import { shallow } from 'zustand/shallow'
+import SaveButtonProduct from './saveButton'
+import ShortDescriptionProduct from './shortDescription'
+import DescriptionProduct from './description'
+import CategoriesProduct from './categories'
 
-export default function PublishEditor({
-  data,
-  action,
-  children,
-}: {
-  data?: PostSchema
-  action?: (action: 'publish' | 'draft') => void
-  children?: ReactNode
-}) {
-  const { title, categories, id, status } = usePublishStore(
-    (state) => state.postData
-  )
+export default function PublishEditor({ data }: { data?: PostSchema }) {
+  const id = usePublishStore((state) => state.id)
+  const status = usePublishStore((state) => state.status)
+  const setData = usePublishStore((state) => state.setData)
+  const reset = usePublishStore((state) => state.reset)
+
   const [dataSuccess, setDataSuccess] = useState(false)
-  const isNew = id === 'new'
-  const isPublish = status === 'publish'
-  const description = usePublishStore((state) => state.postData.description)
-  const shortDescription = usePublishStore(
-    (state) => state.postData.shortDescription
-  )
-
-  const {
-    setTitle,
-    setCagories,
-    reset,
-    setData,
-    setShortDescription,
-    setDescription,
-  } = usePublishStore()
 
   useEffect(() => {
     if (data) {
       setData(data)
     } else if (id !== 'new') {
+      console.log('Contenido reseteado')
       reset()
     }
     setDataSuccess(true)
   }, [data, setData, id, reset])
 
-  const handleShortDescription = (newContent: string) => {
-    if (newContent !== shortDescription) {
-      setShortDescription(newContent)
-    }
-  }
-  const handleDescription = (newContent: string) => {
-    if (newContent !== description) {
-      setDescription(newContent)
-    }
-  }
-
   return (
     <>
       <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-[90rem]">
         <div className=" col-span-7 mb-24">
-          <Input
-            variant="bordered"
-            isRequired
-            label="Titulo"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
+          <ProductTitleInput />
+
           <div className="mt-5">
-            <p className="text-sm mb-1">Descripción corta</p>
-            <RichTextEditor
-              onChange={handleShortDescription}
-              placeholder="Agrega una descripcion corta del producto"
-              content={data?.shortDescription}
-            />
+            <ShortDescriptionProduct content={data?.shortDescription} />
           </div>
 
           <div className="mt-5">
@@ -89,29 +54,18 @@ export default function PublishEditor({
             {dataSuccess && <Variations />}
           </div>
           <div className="mt-5">
-            <p className="text-sm mb-1">Descripción</p>
-
-            <div className="mt-5">
-              <RichTextEditor
-                placeholder="Comienza agregar una descripcion"
-                content={data?.description}
-                onChange={handleDescription}
-              />
-            </div>
+            <DescriptionProduct content={data?.description} />
           </div>
         </div>
         <div className=" col-span-5">
           <p className="mb-1">Guardar</p>
           <div
-            className={`grid  gap-x-2 mb-5 ${isNew || !isPublish ? 'grid-cols-2' : ''} `}
+            className={`grid  gap-x-2 mb-5 ${id === 'new' || status === 'draft' ? 'grid-cols-2' : ''} `}
           >
-            {children}
+            <SaveButtonProduct />
           </div>
 
-          <DisplayCategory
-            value={categories}
-            onSelectCategory={(select) => setCagories(select)}
-          />
+          <CategoriesProduct />
           <EmbedVideo />
         </div>
       </div>

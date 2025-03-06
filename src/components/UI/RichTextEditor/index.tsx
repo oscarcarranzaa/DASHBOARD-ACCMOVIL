@@ -8,6 +8,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import TipTapToolbar from './toolbar'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
+import { useDebouncedCallback } from 'use-debounce'
 
 type TProps = {
   placeholder?: string
@@ -99,13 +100,17 @@ export default function RichTextEditor({
     immediatelyRender: false,
     content,
     onUpdate: ({ editor }) => {
-      if (onChange) {
-        onChange(editor.getHTML())
-      }
+      debounceChange(editor.getHTML())
     },
   })
-
+  const debounceChange = useDebouncedCallback((value: string) => {
+    if (onChange) {
+      onChange(value)
+    }
+    console.log(value)
+  }, 300)
   if (!editor) return null
+
   return (
     <>
       <div className="tiptap-wrapper">

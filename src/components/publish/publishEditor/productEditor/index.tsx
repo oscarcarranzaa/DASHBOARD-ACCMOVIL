@@ -16,7 +16,7 @@ import { getLocalTimeZone, parseAbsoluteToLocal } from '@internationalized/date'
 import { usePublishStore } from '@/store/publish'
 
 export default function ProductEditor() {
-  const { product } = usePublishStore((state) => state.postData)
+  const product = usePublishStore((state) => state.product)
   const startDate = product?.startDiscount
   const endDate = product?.endDiscount
 

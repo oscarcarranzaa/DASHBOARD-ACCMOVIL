@@ -12,11 +12,9 @@ import SelectGalleryItem from './selectItem'
 import { usePublishStore } from '@/store/publish'
 
 export default function Gallery() {
-  const { gallery } = usePublishStore((state) => state.postData)
+  const gallery = usePublishStore((state) => state.gallery)
   const setGallery = usePublishStore((state) => state.setGallery)
-  const [defaultGallery, setDefaultGallery] = useState<IUploads[] | undefined>(
-    gallery || []
-  )
+
   const [isModalMedia, setIsModalMedia] = useState(false)
 
   useEffect(() => {

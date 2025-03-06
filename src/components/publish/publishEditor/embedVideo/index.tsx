@@ -4,7 +4,7 @@ import { Button, Input } from '@heroui/react'
 import { useEffect, useState } from 'react'
 
 export default function EmbedVideo() {
-  const { youtubeVideoId } = usePublishStore((store) => store.postData)
+  const youtubeVideoId = usePublishStore((store) => store.youtubeVideoId)
   const setVideo = usePublishStore((store) => store.setVideo)
   const defaultUrl = youtubeVideoId
     ? 'https://www.youtube.com/watch?v=' + youtubeVideoId

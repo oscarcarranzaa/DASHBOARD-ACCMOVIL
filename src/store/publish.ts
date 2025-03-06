@@ -40,18 +40,31 @@ export type StatePublish = {
         }[]
       }[]
     | null
-  postData: TPostData
+  id: string
+  title: string
+  description?: string | null
+  status: 'publish' | 'draft'
+  type: 'simple' | 'variable'
+  gallery?: IUploads[]
+  youtubeVideoId?: string | null
+  categories?: selectCategory[]
+  shortDescription?: string | null
+  product?: newProductSchema | null
 }
 
 const initialState: StatePublish = {
   variations: [],
   attributes: null,
-  postData: {
-    id: 'new',
-    title: '',
-    type: 'simple',
-    status: 'draft',
-  },
+  categories: undefined,
+  gallery: undefined,
+  description: undefined,
+  product: undefined,
+  shortDescription: undefined,
+  youtubeVideoId: undefined,
+  id: 'new',
+  title: '',
+  type: 'simple',
+  status: 'draft',
 }
 type AttributeMap = {
   [key: string]: {
@@ -103,7 +116,6 @@ type Action = {
   setData: (data: PostSchema) => void
   setVariation: (variations: StatePublish['variations']) => void
   setAttributes: (attributes: StatePublish['attributes']) => void
-  setPostData: (postData: StatePublish['postData']) => void
   setType: (type: 'simple' | 'variable') => void
   setGallery: (gallery: IUploads[] | undefined) => void
   setTitle: (title: string) => void
@@ -125,7 +137,7 @@ type Action = {
     discount: string
     variationId: string
   }) => void
-  setCagories: (categories: selectCategory[]) => void
+  setCategories: (categories: selectCategory[]) => void
   setVideo: (video?: string) => void
   setProductVariation: ({
     product,
@@ -149,47 +161,45 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
   reset: () => set(initialState),
   setData: (data) =>
     set((state) => ({
-      postData: {
-        ...state.postData,
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        shortDescription: data.shortDescription,
-        status: data.status,
-        type: data.type,
-        gallery: data.gallery?.map((img) => {
-          return {
-            id: img.id,
-            urlMedia: img.url,
-            name: img.title,
-            imgURI: img.url,
-          }
-        }),
-        categories: data.categories.map((c) => ({
-          id: c.id,
-          name: c.name,
-          parent: c.parentId,
-        })),
-        productId: data.productId,
-        youtubeVideoId: data.youtubeVideoId,
-        product: {
-          sku: data.product?.sku ?? '',
-          barCode: data.product?.barCode ?? '',
-          price: data.product?.price.toString() ?? '',
-          discountPrice: data.product?.discountPrice?.toString() ?? '',
-          startDiscount: data.product?.startDiscount ?? '',
-          endDiscount: data.product?.endDiscount ?? '',
-          stock: data.product?.stock.toString() ?? '',
-          image: data.product?.media
-            ? {
-                id: data.product.media.id,
-                urlMedia: data.product.media.url,
-                imgURI: data.product.media.qualities[0].src,
-                name: data.product.media.title,
-              }
-            : undefined,
-        },
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      shortDescription: data.shortDescription,
+      status: data.status,
+      type: data.type,
+      gallery: data.gallery?.map((img) => {
+        return {
+          id: img.id,
+          urlMedia: img.url,
+          name: img.title,
+          imgURI: img.qualities.length > 2 ? img.qualities[1].src : img.url,
+        }
+      }),
+      categories: data.categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+        parent: c.parentId,
+      })),
+      productId: data.productId,
+      youtubeVideoId: data.youtubeVideoId,
+      product: {
+        sku: data.product?.sku ?? '',
+        barCode: data.product?.barCode ?? '',
+        price: data.product?.price.toString() ?? '',
+        discountPrice: data.product?.discountPrice?.toString() ?? '',
+        startDiscount: data.product?.startDiscount ?? '',
+        endDiscount: data.product?.endDiscount ?? '',
+        stock: data.product?.stock.toString() ?? '',
+        image: data.product?.media
+          ? {
+              id: data.product.media.id,
+              urlMedia: data.product.media.url,
+              imgURI: data.product.media.qualities[0].src,
+              name: data.product.media.title,
+            }
+          : undefined,
       },
+
       attributes: data.variations
         ? extractAttributesAndTerms(data.variations)
         : null,
@@ -222,22 +232,21 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
           })),
         })) ?? [],
     })),
-  setProduct: (product) =>
-    set((state) => ({ postData: { ...state.postData, product } })),
+  setProduct: (product) => set((state) => ({ ...state, product })),
   setVariation: (newVariation) => set(() => ({ variations: newVariation })),
 
   setAttributes: (newAttributes) => set(() => ({ attributes: newAttributes })),
-  setPostData: (newPostData) => set(() => ({ postData: newPostData })),
-  setType: (type) =>
-    set((state) => ({ postData: { ...state.postData, type } })),
-  setGallery: (gallery) =>
-    set((state) => ({ postData: { ...state.postData, gallery } })),
+
+  setType: (type) => set((state) => ({ ...state, type })),
+  setGallery: (gallery) => set((state) => ({ ...state, gallery })),
   setTitle: (title) =>
-    set((state) => ({ postData: { ...state.postData, title } })),
+    set((state) => ({
+      ...state,
+      title,
+    })),
   setShortDescription: (shortDescription) =>
-    set((state) => ({ postData: { ...state.postData, shortDescription } })),
-  setDescription: (description) =>
-    set((state) => ({ postData: { ...state.postData, description } })),
+    set((state) => ({ ...state, shortDescription })),
+  setDescription: (description) => set((state) => ({ ...state, description })),
   setProductVariation: ({ product, variationId }) =>
     set((state) => {
       const { variations } = state
@@ -280,8 +289,7 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
           : v
       ),
     })),
-  setCagories: (categories) =>
-    set((state) => ({ postData: { ...state.postData, categories } })),
+  setCategories: (categories) => set((state) => ({ ...state, categories })),
   deleteVariation: (id) =>
     set((state) => {
       const { variations } = state
@@ -306,6 +314,5 @@ export const usePublishStore = create<StatePublish & Action>((set) => ({
       })
       return { ...state, variations: restoreVariation }
     }),
-  setVideo: (youtubeVideoId) =>
-    set((state) => ({ postData: { ...state.postData, youtubeVideoId } })),
+  setVideo: (youtubeVideoId) => set((state) => ({ ...state, youtubeVideoId })),
 }))

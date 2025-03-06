@@ -8,13 +8,13 @@ import {
   Input,
   DateValue,
   CalendarDate,
+  addToast,
 } from '@heroui/react'
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { UserSchema } from '@/types/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateUserInfo } from '@/api/userData'
-import { toast } from 'sonner'
 
 type TProps = {
   user: UserSchema
@@ -43,7 +43,12 @@ export default function AccountInformationForm({ user }: TProps) {
   const { data, mutate, isPending } = useMutation({
     mutationFn: updateUserInfo,
     onSuccess: (u) => {
-      toast.success('Cuenta actualizada')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Cuenta actualizada',
+      })
       queryClient.invalidateQueries({ queryKey: ['user'] })
       reset({
         firstName: u.firstName,
@@ -55,7 +60,13 @@ export default function AccountInformationForm({ user }: TProps) {
       })
     },
     onError: (e) => {
-      toast.error(e.message || 'Error al actualizar datos')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error al actualizar datos',
+        description: e.message,
+      })
     },
   })
   useEffect(() => {

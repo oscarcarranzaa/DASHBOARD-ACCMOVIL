@@ -3,9 +3,9 @@ import { createRol, getPermissions } from '@/api/users'
 import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import RoleEditor from '@/components/users/roles/roleEditor'
+import { addToast } from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { toast, Toaster } from 'sonner'
 
 export default function AdminRolPage() {
   const queryClient = useQueryClient()
@@ -21,10 +21,22 @@ export default function AdminRolPage() {
     onSuccess: (dat) => {
       queryClient.invalidateQueries({ queryKey: ['roles'] })
       router.push(`/dash/usuarios/roles/${dat.id}`)
-      toast.success('Rol creado')
+
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Rol creado',
+      })
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: err.message,
+      })
     },
   })
   if (error)
@@ -46,7 +58,6 @@ export default function AdminRolPage() {
             }}
           />
         )}
-        <Toaster theme="dark" />
       </div>
     </>
   )

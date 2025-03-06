@@ -4,11 +4,10 @@ import EyeInvisibleSVG from '@/components/icons/eyeInvisible'
 import Spinner from '@/components/icons/spinner'
 import { changePassSchema, ZChangePassword } from '@/types/users'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from "@heroui/react"
+import { addToast, Button, Input } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 type TProps = {
   onSuccessForm?: () => void
@@ -37,10 +36,22 @@ export default function ChangePasswordForm({ onSuccessForm }: TProps) {
         onSuccessForm()
       }
       reset({ currentPass: '', newPass: '' })
-      toast.success('Contraseña actualizada')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Contraseña actualizada',
+        description: 'Su contraseña se restableció',
+      })
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error al restablecer contraseña',
+        description: err.message,
+      })
     },
   })
 

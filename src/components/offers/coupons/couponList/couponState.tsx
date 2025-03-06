@@ -1,9 +1,8 @@
 import { handleStateCoupon } from '@/api/offerts'
 import Spinner from '@/components/icons/spinner'
-import { Switch } from "@heroui/react"
+import { addToast, Switch } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
-import { toast } from 'sonner'
 
 export default function CouponState({
   status,
@@ -18,10 +17,21 @@ export default function CouponState({
     onSuccess: (coupon) => {
       const active = coupon.isActive ? 'ACTIVADO' : 'DESACTIVADO'
       setSelected(coupon.isActive)
-      toast.success(`El cupón ${coupon.code} ha sido ${active}.`)
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Éxito',
+        description: `El cupón ${coupon.code} ha sido ${active}`,
+      })
     },
     onError: () => {
-      toast.error('Error al cambiar el estado del cupón.')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error al cambiar el estado del cupón',
+      })
     },
   })
   return (

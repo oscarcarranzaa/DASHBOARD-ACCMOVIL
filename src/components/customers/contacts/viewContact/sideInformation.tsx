@@ -2,12 +2,11 @@
 import FireSVG from '@/components/icons/fire'
 import { contactSchema } from '@/types/customer'
 import formatFromNowDate from '@/utils/formatFromNowDate'
-import { Accordion, AccordionItem, Button } from "@heroui/react"
+import { Accordion, AccordionItem, addToast, Button } from '@heroui/react'
 import ContactSummary from './summary'
 import ContactDetails from './details'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteOneContact } from '@/api/contact'
-import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
 export default function SideInformationContact({
@@ -22,11 +21,23 @@ export default function SideInformationContact({
     mutationFn: deleteOneContact,
     onSuccess: (succ) => {
       queryClient.invalidateQueries({ queryKey: ['contact'] })
-      toast.success(succ)
+
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: succ,
+      })
       router.push('/dash/pipe/contactos')
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: err.message,
+      })
     },
   })
   const handleDeleteContact = () => {

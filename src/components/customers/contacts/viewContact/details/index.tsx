@@ -8,15 +8,15 @@ import {
 } from '@/types/customer'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  addToast,
   DateInput,
   DateInputField,
   DatePicker,
   DateValue,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 export default function ContactDetails({
   contact,
@@ -51,10 +51,21 @@ export default function ContactDetails({
         })
       })
       queryClient.invalidateQueries({ queryKey: ['contact', contact.id] })
-      toast.success('Contacto actualizado')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Contacto actualizado',
+      })
     },
     onError: (err) => {
-      toast.error(err.message || 'Ocurrió un error desconocido')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: err.message,
+      })
     },
   })
 
@@ -62,7 +73,14 @@ export default function ContactDetails({
     if (!dirtyFields[fieldName]) return
     const isValid = await trigger(fieldName)
     if (!isValid) {
-      toast.warning(`Error en los datos [field: ${fieldName}] `)
+      addToast({
+        color: 'warning',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Advertencia de error',
+        description: `Error en los datos [campo: ${fieldName}] `,
+      })
+
       return
     }
     const value = getValues(fieldName)

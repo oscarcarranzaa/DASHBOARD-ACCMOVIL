@@ -1,9 +1,8 @@
 import { orderPaidByCash } from '@/api/order'
 import Money from '@/components/icons/money'
 import Spinner from '@/components/icons/spinner'
-import { Button } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 
 type TProps = {
   orderId: string
@@ -17,10 +16,20 @@ export default function OrderCash({ orderId, totalAmount, onClose }: TProps) {
     onSuccess: () => {
       onClose()
       queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
-      toast.success('Transacción agregada.')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Transacción agregada',
+      })
     },
     onError: () => {
-      toast.error('Ocurrion un error.')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+      })
     },
   })
   const handlePaid = () => {

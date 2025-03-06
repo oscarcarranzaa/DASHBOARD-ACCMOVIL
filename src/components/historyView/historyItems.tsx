@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Button,
+  addToast,
 } from '@heroui/react'
 import { TPropsHistory } from '.'
 import HistoryImage from './typeHistory/image'
@@ -18,7 +19,6 @@ import TrashSVG from '../icons/trahs'
 import { useAuthStore } from '@/store/auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteCommentFromOrder } from '@/api/order'
-import { toast } from 'sonner'
 
 export default function HistoryItem({
   id,
@@ -40,7 +40,13 @@ export default function HistoryItem({
       queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
     },
     onError: () => {
-      toast.error('Error al eliminar el comentario.')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: 'Error al eliminar el comentario',
+      })
     },
   })
   const renderHistoty = () => {

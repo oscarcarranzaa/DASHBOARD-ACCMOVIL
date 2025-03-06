@@ -2,9 +2,8 @@ import { deleteProductOrder } from '@/api/order'
 import Spinner from '@/components/icons/spinner'
 import TrashSVG from '@/components/icons/trahs'
 import { createOrderState } from '@/store/order'
-import { Button } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
-import { toast } from 'sonner'
 
 export default function DeleteProductOrder({
   id,
@@ -24,7 +23,14 @@ export default function DeleteProductOrder({
       setOrderInfo(data.order)
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: err.message,
+      })
+
       if (err.cause === 403) {
         return resetOrder()
       }

@@ -1,13 +1,12 @@
 import DisplayPrice from '@/components/displayPrice'
 import style from './posts.module.css'
 import SquareImage from '@/components/squareImage'
-import { Button } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import Link from 'next/link'
 import { useMutation } from '@tanstack/react-query'
 import { duplicatePost } from '@/api/posts'
 import { useRouter } from 'next/navigation'
 import Spinner from '@/components/icons/spinner'
-import { toast } from 'sonner'
 
 type TProps = {
   id: string
@@ -39,7 +38,13 @@ export default function PostItem({
       router.push(`/dash/producto/${res.id}`)
     },
     onError: (err) => {
-      toast.error(err.message ?? 'Ocurrió un error al duplicar el producto.')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error al duplicar el producto',
+        description: err.message,
+      })
     },
   })
 

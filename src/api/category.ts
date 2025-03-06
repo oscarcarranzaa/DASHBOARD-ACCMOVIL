@@ -8,7 +8,6 @@ import {
   ZOneCategory,
 } from '@/types/category'
 import { resposeIdSchema, ZResponseId } from '@/types/schemas'
-import { toast } from 'sonner'
 
 export async function getCategories(id: string) {
   try {

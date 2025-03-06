@@ -5,11 +5,10 @@ import SendMessageSVG from '@/components/icons/sendMessage'
 import { historyCommentSchema, ZComment } from '@/types/history'
 import { orderDetailsRead } from '@/types/order'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from "@heroui/react"
+import { addToast, Button, Input } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { ORDER_STATUS } from './orderStatus'
 
 type TProps = {
@@ -60,7 +59,12 @@ export default function OrderHistory({ history, orderId }: TProps) {
       queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
     },
     onError: () => {
-      toast.error('Error al enviar comentario.')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error al enviar comentario',
+      })
     },
   })
 

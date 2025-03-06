@@ -5,11 +5,10 @@ import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
 import { newBillingInfoSchema, ZNewBillingInfo } from '@/types/order'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Switch } from '@heroui/react'
+import { addToast, Button, Input, Switch } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 export default function ContactOrderForm() {
   const contactOrder = createOrderState((state) => state.contact)
@@ -43,7 +42,13 @@ export default function ContactOrderForm() {
       setCompletedNavegation(orderNavegation)
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: err.message,
+      })
     },
   })
 

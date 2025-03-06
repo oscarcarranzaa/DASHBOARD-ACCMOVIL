@@ -1,20 +1,19 @@
 import { CustomerProfileSVG } from '@/components/icons/customerProfile'
 import {
   Avatar,
-  Button,
   Chip,
   Select,
   SelectItem,
   SelectProps,
   Selection,
-} from "@heroui/react"
+  addToast,
+} from '@heroui/react'
 import dayjs from 'dayjs'
 import { ReactNode, useEffect, useState } from 'react'
 import { getDisabledKeys, ORDER_STATUS } from './orderStatus'
 import { orderInfoSchema } from '@/types/order'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateOrderState } from '@/api/order'
-import { toast } from 'sonner'
 
 type TProps = {
   orderId: string
@@ -61,7 +60,13 @@ export default function OrderDetailsHeader({
     },
     onError: (err) => {
       setStatusSelect(prevKey)
-      toast.error(err.message ?? 'Error al cambiar el estado')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error al cambiar el estado',
+        description: err.message,
+      })
     },
   })
   const sendStatus = (st?: string) => {

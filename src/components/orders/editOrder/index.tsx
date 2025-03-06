@@ -10,6 +10,7 @@ import {
 import getCountrySelect from '@/utils/getCountrySelect'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  addToast,
   Autocomplete,
   AutocompleteItem,
   Button,
@@ -27,7 +28,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { toast } from 'sonner'
 
 type TProps = {
   shippingInfo?: shippingInfoSchema | null
@@ -89,7 +89,13 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
   const { mutate, isPending: pendingUpdate } = useMutation({
     mutationFn: updateOrderData,
     onSuccess: () => {
-      toast.success('Pedido actualizado.')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Pedido actualizado',
+      })
+
       onClose()
       if (billingInfo) {
         queryClient.invalidateQueries({
@@ -98,7 +104,13 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
       }
     },
     onError: () => {
-      toast.error('Ocurrio un error al actualizar datos del pedido')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: 'Error al actualizar datos del pedido',
+      })
     },
   })
   const sendUpdateOrder = (form: orderEditShema) => {

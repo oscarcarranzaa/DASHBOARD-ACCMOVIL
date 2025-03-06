@@ -3,9 +3,9 @@ import { getOneRol, updateRol } from '@/api/users'
 import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import RoleEditor from '@/components/users/roles/roleEditor'
+import { addToast } from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { toast, Toaster } from 'sonner'
 
 type paramsID = {
   roleId: string
@@ -25,10 +25,22 @@ export default function AdminRolPage() {
     mutationFn: updateRol,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] })
-      toast.success('Rol actualizado')
+
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Rol actualizado',
+      })
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: err.message,
+      })
     },
   })
   if (error) {
@@ -50,7 +62,6 @@ export default function AdminRolPage() {
             }}
           />
         )}
-        <Toaster theme="dark" />
       </div>
     </>
   )

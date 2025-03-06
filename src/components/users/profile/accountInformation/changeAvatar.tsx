@@ -1,10 +1,8 @@
 'use client'
 import { updateUserAvatar } from '@/api/userData'
-import { Skeleton, Spinner } from "@heroui/react"
+import { addToast, Skeleton, Spinner } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-
 type TProps = {
   avatar?: string | null
 }
@@ -16,11 +14,24 @@ export default function ChangeAvatar({ avatar }: TProps) {
   const { mutate, isPending } = useMutation({
     mutationFn: updateUserAvatar,
     onSuccess: () => {
-      toast.success('Foto de perfil actualizada')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Foto de perfil actualizada',
+      })
+
       queryClient.invalidateQueries({ queryKey: ['user'] })
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error al actualizar foto',
+        description: err.message,
+      })
+
       setPreview(avatarImage)
     },
   })

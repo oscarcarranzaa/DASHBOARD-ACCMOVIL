@@ -1,11 +1,10 @@
 import EmptyOrder from './emptyOrder'
-import { Button } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import { useState } from 'react'
 import { createOrderState } from '@/store/order'
 import ProductItems from './productItems'
 import { useMutation } from '@tanstack/react-query'
 import { addProductOrder } from '@/api/order'
-import { toast } from 'sonner'
 import Spinner from '@/components/icons/spinner'
 import ProductSelect from '@/components/publish/selectProduct'
 
@@ -32,7 +31,13 @@ export default function AddProductOrder() {
     },
     onError: (error) => {
       deletedProduct(productId)
-      toast.error(error.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Error',
+        description: error.message,
+      })
     },
   })
   return (

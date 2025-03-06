@@ -2,11 +2,10 @@
 import Bank from '@/components/icons/bank'
 import ClockSVG from '@/components/icons/clock'
 import Money from '@/components/icons/money'
-import { Checkbox, cn, Button } from "@heroui/react"
+import { Checkbox, cn, Button, addToast } from '@heroui/react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import SquareImage from '@/components/squareImage'
-import { toast } from 'sonner'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { finishOrder } from '@/api/order'
 import { createOrderState } from '@/store/order'
@@ -44,7 +43,13 @@ export default function FinishOrder() {
       setNavegation('finalice')
     },
     onError: () => {
-      toast.error('Error al agregar pago a la orden.')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: 'Error al agregar pago a la orden',
+      })
     },
   })
 
@@ -73,12 +78,25 @@ export default function FinishOrder() {
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     if (totalPaid < 1) {
-      toast.warning('No se puede procesar la orden en 0.')
+      addToast({
+        color: 'warning',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Advertencia de error',
+        description: 'No se puede procesar la orden en 0',
+      })
+
       return
     }
     const formData = new FormData()
     if (paymentMethod === 'BANK_TRANSFER' && !data.image) {
-      toast.error('Agrega la foto del comprobante')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Agrega la foto del comprobante',
+      })
+
       return
     }
     if (data.image && paymentMethod === 'BANK_TRANSFER') {

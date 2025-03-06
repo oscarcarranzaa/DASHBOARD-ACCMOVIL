@@ -5,14 +5,20 @@ import DownloadSVG from '@/components/icons/download'
 import FireSVG from '@/components/icons/fire'
 import LinkSVG from '@/components/icons/link'
 import useClipboard from '@/hooks/useClipBoard'
-import { Accordion, AccordionItem, Button, Image, Input } from '@heroui/react'
+import {
+  Accordion,
+  AccordionItem,
+  addToast,
+  Button,
+  Image,
+  Input,
+} from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import NavegationPages from '@/components/navegationPages'
-import { toast } from 'sonner'
 import SendSVG from '@/components/icons/send'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -62,10 +68,21 @@ export default function MediaID() {
     onSuccess: (da) => {
       queryClient.invalidateQueries({ queryKey: ['medias'] })
       reset({ title: getValues('title') })
-      toast.success(da ?? 'Nombre actualizado')
+
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: da ?? 'Nombre actualizado',
+      })
     },
     onError: () => {
-      toast.error('Ocurrio un error')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+      })
     },
   })
 

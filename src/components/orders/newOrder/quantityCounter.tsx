@@ -2,10 +2,9 @@
 import { updateProductOrder } from '@/api/order'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
-import { Button } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 
 export default function QuantityCounter({
@@ -38,7 +37,13 @@ export default function QuantityCounter({
         return resetOrder()
       }
       setQuantity(id, quantitySuccess)
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: err.message,
+      })
     },
   })
   const disabledDecremental = quantity <= 1

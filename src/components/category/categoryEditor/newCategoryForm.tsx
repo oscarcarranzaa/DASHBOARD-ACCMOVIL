@@ -4,11 +4,10 @@ import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { newCategoryForm, ZNewCategoryForm } from '@/types/category'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Textarea } from "@heroui/react"
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { addToast, Button, Input, Textarea } from '@heroui/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast, Toaster } from 'sonner'
 
 type TProps = {
   categorySelected?: string | undefined
@@ -42,11 +41,23 @@ export default function NewCategoryForm({
       })
       seNewImageValue(undefined)
       reset()
-      toast.success('Nueva categoría creada.')
+
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Nueva categoría creada',
+      })
       setValue('parent', categorySelected)
     },
     onError: (err) => {
       setErrorMessage(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+      })
     },
   })
 
@@ -131,7 +142,6 @@ export default function NewCategoryForm({
           </div>
         </form>
       </div>
-      <Toaster theme="dark" richColors />
     </>
   )
 }

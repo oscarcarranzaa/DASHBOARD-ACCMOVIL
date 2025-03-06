@@ -1,9 +1,8 @@
 import EmailSVG from '@/components/icons/email'
 import PhoneSVG from '@/components/icons/phone'
 import { contactSchema, contactStatusSchema } from '@/types/customer'
-import { User, Select, SelectItem } from "@heroui/react"
+import { User, Select, SelectItem, addToast } from '@heroui/react'
 import { contactStatusOption } from '../newContact/contactStatusOptions'
-import { toast } from 'sonner'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateContactStatus } from '@/api/contact'
 
@@ -21,11 +20,22 @@ export default function ContactHeader({ contact }: { contact: contactSchema }) {
   const { mutate, isPending } = useMutation({
     mutationFn: updateContactStatus,
     onSuccess: (succ) => {
-      toast.success('Estado actualizado')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Estado actualizado',
+      })
       queryClient.invalidateQueries({ queryKey: ['contact', succ.id] })
     },
     onError: (err) => {
-      toast.error(err.message ?? 'Error al actualizar el estado')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: `Error al actualizar el estado: ${err.message}`,
+      })
     },
   })
 
@@ -33,7 +43,12 @@ export default function ContactHeader({ contact }: { contact: contactSchema }) {
     if (!op) return
     const option = statusContactMap[op]
     if (!option) {
-      toast.warning('Este estado no esta disponible.')
+      addToast({
+        color: 'warning',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Este estado no esta disponible',
+      })
     }
     mutate({ status: option, id: contact.id })
   }

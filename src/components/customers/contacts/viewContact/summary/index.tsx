@@ -8,10 +8,10 @@ import {
   contactSummarySchema,
   ZContactSummary,
 } from '@/types/customer'
+import { addToast } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 export default function ContactSummary({
   contact,
@@ -29,6 +29,7 @@ export default function ContactSummary({
     trigger,
     resetField,
     reset,
+    clearErrors,
     formState: { errors, dirtyFields },
     getValues,
   } = useForm<contactSummarySchema>({
@@ -45,19 +46,40 @@ export default function ContactSummary({
         })
       })
       queryClient.invalidateQueries({ queryKey: ['contact', contact.id] })
-      toast.success('Contacto actualizado')
+      addToast({
+        color: 'success',
+        timeout: 5000,
+        variant: 'bordered',
+        title: 'Contacto actualizado',
+      })
     },
     onError: (err) => {
       reset(defaultValues)
-      toast.error(err.message || 'Ocurrió un error desconocido')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: err.message,
+      })
     },
   })
 
   const handleAutoSubmit = async (fieldName: keyof contactSummarySchema) => {
-    if (!dirtyFields[fieldName]) return
+    if (!dirtyFields[fieldName]) {
+      clearErrors(fieldName)
+      return
+    }
     const isValid = await trigger(fieldName)
     if (!isValid) {
-      toast.warning(`Error en los datos [Input: ${fieldName}] `)
+      addToast({
+        color: 'warning',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Advertencia de error',
+        description: `Error en los datos [Entrada: ${fieldName}] `,
+      })
+
       return
     }
     const value = getValues(fieldName)

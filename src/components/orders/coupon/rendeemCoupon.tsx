@@ -3,11 +3,9 @@ import ArrowSVG from '@/components/icons/arrow'
 import Coupon from '@/components/icons/coupon'
 import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
-import { Input, Button } from "@heroui/react"
+import { Input, Button, addToast } from '@heroui/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 type TCode = {
   code: string
@@ -35,7 +33,13 @@ export default function RendeemCoupon() {
       })
       setOrderInfo(success.order)
       reset()
-      toast.success(`Se aplicó el código ${success.coupon.code} a su pedido.`)
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Éxito',
+        description: `Se aplicó el código ${success.coupon.code} a su pedido`,
+      })
     },
     onError: () => {
       reset()
@@ -48,7 +52,13 @@ export default function RendeemCoupon() {
       removeCoupon()
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: err.message,
+      })
     },
   })
   const submitCode = (form: TCode) => {

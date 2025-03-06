@@ -5,12 +5,11 @@ import SelectImage from '@/components/media/selectImage'
 import { IUploads } from '@/types'
 import { newCategoryForm, ZNewCategoryForm } from '@/types/category'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Progress, Textarea } from "@heroui/react"
+import { addToast, Button, Input, Progress, Textarea } from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import AdvancedSettings from './advancedSettings'
-import { toast, Toaster } from 'sonner'
 
 type TProps = {
   category: string
@@ -32,11 +31,25 @@ export default function EditCategoryForm({
   const { mutate, isPending: loadUpdate } = useMutation({
     mutationFn: updateCategory,
     onSuccess: (cat) => {
-      toast.success('Categoría actualizada...')
       queryClient.invalidateQueries({
         queryKey: ['categories'],
       })
       queryClient.invalidateQueries({ queryKey: [cat.id] })
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Categoría actualizada',
+        description: 'Los cambios se guardaron',
+      })
+    },
+    onError: (err) => {
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+      })
     },
   })
 
@@ -201,7 +214,6 @@ export default function EditCategoryForm({
           </div>
         </div>
       </form>
-      <Toaster theme="dark" richColors />
     </>
   )
 }

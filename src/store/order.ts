@@ -2,7 +2,7 @@
 
 import { orderDetailsSchema } from '@/types/order'
 import { MediaSchema } from '@/types/schemas'
-import { toast } from 'sonner'
+import { addToast } from '@heroui/react'
 import { create } from 'zustand'
 
 type productOrder = {
@@ -131,7 +131,13 @@ export const createOrderState = create<State & Action>((set) => ({
       if (existingProduct) {
         const totalQuantity = existingProduct.quantity + newProduct.quantity
         if (totalQuantity > newProduct.stock) {
-          toast.error('No hay suficiente stock disponible.')
+          addToast({
+            color: 'danger',
+            variant: 'bordered',
+            timeout: 5000,
+            title: 'No hay suficiente stock disponible',
+          })
+
           return state
         }
         return {
@@ -165,7 +171,13 @@ export const createOrderState = create<State & Action>((set) => ({
           ),
         }
       } else {
-        toast.error('No se encontró el producto.')
+        addToast({
+          color: 'danger',
+          variant: 'bordered',
+          timeout: 5000,
+          title: 'No se encontró el producto',
+        })
+
         return { products: state.products }
       }
     }),
@@ -189,7 +201,13 @@ export const createOrderState = create<State & Action>((set) => ({
       if (existingProduct) {
         const totalQuantity = q
         if (totalQuantity > existingProduct.stock) {
-          toast.error('No hay suficiente stock disponible.')
+          addToast({
+            color: 'danger',
+            variant: 'bordered',
+            timeout: 5000,
+            title: 'No hay suficiente stock disponible',
+          })
+
           return state
         }
         return {
@@ -200,7 +218,12 @@ export const createOrderState = create<State & Action>((set) => ({
           ),
         }
       } else {
-        toast.error('No se encontró el producto.')
+        addToast({
+          color: 'danger',
+          variant: 'bordered',
+          timeout: 5000,
+          title: 'No se encontró el producto',
+        })
         return { products: state.products }
       }
     }),
@@ -212,7 +235,12 @@ export const createOrderState = create<State & Action>((set) => ({
       if (existingProduct) {
         const totalQuantity = existingProduct.quantity + 1
         if (totalQuantity > existingProduct.stock) {
-          toast.error('No hay suficiente stock disponible.')
+          addToast({
+            color: 'danger',
+            variant: 'bordered',
+            timeout: 5000,
+            title: 'No hay suficiente stock disponible',
+          })
           return state
         }
         return {
@@ -223,7 +251,13 @@ export const createOrderState = create<State & Action>((set) => ({
           ),
         }
       } else {
-        toast.error('No se encontró el producto.')
+        addToast({
+          color: 'danger',
+          variant: 'bordered',
+          timeout: 5000,
+          title: 'No se encontró el producto',
+        })
+
         return { products: state.products }
       }
     }),
@@ -235,7 +269,12 @@ export const createOrderState = create<State & Action>((set) => ({
       if (existingProduct) {
         const totalQuantity = existingProduct.quantity - 1
         if (totalQuantity <= 0) {
-          toast.error('No se permiten cantidades menores a 1')
+          addToast({
+            color: 'danger',
+            variant: 'bordered',
+            timeout: 5000,
+            title: 'No se permiten cantidades menores a 1',
+          })
           return state
         }
         return {
@@ -246,7 +285,12 @@ export const createOrderState = create<State & Action>((set) => ({
           ),
         }
       } else {
-        toast.error('No se encontró el producto.')
+        addToast({
+          color: 'danger',
+          variant: 'bordered',
+          timeout: 5000,
+          title: 'No se encontró el producto',
+        })
         return state
       }
     }),
@@ -260,7 +304,12 @@ export const createOrderState = create<State & Action>((set) => ({
           products: state.products.filter((product) => product.id !== id),
         }
       } else {
-        toast.error('No se encontró el producto.')
+        addToast({
+          color: 'danger',
+          variant: 'bordered',
+          timeout: 5000,
+          title: 'No se encontró el producto',
+        })
         return state
       }
     }),

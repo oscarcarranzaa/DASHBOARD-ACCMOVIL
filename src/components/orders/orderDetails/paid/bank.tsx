@@ -2,11 +2,9 @@ import { orderPaidByTransfer } from '@/api/order'
 import Bank from '@/components/icons/bank'
 import Spinner from '@/components/icons/spinner'
 import SquareImage from '@/components/squareImage'
-import { Button } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-
-import { toast } from 'sonner'
 
 type TProps = {
   orderId: string
@@ -22,12 +20,23 @@ export default function OrderBank({ orderId, totalAmount, onClose }: TProps) {
   const { mutate, isPending } = useMutation({
     mutationFn: orderPaidByTransfer,
     onSuccess: () => {
-      toast.success('Transaccion exitosa.')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Transaccion exitosa',
+      })
+
       onClose()
       queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
     },
     onError: () => {
-      toast.error('Ocurrió un error al agregar la transaccion')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error al agregar la transaccion',
+      })
     },
   })
 
@@ -57,7 +66,13 @@ export default function OrderBank({ orderId, totalAmount, onClose }: TProps) {
   const onSubmit = () => {
     const formData = new FormData()
     if (!image) {
-      toast.error('Agrega la foto del comprobante')
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Agrega la foto del comprobante',
+      })
+
       return
     }
     formData.append('file', image[0])

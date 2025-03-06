@@ -6,11 +6,10 @@ import Spinner from '@/components/icons/spinner'
 import UbicationSVG from '@/components/icons/ubication'
 import { shippingInfoSchema, ZUpdateTrackUrl } from '@/types/order'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from '@heroui/react'
+import { addToast, Button, Input } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 type TProps = {
   shippingInfo?: shippingInfoSchema | null
@@ -49,10 +48,22 @@ export default function OrderTrackDetails({
         setTrackingUrl(updatedUrl)
       }
       queryClient.invalidateQueries({ queryKey: ['order', orderId, 'details'] })
-      toast.success('Se actualizó la URL de seguimiento.')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Se actualizó la URL de seguimiento',
+      })
     },
     onError: (err) => {
-      toast.error(err.message)
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: err.message,
+      })
+
       reset({ url: trackingUrl ?? '' })
     },
   })

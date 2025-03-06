@@ -3,12 +3,11 @@
 import { createPost, updatePost } from '@/api/posts'
 import Spinner from '@/components/icons/spinner'
 import { usePublishStore } from '@/store/publish'
-import { Button } from '@heroui/react'
+import { Button, addToast } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
-import { toast } from 'sonner'
 
 export default function SaveButtonProduct() {
   const [buttonAction, setButtonAction] = useState<'draft' | 'publish'>()
@@ -43,7 +42,13 @@ export default function SaveButtonProduct() {
     },
     onSuccess: (res) => {
       setIsSaving(false)
-      toast.success(isNew ? 'Producto creado' : 'Producto actualizado')
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: isNew ? 'Producto creado' : 'Producto actualizado',
+        description: 'Los cambios se guardaron',
+      })
 
       if (isNew) {
         reset()
@@ -54,7 +59,12 @@ export default function SaveButtonProduct() {
     },
     onError: () => {
       setIsSaving(false)
-      toast.error('Ocurrió un error')
+      addToast({
+        color: 'danger',
+        timeout: 5000,
+        title: 'Ocurrio un error',
+        description: 'Lo sentimos, los cambios no se guardaron',
+      })
     },
   })
 
@@ -118,18 +128,7 @@ export default function SaveButtonProduct() {
       'Guardar'
     )
   }
-  console.log({
-    title,
-    categories,
-    description,
-    shortDescription,
-    status,
-    type,
-    product,
-    gallery,
-    variations,
-    youtubeVideoId,
-  })
+
   return (
     <>
       <Button

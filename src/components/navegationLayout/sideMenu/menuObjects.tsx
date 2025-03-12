@@ -73,25 +73,9 @@ export const menuItems = [
   {
     name: 'Cliente Potencial',
     icon: <FunnnelSVG size={iconSize} />,
-    urlKey: '/dash/pipe',
+    urlKey: '/dash/crm/clientes-potenciales',
+    href: '/dash/crm/clientes-potenciales',
     permissionKeys: [],
-    items: [
-      {
-        name: 'Contactos',
-        href: '/dash/pipe/contactos',
-        permissionKeys: [],
-      },
-      {
-        name: 'Prospectos',
-        href: '/dash/pipe/leads',
-        permissionKeys: [],
-      },
-      {
-        name: 'Negociaciones',
-        href: '/dash/pipe/deals',
-        permissionKeys: [],
-      },
-    ],
   },
   {
     name: 'Clientes',
@@ -100,7 +84,12 @@ export const menuItems = [
     permissionKeys: ['users.add'],
     items: [
       {
-        name: 'Clientes Web',
+        name: 'Contactos',
+        href: '/dash/clientes/contactos',
+        permissionKeys: [],
+      },
+      {
+        name: 'Clientes',
         href: '/dash/clientes',
         permissionKeys: ['team.view'],
       },

@@ -5,22 +5,23 @@ import Spinner from '@/components/icons/spinner'
 import useOutsideClick from '@/hooks/useOutSideClick'
 import { Button, Chip, Input } from '@heroui/react'
 import { useQuery } from '@tanstack/react-query'
-import { ExternalLink, PlusIcon, SearchX, UserSearch } from 'lucide-react'
-import Link from 'next/link'
+import { PlusIcon, SearchX, UserSearch } from 'lucide-react'
 import { ChangeEvent, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import ContactCardPreview from './contactCard'
-import styles from './style.module.css'
 import { contactSchema } from '@/types/customer'
 import ContactItem from './contactItem'
 
 type TProps = {
   onContactChange?: (contact: contactSchema) => void
   onNewContactChange?: (name: string) => void
+  onClear?: () => void
+  errors?: string
 }
 export default function ContactInput({
   onContactChange,
   onNewContactChange,
+  onClear,
+  errors,
 }: TProps) {
   const [contactName, setContactName] = useState<string>('')
   const [contactSearch, setContactSearch] = useState<string>('')
@@ -52,6 +53,9 @@ export default function ContactInput({
     debounce(inputValue)
 
     if (inputValue.length < 2) {
+      if (onClear) {
+        onClear()
+      }
       setIsNew(false)
       return
     }
@@ -85,20 +89,19 @@ export default function ContactInput({
       onContactChange(person)
     }
   }
-  console.log('render', openContacts)
   return (
     <>
       <div className="relative" ref={ref}>
         <Input
+          isRequired
+          isInvalid={!!errors}
+          errorMessage={errors}
           placeholder="Buscar contacto"
           onFocus={() => {
             setOpenContacts(true)
-            console.log('b')
           }}
           onBlur={() => {
             handleSelectContact(undefined)
-
-            console.log('a')
           }}
           startContent={
             <span className="opacity-70">

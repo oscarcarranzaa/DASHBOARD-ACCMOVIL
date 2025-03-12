@@ -8,18 +8,20 @@ import { useAuthStore } from '@/store/auth'
 
 type TProps = {
   placeholder?: string
-  defaultId?: string
-  isThisUser?: boolean
+
   label?: string
+  value?: string
   onChange?: (userID: string | null) => void
 }
 export default function SelectUser({
   placeholder = 'Usuarios',
-  defaultId,
+
   label,
   onChange,
-  isThisUser,
+
+  value,
 }: TProps) {
+  const thisUser = useAuthStore((state) => state.user)?.id
   const { data, isPending, error } = useQuery({
     queryKey: ['users'],
     queryFn: () => getAllUsers('1', '50'),
@@ -27,12 +29,11 @@ export default function SelectUser({
     retry: false,
   })
   const users = data?.data ?? []
-  const thisUser = useAuthStore((state) => state.user)?.id
-  const defaultSeletedKey = isThisUser ? thisUser : defaultId
+  console.log(value)
   return (
     <>
       <Autocomplete
-        defaultSelectedKey={defaultSeletedKey}
+        selectedKey={value}
         label={label}
         onSelectionChange={(key) => {
           if (onChange) {

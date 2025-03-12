@@ -2,6 +2,18 @@ import { Select, SelectItem } from '@heroui/react'
 
 export const sources = [
   {
+    key: 'STORE',
+    name: 'Tiendas físicas',
+  },
+  {
+    key: 'FRIENDS',
+    name: 'Amigos',
+  },
+  {
+    key: 'SOCIAL_MEDIA',
+    name: 'Redes Sociales',
+  },
+  {
     key: 'WEB_FORMS',
     name: 'Formulario web',
   },

@@ -3,7 +3,6 @@ import { contactSchema } from '@/types/customer'
 import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import ContactCardPreview from '../contactCard'
-import { useRef, useState } from 'react'
 import { Tooltip } from '@heroui/react'
 
 type TProps = {

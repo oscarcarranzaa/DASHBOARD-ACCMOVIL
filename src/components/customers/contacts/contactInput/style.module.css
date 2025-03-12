@@ -1,0 +1,11 @@
+.hoverItem {
+  display: none;
+  position: absolute;
+  left: 28px;
+
+  transform: translateY(calc(-50% + 15%));
+  z-index: 999;
+}
+.hoverContent:hover > .hoverItem {
+  display: block;
+}

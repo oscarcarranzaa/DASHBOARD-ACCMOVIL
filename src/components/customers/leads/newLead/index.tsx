@@ -37,7 +37,10 @@ export default function NewLead() {
                 <ModalHeader>Añadir prospecto</ModalHeader>
                 <div className=" grid grid-cols-2">
                   <div className="px-3 flex flex-col gap-4">
-                    <ContactInput />
+                    <ContactInput
+                      onContactChange={(e) => console.log(e)}
+                      onNewContactChange={(e) => console.log(e)}
+                    />
                     <Input
                       placeholder="titulo"
                       labelPlacement="outside"

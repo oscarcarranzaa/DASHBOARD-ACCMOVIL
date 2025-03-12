@@ -12,7 +12,7 @@ import {
   ModalFooter,
   SelectItem,
   Select,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 import { contactStatusOption } from './contactStatusOptions'
@@ -24,6 +24,7 @@ export default function CreateContact() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
   const queryClient = useQueryClient()
   const defaultValues = {
+    name: '',
     firstName: '',
     status: defaultStatus,
   }
@@ -70,37 +71,21 @@ export default function CreateContact() {
                   <div className="p-5  grid gap-y-4">
                     <div className="flex gap-2">
                       <Controller
-                        name="firstName"
+                        name="name"
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
                           <Input
                             {...field}
                             type="text"
-                            errorMessage={errors.firstName?.message}
-                            isInvalid={!!errors.firstName}
+                            errorMessage={errors.name?.message}
+                            isInvalid={!!errors.name}
                             placeholder="Ejem: (Juan Jose)"
                             label="Nombre"
                             required
                             variant="bordered"
                             labelPlacement="outside"
                             isRequired
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="lastName"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            {...field}
-                            errorMessage={errors.lastName?.message}
-                            isInvalid={!!errors.lastName}
-                            type="text"
-                            variant="bordered"
-                            labelPlacement="outside"
-                            placeholder="Ejem: (Martínez García)"
-                            label="Apellidos"
                           />
                         )}
                       />

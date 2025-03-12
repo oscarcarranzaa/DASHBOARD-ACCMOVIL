@@ -13,7 +13,7 @@ import {
   ChipProps,
   Chip,
   User,
-} from "@heroui/react"
+} from '@heroui/react'
 import { contactRows } from './rows'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -47,7 +47,6 @@ export default function ContactList({ data, rows, isPending }: IProps) {
     (contact: contactSchema, columnKey: React.Key) => {
       switch (columnKey) {
         case 'name':
-          const name = `${contact.firstName?.split(' ')[0]} ${contact.lastName?.split(' ')[0] ?? ''}`
           return (
             <Link
               className="hover:underline flex"
@@ -57,13 +56,13 @@ export default function ContactList({ data, rows, isPending }: IProps) {
                 avatarProps={{
                   radius: 'full',
                   src: contact.avatar ?? undefined,
-                  name: contact.firstName.toUpperCase(),
+                  name: contact.name.toUpperCase(),
                   className: 'bg-blue-200 dark:bg-blue-700',
                 }}
                 description={`Se unió ${formaFromNowDate(contact.createdAt)}`}
                 name={
                   <div className="flex gap-x-2 line-clamp-1">
-                    <p>{name}</p>
+                    <p>{contact.name}</p>
                   </div>
                 }
               ></User>

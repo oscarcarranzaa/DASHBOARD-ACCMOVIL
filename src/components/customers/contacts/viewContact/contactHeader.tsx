@@ -13,8 +13,6 @@ const statusContactMap: Record<string, contactStatusSchema['status']> = {
 }
 
 export default function ContactHeader({ contact }: { contact: contactSchema }) {
-  const name = `${contact.firstName} ${contact.lastName ?? ''}`
-
   const queryClient = useQueryClient()
 
   const { mutate, isPending } = useMutation({
@@ -60,7 +58,7 @@ export default function ContactHeader({ contact }: { contact: contactSchema }) {
             radius: 'full',
             size: 'lg',
             src: contact.avatar ?? undefined,
-            name: contact.firstName.toUpperCase(),
+            name: contact.name.toUpperCase(),
             className: 'bg-blue-200 dark:bg-blue-700 w-20 h-20',
           }}
           description={
@@ -81,7 +79,7 @@ export default function ContactHeader({ contact }: { contact: contactSchema }) {
           }
           name={
             <div className="flex gap-x-2 line-clamp-1 ">
-              <p className="text-xl font-semibold ">{name}</p>
+              <p className="text-xl font-semibold ">{contact.name}</p>
             </div>
           }
         ></User>

@@ -7,13 +7,7 @@ import {
   ZContactDetails,
 } from '@/types/customer'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  addToast,
-  DateInput,
-  DateInputField,
-  DatePicker,
-  DateValue,
-} from '@heroui/react'
+import { addToast, DateValue } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -27,8 +21,8 @@ export default function ContactDetails({
   const queryClient = useQueryClient()
 
   const defaultValues = {
-    firstName: contact.firstName ?? undefined,
-    lastName: contact.lastName ?? undefined,
+    name: contact.name ?? undefined,
+
     dateOfBirth: contact.dateOfBirth ?? undefined,
   }
   const {
@@ -91,37 +85,22 @@ export default function ContactDetails({
     <>
       <div>
         <Controller
-          name="firstName"
+          name="name"
           control={control}
           render={({ field }) => (
             <InputField
-              startContent={<p className="text-sm ">Nombres:</p>}
+              startContent={<p className="text-sm ">Nombre:</p>}
               placeholder="Ej: Juan Jose"
               type="text"
               value={field.value}
               label="Nuevo nombre"
               onBlur={() => handleAutoSubmit(field.name)}
               onValueChange={(v) => field.onChange(v)}
-              error={errors.firstName?.message}
+              error={errors.name?.message}
             />
           )}
         />
-        <Controller
-          name="lastName"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              value={field.value}
-              startContent={<p className="text-sm ">Apellidos:</p>}
-              placeholder="Ej: Martinez"
-              type="text"
-              label="Agregar apellido"
-              onBlur={() => handleAutoSubmit(field.name)}
-              onValueChange={(v) => field.onChange(v)}
-              error={errors.lastName?.message}
-            />
-          )}
-        />
+
         <Controller
           name="dateOfBirth"
           control={control}

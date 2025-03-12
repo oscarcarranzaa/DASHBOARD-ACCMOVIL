@@ -1,6 +1,7 @@
+'use client'
 import { ReactNode } from 'react'
 import Header from './header'
-import SideMenu from './sideMenu'
+import SideMenuContent from './sideMenu'
 
 export default function NavegationLayout({
   children,
@@ -11,7 +12,7 @@ export default function NavegationLayout({
     <>
       <Header />
       <div className="bg-zinc-50 dark:bg-zinc-950 flex">
-        <SideMenu />
+        <SideMenuContent />
         {children}
       </div>
     </>

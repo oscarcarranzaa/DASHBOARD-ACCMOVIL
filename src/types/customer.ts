@@ -47,8 +47,7 @@ export const ZCreateCustomer = z
 
 export const ZContact = z.object({
   id: z.string(),
-  firstName: z.string().min(3, 'Nombre muy corto'),
-  lastName: z.string().nullable().optional(),
+  name: z.string().min(3, 'Nombre muy corto'),
   labelId: z.string().nullable().optional(),
   avatar: z.string().nullable().optional(),
   phone: z.string().nullable().optional(),
@@ -62,11 +61,10 @@ export const ZContact = z.object({
 })
 export const ZContactStatus = ZContact.pick({ status: true })
 export const ZCreateContact = ZContact.pick({
-  firstName: true,
+  name: true,
   status: true,
 }).merge(
   z.object({
-    lastName: z.string().optional(),
     phone: z
       .string()
       .optional()
@@ -84,10 +82,9 @@ export const ZCreateContact = ZContact.pick({
       .transform((val) => (val === '' ? undefined : val)),
     email: z
       .string()
-      .email('Correo no es válido.')
       .optional()
       .superRefine((val, ctx) => {
-        if (val === '') return
+        if (val === '' || val === undefined) return
         if (!z.string().email().safeParse(val).success) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -105,8 +102,7 @@ export const ZContactSummary = ZCreateContact.pick({
   address: true,
 })
 export const ZContactDetails = ZCreateContact.pick({
-  firstName: true,
-  lastName: true,
+  name: true,
 }).merge(
   z.object({
     dateOfBirth: z.string().optional(),
@@ -116,8 +112,7 @@ export const ZUpdateDataContact = z.object({
   email: z.string().optional(),
   phone: z.string().optional(),
   address: z.string().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  name: z.string().optional(),
 })
 export const ZAllContacts = z.object({
   data: z.array(ZContact),

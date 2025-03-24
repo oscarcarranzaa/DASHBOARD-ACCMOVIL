@@ -20,7 +20,7 @@ export default function ContactCardPreview({
   return (
     <div className="dark:bg-zinc-800 w-60 bg-zinc-50 border border-zinc-500 p-2  py-3 min-w-80 rounded-lg dark:text-white text-black ">
       <Link
-        href={`/dash/pipe/contactos/${id}`}
+        href={`/dash/clientes/contactos/${id}`}
         target="_blank"
         className=" text-lg font-semibold hover:text-blue-500 flex items-center gap-2 hover:underline"
       >

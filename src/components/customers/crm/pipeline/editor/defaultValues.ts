@@ -1,0 +1,45 @@
+export const pipelineDefaultValues = {
+  name: '',
+  stages: [
+    {
+      id: crypto.randomUUID(),
+      name: 'Nuevo',
+      dealProbability: 100,
+      is_new: true,
+      rottenDays: undefined,
+      description: undefined,
+    },
+    {
+      id: crypto.randomUUID(),
+      name: 'Información',
+      dealProbability: 100,
+      is_new: true,
+      rottenDays: undefined,
+      description: undefined,
+    },
+    {
+      id: crypto.randomUUID(),
+      name: 'Cierre de ventas',
+      dealProbability: 100,
+      is_new: true,
+      rottenDays: undefined,
+      description: undefined,
+    },
+    {
+      id: crypto.randomUUID(),
+      name: 'Seguimiento',
+      dealProbability: 100,
+      is_new: true,
+      rottenDays: undefined,
+      description: undefined,
+    },
+    {
+      id: crypto.randomUUID(),
+      name: 'Reseña',
+      dealProbability: 100,
+      is_new: true,
+      rottenDays: undefined,
+      description: undefined,
+    },
+  ],
+}

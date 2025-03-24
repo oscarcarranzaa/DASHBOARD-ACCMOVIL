@@ -1,5 +1,4 @@
 'use client'
-
 import PaginationPage from '@/components/UI/pagination'
 import { useCallback, useEffect, useState } from 'react'
 import {
@@ -13,7 +12,7 @@ import {
   ChipProps,
   Chip,
   User,
-} from "@heroui/react"
+} from '@heroui/react'
 import { userRows } from './rows'
 import Link from 'next/link'
 import VerifiedSVG from '@/components/icons/verified'

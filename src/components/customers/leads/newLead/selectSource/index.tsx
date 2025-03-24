@@ -32,10 +32,12 @@ export const sources = [
 ]
 type TProps = {
   onChange: (key?: string | null) => void
+  value?: string | null
 }
-export default function SelectSourceLead({ onChange }: TProps) {
+export default function SelectSourceLead({ onChange, value }: TProps) {
   return (
     <Select
+      value={value ?? undefined}
       items={sources}
       label="Canal de la fuente"
       placeholder="Seleccionar canal"

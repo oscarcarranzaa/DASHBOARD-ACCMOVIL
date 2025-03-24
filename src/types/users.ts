@@ -45,7 +45,7 @@ export const ZUser = z.object({
   username: z.string(),
   gender: z.string().nullable(),
   job: z.string(),
-  role: ZRole.nullable(),
+  role: ZRole.optional().nullable(),
   email: z.string().email(),
   phone: z.string().nullable(),
   avatar: z.string().nullable(),

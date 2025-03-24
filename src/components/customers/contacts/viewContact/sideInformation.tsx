@@ -28,7 +28,7 @@ export default function SideInformationContact({
         timeout: 5000,
         title: succ,
       })
-      router.push('/dash/pipe/contactos')
+      router.push('/dash/clientes/contactos')
     },
     onError: (err) => {
       addToast({

@@ -1,5 +1,5 @@
 'use client'
-import { Pagination } from "@heroui/react"
+import { Pagination } from '@heroui/react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
@@ -26,8 +26,11 @@ export default function PaginationPage({ totalPages, pageName }: TProps) {
     <>
       <div>
         <Pagination
+          showControls
+          showShadow
           onChange={(n) => createPageUrl(n)}
-          variant="bordered"
+          variant="light"
+          color="default"
           total={totalPages}
           page={Math.abs(currentPage)}
         />

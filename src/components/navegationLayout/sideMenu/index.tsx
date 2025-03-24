@@ -12,9 +12,13 @@ import { Tooltip } from '@heroui/react'
 import { verifyAccess } from '@/lib/verifyAccess'
 import useUserInfo from '@/hooks/useUserInfo'
 
-export default function SideMenuContent() {
+type TProps = {
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
   const path = usePathname()
-  const [isOpen, setIsOpen] = useState(true)
   const [openMenu, setOpenMenu] = useState<number | null>(null)
   const { userData } = useUserInfo()
   const toggleMenu = useCallback((index: number) => {
@@ -31,7 +35,7 @@ export default function SideMenuContent() {
 
     if (menuCookie) {
       const value = menuCookie.split('=')[1]
-      setIsOpen(value === 'true')
+      onOpenChange(value === 'true')
     }
   }, [])
 
@@ -42,7 +46,7 @@ export default function SideMenuContent() {
   return (
     <>
       <nav
-        className={`${isOpen ? 'w-16' : ' w-56 overflow-y-scroll'} p-2 pt-5  border-r h-full border-gray-200 dark:border-gray-600  ${style.menuContent}`}
+        className={` p-2 pt-5 col-span-1  border-r h-full border-gray-200 dark:border-gray-600  ${style.menuContent}`}
       >
         <div>
           <Tooltip
@@ -55,7 +59,7 @@ export default function SideMenuContent() {
             <button
               className="p-2 w-full text-start flex items-center gap-2 mb-10 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-300 rounded-md fill-black stroke-black"
               onClick={() => {
-                setIsOpen(!isOpen)
+                onOpenChange(!isOpen)
               }}
             >
               {isOpen ? (
@@ -94,6 +98,8 @@ export default function SideMenuContent() {
                       content={menu.name}
                       placement="right"
                       offset={8}
+                      closeDelay={0}
+                      disableAnimation
                       className="dark:bg-black"
                       isDisabled={!isOpen}
                     >

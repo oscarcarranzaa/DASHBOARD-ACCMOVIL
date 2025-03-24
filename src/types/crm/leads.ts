@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { ZProduct } from '../products'
 import { ZContact } from '../customer'
 import { ZUser } from '../users'
+import { ZPipeline } from './pipeline'
 
 export const ZHistoryLead = z.object({
   id: z.string(),
@@ -21,10 +22,12 @@ export const ZLabel = z.object({
 export const ZLead = z.object({
   id: z.string(),
   title: z.string(),
-  userId: z.string().optional(),
+  userId: z.string().nullable().optional(),
   contactId: z.string().nullable().optional(),
-  labelId: z.string().optional(),
-  status: z.enum(['ARCHIVE', 'PROGRESS', 'ACTIVE', 'DELETED']),
+  labelId: z.string().nullable().optional(),
+  pipelineId: z.string(),
+  stageId: z.string(),
+  status: z.enum(['ACTIVE', 'DELETED', 'ARCHIVE', 'LOST', 'WON']),
   source: z
     .enum([
       'WEB_FORMS',
@@ -38,14 +41,14 @@ export const ZLead = z.object({
     .nullable()
     .optional(),
   expectedCloseDate: z.string().nullable().optional(),
-  value: z.number().optional(),
-  products: z.array(ZProduct),
-  historyLeads: z.array(ZHistoryLead),
+  value: z.number().nullable().optional(),
+  products: z.array(ZProduct).nullable().optional(),
+  historyLeads: z.array(ZHistoryLead).nullable().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
   contact: ZContact,
-  user: ZUser.optional(),
-  label: ZLabel.optional(),
+  user: ZUser.nullable().optional(),
+  label: ZLabel.nullable().optional(),
 })
 export const ZNewLead = ZLead.pick({
   contactId: true,
@@ -53,6 +56,7 @@ export const ZNewLead = ZLead.pick({
   expectedCloseDate: true,
   value: true,
   labelId: true,
+  pipelineId: true,
   source: true,
   userId: true,
 }).merge(
@@ -78,5 +82,16 @@ export const ZNewLead = ZLead.pick({
   })
 )
 
+export const ZAllLeads = z.object({
+  data: z.array(ZLead),
+  totalPages: z.number(),
+  total: z.number(),
+  limit: z.number(),
+  results: z.number(),
+  pipelines: z.array(ZPipeline),
+  pageNumber: z.number(),
+})
+
 export type leadSchema = z.infer<typeof ZLead>
 export type newLeadSchema = z.infer<typeof ZNewLead>
+export type allLeadShema = z.infer<typeof ZAllLeads>

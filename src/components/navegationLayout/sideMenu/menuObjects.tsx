@@ -73,8 +73,8 @@ export const menuItems = [
   {
     name: 'Cliente Potencial',
     icon: <FunnnelSVG size={iconSize} />,
-    urlKey: '/dash/crm/clientes-potenciales',
-    href: '/dash/crm/clientes-potenciales',
+    urlKey: '/dash/embudo',
+    href: '/dash/embudo',
     permissionKeys: [],
   },
   {

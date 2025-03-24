@@ -1,0 +1,26 @@
+.box_content {
+  position: relative;
+  display: inline-block;
+}
+
+.card_tooltip {
+  visibility: hidden;
+  opacity: 0;
+  left: 100%;
+  bottom: 50%;
+  transform: translateY(50%);
+  z-index: 999;
+  position: absolute;
+  transition:
+    opacity 0.1s ease-in-out,
+    visibility 0.1s ease-in-out;
+  pointer-events: none;
+  padding: 30px;
+}
+
+.box_content:hover > .card_tooltip {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 500ms;
+}

@@ -1,0 +1,77 @@
+.stage_selector {
+  display: flex;
+  align-items: center;
+  border: unset;
+  clip-path: polygon(
+    calc(100% - 6px) 0,
+    100% 50%,
+    calc(100% - 6px) 100%,
+    2px 100%,
+    8px 50%,
+    2px 0
+  );
+  border-radius: 0px;
+  height: 30px;
+  width: 100%;
+  min-width: 30px;
+  cursor: pointer;
+  flex-basis: 0;
+  flex-grow: 1;
+  justify-content: center;
+  margin-left: -6px;
+  text-align: center;
+}
+.first_stage_selector {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  border: unset;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 6px) 0,
+    100% 50%,
+    calc(100% - 6px) 100%,
+    0 100%
+  );
+
+  height: 30px;
+  width: 100%;
+  min-width: 30px;
+  cursor: pointer;
+  flex-basis: 0;
+  flex-grow: 1;
+  justify-content: center;
+  margin-left: -6px;
+  text-align: center;
+}
+
+.box_content {
+  position: relative;
+}
+
+.card_tooltip {
+  display: flex;
+  flex-basis: 0;
+  flex-grow: 1;
+  width: auto;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  bottom: 100%;
+  right: 50%;
+  transform: translateX(47%);
+  z-index: 999999;
+  position: absolute;
+  transition:
+    opacity 0.1s ease-in-out,
+    visibility 0.1s ease-in-out;
+  pointer-events: none;
+  padding: 3px;
+}
+
+.box_content:hover > .card_tooltip {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 300ms;
+}

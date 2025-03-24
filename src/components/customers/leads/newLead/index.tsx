@@ -11,36 +11,45 @@ import {
   DatePicker,
   DateValue,
   NumberInput,
+  addToast,
+  ButtonProps,
 } from '@heroui/react'
 import { Plus } from 'lucide-react'
 import SelectSourceLead from './selectSource'
 import ContactInput from '../../contacts/contactInput'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { contactSchema } from '@/types/customer'
 import { newLeadSchema, ZNewLead } from '@/types/crm/leads'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone, parseDate } from '@internationalized/date'
 import { useAuthStore } from '@/store/auth'
+import { useMutation } from '@tanstack/react-query'
+import { addLead } from '@/api/crm'
+import Spinner from '@/components/icons/spinner'
+import SelectPipeline from '../../crm/pipeline/selectPipeline'
 
-export default function NewLead() {
+type TProps = {
+  button?: ButtonProps
+}
+export default function NewLead({ button }: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const thisUser = useAuthStore((state) => state.user)?.id
 
   const initialValues: newLeadSchema = {
     contactId: undefined,
+    pipelineId: '',
     title: '',
     value: 0,
     name: '',
     expectedCloseDate: undefined,
     userId: thisUser,
-    source: 'MANUALLY',
-    email: '',
-    phone: '',
+    source: undefined,
+    email: undefined,
+    phone: undefined,
     isNewContact: true,
   }
   const {
-    register,
     handleSubmit,
     setValue,
     getValues,
@@ -50,6 +59,28 @@ export default function NewLead() {
   } = useForm<newLeadSchema>({
     resolver: zodResolver(ZNewLead),
     defaultValues: initialValues,
+  })
+  const { mutate, isPending } = useMutation({
+    mutationFn: addLead,
+    onSuccess: () => {
+      reset(initialValues)
+      onOpenChange()
+      addToast({
+        color: 'success',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Nuevo cliente potencial agregado',
+      })
+    },
+    onError: (err) => {
+      addToast({
+        color: 'danger',
+        variant: 'bordered',
+        timeout: 5000,
+        title: 'Ocurrió un error',
+        description: err.message,
+      })
+    },
   })
 
   const handleSetContact = (contact: contactSchema) => {
@@ -62,6 +93,7 @@ export default function NewLead() {
       phone: contact.phone ?? undefined,
     })
   }
+
   const handleSetNewContact = (name: string) => {
     reset({
       ...getValues(),
@@ -83,16 +115,17 @@ export default function NewLead() {
     })
   }
   const submitLead = (lead: newLeadSchema) => {
-    console.log(lead)
+    mutate(lead)
   }
+
   useEffect(() => {
     setValue('userId', thisUser)
   }, [thisUser])
-  console.log('render', errors)
+
   return (
     <>
       <div>
-        <Button onPress={onOpen} color="primary">
+        <Button onPress={onOpen} color="primary" {...button}>
           <Plus /> Prospecto
         </Button>
         <Modal
@@ -134,15 +167,13 @@ export default function NewLead() {
                       <Controller
                         control={control}
                         name="value"
-                        render={({
-                          field: { onChange, onBlur, value, ref },
-                        }) => (
+                        render={({ field: { onChange, value, ref } }) => (
                           <NumberInput
                             labelPlacement="outside"
                             onValueChange={onChange}
                             variant="bordered"
                             placeholder="0.00"
-                            value={value}
+                            value={value ?? undefined}
                             aria-label="Valor"
                             minValue={0}
                             errorMessage={errors.value?.message}
@@ -192,6 +223,18 @@ export default function NewLead() {
                       />
                       <Controller
                         control={control}
+                        name="pipelineId"
+                        render={({ field: { onChange, value } }) => (
+                          <SelectPipeline
+                            label="Seleccionar embudo"
+                            placeholder="Embudo"
+                            value={value}
+                            onChange={onChange}
+                          />
+                        )}
+                      />
+                      <Controller
+                        control={control}
                         name="userId"
                         render={({ field: { onChange, value } }) => (
                           <SelectUser
@@ -205,8 +248,8 @@ export default function NewLead() {
                       <Controller
                         control={control}
                         name="source"
-                        render={({ field: { onChange } }) => (
-                          <SelectSourceLead onChange={onChange} />
+                        render={({ field: { onChange, value } }) => (
+                          <SelectSourceLead value={value} onChange={onChange} />
                         )}
                       />
                     </div>
@@ -217,6 +260,8 @@ export default function NewLead() {
                         render={({ field }) => (
                           <Input
                             {...field}
+                            isDisabled={!getValues('isNewContact')}
+                            readOnly={!getValues('isNewContact')}
                             placeholder="example@correo.com"
                             labelPlacement="outside"
                             variant="bordered"
@@ -224,6 +269,11 @@ export default function NewLead() {
                             isInvalid={!!errors.email}
                             type="email"
                             label="Correo electronico"
+                            className={
+                              !getValues('isNewContact')
+                                ? 'cursor-not-allowed'
+                                : ''
+                            }
                           />
                         )}
                       />
@@ -233,6 +283,8 @@ export default function NewLead() {
                         render={({ field }) => (
                           <Input
                             {...field}
+                            readOnly={!getValues('isNewContact')}
+                            isDisabled={!getValues('isNewContact')}
                             placeholder="99990000"
                             labelPlacement="outside"
                             variant="bordered"
@@ -240,6 +292,11 @@ export default function NewLead() {
                             errorMessage={errors.phone?.message}
                             isInvalid={!!errors.phone}
                             label="Teléfono"
+                            className={
+                              !getValues('isNewContact')
+                                ? 'cursor-not-allowed'
+                                : ''
+                            }
                           />
                         )}
                       />
@@ -250,7 +307,7 @@ export default function NewLead() {
                       Cancelar
                     </Button>
                     <Button className=" min-w-32" color="primary" type="submit">
-                      Crear
+                      {isPending ? <Spinner size={20} fill="#fff" /> : 'Crear'}
                     </Button>
                   </ModalFooter>
                 </form>

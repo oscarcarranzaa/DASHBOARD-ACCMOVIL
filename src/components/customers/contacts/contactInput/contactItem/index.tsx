@@ -47,7 +47,7 @@ export default function ContactItem({
           }
         >
           <Link
-            href={`/dash/pipe/contactos/${contact.id}`}
+            href={`/dash/clientes/contactos/${contact.id}`}
             target="_blank"
             className="hover:bg-blue-400 rounded-md w-full h-full flex justify-center items-center"
           >

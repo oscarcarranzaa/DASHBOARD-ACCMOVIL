@@ -15,10 +15,8 @@ export default function DashLayout({
       <ToastProvider />
       <ThemeProvider attribute="class">
         <NavegationLayout>
-          <main className="flex justify-center w-full">
-            <div className=" max-w-[130rem] p-5 2xl:ml-10 2xl:mr-10 w-full">
-              {children}
-            </div>
+          <main className=" flex-none block">
+            <div className="   p-5 container w-full">{children}</div>
           </main>
         </NavegationLayout>
       </ThemeProvider>

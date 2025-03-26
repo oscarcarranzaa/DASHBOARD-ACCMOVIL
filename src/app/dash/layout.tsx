@@ -15,8 +15,10 @@ export default function DashLayout({
       <ToastProvider />
       <ThemeProvider attribute="class">
         <NavegationLayout>
-          <main className=" flex-none block">
-            <div className="   p-5 container w-full">{children}</div>
+          <main className="flex-none block ">
+            <div className="px-5 pt-5 max-w-[1700px] h-full w-full ">
+              {children}
+            </div>
           </main>
         </NavegationLayout>
       </ThemeProvider>

@@ -50,3 +50,4 @@ export const ZNewPipeline = ZPipeline.pick({
 export type newPipelineSchema = z.infer<typeof ZNewPipeline>
 export type pipelineSchema = z.infer<typeof ZPipeline>
 export type getAllPipelineSchema = z.infer<typeof ZGetPipelines>
+export type stageSchema = z.infer<typeof ZStage>

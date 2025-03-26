@@ -1,16 +1,16 @@
-import LeadHeader from '@/components/customers/leads/leadHeader'
-import LeadList from '@/components/customers/leads/leadsList'
-import NewLead from '@/components/customers/leads/newLead'
 import NavegationPages from '@/components/navegationPages'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { cookies } from 'next/headers'
+import LeadDrag from '@/components/customers/leads/leadsDrag'
 
-export default async function Leads() {
+export default async function Leads({
+  params,
+}: {
+  params: Promise<{ funnel: string }>
+}) {
+  const { funnel } = await params
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <NavegationPages text="Clientes potenciales" />
-      <LeadHeader />
+      <LeadDrag pipelineId={funnel} />
     </div>
   )
 }

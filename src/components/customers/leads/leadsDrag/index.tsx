@@ -1,0 +1,57 @@
+'use client'
+
+import { useParams, useRouter } from 'next/navigation'
+import LeadHeader from '../leadHeader'
+import { useQuery } from '@tanstack/react-query'
+import { getAllsLeadsByPipeline } from '@/api/crm'
+import LeadDraggable from './draggable'
+import EmptyPipeline from '../../crm/pipeline/emptyPipeline'
+import { Spinner } from '@heroui/react'
+
+type TProps = {
+  pipelineId: string
+}
+export default function LeadDrag({ pipelineId }: TProps) {
+  const router = useRouter()
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ['leadsFunnel', pipelineId],
+    queryFn: () =>
+      getAllsLeadsByPipeline({
+        page: '1',
+        limit: '100',
+        pipelineId,
+      }),
+    retry: false,
+    refetchOnWindowFocus: false,
+  })
+
+  const handleRouter = (url: string | undefined) => {
+    if (url) {
+      router.push(`/dash/embudo/${url}`)
+    }
+  }
+  console.log(error?.cause)
+  return (
+    <div className="flex flex-col h-full">
+      <div className="mb-6">
+        <LeadHeader isRequired valueKey={pipelineId} onChange={handleRouter} />
+      </div>
+      <div className="h-full max-h-screen relative ">
+        {data && <LeadDraggable data={data} />}
+        {isPending && (
+          <div className="w-full flex  flex-col justify-center mt-40">
+            <Spinner variant="spinner" label="Cargando su embudo..." />
+          </div>
+        )}
+        {error && (
+          <EmptyPipeline
+            title={error.message}
+            type="error"
+            description="Parece que tuvimos un problema en mostrarte el embudo, contacta a soporte para más detalles."
+          />
+        )}
+      </div>
+    </div>
+  )
+}

@@ -241,7 +241,9 @@ export default function LeadTable({
           }
           items={data ?? []}
           loadingState={loadingState}
-          loadingContent={<Spinner label="Cargando..." />}
+          loadingContent={
+            <Spinner variant="spinner" label="Obteniendo datos..." />
+          }
         >
           {(item) => (
             <TableRow

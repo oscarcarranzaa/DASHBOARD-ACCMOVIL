@@ -1,21 +1,31 @@
 'use client'
 
-import { Button, Autocomplete, Tooltip, AutocompleteItem } from '@heroui/react'
+import {
+  Button,
+  Autocomplete,
+  Select,
+  SelectItem,
+  Tooltip,
+  AutocompleteItem,
+} from '@heroui/react'
+import type { Selection } from '@heroui/react'
 import NewLead from '../newLead'
 import Link from 'next/link'
-import { List, Plus } from 'lucide-react'
+import { Bolt, List, Plus, Settings } from 'lucide-react'
 import PipelineSVG from '@/components/icons/pipeline'
 import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { getPipelines } from '@/api/crm'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type TProps = {
   isRequired?: boolean
   onChange?: (url: string | undefined) => void
+  valueKey?: string
 }
-export default function LeadHeader({ isRequired, onChange }: TProps) {
-  const [funnelUrl, setFunnelUrl] = useState('all')
+export default function LeadHeader({ isRequired, valueKey, onChange }: TProps) {
+  const [value, setValue] = useState<string>('')
+  const [funnelUrl, setFunnelUrl] = useState<string | undefined>()
   const { data, isPending } = useQuery({
     queryKey: ['pipelines'],
     queryFn: () => getPipelines(),
@@ -27,13 +37,23 @@ export default function LeadHeader({ isRequired, onChange }: TProps) {
   const getFunnel = params.funnel
 
   const handleFunnelUrl = (url?: string) => {
-    setFunnelUrl(url || 'all')
+    setFunnelUrl(url)
     if (onChange) {
       onChange(url)
     }
   }
+  useEffect(() => {
+    if (data && data.length > 0 && !funnelUrl) {
+      setFunnelUrl(data[0].id)
+    }
+  }, [data, funnelUrl])
+
+  useEffect(() => {
+    setValue(valueKey ?? '')
+  }, [valueKey])
+
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       <div className="flex items-center gap-2">
         <div className="flex">
           <Tooltip content="Lista" placement="bottom">
@@ -50,9 +70,10 @@ export default function LeadHeader({ isRequired, onChange }: TProps) {
           </Tooltip>
           <Tooltip content="Embudo" placement="bottom">
             <Button
+              isDisabled={!funnelUrl}
               isIconOnly
               variant="bordered"
-              href={`/dash/embudo/${funnelUrl}`}
+              href={`/dash/embudo/${funnelUrl ?? ''}`}
               as={Link}
               color={getFunnel ? 'primary' : 'default'}
               className=" rounded-s-none "
@@ -61,31 +82,38 @@ export default function LeadHeader({ isRequired, onChange }: TProps) {
             </Button>
           </Tooltip>
         </div>
+        <Tooltip content="Configuración">
+          <Button isIconOnly variant="bordered">
+            <Bolt />
+          </Button>
+        </Tooltip>
         <NewLead />
       </div>
       <div>
-        <Autocomplete
+        <Select
           label="Embudo"
-          onSelectionChange={(e) => {
-            if (e) {
-              handleFunnelUrl(e.toString())
+          selectedKeys={[value]}
+          onChange={(e) => {
+            const valueKeyFunnel = e.target.value
+            if (!isRequired) {
+              setValue(e.target.value)
+            }
+            if (valueKeyFunnel.length > 0) {
+              if (isRequired) {
+                setValue(e.target.value)
+              }
+              handleFunnelUrl(valueKeyFunnel)
               return
             }
+
             handleFunnelUrl(undefined)
           }}
           isRequired={isRequired}
-          labelPlacement="outside-left"
+          labelPlacement="outside"
           isLoading={isPending}
+          className="min-w-60"
           aria-label={'Embudo'}
-          classNames={{
-            selectorButton: 'text-default-500',
-          }}
-          defaultItems={pipelines}
-          inputProps={{
-            classNames: {
-              input: 'ml-1',
-            },
-          }}
+          items={pipelines}
           listboxProps={{
             hideSelectedIcon: true,
             itemClasses: {
@@ -114,13 +142,13 @@ export default function LeadHeader({ isRequired, onChange }: TProps) {
           variant="bordered"
         >
           {pipelines?.map((item) => (
-            <AutocompleteItem key={item.id} textValue={item.name}>
+            <SelectItem key={item.id} textValue={item.name}>
               <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">{item.name}</div>
               </div>
-            </AutocompleteItem>
+            </SelectItem>
           ))}
-        </Autocomplete>
+        </Select>
       </div>
     </div>
   )

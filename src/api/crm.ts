@@ -1,9 +1,11 @@
 import axiosInstance from '@/lib/axiosClient'
 import {
+  allLeadsByPipelineSchema,
   allLeadShema,
   leadSchema,
   newLeadSchema,
   ZAllLeads,
+  ZAllLeadsByPipeline,
   ZLead,
 } from '@/types/crm/leads'
 import {
@@ -120,7 +122,39 @@ export async function changeStage({ new_stage_id, lead_id }: TChangeStage) {
         cause: error.response.status,
       })
     } else {
-      throw new Error('An unexpected error occurred while get pipelines.')
+      throw new Error('Error al sincronizar con el servidor.')
+    }
+  }
+}
+type TFilterLeadsByPipeline = {
+  pipelineId: string
+  limit: string
+  page: string
+  orderBy?: 'value' | 'title'
+  userId?: string
+  status?: 'ACTIVE' | 'DELETED' | 'ARCHIVE' | 'LOST' | 'WON'
+}
+export async function getAllsLeadsByPipeline({
+  page,
+  limit,
+  status,
+  orderBy,
+  userId,
+  pipelineId,
+}: TFilterLeadsByPipeline) {
+  try {
+    const { data } = await axiosInstance.get<allLeadsByPipelineSchema>(
+      `/admin/leads/${pipelineId}?page=${page}&limit=${limit}${status ? '&status=' + status : ''}${userId ? '&userId=' + status : ''}${orderBy ? '&orderBy=' + orderBy : ''}`
+    )
+    const validData = ZAllLeadsByPipeline.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al obtener los Clientes.')
     }
   }
 }

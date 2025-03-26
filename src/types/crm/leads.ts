@@ -91,7 +91,17 @@ export const ZAllLeads = z.object({
   pipelines: z.array(ZPipeline),
   pageNumber: z.number(),
 })
+export const ZAllLeadsByPipeline = z.object({
+  data: z.array(ZLead),
+  totalPages: z.number(),
+  total: z.number(),
+  limit: z.number(),
+  results: z.number(),
+  pipeline: ZPipeline,
+  pageNumber: z.number(),
+})
 
 export type leadSchema = z.infer<typeof ZLead>
 export type newLeadSchema = z.infer<typeof ZNewLead>
 export type allLeadShema = z.infer<typeof ZAllLeads>
+export type allLeadsByPipelineSchema = z.infer<typeof ZAllLeadsByPipeline>

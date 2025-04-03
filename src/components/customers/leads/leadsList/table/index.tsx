@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@heroui/react'
-import { EllipsisVerticalIcon, MoveRight } from 'lucide-react'
+import { Copy, EllipsisVerticalIcon, MoveRight, Trash } from 'lucide-react'
 import { columns } from './columns'
 import PaginationPage from '@/components/UI/pagination'
 import dayjs from 'dayjs'
@@ -30,6 +30,7 @@ import styles from './style.module.css'
 import formaFromNowDate from '@/utils/formatFromNowDate'
 import NewLead from '../../newLead'
 import PipelineCard from './pipelineCard'
+import DeleteLeadModal from '../../leadActions/deleteModal'
 
 type TProps = {
   leadsData?: allLeadShema
@@ -51,7 +52,7 @@ export default function LeadTable({
           return (
             <div className={styles.box_content}>
               <Link
-                href={`/dash/crm/clientes-potenciales/${lead.id}`}
+                href={`/dash/embudo/${lead.pipelineId}/${lead.id}`}
                 className="hover:underline"
               >
                 {lead.contact.name}
@@ -79,7 +80,21 @@ export default function LeadTable({
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem key="delete">Eliminar</DropdownItem>
+                  <DropdownItem key="copy">
+                    <div className="flex gap-2 items-center ">
+                      <Copy size={16} /> Copiar
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    color="danger"
+                    variant="flat"
+                    closeOnSelect={false}
+                  >
+                    <div className="flex gap-2 items-center ">
+                      <DeleteLeadModal leadId={lead.id} title={lead.title} />
+                    </div>
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
@@ -95,7 +110,7 @@ export default function LeadTable({
         case 'title':
           return (
             <Link
-              href={`/dash/crm/clientes-potenciales/${lead.id}`}
+              href={`/dash/embudo/${lead.pipelineId}/${lead.id}`}
               className="hover:underline"
             >
               {lead.title.length > 0 ? lead.title : '-'}

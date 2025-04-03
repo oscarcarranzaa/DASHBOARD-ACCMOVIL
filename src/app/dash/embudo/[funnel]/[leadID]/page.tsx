@@ -1,9 +1,17 @@
-export default function LeadDetails() {
+import DetailsLead from '@/components/customers/leads/detailsLead'
+import NavegationPages from '@/components/navegationPages'
+
+export default async function LeadDetails({
+  params,
+}: {
+  params: Promise<{ leadID: string }>
+}) {
+  const { leadID } = await params
   return (
     <>
-      <div>
-        <p>Holaa</p>
-      </div>
+      <NavegationPages text="Detalles del cliente potencial" />
+
+      <DetailsLead leadId={leadID} />
     </>
   )
 }

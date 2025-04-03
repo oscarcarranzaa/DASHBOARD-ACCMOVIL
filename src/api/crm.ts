@@ -2,11 +2,13 @@ import axiosInstance from '@/lib/axiosClient'
 import {
   allLeadsByPipelineSchema,
   allLeadShema,
+  getOneLeadShema,
   leadSchema,
   newLeadSchema,
   ZAllLeads,
   ZAllLeadsByPipeline,
   ZLead,
+  ZOneLead,
 } from '@/types/crm/leads'
 import {
   getAllPipelineSchema,
@@ -144,7 +146,7 @@ export async function getAllsLeadsByPipeline({
 }: TFilterLeadsByPipeline) {
   try {
     const { data } = await axiosInstance.get<allLeadsByPipelineSchema>(
-      `/admin/leads/${pipelineId}?page=${page}&limit=${limit}${status ? '&status=' + status : ''}${userId ? '&userId=' + status : ''}${orderBy ? '&orderBy=' + orderBy : ''}`
+      `/admin/leads/pipeline/${pipelineId}?page=${page}&limit=${limit}${status ? '&status=' + status : ''}${userId ? '&userId=' + status : ''}${orderBy ? '&orderBy=' + orderBy : ''}`
     )
     const validData = ZAllLeadsByPipeline.parse(data)
     return validData
@@ -155,6 +157,52 @@ export async function getAllsLeadsByPipeline({
       })
     } else {
       throw new Error('Ocurrió un error al obtener los Clientes.')
+    }
+  }
+}
+export async function getOneLead(id: string) {
+  try {
+    const { data } = await axiosInstance.get<getOneLeadShema>(
+      `/admin/lead/${id}`
+    )
+    const validData = ZOneLead.parse(data)
+    return validData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al obtener este cliente potencial.')
+    }
+  }
+}
+export async function updateLeadField({
+  lead,
+  id,
+}: {
+  id: string
+  lead: {
+    [key: string]: string | number | undefined | null
+  }
+}) {
+  try {
+    const { data } = await axiosInstance.put<getOneLeadShema>(
+      `/admin/lead/fields/${id}`,
+      lead
+    )
+    const validData = ZOneLead.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error(
+        'Error al actualizar los datos de este cliente potencial.'
+      )
     }
   }
 }

@@ -1,5 +1,5 @@
 import Edit from '@/components/icons/edit'
-import { Input } from "@heroui/react"
+import { Input, Spinner } from '@heroui/react'
 import { ReactNode, useState } from 'react'
 import style from './field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
@@ -13,6 +13,8 @@ type EditableFieldProps = {
   label?: string
   error?: string
   startContent?: ReactNode
+  isRequired?: boolean
+  isPending?: boolean
 }
 
 export default function InputField({
@@ -24,6 +26,8 @@ export default function InputField({
   error,
   label = 'Haz clic para editar',
   startContent,
+  isPending,
+  isRequired,
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false)
 
@@ -62,6 +66,8 @@ export default function InputField({
             <div className={`flex items-center ${style.fiel_contaier}`}>
               {isEditing ? (
                 <Input
+                  isRequired={isRequired}
+                  isDisabled={isPending}
                   type={type}
                   value={internalValue}
                   onChange={handleChange}
@@ -93,10 +99,14 @@ export default function InputField({
                     </p>
                   </span>
                   <button
-                    className={`flex stroke-blue-500 ${style.edit_icon_field}`}
+                    className={`flex stroke-blue-500 ${!isPending ? style.edit_icon_field : ''}`}
                     onClick={() => setIsEditing(true)}
                   >
-                    <Edit size={18} />
+                    {isPending ? (
+                      <Spinner variant="dots" size="sm" className="w-4 h-4" />
+                    ) : (
+                      <Edit size={18} />
+                    )}
                   </button>
                 </>
               )}

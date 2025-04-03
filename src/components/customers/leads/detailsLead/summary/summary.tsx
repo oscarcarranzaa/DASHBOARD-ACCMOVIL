@@ -1,30 +1,22 @@
 import { updateContactData } from '@/api/contact'
-import EmailSVG from '@/components/icons/email'
-import PhoneSVG from '@/components/icons/phone'
-import UbicationSVG from '@/components/icons/ubication'
+import { updateLeadField } from '@/api/crm'
 import InputField from '@/components/UI/editableFields/input'
-import {
-  contactSchema,
-  contactSummarySchema,
-  ZContactSummary,
-} from '@/types/customer'
+import NumberInputField from '@/components/UI/editableFields/inputNumber'
+import { leadSchema, leadSummarySchema, ZLeadSummary } from '@/types/crm/leads'
 import { addToast } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { DollarSign, Type } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-export default function ContactSummary({
-  contact,
-}: {
-  contact: contactSchema
-}) {
+export default function LeadSummaryValues({ lead }: { lead: leadSchema }) {
   const [keyActive, setKeyActive] = useState<string | null>(null)
   const queryClient = useQueryClient()
   const defaultValues = {
-    email: contact.email ?? undefined,
-    phone: contact.phone ?? undefined,
-    address: contact.address ?? undefined,
+    title: lead.title,
+    value: lead.value ?? undefined,
+    expectedCloseDate: lead.expectedCloseDate ?? undefined,
   }
   const {
     control,
@@ -34,21 +26,21 @@ export default function ContactSummary({
     clearErrors,
     formState: { errors, dirtyFields },
     getValues,
-  } = useForm<contactSummarySchema>({
-    resolver: zodResolver(ZContactSummary),
+  } = useForm<leadSummarySchema>({
+    resolver: zodResolver(ZLeadSummary),
     defaultValues,
   })
 
   const { mutate, isPending } = useMutation({
-    mutationFn: updateContactData,
+    mutationFn: updateLeadField,
     onSuccess: (updatedContact) => {
+      setKeyActive(null)
       Object.entries(updatedContact).forEach(([key, value]) => {
-        resetField(key as keyof contactSummarySchema, {
+        resetField(key as keyof leadSummarySchema, {
           defaultValue: typeof value === 'string' ? value : undefined,
         })
       })
-      queryClient.invalidateQueries({ queryKey: ['contact', contact.id] })
-      setKeyActive(null)
+      queryClient.invalidateQueries({ queryKey: ['oneLead', lead.id] })
     },
     onError: (err) => {
       setKeyActive(null)
@@ -63,7 +55,7 @@ export default function ContactSummary({
     },
   })
 
-  const handleAutoSubmit = async (fieldName: keyof contactSummarySchema) => {
+  const handleAutoSubmit = async (fieldName: keyof leadSummarySchema) => {
     if (!dirtyFields[fieldName]) {
       clearErrors(fieldName)
       return
@@ -77,65 +69,47 @@ export default function ContactSummary({
         title: 'Advertencia de error',
         description: `Error en los datos [Entrada: ${fieldName}] `,
       })
-
       return
     }
     const value = getValues(fieldName)
     const editField = { [fieldName]: value }
+    mutate({ id: lead.id, lead: editField })
     setKeyActive(fieldName)
-    mutate({ id: contact.id, contact: editField })
   }
   return (
     <>
       <div>
         <Controller
-          name="email"
+          name="title"
           control={control}
           render={({ field }) => (
             <InputField
               isPending={isPending && keyActive === field.name}
-              startContent={<EmailSVG size={24} />}
-              placeholder="example@correo.com"
+              startContent={<Type size={18} />}
+              placeholder="Descripción del Lead"
               value={field.value}
-              type="email"
-              label="Agregar correo"
+              type="text"
+              label="Agregar descripcion"
               onBlur={() => handleAutoSubmit(field.name)}
               onValueChange={(v) => field.onChange(v)}
-              error={errors.email?.message}
+              error={errors.title?.message}
             />
           )}
         />
         <Controller
-          name="phone"
+          name="value"
           control={control}
           render={({ field }) => (
-            <InputField
+            <NumberInputField
               isPending={isPending && keyActive === field.name}
-              startContent={<PhoneSVG size={24} />}
-              placeholder="98158066"
-              value={field.value}
+              startContent={<DollarSign size={18} />}
+              placeholder="599.00"
+              value={field.value ?? undefined}
               type="text"
-              label="Agregar teléfono"
+              label="Valor"
               onBlur={() => handleAutoSubmit(field.name)}
               onValueChange={(v) => field.onChange(v)}
-              error={errors.phone?.message}
-            />
-          )}
-        />
-        <Controller
-          name="address"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              isPending={isPending && keyActive === field.name}
-              startContent={<UbicationSVG size={24} />}
-              placeholder="EJ: Av. 70 NW"
-              type="text"
-              value={field.value}
-              label="Agregar dirección"
-              onBlur={() => handleAutoSubmit(field.name)}
-              onValueChange={(v) => field.onChange(v)}
-              error={errors.address?.message}
+              error={errors.value?.message}
             />
           )}
         />

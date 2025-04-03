@@ -1,0 +1,78 @@
+import { pipelineSchema } from '@/types/crm/pipeline'
+import styles from '../simple/style.module.css'
+import { Button } from '@heroui/react'
+import { MoveRight } from 'lucide-react'
+import Spinner from '@/components/icons/spinner'
+import { useState } from 'react'
+
+type TProps = {
+  pipeline?: pipelineSchema
+  currentStage: string
+  onChange?: (id: string) => void
+  isLoading?: boolean
+}
+
+export default function DetailedPipelineStages({
+  pipeline,
+  currentStage,
+  isLoading,
+  onChange,
+}: TProps) {
+  const [savingStageId, setSavingStageId] = useState('')
+  if (!pipeline) return null
+  const findCurrentStage = pipeline.stages.find((p) => p.id === currentStage)
+  const handleChange = (id: string) => {
+    if (onChange) {
+      onChange(id)
+      setSavingStageId(id)
+    }
+  }
+
+  return (
+    <>
+      <div className={`flex w-full max-w-full flex-grow`}>
+        {pipeline.stages.map((stage, index) => {
+          const activeIndex = pipeline.stages.findIndex(
+            (p) => p.id === currentStage
+          )
+
+          return (
+            <div
+              key={stage.id}
+              className={`flex flex-grow ${styles.box_content}`}
+            >
+              <Button
+                onPress={() => {
+                  if (stage.id === currentStage) return
+                  handleChange(stage.id)
+                }}
+                isDisabled={isLoading}
+                className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${index <= activeIndex ? 'bg-green-600' : ''}`}
+              >
+                <div className=" absolute">
+                  {isLoading && stage.id === savingStageId && (
+                    <Spinner size={18} fill="#fff" />
+                  )}
+                </div>
+              </Button>
+              <div className={styles.card_tooltip}>
+                <div className="bg-gray-50 border dark:bg-zinc-800 dark:border-zinc-700 border-zinc-300 px-2 py-1 rounded-lg shadow-xl ">
+                  <p className="text-xs min-w-full text-center whitespace-nowrap">
+                    {stage.name}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <div className="text-xs mt-2 flex flex-wrap flex-row gap-1  items-center">
+        <p>{pipeline.name}</p>
+        <div className="flex items-center gap-1">
+          <MoveRight size={14} />
+          <p>{findCurrentStage?.name}</p>
+        </div>
+      </div>
+    </>
+  )
+}

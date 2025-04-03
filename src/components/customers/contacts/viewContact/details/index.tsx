@@ -17,7 +17,7 @@ export default function ContactDetails({
 }: {
   contact: contactSchema
 }) {
-  const [expires, setExpires] = useState<DateValue | null>()
+  const [keyActive, setKeyActive] = useState<string | null>(null)
   const queryClient = useQueryClient()
 
   const defaultValues = {
@@ -45,14 +45,10 @@ export default function ContactDetails({
         })
       })
       queryClient.invalidateQueries({ queryKey: ['contact', contact.id] })
-      addToast({
-        color: 'success',
-        variant: 'bordered',
-        timeout: 5000,
-        title: 'Contacto actualizado',
-      })
+      setKeyActive(null)
     },
     onError: (err) => {
+      setKeyActive(null)
       addToast({
         color: 'danger',
         variant: 'bordered',
@@ -79,6 +75,7 @@ export default function ContactDetails({
     }
     const value = getValues(fieldName)
     const editField = { [fieldName]: value }
+    setKeyActive(fieldName)
     mutate({ id: contact.id, contact: editField })
   }
   return (
@@ -89,6 +86,7 @@ export default function ContactDetails({
           control={control}
           render={({ field }) => (
             <InputField
+              isPending={isPending && keyActive === field.name}
               startContent={<p className="text-sm ">Nombre:</p>}
               placeholder="Ej: Juan Jose"
               type="text"
@@ -106,6 +104,7 @@ export default function ContactDetails({
           control={control}
           render={({ field }) => (
             <DatePickerField
+              isPending={isPending && keyActive === field.name}
               label="Nacimiento"
               startContent={<p className="text-sm ">Nacimiento:</p>}
               onValueChange={(e) => field.onChange(e)}

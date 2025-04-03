@@ -1,47 +1,46 @@
 import Edit from '@/components/icons/edit'
-import { DatePicker, DateValue, Spinner } from '@heroui/react'
-import { parseDate, getLocalTimeZone } from '@internationalized/date'
-import { ReactNode, useRef, useState } from 'react'
+import { Input, NumberInput, Spinner } from '@heroui/react'
+import { ReactNode, useState } from 'react'
 import style from '../input/field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
-import dayjs from 'dayjs'
-import useOutsideClick from '@/hooks/useOutSideClick'
 
 type EditableFieldProps = {
-  value?: string
-  onValueChange: (newValue: string | undefined) => void
-  onBlur?: (newValue: string | undefined) => void
+  value?: number
+  onValueChange: (newValue: number | undefined) => void
+  onBlur?: (newValue: number | undefined) => void
+  type?: 'text' | 'number' | 'email'
   placeholder?: string
   label?: string
   error?: string
   startContent?: ReactNode
+  isRequired?: boolean
   isPending?: boolean
 }
 
-export default function DatePickerField({
+export default function NumberInputField({
   value,
   onValueChange,
   onBlur,
+  type = 'text',
+  placeholder,
   error,
   label = 'Haz clic para editar',
   startContent,
   isPending,
+  isRequired,
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false)
-  const [internalValue, setInternalValue] = useState<DateValue | null>(
-    value ? (parseDate(value) as unknown as DateValue) : null
-  )
-  const ref = useRef(null)
-  const handleChange = (e: DateValue) => {
+
+  const [internalValue, setInternalValue] = useState<number | undefined>(value)
+
+  const handleChange = (e: number) => {
     setInternalValue(e)
-    onValueChange(e?.toDate(getLocalTimeZone()).toISOString().split('T')[0])
+    onValueChange(e)
   }
   const handleBlur = () => {
     setIsEditing(false)
     if (onBlur) {
-      onBlur(
-        internalValue?.toDate(getLocalTimeZone()).toISOString().split('T')[0]
-      )
+      onBlur(internalValue)
     }
   }
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -49,7 +48,6 @@ export default function DatePickerField({
       handleBlur()
     }
   }
-  useOutsideClick(ref, () => handleBlur())
   return (
     <>
       <div
@@ -67,24 +65,29 @@ export default function DatePickerField({
           <label>
             <div className={`flex items-center ${style.fiel_contaier}`}>
               {isEditing ? (
-                <div>
-                  <DatePicker
-                    isDisabled={isPending}
-                    ref={ref}
-                    value={internalValue}
-                    showMonthAndYearPickers
-                    onChange={(v) => {
-                      if (!v) return
-                      handleChange(v)
-                    }}
-                    autoFocus
-                    variant="bordered"
-                    errorMessage={error}
-                    aria-label={label}
-                    aria-describedby={error ? 'error-message' : undefined}
-                    onKeyDown={handleKeyDown}
-                  />
-                </div>
+                <NumberInput
+                  size="sm"
+                  isRequired={isRequired}
+                  isDisabled={isPending}
+                  type={type}
+                  value={internalValue}
+                  onValueChange={handleChange}
+                  onBlur={handleBlur}
+                  autoFocus
+                  classNames={{
+                    innerWrapper: ['px-0'],
+                    inputWrapper: ['px-0'],
+                    input: ['px-3'],
+                  }}
+                  className="min-h-10"
+                  labelPlacement="outside"
+                  variant="bordered"
+                  errorMessage={error}
+                  placeholder={placeholder}
+                  aria-label={label}
+                  aria-describedby={error ? 'error-message' : undefined}
+                  onKeyDown={handleKeyDown}
+                />
               ) : (
                 <>
                   <span
@@ -95,15 +98,10 @@ export default function DatePickerField({
                     <p
                       className={`${!error ? 'text-blue-500' : 'text-red-500'} line-clamp-2 text-sm`}
                     >
-                      {internalValue
-                        ? dayjs(
-                            internalValue
-                              .toDate(getLocalTimeZone())
-                              .toISOString()
-                          ).format('DD/MM/YYYY')
-                        : label}
+                      {internalValue || label}
                     </p>
                   </span>
+
                   <button
                     className={`flex stroke-blue-500 ${!isPending ? style.edit_icon_field : ''}`}
                     onClick={() => setIsEditing(true)}

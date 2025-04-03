@@ -4,15 +4,6 @@ import { ZContact } from '../customer'
 import { ZUser } from '../users'
 import { ZPipeline } from './pipeline'
 
-export const ZHistoryLead = z.object({
-  id: z.string(),
-  leadId: z.string(),
-  userId: z.string(),
-  type: z.enum(['status', 'comment', 'file', 'task', 'ubication']),
-  metadata: z.object({}),
-  updatedAt: z.string(),
-  createdAt: z.string(),
-})
 export const ZLabel = z.object({
   id: z.string(),
   name: z.string(),
@@ -43,7 +34,6 @@ export const ZLead = z.object({
   expectedCloseDate: z.string().nullable().optional(),
   value: z.number().nullable().optional(),
   products: z.array(ZProduct).nullable().optional(),
-  historyLeads: z.array(ZHistoryLead).nullable().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
   contact: ZContact,
@@ -101,7 +91,19 @@ export const ZAllLeadsByPipeline = z.object({
   pageNumber: z.number(),
 })
 
+export const ZOneLead = ZLead.omit({
+  products: true,
+  label: true,
+}).merge(z.object({ pipeline: ZPipeline }))
+
+export const ZLeadSummary = ZLead.pick({
+  value: true,
+  expectedCloseDate: true,
+  title: true,
+})
+export type leadSummarySchema = z.infer<typeof ZLeadSummary>
 export type leadSchema = z.infer<typeof ZLead>
 export type newLeadSchema = z.infer<typeof ZNewLead>
 export type allLeadShema = z.infer<typeof ZAllLeads>
 export type allLeadsByPipelineSchema = z.infer<typeof ZAllLeadsByPipeline>
+export type getOneLeadShema = z.infer<typeof ZOneLead>

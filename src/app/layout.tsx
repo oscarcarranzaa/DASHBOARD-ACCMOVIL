@@ -9,7 +9,7 @@ const inter = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'Accmovil Online',
+  title: 'CRM | ACCMOVIL',
   description:
     'Herramienta para el manejo de Ordenes, Productos, Clientes y gestiones de ofertas.',
   openGraph: {

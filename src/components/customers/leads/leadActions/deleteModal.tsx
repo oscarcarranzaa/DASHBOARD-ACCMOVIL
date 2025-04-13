@@ -1,3 +1,8 @@
+'use client'
+
+import { deleteOneLead } from '@/api/crm'
+import Spinner from '@/components/icons/spinner'
+import { allLeadShema } from '@/types/crm/leads'
 import {
   Modal,
   ModalContent,
@@ -6,56 +11,109 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  addToast,
 } from '@heroui/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Trash } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 type TProps = {
   leadId: string
   title: string
 }
 export default function DeleteLeadModal({ leadId, title }: TProps) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const queryClient = useQueryClient()
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('leadPage')) || 1
+  const funnelId = searchParams.get('id')
 
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteOneLead,
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: ['leads'] })
+      const previousLeads = queryClient.getQueryData([
+        'leads',
+        currentPage.toString(),
+        funnelId,
+      ])
+      queryClient.setQueryData(
+        ['leads', currentPage.toString(), funnelId],
+        (oldLead: allLeadShema) => {
+          if (!oldLead) return oldLead
+          return {
+            ...oldLead,
+            data: oldLead.data.filter((lead) => lead.id !== newData),
+          }
+        }
+      )
+      return { previousLeads }
+    },
+    onError: (_err, _newData, context) => {
+      if (context?.previousLeads) {
+        queryClient.setQueryData(
+          ['leads', currentPage.toString(), funnelId],
+          context.previousLeads
+        )
+      }
+      addToast({
+        variant: 'bordered',
+        color: 'danger',
+        title: 'Ocurrió un error',
+        description: _err.message,
+      })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['leads', currentPage.toString()],
+        funnelId,
+      })
+      onClose()
+    },
+  })
+  const handleDeleteLead = () => {
+    mutate(leadId)
+  }
   return (
     <>
-      <button onClick={onOpen}>Open Modal</button>
-      <Modal
-        isDismissable={false}
-        isKeyboardDismissDisabled={true}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
+      <Button
+        variant="light"
+        className="w-full justify-start"
+        color="danger"
+        onPress={onOpen}
       >
+        <Trash size={16} /> Eliminar
+      </Button>
+      <Modal isDismissable isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                <p>
+                  ¿Estás seguro de querer eliminar este cliente potencial{' '}
+                  <span className=" underline">
+                    &quot;
+                    {title}&quot;
+                  </span>
+                  ?
+                </p>
               </ModalHeader>
               <ModalBody>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat
-                  consequat elit dolor adipisicing. Mollit dolor eiusmod sunt ex
-                  incididunt cillum quis. Velit duis sit officia eiusmod Lorem
-                  aliqua enim laboris do dolor eiusmod. Et mollit incididunt
-                  nisi consectetur esse laborum eiusmod pariatur proident Lorem
-                  eiusmod et. Culpa deserunt nostrud ad veniam.
+                <p className="text-sm">
+                  también se elminarán las notas, archivos y documentos
+                  vinculados.
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                <Button color="default" variant="bordered" onPress={onClose}>
+                  Cancelar
                 </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
+                <Button
+                  isDisabled={isPending}
+                  color="danger"
+                  onPress={handleDeleteLead}
+                >
+                  {!isPending ? 'Eliminar' : <Spinner size={18} fill="#fff" />}
                 </Button>
               </ModalFooter>
             </>

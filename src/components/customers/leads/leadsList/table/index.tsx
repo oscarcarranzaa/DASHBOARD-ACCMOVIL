@@ -31,6 +31,7 @@ import formaFromNowDate from '@/utils/formatFromNowDate'
 import NewLead from '../../newLead'
 import PipelineCard from './pipelineCard'
 import DeleteLeadModal from '../../leadActions/deleteModal'
+import DropDown from '@/components/UI/dropDown/dropDown'
 
 type TProps = {
   leadsData?: allLeadShema
@@ -70,33 +71,12 @@ export default function LeadTable({
         case 'actions':
           return (
             <div className="relative flex justify-end items-center gap-2">
-              <Dropdown
-                className="bg-background border-1 border-default-200"
-                shouldBlockScroll={false}
-              >
-                <DropdownTrigger>
-                  <Button isIconOnly radius="full" size="sm" variant="light">
-                    <EllipsisVerticalIcon className="text-default-400" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu>
-                  <DropdownItem key="copy">
-                    <div className="flex gap-2 items-center ">
-                      <Copy size={16} /> Copiar
-                    </div>
-                  </DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    color="danger"
-                    variant="flat"
-                    closeOnSelect={false}
-                  >
-                    <div className="flex gap-2 items-center ">
-                      <DeleteLeadModal leadId={lead.id} title={lead.title} />
-                    </div>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <DropDown label="Acciones">
+                <Button className="w-full justify-start" variant="light">
+                  <Copy size={16} /> Copiar
+                </Button>
+                <DeleteLeadModal leadId={lead.id} title={lead.title} />
+              </DropDown>
             </div>
           )
         case 'previusDate':

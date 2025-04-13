@@ -1,5 +1,4 @@
 import DetailsLead from '@/components/customers/leads/detailsLead'
-import NavegationPages from '@/components/navegationPages'
 
 export default async function LeadDetails({
   params,
@@ -9,9 +8,9 @@ export default async function LeadDetails({
   const { leadID } = await params
   return (
     <>
-      <NavegationPages text="Detalles del cliente potencial" />
-
-      <DetailsLead leadId={leadID} />
+      <div className=" h-screen  flex flex-col ">
+        <DetailsLead leadId={leadID} />
+      </div>
     </>
   )
 }

@@ -1,0 +1,8 @@
+.status_bar_line {
+  height: calc(100% + 15px);
+  width: 2px;
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+}

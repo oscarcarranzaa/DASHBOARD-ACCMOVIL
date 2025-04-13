@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { ZProduct } from '../products'
 import { ZContact } from '../customer'
-import { ZUser } from '../users'
+import { ZUser, ZUserNameData } from '../users'
 import { ZPipeline } from './pipeline'
 
 export const ZLabel = z.object({
@@ -101,6 +101,60 @@ export const ZLeadSummary = ZLead.pick({
   expectedCloseDate: true,
   title: true,
 })
+
+export const ZNote = z.object({
+  id: z.string(),
+  content: z.string(),
+  pinned: z.boolean(),
+  userId: z.string().nullable(),
+  leadId: z.string().nullable(),
+  updatedAt: z.string(),
+  createdAt: z.string(),
+})
+export const ZFile = z.object({
+  id: z.string(),
+  file_size: z.number(),
+  url: z.string(),
+  remote_key: z.string(),
+  name: z.string(),
+  file_name: z.string(),
+  file_type: z.string(),
+  description: z.string().nullable(),
+  userId: z.string().nullable(),
+  leadId: z.string().nullable(),
+  updatedAt: z.string(),
+  createdAt: z.string(),
+})
+export const ZChangeLogs = z.object({
+  id: z.string(),
+  old_value: z.string().nullable(),
+  new_value: z.string().nullable(),
+  field_key: z.enum(['STATUS', 'CREATED', 'USER', 'STAGE']),
+  source: z.string().nullable(),
+  userId: z.string().nullable(),
+  leadId: z.string().nullable(),
+  createdAt: z.string(),
+})
+
+export const ZUserInfoLead = z.object({
+  user: ZUserNameData,
+})
+export const ZChageLogFormatted = ZChangeLogs.merge(
+  z.object({
+    old_value_formatted: z.string().nullable().optional(),
+    new_value_formatted: z.string().nullable().optional(),
+  })
+)
+export const ZHistoryLeads = z.object({
+  id: z.string(),
+  notes: z.array(ZNote.merge(ZUserInfoLead)).optional(),
+  file: z.array(ZFile.merge(ZUserInfoLead)).optional(),
+  changeLogs: z.array(ZChageLogFormatted.merge(ZUserInfoLead)).optional(),
+})
+
+export type changelogSchema = z.infer<typeof ZChangeLogs>
+export type historyLeadSchema = z.infer<typeof ZHistoryLeads>
+export type noteSchema = z.infer<typeof ZNote>
 export type leadSummarySchema = z.infer<typeof ZLeadSummary>
 export type leadSchema = z.infer<typeof ZLead>
 export type newLeadSchema = z.infer<typeof ZNewLead>

@@ -5,8 +5,8 @@ const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -16,11 +16,30 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       transitionProperty: {
-        height: ' 0.3s ease',
+        height: 'height',
       },
+      typography: () => ({
+        DEFAULT: {
+          css: {
+            p: {
+              marginTop: '0.3em',
+              marginBottom: '0.3em',
+            },
+          },
+        },
+        invert: {
+          css: {
+            p: {
+              marginTop: '0.3em',
+              marginBottom: '0.3em',
+            },
+          },
+        },
+      }),
     },
   },
-  darkMode: 'selector',
+  darkMode: 'class',
   plugins: [heroui(), require('@tailwindcss/typography')],
 }
+
 export default config

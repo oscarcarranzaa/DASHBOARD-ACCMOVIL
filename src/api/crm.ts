@@ -3,11 +3,15 @@ import {
   allLeadsByPipelineSchema,
   allLeadShema,
   getOneLeadShema,
+  historyLeadSchema,
   leadSchema,
   newLeadSchema,
+  noteSchema,
   ZAllLeads,
   ZAllLeadsByPipeline,
+  ZHistoryLeads,
   ZLead,
+  ZNote,
   ZOneLead,
 } from '@/types/crm/leads'
 import {
@@ -204,5 +208,80 @@ export async function updateLeadField({
         'Error al actualizar los datos de este cliente potencial.'
       )
     }
+  }
+}
+export async function deleteOneLead(id: string) {
+  try {
+    const { data } = await axiosInstance.delete(`/admin/lead/${id}`)
+
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al eliminar este cliente potencial.')
+    }
+  }
+}
+type TLeadAddNote = {
+  leadId: string
+  note: string
+}
+export async function leadAddNote({ leadId, note }: TLeadAddNote) {
+  try {
+    const { data } = await axiosInstance.post<noteSchema>(
+      `/admin/lead/${leadId}/note`,
+      { note }
+    )
+    const validData = ZNote.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrio un error al agregar la nota')
+    }
+  }
+}
+type THistoryLead = {
+  leadId: string
+  changeLogs?: boolean
+  file?: boolean
+  notes?: boolean
+}
+export async function getLeadHistory({
+  leadId,
+  changeLogs,
+  file,
+  notes,
+}: THistoryLead) {
+  try {
+    const params = new URLSearchParams()
+
+    if (changeLogs) params.append('changeLogs', 'true')
+    if (file) params.append('file', 'true')
+    if (notes) params.append('notes', 'true')
+
+    const query = params.toString()
+    const url = `/admin/lead/fill/${leadId}${query ? '?' + query : ''}`
+
+    const { data } = await axiosInstance.get<historyLeadSchema>(url)
+    return ZHistoryLeads.parse(data)
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      const status = error.response.status
+      const msg =
+        error.response.data?.response?.msg || 'Error desconocido del servidor'
+
+      throw new Error(msg, { cause: status })
+    }
+
+    throw new Error('Ocurrió un error al obtener el historial del lead')
   }
 }

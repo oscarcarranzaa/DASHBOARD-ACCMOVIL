@@ -24,7 +24,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone, parseDate } from '@internationalized/date'
 import { useAuthStore } from '@/store/auth'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addLead } from '@/api/crm'
 import Spinner from '@/components/icons/spinner'
 import SelectPipeline from '../../crm/pipeline/selectPipeline'
@@ -35,6 +35,7 @@ type TProps = {
 export default function NewLead({ button }: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const thisUser = useAuthStore((state) => state.user)?.id
+  const queryClient = useQueryClient()
 
   const initialValues: newLeadSchema = {
     contactId: undefined,
@@ -71,6 +72,7 @@ export default function NewLead({ button }: TProps) {
         timeout: 5000,
         title: 'Nuevo cliente potencial agregado',
       })
+      queryClient.invalidateQueries({ queryKey: ['lead'] })
     },
     onError: (err) => {
       addToast({

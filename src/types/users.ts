@@ -11,6 +11,12 @@ export const ZAddress = z.object({
   city: z.string(),
   state: z.string(),
 })
+export const ZUserNameData = z.object({
+  id: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  avatar: z.string().nullable(),
+})
 
 export const ZRole = z.object({
   id: z.string(),

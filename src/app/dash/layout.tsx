@@ -3,7 +3,7 @@
 import { ThemeProvider } from 'next-themes'
 import { HeroUIProvider } from '@heroui/react'
 import NavegationLayout from '@/components/navegationLayout'
-import { ToastProvider } from '@heroui/toast'
+import { ToastProvider } from '@heroui/react'
 
 export default function DashLayout({
   children,

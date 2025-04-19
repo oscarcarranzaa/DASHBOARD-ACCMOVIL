@@ -1,5 +1,6 @@
 import ViewContact from '@/components/customers/contacts/viewContact'
 import NavegationPages from '@/components/navegationPages'
+
 export default async function ContactView({
   params,
 }: {

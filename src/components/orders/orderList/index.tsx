@@ -15,19 +15,16 @@ import {
   Avatar,
   AvatarGroup,
   Badge,
-} from "@heroui/react"
+} from '@heroui/react'
 import { orderRows } from './rows'
 import { useSearchParams } from 'next/navigation'
 import { orderCellSchema, orderListSchema } from '@/types/order'
 import { CustomerProfileSVG } from '@/components/icons/customerProfile'
 import formaFromNowDate from '@/utils/formatFromNowDate'
 import Link from 'next/link'
+import { useQuery } from '@tanstack/react-query'
+import { getAllsOrder } from '@/api/order'
 
-interface IProps {
-  data?: orderListSchema
-  rows: number
-  isPending: boolean
-}
 const statusColorMap: Record<string, ChipProps['color']> = {
   completed: 'success',
   cancelled: 'default',
@@ -51,10 +48,24 @@ const paidStatus: Record<string, string> = {
   CANCELLED: 'Pago cancelado',
   REFUND: 'Pago reembolsado',
 }
-export default function OrderList({ data, rows, isPending }: IProps) {
+
+const ROWS = 15
+export default function OrderList() {
   const [totalPages, setTotalPages] = useState(0)
-  const params = useSearchParams()
-  const search = params.get('search') || ''
+
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('p')) || 1
+  const search = searchParams.get('search') || ''
+
+  const { data, error, isPending } = useQuery({
+    queryKey: ['order', currentPage.toString(), search],
+    queryFn: () =>
+      getAllsOrder({
+        page: currentPage.toString(),
+        limit: ROWS.toString(),
+        q: search,
+      }),
+  })
 
   const getData = data ? data.data : []
 
@@ -178,7 +189,7 @@ export default function OrderList({ data, rows, isPending }: IProps) {
     <>
       <p className="text-sm text-zinc-500 ">
         {data?.total
-          ? `Mostrando ${rows >= data.results ? data.results : rows} de ${data.total} ordenes`
+          ? `Mostrando ${ROWS >= data.results ? data.results : ROWS} de ${data.total} ordenes`
           : ''}
         {isPending && 'Cargando...'}
         {!isPending && data?.data.length === 0 && search ? (

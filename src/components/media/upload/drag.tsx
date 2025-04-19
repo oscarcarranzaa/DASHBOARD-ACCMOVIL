@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import DragFiles from '@/components/media/upload/dragFIles'
-import { SetStateAction, useEffect, useRef, useState } from 'react'
+import { SetStateAction, Suspense, useEffect, useRef, useState } from 'react'
 import axiosInstance from '@/lib/axiosClient'
 import ContentImages from '../contentImages'
 import style from './style.module.css'
@@ -192,11 +192,13 @@ export default function DragMedia({
         <DragFiles />
       </div>
       <div className=" flex justify-between dark:fill-white px-3 mb-3 pt-2">
-        <Search
-          searchName="searchMedia"
-          pageName="pageMedia"
-          placeHolder="Buscar medio..."
-        />
+        <Suspense>
+          <Search
+            searchName="searchMedia"
+            pageName="pageMedia"
+            placeHolder="Buscar medio..."
+          />
+        </Suspense>
 
         <input
           type="file"
@@ -266,7 +268,9 @@ export default function DragMedia({
       </div>
       <div className="mt-10 flex justify-center mb-20">
         {totalPageDefine > 0 && (
-          <PaginationPage totalPages={totalPageDefine} pageName="pageMedia" />
+          <Suspense>
+            <PaginationPage totalPages={totalPageDefine} pageName="pageMedia" />
+          </Suspense>
         )}
       </div>
     </div>

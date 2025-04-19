@@ -1,11 +1,5 @@
 import AccountInformation from '@/components/users/profile/accountInformation'
 
-const PROFILE_MENU = [
-  {
-    name: 'General',
-    href: '/dash/account',
-  },
-]
 export default function AccountSetting() {
   return (
     <>

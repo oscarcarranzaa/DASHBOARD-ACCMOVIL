@@ -17,16 +17,14 @@ import {
 import { contactRows } from './rows'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { contactSchema, getAllContactSchema } from '@/types/customer'
+import { contactSchema } from '@/types/customer'
 import formaFromNowDate from '@/utils/formatFromNowDate'
 import EmailSVG from '@/components/icons/email'
 import PhoneSVG from '@/components/icons/phone'
+import { useQuery } from '@tanstack/react-query'
+import { getAllsContacts } from '@/api/contact'
+import ErrorsPages from '@/components/errorsPages'
 
-interface IProps {
-  data?: getAllContactSchema
-  rows: number
-  isPending: boolean
-}
 const statusColorMap: Record<string, ChipProps['color']> = {
   SUBSCRIBED: 'success',
   UNSUBSCRIBED: 'warning',
@@ -37,10 +35,25 @@ const statusContactMap = {
   UNSUBSCRIBED: 'DE BAJA',
   BOUNCED: 'REBOTADO',
 }
-export default function ContactList({ data, rows, isPending }: IProps) {
+const ROWS = 20
+export default function ContactList() {
   const [totalPages, setTotalPages] = useState(0)
-  const params = useSearchParams()
-  const search = params.get('search') || ''
+
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('p')) || 1
+  const search = searchParams.get('search') || ''
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ['contact', currentPage.toString(), search],
+    queryFn: () =>
+      getAllsContacts({
+        page: currentPage.toString(),
+        limit: ROWS.toString(),
+        query: search,
+      }),
+    refetchOnWindowFocus: false,
+    retry: false,
+  })
 
   const getData = data ? data.data : []
   const renderCell = useCallback(
@@ -137,11 +150,13 @@ export default function ContactList({ data, rows, isPending }: IProps) {
     }),
     []
   )
+  if (error)
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
   return (
     <>
       <p className="text-sm text-zinc-500 ">
         {data?.total
-          ? `Mostrando ${rows >= data.results ? data.results : rows} de ${data.total} contactos`
+          ? `Mostrando ${ROWS >= data.results ? data.results : ROWS} de ${data.total} contactos`
           : ''}
         {isPending && 'Cargando...'}
         {!isPending && data?.data.length === 0 && search ? (

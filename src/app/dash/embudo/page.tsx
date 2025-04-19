@@ -1,4 +1,3 @@
-import LeadHeader from '@/components/customers/leads/leadHeader'
 import LeadList from '@/components/customers/leads/leadsList'
 import NavegationPages from '@/components/navegationPages'
 

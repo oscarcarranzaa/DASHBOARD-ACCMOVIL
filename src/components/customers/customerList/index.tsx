@@ -18,6 +18,9 @@ import Link from 'next/link'
 import VerifiedSVG from '@/components/icons/verified'
 import { useSearchParams } from 'next/navigation'
 import { customerSchema, getAllCustomerSchema } from '@/types/customer'
+import ErrorsPages from '@/components/errorsPages'
+import { useQuery } from '@tanstack/react-query'
+import { getAllCustomer } from '@/api/customer'
 
 interface IProps {
   data?: getAllCustomerSchema
@@ -29,10 +32,21 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   suspended: 'default',
   disabled: 'danger',
 }
-export default function CustomerList({ data, rows, isPending }: IProps) {
+
+const rows = 20
+export default function CustomerList() {
   const [totalPages, setTotalPages] = useState(0)
-  const params = useSearchParams()
-  const search = params.get('search') || ''
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('p')) || 1
+  const search = searchParams.get('search') || ''
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ['customer', currentPage.toString(), search],
+    queryFn: () =>
+      getAllCustomer(currentPage.toString(), rows.toString(), search),
+    refetchOnWindowFocus: false,
+    retry: false,
+  })
 
   const getData = data ? data.data : []
   const renderCell = useCallback(
@@ -105,6 +119,8 @@ export default function CustomerList({ data, rows, isPending }: IProps) {
       : 'Algo salió mal :('
 
   const loadingState = isPending ? 'loading' : 'idle'
+  if (error)
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
   return (
     <>
       <p className="text-sm text-zinc-500 ">

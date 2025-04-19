@@ -1,4 +1,3 @@
-'use client'
 import Media from '@/components/media'
 import NavegationPages from '@/components/navegationPages'
 

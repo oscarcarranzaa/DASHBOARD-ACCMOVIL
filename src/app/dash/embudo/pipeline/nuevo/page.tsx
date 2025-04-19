@@ -1,4 +1,3 @@
-'use client'
 import PipelineEditor from '@/components/customers/crm/pipeline/editor'
 import NavegationPages from '@/components/navegationPages'
 

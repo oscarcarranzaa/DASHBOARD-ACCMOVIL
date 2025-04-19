@@ -14,28 +14,34 @@ import {
   ChipProps,
   Chip,
   User,
-} from "@heroui/react"
+} from '@heroui/react'
 import { userRows } from './rows'
 import { UserSchema } from '@/types/users'
 import Link from 'next/link'
-import VerifiedSVG from '@/components/icons/verified'
 import { useSearchParams } from 'next/navigation'
+import { getAllUsers } from '@/api/users'
+import { useQuery } from '@tanstack/react-query'
+import ErrorsPages from '@/components/errorsPages'
 
-interface IProps {
-  data?: AllUsersSchema
-  rows: number
-  isPending: boolean
-}
 const statusColorMap: Record<string, ChipProps['color']> = {
   ACTIVE: 'success',
   INACTIVE: 'default',
   SUSPENDED: 'danger',
   TERMINATED: 'warning',
 }
-export default function UserList({ data, rows, isPending }: IProps) {
+const rows = 20
+export default function UserList() {
   const [totalPages, setTotalPages] = useState(0)
-  const params = useSearchParams()
-  const search = params.get('search') || ''
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('p')) || 1
+  const search = searchParams.get('search') || ''
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ['users', currentPage.toString(), search],
+    queryFn: () => getAllUsers(currentPage.toString(), rows.toString(), search),
+    refetchOnWindowFocus: false,
+    retry: false,
+  })
 
   const getData = data ? data.data : []
   const renderCell = useCallback((user: UserSchema, columnKey: React.Key) => {
@@ -98,7 +104,8 @@ export default function UserList({ data, rows, isPending }: IProps) {
     : data.data.length === 0
       ? 'No hay resultados de búsqueda.'
       : 'Algo salió mal :('
-
+  if (error)
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
   const loadingState = isPending ? 'loading' : 'idle'
   return (
     <>

@@ -1,3 +1,5 @@
+'use client'
+
 import { createUser, getAllRoles } from '@/api/users'
 import EyeSVG from '@/components/icons/eye'
 import EyeInvisibleSVG from '@/components/icons/eyeInvisible'

@@ -1,3 +1,4 @@
+'use client'
 import { useAuthStore } from '@/store/auth'
 import api from './axios'
 import { decodeJwt } from 'jose'

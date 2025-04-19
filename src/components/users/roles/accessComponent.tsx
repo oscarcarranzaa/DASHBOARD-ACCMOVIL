@@ -1,3 +1,4 @@
+'use client'
 import { verifyAccess } from '@/lib/verifyAccess'
 import { useAuthStore } from '@/store/auth'
 

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { ZProduct } from '../products'
 import { ZContact } from '../customer'
-import { ZUser, ZUserNameData } from '../users'
+import { ZPreviewUser, ZUser, ZUserNameData } from '../users'
 import { ZPipeline } from './pipeline'
 
 export const ZLabel = z.object({
@@ -13,7 +13,8 @@ export const ZLabel = z.object({
 export const ZLead = z.object({
   id: z.string(),
   title: z.string(),
-  userId: z.string().nullable().optional(),
+  userId: z.string(),
+  assignedToId: z.string().nullable().optional(),
   contactId: z.string().nullable().optional(),
   labelId: z.string().nullable().optional(),
   pipelineId: z.string(),
@@ -37,7 +38,8 @@ export const ZLead = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
   contact: ZContact,
-  user: ZUser.nullable().optional(),
+  assignedTo: ZPreviewUser.nullable().optional(),
+  user: ZUser,
   label: ZLabel.nullable().optional(),
 })
 export const ZNewLead = ZLead.pick({
@@ -48,7 +50,7 @@ export const ZNewLead = ZLead.pick({
   labelId: true,
   pipelineId: true,
   source: true,
-  userId: true,
+  assignedToId: true,
 }).merge(
   z.object({
     name: z.string().min(2, 'Nombre muy corto'),
@@ -91,10 +93,21 @@ export const ZAllLeadsByPipeline = z.object({
   pageNumber: z.number(),
 })
 
+export const ZStageHistory = z.object({
+  stageId: z.string(),
+  totalTimeSpent: z.number(),
+  exitedAt: z.string().optional().nullable(),
+  enteredAt: z.string(),
+})
 export const ZOneLead = ZLead.omit({
   products: true,
   label: true,
-}).merge(z.object({ pipeline: ZPipeline }))
+}).merge(
+  z.object({
+    pipeline: ZPipeline,
+    leadStageHistory: z.array(ZStageHistory).nullable(),
+  })
+)
 
 export const ZLeadSummary = ZLead.pick({
   value: true,
@@ -152,6 +165,7 @@ export const ZHistoryLeads = z.object({
   changeLogs: z.array(ZChageLogFormatted.merge(ZUserInfoLead)).optional(),
 })
 
+export type stageHistorySchema = z.infer<typeof ZStageHistory>
 export type changelogSchema = z.infer<typeof ZChangeLogs>
 export type historyLeadSchema = z.infer<typeof ZHistoryLeads>
 export type noteSchema = z.infer<typeof ZNote>

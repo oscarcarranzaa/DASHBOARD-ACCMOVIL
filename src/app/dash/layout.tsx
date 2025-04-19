@@ -12,7 +12,6 @@ export default function DashLayout({
 }>) {
   return (
     <HeroUIProvider locale="es-ES">
-      <ToastProvider />
       <ThemeProvider attribute="class">
         <NavegationLayout>
           <main className="flex-none block ">
@@ -22,6 +21,7 @@ export default function DashLayout({
           </main>
         </NavegationLayout>
       </ThemeProvider>
+      <ToastProvider />
     </HeroUIProvider>
   )
 }

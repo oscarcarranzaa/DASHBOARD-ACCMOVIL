@@ -22,8 +22,8 @@ export default function LeadDrag({ pipelineId }: TProps) {
         limit: '100',
         pipelineId,
       }),
-    retry: false,
-    refetchOnWindowFocus: false,
+    retry: 2,
+    refetchOnWindowFocus: true,
   })
 
   const handleRouter = (url: string | undefined) => {
@@ -31,7 +31,7 @@ export default function LeadDrag({ pipelineId }: TProps) {
       router.push(`/dash/embudo/${url}`)
     }
   }
-  console.log(error?.cause)
+
   return (
     <div className="flex flex-col h-full">
       <div className="mb-6">

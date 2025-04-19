@@ -23,10 +23,10 @@ export default function LeadList() {
     queryFn: () =>
       getAllsLeads({
         page: currentPage.toString(),
-        limit: '20',
+        limit: '50',
         pipelineId: seletedFunnel,
       }),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   })
   const createPageUrl = (funnelId: string | undefined) => {
     if (!funnelId) {

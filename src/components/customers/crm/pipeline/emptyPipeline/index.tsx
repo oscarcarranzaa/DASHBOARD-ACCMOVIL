@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import FunnnelSVG from '@/components/icons/funnel'
 import { Button } from '@heroui/react'
 import { PlusCircle } from 'lucide-react'
@@ -12,7 +13,7 @@ export default function EmptyPipeline({ type, title, description }: TProps) {
   return (
     <>
       <div className="mt-20 flex justify-center items-center flex-col">
-        <p className="text-2xl font-semibold">{title}</p>
+        <p className="text-2xl font-semibold text-danger">{title}</p>
         <p className=" text-sm mt-2 opacity-70 max-w-2xl text-center">
           {description}
         </p>
@@ -23,7 +24,7 @@ export default function EmptyPipeline({ type, title, description }: TProps) {
                 ? '/static/add_funnel.webp'
                 : '/static/funnel_404.webp'
             }
-            alt={`Imagen de ${title}`}
+            alt={title}
           />
         </div>
         <div className="mt-10">

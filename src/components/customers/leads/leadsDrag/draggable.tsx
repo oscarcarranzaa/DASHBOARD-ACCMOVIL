@@ -1,6 +1,6 @@
 'use client'
 
-import { allLeadsByPipelineSchema } from '@/types/crm/leads'
+import { allLeadsByPipelineSchema, leadSchema } from '@/types/crm/leads'
 import DropLead from './dropLead'
 import {
   DndContext,
@@ -12,7 +12,8 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { changeStage } from '@/api/crm'
 import { addToast } from '@heroui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { socket } from '@/lib/socket'
 
 type TProps = {
   data: allLeadsByPipelineSchema
@@ -62,7 +63,34 @@ export default function LeadDraggable({ data }: TProps) {
       })
     },
   })
+  useEffect(() => {
+    const handleStageChanged = (data: {
+      lead: leadSchema
+      newStageId: string
+    }) => {
+      queryClient.setQueryData(
+        queryKey,
+        (oldData: allLeadsByPipelineSchema) => {
+          if (!oldData) return oldData
 
+          return {
+            ...oldData,
+            data: oldData.data.map((lead) =>
+              lead.id === data.lead.id
+                ? { ...lead, stageId: data.newStageId }
+                : lead
+            ),
+          }
+        }
+      )
+    }
+
+    socket.on('lead:stageChanged', handleStageChanged)
+
+    return () => {
+      socket.off('lead:stageChanged', handleStageChanged)
+    }
+  }, [queryClient])
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   )

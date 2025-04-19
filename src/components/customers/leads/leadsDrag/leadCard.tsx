@@ -42,9 +42,11 @@ export default function LeadCard({
     >
       <Link
         href={`/dash/embudo/${pipelineId}/${id}`}
-        className={`w-full ${isDragging ? 'pointer-events-none' : ''} ${isPending ? 'opacity-60' : ''}`}
+        className={`w-full  ${isDragging ? 'pointer-events-none' : ''} ${isPending ? 'opacity-60' : ''}`}
       >
-        <p className=" font-medium text-base">{title}</p>
+        <p className=" font-medium text-base max-w-96 break-words line-clamp-3">
+          {title}
+        </p>
         <p className="mt-1 opacity-70">{contactName}</p>
 
         <div className="flex gap-2 items-center justify-between">

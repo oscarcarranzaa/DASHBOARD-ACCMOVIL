@@ -4,17 +4,21 @@ import { Button } from '@heroui/react'
 import { MoveRight } from 'lucide-react'
 import Spinner from '@/components/icons/spinner'
 import { useState } from 'react'
+import { stageHistorySchema } from '@/types/crm/leads'
+import TimerStage from './timerStage'
 
 type TProps = {
   pipeline?: pipelineSchema
   currentStage: string
   onChange?: (id: string) => void
   isLoading?: boolean
+  stageHistory: stageHistorySchema[] | null
 }
 
 export default function DetailedPipelineStages({
   pipeline,
   currentStage,
+  stageHistory,
   isLoading,
   onChange,
 }: TProps) {
@@ -27,6 +31,10 @@ export default function DetailedPipelineStages({
       setSavingStageId(id)
     }
   }
+
+  const findHistoryStage = stageHistory?.find(
+    (idx) => idx.stageId === findCurrentStage?.id
+  )
 
   return (
     <>
@@ -71,6 +79,14 @@ export default function DetailedPipelineStages({
         <div className="flex items-center gap-1">
           <MoveRight size={14} />
           <p>{findCurrentStage?.name}</p>
+          <p>•</p>
+          <p>Tiempo: </p>
+          {findHistoryStage && (
+            <TimerStage
+              initDate={findHistoryStage.enteredAt}
+              totalTimeSpent={findHistoryStage.totalTimeSpent}
+            />
+          )}
         </div>
       </div>
     </>

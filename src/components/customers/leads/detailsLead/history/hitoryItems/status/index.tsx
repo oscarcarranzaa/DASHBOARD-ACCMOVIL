@@ -1,6 +1,5 @@
 import { changelogSchema } from '@/types/crm/leads'
-import dayjs from 'dayjs'
-import { ArrowBigLeft, MoveRight } from 'lucide-react'
+import { MoveRight } from 'lucide-react'
 
 type TProps = {
   oldValue?: string | null
@@ -16,11 +15,11 @@ const logKey: Record<changelogSchema['field_key'], string> = {
 export default function StatusHistory({ oldValue, newValue, type }: TProps) {
   return (
     <div>
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center ">
         <div className="flex gap-1">
           <p className="font-medium "> {logKey[type]}:</p> <p>{oldValue}</p>
         </div>
-        {oldValue && newValue ? <MoveRight size={18} /> : null}
+        {oldValue && newValue ? <MoveRight size={16} /> : null}
         <p> {newValue}</p>
       </div>
     </div>

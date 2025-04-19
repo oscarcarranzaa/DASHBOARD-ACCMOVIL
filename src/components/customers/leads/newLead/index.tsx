@@ -44,7 +44,7 @@ export default function NewLead({ button }: TProps) {
     value: 0,
     name: '',
     expectedCloseDate: undefined,
-    userId: thisUser,
+    assignedToId: thisUser,
     source: undefined,
     email: undefined,
     phone: undefined,
@@ -72,7 +72,7 @@ export default function NewLead({ button }: TProps) {
         timeout: 5000,
         title: 'Nuevo cliente potencial agregado',
       })
-      queryClient.invalidateQueries({ queryKey: ['lead'] })
+      queryClient.invalidateQueries({ queryKey: ['leads'] })
     },
     onError: (err) => {
       addToast({
@@ -121,14 +121,14 @@ export default function NewLead({ button }: TProps) {
   }
 
   useEffect(() => {
-    setValue('userId', thisUser)
+    setValue('assignedToId', thisUser)
   }, [thisUser])
 
   return (
     <>
       <div>
         <Button onPress={onOpen} color="primary" {...button}>
-          <Plus /> Prospecto
+          <Plus /> Cliente
         </Button>
         <Modal
           backdrop="opaque"
@@ -141,7 +141,7 @@ export default function NewLead({ button }: TProps) {
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader>Añadir prospecto</ModalHeader>
+                <ModalHeader>Añadir cliente potencial</ModalHeader>
                 <form onSubmit={handleSubmit(submitLead)}>
                   <div className=" grid grid-cols-2">
                     <div className="px-3 flex flex-col gap-4">
@@ -237,11 +237,11 @@ export default function NewLead({ button }: TProps) {
                       />
                       <Controller
                         control={control}
-                        name="userId"
+                        name="assignedToId"
                         render={({ field: { onChange, value } }) => (
                           <SelectUser
-                            label="Seleccionar propietario"
-                            placeholder="Buscar propietario"
+                            label="Asingnar propietario"
+                            placeholder="Buscar"
                             value={value}
                             onChange={onChange}
                           />

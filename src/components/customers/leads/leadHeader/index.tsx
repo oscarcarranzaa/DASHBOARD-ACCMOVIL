@@ -83,7 +83,12 @@ export default function LeadHeader({ isRequired, valueKey, onChange }: TProps) {
           </Tooltip>
         </div>
         <Tooltip content="Configuración">
-          <Button isIconOnly variant="bordered">
+          <Button
+            as={Link}
+            href="/dash/embudo/ajustes"
+            isIconOnly
+            variant="bordered"
+          >
             <Bolt />
           </Button>
         </Tooltip>

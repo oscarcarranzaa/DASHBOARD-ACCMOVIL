@@ -40,7 +40,6 @@ export default function DropLead({
             className="flex gap-1 items-center text-green-600 "
             title="Total"
           >
-            <DollarSign size={16} />
             <p className="text-sm ">
               {totalValue.toLocaleString('es-HN', {
                 style: 'currency',

@@ -7,7 +7,6 @@ import StatusHistory from './hitoryItems/status'
 import FileHistory from './hitoryItems/file'
 import HistoryTime from './hitoryItems/time'
 import { Activity, File, RefreshCcw } from 'lucide-react'
-import styles from './style.module.css'
 import LeadStatusBar from './statusBar'
 import { Avatar, Button } from '@heroui/react'
 import { useState } from 'react'
@@ -15,10 +14,11 @@ import SkeletonHistory from './skeleton'
 
 type TProps = {
   leadId: string
+  hiddenButtons?: boolean
 }
 type TFilter = 'history' | 'logs' | 'files' | 'notes'
 
-export default function LeadHistory({ leadId }: TProps) {
+export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
   const [filter, setFilter] = useState<TFilter>('history')
 
   const include = (name: TFilter) => filter === name || filter === 'history'
@@ -67,7 +67,9 @@ export default function LeadHistory({ leadId }: TProps) {
   ]
   return (
     <>
-      <div className="mt-5 flex justify-between items-center">
+      <div
+        className={`mt-5 flex justify-between items-center ${hiddenButtons ? 'hidden' : ''}`}
+      >
         <div className="flex">
           {ButtonsNav.map((btn) => {
             return (
@@ -76,6 +78,7 @@ export default function LeadHistory({ leadId }: TProps) {
                 variant="flat"
                 color={filter === btn.key ? 'primary' : 'default'}
                 size="sm"
+                isDisabled={isPending}
                 radius="none"
                 onPress={() => setFilter(btn.key)}
               >
@@ -133,7 +136,7 @@ export default function LeadHistory({ leadId }: TProps) {
                   />
                   <HistoryTime
                     name={history.changelogs.user.firstName}
-                    source="Aplicación web"
+                    source="App web"
                     date={history.changelogs.createdAt}
                   />
                 </div>

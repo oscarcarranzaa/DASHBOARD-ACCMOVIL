@@ -60,7 +60,14 @@ export const ZUser = z.object({
   documentNumber: z.string().nullable(),
   createdAt: z.string(),
 })
-
+export const ZPreviewUser = ZUser.pick({
+  id: true,
+  firstName: true,
+  lastName: true,
+  avatar: true,
+  job: true,
+  username: true,
+})
 export const ZRolePermissions = ZRole.merge(
   z.object({
     permissions: z.array(ZPermissions),

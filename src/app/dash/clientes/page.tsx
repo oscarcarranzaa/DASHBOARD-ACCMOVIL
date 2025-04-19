@@ -2,6 +2,7 @@ import CustomerList from '@/components/customers/customerList'
 import NewCustomerForm from '@/components/customers/newCustomer'
 import NavegationPages from '@/components/navegationPages'
 import Search from '@/components/UI/search'
+import { Suspense } from 'react'
 
 export default function CustomersHome() {
   return (
@@ -9,11 +10,15 @@ export default function CustomersHome() {
       <NavegationPages text="Clientes" />
       <div>
         <div className="mb-3 flex justify-between">
-          <Search placeHolder="Buscar cliente..." />
+          <Suspense>
+            <Search placeHolder="Buscar cliente..." />
+          </Suspense>
           <NewCustomerForm />
         </div>
         <div className="mb-16">
-          <CustomerList />
+          <Suspense>
+            <CustomerList />
+          </Suspense>
         </div>
       </div>
     </>

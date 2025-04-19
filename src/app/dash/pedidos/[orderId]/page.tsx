@@ -1,9 +1,11 @@
 import OrderDetails from '@/components/orders/orderDetails'
-
+import { Suspense } from 'react'
 export default function OrderDetailsPage() {
   return (
     <>
-      <OrderDetails />
+      <Suspense>
+        <OrderDetails />
+      </Suspense>
     </>
   )
 }

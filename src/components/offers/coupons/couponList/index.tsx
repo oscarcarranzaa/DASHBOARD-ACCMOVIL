@@ -14,7 +14,7 @@ import {
   Chip,
   User,
   Switch,
-} from "@heroui/react"
+} from '@heroui/react'
 import { couponsRows } from './rows'
 import Link from 'next/link'
 import VerifiedSVG from '@/components/icons/verified'
@@ -23,21 +23,24 @@ import { customerSchema, getAllCustomerSchema } from '@/types/customer'
 import { couponSchema, listCouponSchema } from '@/types/offers'
 import dayjs from 'dayjs'
 import CouponState from './couponState'
+import { useQuery } from '@tanstack/react-query'
+import { getAllCoupons } from '@/api/offerts'
 
-interface IProps {
-  data?: listCouponSchema
-  rows: number
-  isPending: boolean
-}
-const statusColorMap: Record<string, ChipProps['color']> = {
-  active: 'success',
-  suspended: 'default',
-  disabled: 'danger',
-}
-export default function CouponList({ data, rows, isPending }: IProps) {
+const ROWS = 10
+export default function CouponList() {
   const [totalPages, setTotalPages] = useState(0)
-  const params = useSearchParams()
-  const search = params.get('search') || ''
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('p')) || 1
+  const search = searchParams.get('search') || ''
+  const { data, isPending } = useQuery({
+    queryKey: ['coupons', currentPage, search],
+    queryFn: () =>
+      getAllCoupons({
+        page: currentPage.toString(),
+        limit: ROWS.toString(),
+        q: search,
+      }),
+  })
 
   const getData = data ? data.data : []
   const renderCell = useCallback(
@@ -131,7 +134,7 @@ export default function CouponList({ data, rows, isPending }: IProps) {
     <>
       <p className="text-sm text-zinc-500 ">
         {data?.total
-          ? `Mostrando ${rows >= data.results ? data.results : rows} de ${data.total} cupones`
+          ? `Mostrando ${ROWS >= data.results ? data.results : ROWS} de ${data.total} cupones`
           : ''}
         {isPending && 'Cargando...'}
         {!isPending && data?.data.length === 0 && search ? (

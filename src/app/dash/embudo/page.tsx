@@ -1,11 +1,14 @@
 import LeadList from '@/components/customers/leads/leadsList'
 import NavegationPages from '@/components/navegationPages'
+import { Suspense } from 'react'
 
 export default async function Leads() {
   return (
     <div>
       <NavegationPages text="Clientes potenciales" />
-      <LeadList />
+      <Suspense>
+        <LeadList />
+      </Suspense>
     </div>
   )
 }

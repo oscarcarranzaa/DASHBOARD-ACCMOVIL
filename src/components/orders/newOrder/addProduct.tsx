@@ -1,6 +1,6 @@
 import EmptyOrder from './emptyOrder'
 import { addToast, Button } from '@heroui/react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { createOrderState } from '@/store/order'
 import ProductItems from './productItems'
 import { useMutation } from '@tanstack/react-query'
@@ -77,29 +77,31 @@ export default function AddProductOrder() {
             </>
           )}
         </div>
-        <ProductSelect
-          openModal={openSelect}
-          closeModal={() => setOpenSelect(false)}
-          setValue={(p) => {
-            if (p) {
-              mutate(p.id)
-              setProductId(p.id)
-              setProduct({
-                id: p.id,
-                name: p.name,
-                isSaved: false,
-                price: p.price,
-                quantity: 1,
-                stock: p.stock,
-                sku: p.sku,
-                media: p.media,
-                discountPrice: p.discountPrice,
-                startDiscount: p.startDiscount,
-                endDiscount: p.endDiscount,
-              })
-            }
-          }}
-        />
+        <Suspense>
+          <ProductSelect
+            openModal={openSelect}
+            closeModal={() => setOpenSelect(false)}
+            setValue={(p) => {
+              if (p) {
+                mutate(p.id)
+                setProductId(p.id)
+                setProduct({
+                  id: p.id,
+                  name: p.name,
+                  isSaved: false,
+                  price: p.price,
+                  quantity: 1,
+                  stock: p.stock,
+                  sku: p.sku,
+                  media: p.media,
+                  discountPrice: p.discountPrice,
+                  startDiscount: p.startDiscount,
+                  endDiscount: p.endDiscount,
+                })
+              }
+            }}
+          />
+        </Suspense>
       </div>
     </>
   )

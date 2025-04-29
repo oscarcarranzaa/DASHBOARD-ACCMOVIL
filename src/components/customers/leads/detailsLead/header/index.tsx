@@ -1,17 +1,44 @@
 'use client'
 
+import { assignedToNewUser } from '@/api/crm'
 import { getAllUsers } from '@/api/users'
 import { leadSchema } from '@/types/crm/leads'
-import { Button } from '@heroui/react'
-import { Select, SelectItem, Avatar, Selection } from '@heroui/react'
-import { useQuery } from '@tanstack/react-query'
+import { addToast, Button } from '@heroui/react'
+import { Select, SelectItem, Avatar } from '@heroui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Ellipsis } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type TProps = {
   lead: leadSchema
 }
 export default function LeadDetailsHeader({ lead }: TProps) {
+  const [prevValue, setPrevValue] = useState<string | undefined>(
+    lead.assignedTo?.id
+  )
+  const [value, setValue] = useState<string | undefined>(lead.assignedTo?.id)
+  const queryClient = useQueryClient()
+  const { mutate, isPending: isPendingSave } = useMutation({
+    mutationFn: assignedToNewUser,
+    onSuccess: (succ) => {
+      if (prevValue !== value) {
+        setPrevValue(value)
+      }
+    },
+    onError: (error) => {
+      setValue(prevValue)
+      addToast({
+        title: 'Ocurrio un error',
+        variant: 'bordered',
+        description: error.message,
+        color: 'danger',
+      })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [lead.id, 'history'] })
+    },
+  })
+
   const { data, isPending, error } = useQuery({
     queryKey: ['users'],
     queryFn: () => getAllUsers('1', '200'),
@@ -20,12 +47,20 @@ export default function LeadDetailsHeader({ lead }: TProps) {
   })
   const userData = data?.data ?? []
 
+  const handleUserChange = (userId: string | undefined) => {
+    mutate({
+      leadId: lead.id,
+      userId: userId ?? null,
+    })
+    setValue(userId)
+  }
   return (
     <>
       <div className=" flex justify-between items-center px-5 border-2 border-zinc-200 dark:border-zinc-900 rounded-lg py-2">
         <h2 className="text-lg font-medium line-clamp-2">{lead.title}</h2>
         <div className=" flex gap-4 items-center">
           <Select
+            isDisabled={isPendingSave}
             className="max-w-xs min-w-52 bg-transparent"
             classNames={{
               base: 'bg-transparent data-[hover=true]:bg-transparent',
@@ -36,8 +71,11 @@ export default function LeadDetailsHeader({ lead }: TProps) {
               innerWrapper: 'min-h-8',
             }}
             items={userData}
-            selectedKeys={[lead.assignedToId ?? '']}
-            isLoading={isPending}
+            selectedKeys={value ? [value] : []}
+            isLoading={isPending || isPendingSave}
+            onSelectionChange={(key) => {
+              handleUserChange(key.currentKey)
+            }}
             label="Propietario asignado"
             placeholder="Asignar propietario"
             listboxProps={{

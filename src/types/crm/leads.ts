@@ -164,7 +164,16 @@ export const ZHistoryLeads = z.object({
   file: z.array(ZFile.merge(ZUserInfoLead)).optional(),
   changeLogs: z.array(ZChageLogFormatted.merge(ZUserInfoLead)).optional(),
 })
-
+export const ZAssingUser = z.object({
+  id: z.string(),
+  assignedTo: ZUser.pick({
+    firstName: true,
+    lastName: true,
+    id: true,
+    email: true,
+    job: true,
+  }).nullable(),
+})
 export type stageHistorySchema = z.infer<typeof ZStageHistory>
 export type changelogSchema = z.infer<typeof ZChangeLogs>
 export type historyLeadSchema = z.infer<typeof ZHistoryLeads>
@@ -175,3 +184,4 @@ export type newLeadSchema = z.infer<typeof ZNewLead>
 export type allLeadShema = z.infer<typeof ZAllLeads>
 export type allLeadsByPipelineSchema = z.infer<typeof ZAllLeadsByPipeline>
 export type getOneLeadShema = z.infer<typeof ZOneLead>
+export type assingUserSchema = z.infer<typeof ZAssingUser>

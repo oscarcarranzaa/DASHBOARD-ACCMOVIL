@@ -6,7 +6,7 @@ import NotesHistory from './hitoryItems/notes'
 import StatusHistory from './hitoryItems/status'
 import FileHistory from './hitoryItems/file'
 import HistoryTime from './hitoryItems/time'
-import { Activity, File, RefreshCcw } from 'lucide-react'
+import { Activity, File, RefreshCcw, User } from 'lucide-react'
 import LeadStatusBar from './statusBar'
 import { Avatar, Button } from '@heroui/react'
 import { useState } from 'react'
@@ -127,9 +127,17 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
           } else if ('changelogs' in history) {
             return (
               <div className="flex gap-3" key={history.changelogs.id}>
-                <LeadStatusBar render={<Activity size={16} />} />
+                {history.changelogs.field_key !== 'USER' ? (
+                  <LeadStatusBar
+                    color="success"
+                    render={<Activity size={16} />}
+                  />
+                ) : (
+                  <LeadStatusBar color="primary" render={<User size={16} />} />
+                )}
                 <div className="pb-6">
                   <StatusHistory
+                    avatar={history.changelogs.user.avatar}
                     type={history.changelogs.field_key}
                     oldValue={history.changelogs.old_value_formatted}
                     newValue={history.changelogs.new_value_formatted}

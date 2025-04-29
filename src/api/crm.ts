@@ -2,6 +2,7 @@ import axiosInstance from '@/lib/axiosClient'
 import {
   allLeadsByPipelineSchema,
   allLeadShema,
+  assingUserSchema,
   getOneLeadShema,
   historyLeadSchema,
   leadSchema,
@@ -9,6 +10,7 @@ import {
   noteSchema,
   ZAllLeads,
   ZAllLeadsByPipeline,
+  ZAssingUser,
   ZHistoryLeads,
   ZLead,
   ZNote,
@@ -199,6 +201,7 @@ export async function updateLeadField({
     const validData = ZOneLead.parse(data)
     return validData
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,
@@ -283,5 +286,28 @@ export async function getLeadHistory({
     }
 
     throw new Error('Ocurrió un error al obtener el historial del lead')
+  }
+}
+type TAssinedTo = {
+  leadId: string
+  userId: string | null
+}
+export async function assignedToNewUser({ leadId, userId }: TAssinedTo) {
+  try {
+    const { data } = await axiosInstance.put<assingUserSchema>(
+      `/admin/lead/${leadId}/assing`,
+      { userId }
+    )
+    const validData = ZAssingUser.parse(data)
+    return validData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrio un error al asinar el usuario')
+    }
   }
 }

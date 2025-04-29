@@ -1,9 +1,11 @@
 import { changelogSchema } from '@/types/crm/leads'
+import { Avatar } from '@heroui/react'
 import { MoveRight } from 'lucide-react'
 
 type TProps = {
   oldValue?: string | null
   newValue?: string | null
+  avatar?: string | null
   type: changelogSchema['field_key']
 }
 const logKey: Record<changelogSchema['field_key'], string> = {
@@ -16,11 +18,12 @@ export default function StatusHistory({ oldValue, newValue, type }: TProps) {
   return (
     <div>
       <div className="flex gap-2 items-center ">
-        <div className="flex gap-1">
-          <p className="font-medium "> {logKey[type]}:</p> <p>{oldValue}</p>
+        <div className="flex gap-1 items-center">
+          <p className=" "> {logKey[type]}:</p>{' '}
+          <p className=" text-sm">{oldValue}</p>
         </div>
         {oldValue && newValue ? <MoveRight size={16} /> : null}
-        <p> {newValue}</p>
+        <p className=" text-sm"> {newValue}</p>
       </div>
     </div>
   )

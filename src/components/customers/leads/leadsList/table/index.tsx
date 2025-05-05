@@ -1,10 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { allLeadShema, leadSchema } from '@/types/crm/leads'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Button,
   Table,
   TableHeader,
@@ -32,6 +29,9 @@ import NewLead from '../../newLead'
 import PipelineCard from './pipelineCard'
 import DeleteLeadModal from '../../leadActions/deleteModal'
 import DropDown from '@/components/UI/dropDown/dropDown'
+import { socket } from '@/lib/socket'
+import { useSearchParams } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 type TProps = {
   leadsData?: allLeadShema
@@ -45,6 +45,39 @@ export default function LeadTable({
   totalPages,
 }: TProps) {
   const data = leadsData?.data
+
+  const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get('leadPage')) || 1
+  const funnelId = searchParams.get('id')
+  const queryClient = useQueryClient()
+  const queryKey = ['leads', currentPage.toString(), funnelId]
+
+  useEffect(() => {
+    const handleStageChanged = (data: {
+      lead: leadSchema
+      newStageId: string
+    }) => {
+      queryClient.setQueryData(queryKey, (oldData: allLeadShema) => {
+        if (!oldData) return oldData
+
+        return {
+          ...oldData,
+          data: oldData.data.map((lead) =>
+            lead.id === data.lead.id
+              ? { ...lead, stageId: data.newStageId }
+              : lead
+          ),
+        }
+      })
+    }
+
+    socket.on('lead:stageChanged', handleStageChanged)
+
+    return () => {
+      socket.off('lead:stageChanged', handleStageChanged)
+    }
+  }, [queryClient])
+
   const renderLeadCell = useCallback(
     (lead: leadSchema, columnKey: React.Key) => {
       switch (columnKey) {
@@ -96,19 +129,19 @@ export default function LeadTable({
               {lead.title.length > 0 ? lead.title : '-'}
             </Link>
           )
-        case 'user':
-          return lead.user ? (
+        case 'assing':
+          return lead.assignedTo ? (
             <Popover>
               <PopoverTrigger>
                 <Avatar
                   className="hover:cursor-pointer"
                   src={
-                    lead.user.avatar
-                      ? `${lead.user.avatar}-thumb.webp`
+                    lead.assignedTo.avatar
+                      ? `${lead.assignedTo.avatar}-thumb.webp`
                       : undefined
                   }
                   size="sm"
-                  name={lead.user.firstName}
+                  name={lead.assignedTo.firstName}
                 />
               </PopoverTrigger>
               <PopoverContent>
@@ -122,23 +155,23 @@ export default function LeadTable({
                         isBordered
                         radius="full"
                         size="md"
-                        name={lead.user.firstName}
+                        name={lead.assignedTo.firstName}
                         src={
-                          lead.user.avatar
-                            ? `${lead.user.avatar}-thumb.webp`
+                          lead.assignedTo.avatar
+                            ? `${lead.assignedTo.avatar}-thumb.webp`
                             : undefined
                         }
                       />
                       <div className="flex flex-col items-start justify-center">
                         <h4 className="text-small font-semibold leading-none text-default-600">
-                          {`${lead.user.firstName} ${lead.user.lastName}`}
+                          {`${lead.assignedTo.firstName} ${lead.assignedTo.lastName}`}
                         </h4>
                         <h5 className="text-small tracking-tight text-default-500">
                           <Link
-                            href={`/dash/usuarios/${lead.user.username}`}
+                            href={`/dash/usuarios/${lead.assignedTo.username}`}
                             className="hover:underline"
                           >
-                            @{lead.user.username}
+                            @{lead.assignedTo.username}
                           </Link>
                         </h5>
                       </div>
@@ -148,7 +181,7 @@ export default function LeadTable({
               </PopoverContent>
             </Popover>
           ) : (
-            '-'
+            'No asingnado'
           )
         case 'pipeline':
           const findPipeline = leadsData?.pipelines?.find(

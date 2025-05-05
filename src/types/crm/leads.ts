@@ -19,7 +19,7 @@ export const ZLead = z.object({
   labelId: z.string().nullable().optional(),
   pipelineId: z.string(),
   stageId: z.string(),
-  status: z.enum(['ACTIVE', 'DELETED', 'ARCHIVE', 'LOST', 'WON']),
+  status: z.enum(['ACTIVE', 'LOST', 'WON']),
   source: z
     .enum([
       'WEB_FORMS',

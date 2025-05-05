@@ -63,8 +63,12 @@ export default function DropLead({
                 title={lead.title}
                 contactName={lead.contact.name}
                 value={lead.value}
-                user={lead.user?.firstName}
-                avatar={`${lead.user?.avatar}-thumb.webp`}
+                user={lead.assignedTo?.firstName}
+                avatar={
+                  lead.assignedTo?.avatar
+                    ? lead.assignedTo?.avatar + '-thumb.webp'
+                    : undefined
+                }
               />
             )
           })}

@@ -117,14 +117,16 @@ type TChangeStage = {
 }
 export async function changeStage({ new_stage_id, lead_id }: TChangeStage) {
   try {
-    const { data } = await axiosInstance.put<leadSchema>('/admin/lead/stage', {
-      new_stage_id,
-      lead_id,
-    })
-    const validData = ZLead.parse(data)
+    const { data } = await axiosInstance.put<getOneLeadShema>(
+      '/admin/lead/stage',
+      {
+        new_stage_id,
+        lead_id,
+      }
+    )
+    const validData = ZOneLead.parse(data)
     return validData
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,
@@ -307,7 +309,36 @@ export async function assignedToNewUser({ leadId, userId }: TAssinedTo) {
         cause: error.response.status,
       })
     } else {
-      throw new Error('Ocurrio un error al asinar el usuario')
+      throw new Error('Ocurrió un error al asignar el usuario')
+    }
+  }
+}
+
+type TChangeStatus = {
+  leadId: string
+  status: getOneLeadShema['status']
+  lostComment?: string
+}
+export async function changeLeadStatus({
+  leadId,
+  status,
+  lostComment,
+}: TChangeStatus) {
+  try {
+    const { data } = await axiosInstance.put<getOneLeadShema>(
+      `/admin/lead/${leadId}/end`,
+      { status, lostComment }
+    )
+    const validData = ZOneLead.parse(data)
+    return validData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al cambiar el estado.')
     }
   }
 }

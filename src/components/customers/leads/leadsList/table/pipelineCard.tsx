@@ -3,19 +3,13 @@
 import { changeStage } from '@/api/crm'
 import SimplePipelineStages from '@/components/customers/crm/pipeline/pipelineStage/simple'
 import PipelineSVG from '@/components/icons/pipeline'
-import { socket } from '@/lib/socket'
-import {
-  allLeadsByPipelineSchema,
-  allLeadShema,
-  leadSchema,
-} from '@/types/crm/leads'
+import { allLeadShema } from '@/types/crm/leads'
 import { pipelineSchema } from '@/types/crm/pipeline'
 import { contactSchema } from '@/types/customer'
 import { addToast } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CircleDollarSign, Flag, User } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 
 type TProps = {
   leadId: string
@@ -39,7 +33,6 @@ export default function PipelineCard({
   const currentPage = Number(searchParams.get('leadPage')) || 1
   const funnelId = searchParams.get('id')
   const queryClient = useQueryClient()
-  const queryKey = ['leads', currentPage.toString(), funnelId]
 
   const { mutate, isPending } = useMutation({
     mutationFn: changeStage,
@@ -89,31 +82,6 @@ export default function PipelineCard({
     },
   })
 
-  useEffect(() => {
-    const handleStageChanged = (data: {
-      lead: leadSchema
-      newStageId: string
-    }) => {
-      queryClient.setQueryData(queryKey, (oldData: allLeadShema) => {
-        if (!oldData) return oldData
-
-        return {
-          ...oldData,
-          data: oldData.data.map((lead) =>
-            lead.id === data.lead.id
-              ? { ...lead, stageId: data.newStageId }
-              : lead
-          ),
-        }
-      })
-    }
-
-    socket.on('lead:stageChanged', handleStageChanged)
-
-    return () => {
-      socket.off('lead:stageChanged', handleStageChanged)
-    }
-  }, [queryClient])
   return (
     <>
       <div className=" p-3 flex flex-col gap-y-3">

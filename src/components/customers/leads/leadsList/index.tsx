@@ -47,7 +47,7 @@ export default function LeadList() {
   return (
     <>
       <LeadHeader onChange={handleFunnel} />
-      <div className="mt-10">
+      <div className="mt-4">
         <LeadTable
           leadsData={data}
           isPending={isPending}

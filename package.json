@@ -29,6 +29,7 @@
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "axios": "^1.7.9",
+    "canvas-confetti": "^1.9.3",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.14.1",
     "jose": "5.2.4",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.14.15",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",

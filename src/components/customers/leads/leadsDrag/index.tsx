@@ -34,7 +34,7 @@ export default function LeadDrag({ pipelineId }: TProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="mb-6">
+      <div className="mb-3">
         <LeadHeader isRequired valueKey={pipelineId} onChange={handleRouter} />
       </div>
       <div className="h-full max-h-screen relative ">

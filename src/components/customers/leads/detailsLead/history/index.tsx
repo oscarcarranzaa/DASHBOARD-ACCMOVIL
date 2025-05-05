@@ -117,7 +117,7 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
                     url={history.file.url}
                   />
                   <HistoryTime
-                    source="Aplicación web"
+                    source="App web"
                     name={history.file.user.firstName}
                     date={history.file.createdAt}
                   />

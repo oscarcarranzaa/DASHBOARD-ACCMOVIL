@@ -39,12 +39,6 @@ export default function UpdateStage({ lead }: TProps) {
     }
   }, [leadId])
 
-  const handleSend = (text: string) => {
-    socket.emit('lead:send', {
-      content: text,
-      sentAt: new Date(),
-    })
-  }
   const queryClient = useQueryClient()
 
   const { mutate, isPending: pendingSetStage } = useMutation({
@@ -61,6 +55,12 @@ export default function UpdateStage({ lead }: TProps) {
       })
       return { previousLeads }
     },
+    onSuccess: async (success) => {
+      queryClient.setQueryData(leadQueryKey, (oldLead: getOneLeadShema) => {
+        if (!oldLead) return oldLead
+        return success
+      })
+    },
     onError: (_err, _newData, context) => {
       if (context?.previousLeads) {
         queryClient.setQueryData(leadQueryKey, context.previousLeads)
@@ -75,10 +75,6 @@ export default function UpdateStage({ lead }: TProps) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: leadQueryKey,
-        leadId,
-      })
-      queryClient.invalidateQueries({
         queryKey: [leadId, 'history'],
         leadId,
       })
@@ -91,6 +87,7 @@ export default function UpdateStage({ lead }: TProps) {
   return (
     <>
       <DetailedPipelineStages
+        leadStatus={lead.status}
         stageHistory={lead.leadStageHistory}
         isLoading={pendingSetStage}
         pipeline={lead.pipeline}

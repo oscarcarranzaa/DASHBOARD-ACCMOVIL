@@ -4,13 +4,18 @@ import { Button } from '@heroui/react'
 import { MoveRight } from 'lucide-react'
 import Spinner from '@/components/icons/spinner'
 import { useState } from 'react'
-import { stageHistorySchema } from '@/types/crm/leads'
+import { getOneLeadShema, stageHistorySchema } from '@/types/crm/leads'
 import TimerStage from './timerStage'
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+
+dayjs.extend(duration)
 
 type TProps = {
   pipeline?: pipelineSchema
   currentStage: string
   onChange?: (id: string) => void
+  leadStatus: getOneLeadShema['status']
   isLoading?: boolean
   stageHistory: stageHistorySchema[] | null
 }
@@ -21,6 +26,7 @@ export default function DetailedPipelineStages({
   stageHistory,
   isLoading,
   onChange,
+  leadStatus,
 }: TProps) {
   const [savingStageId, setSavingStageId] = useState('')
   if (!pipeline) return null
@@ -43,6 +49,11 @@ export default function DetailedPipelineStages({
           const activeIndex = pipeline.stages.findIndex(
             (p) => p.id === currentStage
           )
+          const findTime = stageHistory?.find((id) => id.stageId === stage.id)
+          const totalTime = findTime ? findTime.totalTimeSpent : 0
+          const totalTimeFromNow = dayjs().diff(findTime?.enteredAt) + totalTime
+
+          const dur = dayjs.duration(totalTimeFromNow)
 
           return (
             <div
@@ -55,11 +66,13 @@ export default function DetailedPipelineStages({
                   handleChange(stage.id)
                 }}
                 isDisabled={isLoading}
-                className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${index <= activeIndex ? 'bg-green-600' : ''}`}
+                className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${leadStatus !== 'ACTIVE' ? 'opacity-30' : ''} ${index <= activeIndex ? (leadStatus === 'LOST' ? 'bg-danger-600' : 'bg-green-600') : ''}`}
               >
                 <div className=" absolute">
-                  {isLoading && stage.id === savingStageId && (
+                  {isLoading && stage.id === savingStageId ? (
                     <Spinner size={18} fill="#fff" />
+                  ) : (
+                    <p className="text-tiny">{dur.days()} días</p>
                   )}
                 </div>
               </Button>
@@ -79,13 +92,17 @@ export default function DetailedPipelineStages({
         <div className="flex items-center gap-1">
           <MoveRight size={14} />
           <p>{findCurrentStage?.name}</p>
-          <p>•</p>
-          <p>Tiempo: </p>
-          {findHistoryStage && (
-            <TimerStage
-              initDate={findHistoryStage.enteredAt}
-              totalTimeSpent={findHistoryStage.totalTimeSpent}
-            />
+          {leadStatus === 'ACTIVE' && !isLoading && (
+            <>
+              <p>•</p>
+              <p>Tiempo: </p>
+              {findHistoryStage && (
+                <TimerStage
+                  initDate={findHistoryStage.enteredAt}
+                  totalTimeSpent={findHistoryStage.totalTimeSpent}
+                />
+              )}
+            </>
           )}
         </div>
       </div>

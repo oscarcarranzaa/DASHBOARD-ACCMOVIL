@@ -42,18 +42,20 @@ export default function DetailedPipelineStages({
     (idx) => idx.stageId === findCurrentStage?.id
   )
 
+  const activeIndex = pipeline.stages.findIndex((p) => p.id === currentStage)
+
   return (
     <>
       <div className={`flex w-full max-w-full flex-grow`}>
         {pipeline.stages.map((stage, index) => {
-          const activeIndex = pipeline.stages.findIndex(
-            (p) => p.id === currentStage
-          )
           const findTime = stageHistory?.find((id) => id.stageId === stage.id)
           const totalTime = findTime ? findTime.totalTimeSpent : 0
-          const totalTimeFromNow = dayjs().diff(findTime?.enteredAt) + totalTime
+          const secondsSinceEntered = findTime?.enteredAt
+            ? dayjs().diff(findTime.enteredAt, 'seconds')
+            : 0
+          const totalTimeFromNow = secondsSinceEntered + totalTime
 
-          const dur = dayjs.duration(totalTimeFromNow)
+          const dur = dayjs.duration(totalTimeFromNow, 'seconds')
 
           return (
             <div
@@ -68,16 +70,16 @@ export default function DetailedPipelineStages({
                 isDisabled={isLoading}
                 className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${leadStatus !== 'ACTIVE' ? 'opacity-30' : ''} ${index <= activeIndex ? (leadStatus === 'LOST' ? 'bg-danger-600' : 'bg-green-600') : ''}`}
               >
-                <div className=" absolute">
+                <div className="absolute">
                   {isLoading && stage.id === savingStageId ? (
                     <Spinner size={18} fill="#fff" />
                   ) : (
-                    <p className="text-tiny">{dur.days()} días</p>
+                    <p className="text-tiny">{`${dur.days()} días`}</p>
                   )}
                 </div>
               </Button>
               <div className={styles.card_tooltip}>
-                <div className="bg-gray-50 border dark:bg-zinc-800 dark:border-zinc-700 border-zinc-300 px-2 py-1 rounded-lg shadow-xl ">
+                <div className="bg-gray-50 border dark:bg-zinc-800 dark:border-zinc-700 border-zinc-300 px-2 py-1 rounded-lg shadow-xl">
                   <p className="text-xs min-w-full text-center whitespace-nowrap">
                     {stage.name}
                   </p>
@@ -87,21 +89,19 @@ export default function DetailedPipelineStages({
           )
         })}
       </div>
-      <div className="text-xs mt-2 flex flex-wrap flex-row gap-1  items-center">
+      <div className="text-xs mt-2 flex flex-wrap flex-row gap-1 items-center">
         <p>{pipeline.name}</p>
         <div className="flex items-center gap-1">
           <MoveRight size={14} />
           <p>{findCurrentStage?.name}</p>
-          {leadStatus === 'ACTIVE' && !isLoading && (
+          {leadStatus === 'ACTIVE' && !isLoading && findHistoryStage && (
             <>
               <p>•</p>
               <p>Tiempo: </p>
-              {findHistoryStage && (
-                <TimerStage
-                  initDate={findHistoryStage.enteredAt}
-                  totalTimeSpent={findHistoryStage.totalTimeSpent}
-                />
-              )}
+              <TimerStage
+                initDate={findHistoryStage.enteredAt}
+                totalTimeSpent={findHistoryStage.totalTimeSpent}
+              />
             </>
           )}
         </div>

@@ -24,19 +24,20 @@ export default function TimerStage({
   totalTimeSpent,
   isPending,
 }: TProps) {
-  const [time, setTime] = useState<TCountTimer>(timerCount())
-  console.log(initDate, totalTimeSpent, isPending)
-  function timerCount() {
+  const timerCount = () => {
     const now = dayjs()
-    const totalMillis = now.diff(dayjs(initDate)) + totalTimeSpent
-    const dur = dayjs.duration(totalMillis)
+    const totalSeconds = now.diff(dayjs(initDate), 'seconds') + totalTimeSpent
+    const dur = dayjs.duration(totalSeconds, 'seconds')
 
-    const days = Math.floor(dur.asDays())
-    const hours = dur.hours()
-    const minutes = dur.minutes()
-    const seconds = dur.seconds()
-    return { days, hours, minutes, seconds }
+    return {
+      days: Math.floor(dur.asDays()),
+      hours: dur.hours(),
+      minutes: dur.minutes(),
+      seconds: dur.seconds(),
+    }
   }
+
+  const [time, setTime] = useState<TCountTimer>(timerCount)
 
   useEffect(() => {
     const interval = setInterval(() => {

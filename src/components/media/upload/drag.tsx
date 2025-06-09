@@ -182,7 +182,6 @@ export default function DragMedia({
   }
   return (
     <div onDragOver={handleDragOver} onDrop={handleDrop}>
-      {dataMedia?.length === 0 && !upload ? <EmptyMedia /> : null}
       <div
         onDragLeave={handleDragLeave}
         className={
@@ -266,6 +265,7 @@ export default function DragMedia({
             })
           : Array.from({ length: 50 }).map((_, i) => <SkeletonImage key={i} />)}
       </div>
+      {dataMedia?.length === 0 && !upload ? <EmptyMedia /> : null}
       <div className="mt-10 flex justify-center mb-20">
         {totalPageDefine > 0 && (
           <Suspense>

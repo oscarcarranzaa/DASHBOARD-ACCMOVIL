@@ -3,7 +3,7 @@
 import { changeStage } from '@/api/crm'
 import SimplePipelineStages from '@/components/customers/crm/pipeline/pipelineStage/simple'
 import PipelineSVG from '@/components/icons/pipeline'
-import { allLeadShema } from '@/types/crm/leads'
+import { allLeadShema, getOneLeadShema } from '@/types/crm/leads'
 import { pipelineSchema } from '@/types/crm/pipeline'
 import { contactSchema } from '@/types/customer'
 import { addToast } from '@heroui/react'
@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation'
 
 type TProps = {
   leadId: string
+  leadStatus: getOneLeadShema['status']
   description: string
   stageId: string
   value?: number | null
@@ -24,6 +25,7 @@ export default function PipelineCard({
   leadId,
   description,
   value,
+  leadStatus,
   stageId,
   pipeline,
   contact,
@@ -125,6 +127,7 @@ export default function PipelineCard({
           </div>
           <div className="w-full">
             <SimplePipelineStages
+              leadStatus={leadStatus}
               isLoading={isPending}
               currentStage={stageId}
               pipeline={pipeline}

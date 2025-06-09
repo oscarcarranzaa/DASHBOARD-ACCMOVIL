@@ -1,31 +1,31 @@
 'use client'
 
-import {
-  Button,
-  Autocomplete,
-  Select,
-  SelectItem,
-  Tooltip,
-  AutocompleteItem,
-} from '@heroui/react'
-import type { Selection } from '@heroui/react'
+import { Button, Select, SelectItem, Tooltip } from '@heroui/react'
 import NewLead from '../newLead'
 import Link from 'next/link'
 import { Bolt, List, Plus, Settings } from 'lucide-react'
 import PipelineSVG from '@/components/icons/pipeline'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { getPipelines } from '@/api/crm'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
+import { on } from 'events'
 
 type TProps = {
   isRequired?: boolean
   onChange?: (url: string | undefined) => void
+  onEmpty?: (isEmpty: boolean) => void
   valueKey?: string
 }
-export default function LeadHeader({ isRequired, valueKey, onChange }: TProps) {
+export default function LeadHeader({
+  isRequired,
+  valueKey,
+  onChange,
+  onEmpty,
+}: TProps) {
   const [value, setValue] = useState<string>('')
   const [funnelUrl, setFunnelUrl] = useState<string | undefined>()
+
   const { data, isPending } = useQuery({
     queryKey: ['pipelines'],
     queryFn: () => getPipelines(),
@@ -52,6 +52,16 @@ export default function LeadHeader({ isRequired, valueKey, onChange }: TProps) {
     setValue(valueKey ?? '')
   }, [valueKey])
 
+  useEffect(() => {
+    if (data && data.length === 0) {
+      onEmpty?.(true)
+      return
+    }
+    onEmpty?.(false)
+    if (data && data.length > 0 && !funnelUrl) {
+      setFunnelUrl(data[0].id)
+    }
+  }, [data, onEmpty, setFunnelUrl, funnelUrl])
   return (
     <div className="flex justify-between items-center">
       <div className="flex items-center gap-2">
@@ -92,7 +102,7 @@ export default function LeadHeader({ isRequired, valueKey, onChange }: TProps) {
             <Bolt />
           </Button>
         </Tooltip>
-        <NewLead />
+        <NewLead isDisabled={data && data.length === 0} />
       </div>
       <div>
         <Select

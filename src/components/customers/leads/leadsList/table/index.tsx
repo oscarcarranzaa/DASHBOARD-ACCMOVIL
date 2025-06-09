@@ -80,6 +80,12 @@ export default function LeadTable({
 
   const renderLeadCell = useCallback(
     (lead: leadSchema, columnKey: React.Key) => {
+      const isStatusClass =
+        lead.status === 'WON'
+          ? 'text-success-500'
+          : lead.status === 'LOST'
+            ? 'text-danger-500'
+            : ''
       switch (columnKey) {
         case 'person':
           const { id, name, email, phone } = lead.contact
@@ -87,7 +93,7 @@ export default function LeadTable({
             <div className={styles.box_content}>
               <Link
                 href={`/dash/embudo/${lead.pipelineId}/${lead.id}`}
-                className="hover:underline"
+                className={`${isStatusClass} hover:underline`}
               >
                 {lead.contact.name}
               </Link>
@@ -124,7 +130,7 @@ export default function LeadTable({
           return (
             <Link
               href={`/dash/embudo/${lead.pipelineId}/${lead.id}`}
-              className="hover:underline"
+              className={`${isStatusClass} hover:underline`}
             >
               {lead.title.length > 0 ? lead.title : '-'}
             </Link>
@@ -203,6 +209,7 @@ export default function LeadTable({
               </PopoverTrigger>
               <PopoverContent>
                 <PipelineCard
+                  leadStatus={lead.status}
                   leadId={lead.id}
                   pipeline={findPipeline}
                   description={lead.title}

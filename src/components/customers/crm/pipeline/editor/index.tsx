@@ -20,7 +20,7 @@ import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { GripVertical, Plus, Scale, Trash } from 'lucide-react'
 import RottenDays from './rottenDays'
 import { useId } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addPipeline } from '@/api/crm'
 import Spinner from '@/components/icons/spinner'
 import { useRouter } from 'next/navigation'
@@ -28,6 +28,7 @@ import { useRouter } from 'next/navigation'
 export default function PipelineEditor() {
   const id = useId()
   const router = useRouter()
+  const queryClient = useQueryClient()
   const {
     control,
     formState: { errors },
@@ -40,13 +41,14 @@ export default function PipelineEditor() {
   const { mutate, isPending } = useMutation({
     mutationFn: addPipeline,
     onSuccess: (succ) => {
-      router.push('/dash/crm/clientes-potenciales')
+      queryClient.invalidateQueries({ queryKey: ['pipelines'] })
       addToast({
         title: 'Nuevo embudo creado',
         color: 'success',
         timeout: 5000,
         variant: 'bordered',
       })
+      router.push('/dash/embudo')
     },
     onError: (err) => {
       addToast({

@@ -1,0 +1,23 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 250px; height: 250px;"><style>
+     .line-funnel1-a {animation:line-funnel1-a 2s infinite;}
+     .line-funnel1-b {animation:line-funnel1-a 2s 600ms infinite;}
+     .line-funnel1-c {animation:line-funnel1-c 2s 1s infinite;}
+     .line-funnel1-d {animation:line-funnel1-a 2s 200ms infinite;}
+     .line-funnel1-e {animation:line-funnel1-a 2s 1200ms infinite;}
+     .line-funnel1-f {animation:line-funnel1-a 2s 1000ms infinite;}
+     .line-funnel1-g {animation:line-funnel1-a 2s 800ms infinite;}
+     @keyframes line-funnel1-a {
+         0%{transform: translate3d(0, -50px, 0);}
+         100%{transform: translate3d(0, 5px, 0);}
+     }
+
+     @keyframes line-funnel1-c {
+         0%{transform: translate3d(0, 0, 0);}
+         100%{transform: translate3d(0, 80px, 0);}
+     }
+     @media (prefers-reduced-motion: reduce) {
+         .line-funnel1-a, .line-funnel1-b, .line-funnel1-c, .line-funnel1-d, .line-funnel1-e, .line-funnel1-f, .line-funnel1-g {
+             animation: none;
+         }
+     }
+    </style><path class="stroke1 fill1" d="M50 27C32.2575 27 25.7887 29.7571 23.784 30.989C23.3196 31.2743 23.3469 31.8325 23.8402 32.0642C25.8594 33.0129 32.212 35 50 35C67.788 35 74.1406 33.0129 76.1598 32.0642C76.6531 31.8325 76.6804 31.2743 76.216 30.989C74.2113 29.7571 67.7425 27 50 27Z" fill="rgba(255,255,255,1)" stroke="rgba(131,85,255,1)" stroke-width="2.8px" style="animation-duration: 2s;"></path><circle class="line-funnel1-a stroke2 fill2" cx="38" cy="41" r="4" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><circle class="line-funnel1-b stroke2 fill2" cx="45" cy="49" r="2" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><circle class="line-funnel1-c stroke2 fill2" cx="50" cy="66" r="2" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><circle class="line-funnel1-d stroke2 fill2" cx="67" cy="38" r="2" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><circle class="line-funnel1-e stroke2 fill2" cx="59.5" cy="39.5" r="2.5" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><circle class="line-funnel1-f stroke2 fill2" cx="55" cy="48" r="3" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><circle class="line-funnel1-g stroke2 fill2" cx="47" cy="40" r="2" fill="#fff" stroke="rgba(21,241,64,1)" stroke-width="2.8px" style="animation-duration: 2s;"></circle><path class="stroke1 fill1" d="M23.7929 37.2929L46.2071 59.7071C46.3946 59.8946 46.5 60.149 46.5 60.4142V70.882C46.5 71.6253 47.2823 72.1088 47.9472 71.7764L52.9472 69.2764C53.286 69.107 53.5 68.7607 53.5 68.382V60.4142C53.5 60.149 53.6054 59.8946 53.7929 59.7071L76.2071 37.2929C76.3946 37.1054 76.5 36.851 76.5 36.5858V32.2896C76.5 31.5072 75.6067 30.9587 74.8775 31.242C71.9003 32.3986 64.4964 34.5 50 34.5C35.5036 34.5 28.0996 32.3986 25.1225 31.242C24.3933 30.9587 23.5 31.5072 23.5 32.2896V36.5858C23.5 36.851 23.6054 37.1054 23.7929 37.2929Z" fill="rgba(255,255,255,1)" stroke="rgba(131,85,255,1)" stroke-width="2.8px" style="animation-duration: 2s;"></path></svg>

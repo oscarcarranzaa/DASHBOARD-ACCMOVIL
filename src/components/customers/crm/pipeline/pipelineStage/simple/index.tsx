@@ -4,11 +4,13 @@ import { Button } from '@heroui/react'
 import { MoveRight } from 'lucide-react'
 import Spinner from '@/components/icons/spinner'
 import { useState } from 'react'
+import { getOneLeadShema } from '@/types/crm/leads'
 
 type TProps = {
   pipeline?: pipelineSchema
   currentStage: string
   onChange?: (id: string) => void
+  leadStatus: getOneLeadShema['status']
   isLoading?: boolean
 }
 
@@ -16,6 +18,7 @@ export default function SimplePipelineStages({
   pipeline,
   currentStage,
   isLoading,
+  leadStatus,
   onChange,
 }: TProps) {
   const [savingStageId, setSavingStageId] = useState('')
@@ -47,7 +50,7 @@ export default function SimplePipelineStages({
                 }}
                 isDisabled={isLoading}
                 color={index <= activeIndex ? 'success' : 'default'}
-                className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content}`}
+                className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${leadStatus !== 'ACTIVE' ? 'opacity-30' : ''} ${index <= activeIndex ? (leadStatus === 'LOST' ? 'bg-danger-600' : 'bg-green-600') : ''}`}
               >
                 <div className=" absolute">
                   {isLoading && stage.id === savingStageId && (

@@ -31,8 +31,9 @@ import SelectPipeline from '../../crm/pipeline/selectPipeline'
 
 type TProps = {
   button?: ButtonProps
+  isDisabled?: boolean
 }
-export default function NewLead({ button }: TProps) {
+export default function NewLead({ button, isDisabled }: TProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const thisUser = useAuthStore((state) => state.user)?.id
   const queryClient = useQueryClient()
@@ -127,7 +128,12 @@ export default function NewLead({ button }: TProps) {
   return (
     <>
       <div>
-        <Button onPress={onOpen} color="primary" {...button}>
+        <Button
+          isDisabled={isDisabled}
+          onPress={onOpen}
+          color="primary"
+          {...button}
+        >
           <Plus /> Cliente
         </Button>
         <Modal

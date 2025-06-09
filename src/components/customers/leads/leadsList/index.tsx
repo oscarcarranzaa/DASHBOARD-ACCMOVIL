@@ -9,9 +9,18 @@ import Link from 'next/link'
 import LeadHeader from '../leadHeader'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import StartPipeline from '../../crm/pipeline/startPipeline'
 
 export default function LeadList() {
   const [seletedFunnel, setSelectedFunnel] = useState<string | undefined>()
+  const [isEmpty, setIsEmpty] = useState<boolean>(false)
+  const handleEmpty = (isEmpty: boolean) => {
+    console.log('isEmpty', isEmpty)
+    setIsEmpty(isEmpty)
+    if (isEmpty) {
+      setSelectedFunnel(undefined)
+    }
+  }
 
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('leadPage')) || 1
@@ -46,13 +55,17 @@ export default function LeadList() {
   }
   return (
     <>
-      <LeadHeader onChange={handleFunnel} />
+      <LeadHeader onChange={handleFunnel} onEmpty={handleEmpty} />
       <div className="mt-4">
-        <LeadTable
-          leadsData={data}
-          isPending={isPending}
-          totalPages={data && Number(data.totalPages)}
-        />
+        {isEmpty ? (
+          <StartPipeline />
+        ) : (
+          <LeadTable
+            leadsData={data}
+            isPending={isPending}
+            totalPages={data && Number(data.totalPages)}
+          />
+        )}
       </div>
     </>
   )

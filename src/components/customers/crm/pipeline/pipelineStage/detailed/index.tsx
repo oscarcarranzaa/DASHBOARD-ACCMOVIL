@@ -49,11 +49,22 @@ export default function DetailedPipelineStages({
       <div className={`flex w-full max-w-full flex-grow`}>
         {pipeline.stages.map((stage, index) => {
           const findTime = stageHistory?.find((id) => id.stageId === stage.id)
+
           const totalTime = findTime ? findTime.totalTimeSpent : 0
+
+          // Se obtiene el tiempo total desde que el lead entró al stage
           const secondsSinceEntered = findTime?.enteredAt
             ? dayjs().diff(findTime.enteredAt, 'seconds')
             : 0
-          const totalTimeFromNow = secondsSinceEntered + totalTime
+
+          // Si el stage es el actual y el lead está activo, se calcula el tiempo desde que entró
+          const isSecondEntered =
+            currentStage === stage.id && leadStatus === 'ACTIVE'
+              ? secondsSinceEntered
+              : totalTime
+
+          // Si el stage es el actual y el lead está activo, se suma el tiempo actual
+          const totalTimeFromNow = isSecondEntered + totalTime
 
           const dur = dayjs.duration(totalTimeFromNow, 'seconds')
 

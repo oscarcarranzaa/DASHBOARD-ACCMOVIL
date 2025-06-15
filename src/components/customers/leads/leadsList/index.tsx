@@ -15,7 +15,6 @@ export default function LeadList() {
   const [seletedFunnel, setSelectedFunnel] = useState<string | undefined>()
   const [isEmpty, setIsEmpty] = useState<boolean>(false)
   const handleEmpty = (isEmpty: boolean) => {
-    console.log('isEmpty', isEmpty)
     setIsEmpty(isEmpty)
     if (isEmpty) {
       setSelectedFunnel(undefined)

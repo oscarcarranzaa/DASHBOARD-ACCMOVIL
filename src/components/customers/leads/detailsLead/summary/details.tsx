@@ -34,7 +34,7 @@ export default function LeadDetailsSummary({ lead }: TProps) {
           </div>
           <User
             avatarProps={{
-              src: `${user.avatar}-thumb.webp`,
+              src: user?.avatar ? `${user.avatar}-thumb.webp` : undefined,
             }}
             description={user.job}
             name={shortName}

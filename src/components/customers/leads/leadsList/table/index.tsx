@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@heroui/react'
-import { Copy, EllipsisVerticalIcon, MoveRight, Trash } from 'lucide-react'
+import { Copy, MoveRight } from 'lucide-react'
 import { columns } from './columns'
 import PaginationPage from '@/components/UI/pagination'
 import dayjs from 'dayjs'

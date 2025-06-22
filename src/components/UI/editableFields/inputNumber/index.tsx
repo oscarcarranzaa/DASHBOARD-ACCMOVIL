@@ -8,7 +8,7 @@ type EditableFieldProps = {
   value?: number
   onValueChange: (newValue: number | undefined) => void
   onBlur?: (newValue: number | undefined) => void
-  type?: 'text' | 'number' | 'email'
+  type?: 'number'
   placeholder?: string
   label?: string
   error?: string
@@ -21,7 +21,7 @@ export default function NumberInputField({
   value,
   onValueChange,
   onBlur,
-  type = 'text',
+  type = 'number',
   placeholder,
   error,
   label = 'Haz clic para editar',

@@ -105,7 +105,7 @@ export default function LeadSummaryValues({ lead }: { lead: leadSchema }) {
               startContent={<DollarSign size={18} />}
               placeholder="599.00"
               value={field.value ?? undefined}
-              type="text"
+              type="number"
               label="Valor"
               onBlur={() => handleAutoSubmit(field.name)}
               onValueChange={(v) => field.onChange(v)}

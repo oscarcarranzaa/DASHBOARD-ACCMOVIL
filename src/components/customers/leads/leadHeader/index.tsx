@@ -3,7 +3,7 @@
 import { Button, Select, SelectItem, Tooltip } from '@heroui/react'
 import NewLead from '../newLead'
 import Link from 'next/link'
-import { Bolt, List, Plus, Settings } from 'lucide-react'
+import { Bolt, ChartLine, List, Plus, Settings } from 'lucide-react'
 import PipelineSVG from '@/components/icons/pipeline'
 import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
@@ -92,14 +92,14 @@ export default function LeadHeader({
             </Button>
           </Tooltip>
         </div>
-        <Tooltip content="Configuración">
+        <Tooltip content="Analisis">
           <Button
             as={Link}
-            href="/dash/embudo/ajustes"
+            href="/dash/embudo/analisis"
             isIconOnly
             variant="bordered"
           >
-            <Bolt />
+            <ChartLine />
           </Button>
         </Tooltip>
         <NewLead isDisabled={data && data.length === 0} />

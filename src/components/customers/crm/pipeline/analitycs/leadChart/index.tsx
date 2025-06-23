@@ -11,7 +11,12 @@ import {
 import { useState } from 'react'
 import { Card, CardBody, CardHeader, Divider } from '@heroui/react'
 
-const chartData = [
+type charDataType = {
+  date: string
+  lost: number
+  won: number
+}
+const chartData: charDataType[] = [
   { date: '2024-04-01', lost: 200, won: 150 },
   { date: '2024-04-02', lost: 200, won: 100 },
   { date: '2024-04-03', lost: 167, won: 120 },
@@ -39,7 +44,7 @@ const chartData = [
   { date: '2024-04-25', lost: 215, won: 250 },
   { date: '2024-04-26', lost: 75, won: 130 },
   { date: '2024-04-27', lost: 383, won: 420 },
-  { date: '2024-04-28', lost: 122, won: 180 },
+  { date: '202-04-28', lost: 122, won: 180 },
   { date: '2024-04-29', lost: 315, won: 240 },
   { date: '2024-04-30', lost: 454, won: 380 },
   { date: '2024-05-01', lost: 165, won: 220 },
@@ -53,11 +58,11 @@ const chartData = [
 const chartConfig = {
   won: {
     label: 'Ganado',
-    color: '#25eb7b',
+    color: '#148048',
   },
   lost: {
     label: 'Perdido',
-    color: '#eb255d',
+    color: '#db0206',
   },
 } satisfies ChartConfig
 
@@ -128,9 +133,10 @@ export default function LeadChart() {
                   minTickGap={32}
                   tickFormatter={(value) => {
                     const date = new Date(value)
-                    return date.toLocaleDateString('en-US', {
+                    return date.toLocaleDateString('es-HN', {
                       month: 'short',
                       day: 'numeric',
+                      year: '2-digit',
                     })
                   }}
                 />

@@ -61,7 +61,7 @@ export default function DetailedPipelineStages({
           const isSecondEntered =
             currentStage === stage.id && leadStatus === 'ACTIVE'
               ? secondsSinceEntered
-              : totalTime
+              : 0
 
           // Si el stage es el actual y el lead está activo, se suma el tiempo actual
           const totalTimeFromNow = isSecondEntered + totalTime

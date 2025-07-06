@@ -9,6 +9,7 @@ import { getPipelines } from '@/api/crm'
 type TProps = {
   placeholder?: string
   label?: string
+  isRequired?: boolean
   value?: string | null
   onChange?: (userID: string | null) => void
 }
@@ -17,6 +18,7 @@ export default function SelectPipeline({
   label,
   onChange,
   value,
+  isRequired = true,
 }: TProps) {
   const { data, isPending } = useQuery({
     queryKey: ['pipelines'],
@@ -31,7 +33,7 @@ export default function SelectPipeline({
       <Autocomplete
         selectedKey={value}
         label={label}
-        isRequired
+        isRequired={isRequired}
         onSelectionChange={(key) => {
           if (onChange) {
             onChange(key ? key.toString() : null)

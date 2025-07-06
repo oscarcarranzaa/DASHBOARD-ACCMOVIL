@@ -11,14 +11,16 @@ export default function FunnelSettings() {
   return (
     <>
       <NavegationPages text="Analisis de clientes potenciales" />
-      <FunnelHeaderAnalytics />
+      <FunnelHeaderAnalytics
+        onChangeFilters={(filters) => console.log(filters)}
+      />
       <FunnelConversionRates />
       <LeadChart />
-      <div className="grid grid-cols-3 mt-5 gap-5">
-        <div className="col-span-2">
+      <div className="grid lg:grid-cols-3 grid-cols-2 mt-5 gap-5">
+        <div className="lg:col-span-2 col-span-2">
           <UserSellChart />
         </div>
-        <div>
+        <div className="lg:col-span-1 col-span-2">
           <FunnelChart />
         </div>
       </div>

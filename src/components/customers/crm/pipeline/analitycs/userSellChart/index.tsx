@@ -43,7 +43,7 @@ export default function UserSellChart() {
   return (
     <Card>
       <CardHeader>Top de mejores vendedores (Ganancias)</CardHeader>
-      <CardBody>
+      <CardBody className="color-white fill-white text-white">
         <div className="p-2">
           <ChartContainer config={chartConfig}>
             <BarChart
@@ -65,6 +65,8 @@ export default function UserSellChart() {
                 tickLine={false}
                 tickMargin={0}
                 axisLine={false}
+                textAnchor="end"
+                opacity={1}
                 width={100}
               />
               <XAxis

@@ -90,7 +90,9 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
                 userKeys: userRoles,
               })
 
-              if (!isView) return null
+              const isDisabled = menu.disabled || !isView
+
+              if (isDisabled) return null
               if (menu.href) {
                 return (
                   <li key={index} className=" list-none">

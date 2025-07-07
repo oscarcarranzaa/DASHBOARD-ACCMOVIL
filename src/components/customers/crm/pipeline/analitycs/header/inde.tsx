@@ -1,34 +1,35 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import type { RangeValue } from '@react-types/shared'
 import type { DateValue } from '@react-types/datepicker'
 
 import { DateRangePicker, Select, SelectItem, Selection } from '@heroui/react'
 import { getLocalTimeZone, today } from '@internationalized/date'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Calendar } from 'lucide-react'
 import SelectUser from '@/components/users/selectUser'
 import SelectPipeline from '../../selectPipeline'
 
-type Filters = {
+export type FilterFunnelAnalitycs = {
   userId: string | null
-  pipelineId: string | null
+  funnelId: string | null
   from: string | null
   to: string | null
 }
 type TProps = {
-  onChangeFilters?: (filters: Filters) => void
+  onChangeFilters?: (filters: FilterFunnelAnalitycs) => void
 }
 
 export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
   const [selectValue, setSelectValue] = useState<Selection>(new Set(['30']))
   const [userId, setUserId] = useState<string | null>(null)
-  const [pipelineId, setPipelineId] = useState<string | null>(null)
+  const [funnelId, setFunnelId] = useState<string | null>(null)
 
   const [value, setValue] = useState<RangeValue<DateValue> | null>({
     start: today(getLocalTimeZone()).subtract({ days: 30 }),
     end: today(getLocalTimeZone()),
   })
-
+  const isFirstRun = useRef(true)
   const relativeTimeSelect = [
     {
       key: '7',
@@ -67,15 +68,19 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
   }
 
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false
+      return
+    }
     if (onChangeFilters) {
       onChangeFilters({
         userId,
-        pipelineId,
+        funnelId,
         from: value?.start?.toString() ?? null,
         to: value?.end?.toString() ?? null,
       })
     }
-  }, [userId, pipelineId, value])
+  }, [userId, funnelId, value])
 
   return (
     <div className="flex flex-col lg:flex-row w-full  justify-between max-w-full gap-3 bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg mb-4">
@@ -89,8 +94,8 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
           />
           <SelectPipeline
             isRequired={false}
-            value={pipelineId}
-            onChange={setPipelineId}
+            value={funnelId}
+            onChange={setFunnelId}
             placeholder="Todos los embudos"
           />
         </div>

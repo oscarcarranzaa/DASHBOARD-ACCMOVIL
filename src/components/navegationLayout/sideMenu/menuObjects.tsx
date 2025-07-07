@@ -16,12 +16,14 @@ export const menuItems = [
     icon: <MenuSquareSVG size={iconSize} />,
     urlKey: '/dash/dashboard',
     href: '/dash/dashboard',
+    disabled: false,
     permissionKeys: [],
   },
   {
     name: 'Pedidos',
     icon: <OrdertSVG size={iconSize} />,
     urlKey: '/dash/pedidos',
+    disabled: true,
     permissionKeys: [],
     items: [
       {
@@ -41,6 +43,7 @@ export const menuItems = [
     icon: <ProductSVG size={iconSize} />,
     urlKey: '/dash/producto',
     permissionKeys: [],
+    disabled: true,
     items: [
       {
         name: 'Nuevo',
@@ -67,6 +70,7 @@ export const menuItems = [
   {
     name: 'Multimedia',
     icon: <MediaImageSVG size={iconSize} />,
+    disabled: true,
     urlKey: '/dash/multimedia',
     href: '/dash/multimedia',
   },
@@ -118,6 +122,7 @@ export const menuItems = [
     icon: <OfferSVG size={iconSize} />,
     urlKey: '/dash/ofertas',
     permissionKeys: [],
+    disabled: true,
     items: [
       {
         name: 'Cupones',

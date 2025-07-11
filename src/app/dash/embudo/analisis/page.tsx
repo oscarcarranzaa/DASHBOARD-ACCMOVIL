@@ -16,7 +16,7 @@ export default function FunnelSettings() {
     <>
       <NavegationPages text="Analisis de clientes potenciales" />
       <FunnelHeaderAnalytics onChangeFilters={setFilters} />
-      <FunnelConversionRates />
+      <FunnelConversionRates filters={filter} />
       <LeadChart filters={filter} />
       <div className="grid lg:grid-cols-3 grid-cols-2 mt-5 gap-5">
         <div className="lg:col-span-2 col-span-2">

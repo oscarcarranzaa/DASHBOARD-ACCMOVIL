@@ -23,7 +23,7 @@ export default function StartPipeline() {
           </p>
         </div>
         <Button
-          href="/dash/embudo/pipeline/nuevo"
+          href="/dash/embudo/nuevo"
           as={Link}
           color="primary"
           variant="bordered"

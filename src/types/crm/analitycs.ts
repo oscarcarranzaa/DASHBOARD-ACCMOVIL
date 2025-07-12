@@ -22,6 +22,14 @@ export const ZFunnelMetrics = z.object({
   won: z.number(),
   value: z.number(),
 })
+export const ZUserSellMetrics = z.object({
+  user: z.string(),
+  won: z.number(),
+  lost: z.number(),
+})
+export const ZAllUserSellMetrics = z.array(ZUserSellMetrics)
+export type AllUserSellMetricsSchema = z.infer<typeof ZAllUserSellMetrics>
+
 export const ZAllFunnelMetrics = z.array(ZFunnelMetrics)
 export type AllFunnelMetricsSchema = z.infer<typeof ZAllFunnelMetrics>
 export const ZAllResumeLeadsMetrics = z.array(ZResumeLeadsMetrics)

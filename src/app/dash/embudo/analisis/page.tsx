@@ -18,11 +18,11 @@ export default function FunnelAnalitycs() {
       <FunnelHeaderAnalytics onChangeFilters={setFilters} />
       <FunnelConversionRates filters={filter} />
       <LeadChart filters={filter} />
-      <div className="grid lg:grid-cols-3 grid-cols-2 mt-5 gap-5">
-        <div className="lg:col-span-2 col-span-2">
-          <UserSellChart />
+      <div className="grid lg:grid-cols-7 grid-cols-2 mt-5 gap-5">
+        <div className="lg:col-span-4 col-span-2">
+          <UserSellChart filers={filter} />
         </div>
-        <div className="lg:col-span-1 col-span-2">
+        <div className="lg:col-span-3 col-span-2">
           <FunnelChart filers={filter} />
         </div>
       </div>

@@ -8,6 +8,7 @@ import ProductSVG from '@/components/icons/product'
 import PublishSVG from '@/components/icons/publish'
 import TeamSVG from '@/components/icons/team'
 import WorldSVG from '@/components/icons/world'
+import { SquareUser } from 'lucide-react'
 const iconSize = 20
 
 export const menuItems = [
@@ -82,7 +83,15 @@ export const menuItems = [
     permissionKeys: [],
   },
   {
+    name: 'Contactos',
+    icon: <SquareUser size={iconSize} />,
+    urlKey: '/dash/clientes/contactos',
+    href: '/dash/clientes/contactos',
+    permissionKeys: [],
+  },
+  {
     name: 'Clientes',
+    disabled: true,
     icon: <TeamSVG size={iconSize} />,
     urlKey: '/dash/clientes',
     permissionKeys: ['users.add'],

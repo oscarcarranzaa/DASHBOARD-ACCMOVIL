@@ -1,24 +1,31 @@
 'use client'
 
-import { Pie, PieChart, LabelList, Cell } from 'recharts'
+import { Pie, PieChart, Cell } from 'recharts'
 
 import {
-  ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/UI/chart'
 import { Card, CardBody, CardHeader } from '@heroui/react'
+import { useQuery } from '@tanstack/react-query'
+import { getFunnelMetrics } from '@/api/CRM/analitycs'
+import FunnelChartSkeleton from './skeleton'
+import FunnelChartError from './error'
+import { FilterFunnelAnalitycs } from '../header/inde'
 
 type chartDataType = {
   funnel: string
   won: number
+  value: number
 }[]
 
-const generateChartConfig = (chartData: chartDataType) => {
-  const uniqueFunnels = chartData.map((item) => item.funnel)
+const generateChartConfig = (chartData?: chartDataType) => {
+  const uniqueFunnels = chartData?.map((item) => item.funnel)
 
-  return uniqueFunnels.reduce(
+  return uniqueFunnels?.reduce(
     (acc, funnelName, i) => {
       acc[funnelName] = {
         label: funnelName,
@@ -32,53 +39,74 @@ const generateChartConfig = (chartData: chartDataType) => {
 }
 const dynamicColor = (index: number) => {
   const colors = [
-    '#FF6B6B', // Coral suave
-    '#FFD93D', // Amarillo vibrante
-    '#6BCB77', // Verde menta
-    '#4D96FF', // Azul brillante
-    '#843bff', // Púrpura vibrante
-    '#FF9F1C', // Naranja dorado
-    '#38B6FF', // Azul cielo eléctrico
-    '#FF61A6', // Rosa fuerte
-    '#00C49A', // Verde turquesa
+    '#4F46E5', // Indigo elegante
+    '#22D3EE', // Azul celeste moderno
+    '#2DD4BF', // Verde agua sobrio
+    '#10B981', // Verde esmeralda profundo
+    '#84CC16', // Verde lima fresco
+    '#FACC15', // Amarillo mostaza elegante
+    '#FB923C', // Naranja suave quemado
+    '#F43F5E', // Rosa sandía moderno
+    '#A855F7', // Púrpura moderno
   ]
 
   return colors[index % colors.length]
 }
+const currencyFormatter = new Intl.NumberFormat('es-HN', {
+  style: 'currency',
+  currency: 'HNL',
+  minimumFractionDigits: 2,
+})
 
-const chartData: chartDataType = [
-  { funnel: 'Ventas B2B', won: 2341 },
-  { funnel: 'Ventas por teléfono', won: 187 },
-  { funnel: 'Ventas en presencia', won: 200 },
-  { funnel: 'Ventas en línea', won: 187 },
-]
-
-const chartConfig = generateChartConfig(chartData)
-
-export default function FunnelChart() {
+export default function FunnelChart({
+  filers,
+}: {
+  filers?: FilterFunnelAnalitycs | null
+}) {
+  const { data, error } = useQuery({
+    queryKey: ['funnelMetrics', filers],
+    queryFn: () => getFunnelMetrics({ ...filers }),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: 1,
+  })
+  const chartConfig = generateChartConfig(data)
   return (
     <Card>
-      <CardHeader>Ganancias por embudos</CardHeader>
+      <CardHeader>Ganancias por embudos (HNL)</CardHeader>
       <CardBody>
-        <ChartContainer
-          config={chartConfig}
-          className="[&_.recharts-text]:fill-white aspect-square max-h-[250px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideIndicator />}
-            />
-            <Pie data={chartData} dataKey="won" label nameKey="funnel">
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={chartConfig[entry.funnel]?.color}
-                />
-              ))}
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+        {chartConfig && data ? (
+          <ChartContainer
+            config={chartConfig}
+            className="[&_.recharts-text]:dark:fill-white [&_.recharts-text]:fill-black "
+          >
+            <PieChart>
+              <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="funnel"
+                valueKey="value"
+                label={({ value }) => currencyFormatter.format(value)}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={chartConfig[entry.funnel]?.color}
+                  />
+                ))}
+              </Pie>
+              <ChartLegend
+                content={<ChartLegendContent nameKey="funnel" />}
+                className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+              />
+            </PieChart>
+          </ChartContainer>
+        ) : (
+          !error && <FunnelChartSkeleton />
+        )}
+        {error && <FunnelChartError message={error.message} />}
       </CardBody>
     </Card>
   )

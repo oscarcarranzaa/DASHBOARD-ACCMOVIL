@@ -1,8 +1,5 @@
-'use client'
-export default function DashboardPage() {
-  return (
-    <>
-      <div>Desde el dash</div>
-    </>
-  )
+import Dash from '../page'
+
+export default function Dashboard() {
+  return <Dash />
 }

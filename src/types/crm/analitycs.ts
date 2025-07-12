@@ -17,6 +17,13 @@ export const ZResumeLeadsMetrics = z.object({
   percent: z.string(),
   trend: z.enum(['up', 'down', 'equal']),
 })
+export const ZFunnelMetrics = z.object({
+  funnel: z.string(),
+  won: z.number(),
+  value: z.number(),
+})
+export const ZAllFunnelMetrics = z.array(ZFunnelMetrics)
+export type AllFunnelMetricsSchema = z.infer<typeof ZAllFunnelMetrics>
 export const ZAllResumeLeadsMetrics = z.array(ZResumeLeadsMetrics)
 export type AllResumeLeadsMetricsSchema = z.infer<typeof ZAllResumeLeadsMetrics>
 export const ZLeadsMetricsResponse = z.array(ZLeadsMetrics)

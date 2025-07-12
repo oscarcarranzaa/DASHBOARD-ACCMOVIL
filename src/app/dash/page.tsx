@@ -1,6 +1,6 @@
 'use client'
-import DashboardPage from './dashboard/page'
+import FunnelAnalitycs from './embudo/analisis/page'
 
 export default function Dash() {
-  return <DashboardPage />
+  return <FunnelAnalitycs />
 }

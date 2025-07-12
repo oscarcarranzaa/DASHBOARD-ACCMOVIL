@@ -10,7 +10,7 @@ import UserSellChart from '@/components/customers/crm/pipeline/analitycs/userSel
 import NavegationPages from '@/components/navegationPages'
 import { useState } from 'react'
 
-export default function FunnelSettings() {
+export default function FunnelAnalitycs() {
   const [filter, setFilters] = useState<FilterFunnelAnalitycs | null>()
   return (
     <>
@@ -23,7 +23,7 @@ export default function FunnelSettings() {
           <UserSellChart />
         </div>
         <div className="lg:col-span-1 col-span-2">
-          <FunnelChart />
+          <FunnelChart filers={filter} />
         </div>
       </div>
     </>

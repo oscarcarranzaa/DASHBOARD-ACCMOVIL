@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import SelectUser from '@/components/users/selectUser'
 import {
@@ -74,6 +75,7 @@ export default function NewLead({ button, isDisabled }: TProps) {
         title: 'Nuevo cliente potencial agregado',
       })
       queryClient.invalidateQueries({ queryKey: ['leads'] })
+      queryClient.invalidateQueries({ queryKey: ['leadsFunnel'] })
     },
     onError: (err) => {
       addToast({

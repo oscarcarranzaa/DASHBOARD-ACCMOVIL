@@ -12,7 +12,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-3 bg-white dark:bg-[#131315] flex justify-between border-b border-gray-300 dark:border-zinc-600">
+      <header className="p-3 bg-white fixed z-50 w-full dark:bg-[#131315] flex justify-between border-b border-gray-300 dark:border-zinc-600">
         <div className="ml-5">
           <Link href={'/dash/dashboard'}>
             <Image

@@ -17,6 +17,19 @@ export type TParamsMetrics = {
   userId?: string | null
   funnelId?: string | null
 }
+
+function getParamsUrl({ from, to, userId, funnelId }: TParamsMetrics) {
+  const paramsUrl = new URLSearchParams()
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const entries = { from, to, userId, funnelId, tz }
+  for (const key in entries) {
+    const value = entries[key as keyof typeof entries]
+    if (value) {
+      paramsUrl.set(key, value)
+    }
+  }
+  return paramsUrl
+}
 export async function getLeadsMetrics({
   from,
   to,
@@ -24,14 +37,7 @@ export async function getLeadsMetrics({
   funnelId,
 }: TParamsMetrics) {
   try {
-    const paramsUrl = new URLSearchParams()
-    const entries = { from, to, userId, funnelId }
-    for (const key in entries) {
-      const value = entries[key as keyof typeof entries]
-      if (value) {
-        paramsUrl.set(key, value)
-      }
-    }
+    const paramsUrl = getParamsUrl({ from, to, userId, funnelId })
 
     const { data } = await axiosInstance.get<LeadsMetricsResponseSchema>(
       `/admin/lead/analitycs/metrics?${paramsUrl.toString()}`
@@ -55,14 +61,7 @@ export async function getResumeLeadsMetrics({
   funnelId,
 }: TParamsMetrics) {
   try {
-    const paramsUrl = new URLSearchParams()
-    const entries = { from, to, userId, funnelId }
-    for (const key in entries) {
-      const value = entries[key as keyof typeof entries]
-      if (value) {
-        paramsUrl.set(key, value)
-      }
-    }
+    const paramsUrl = getParamsUrl({ from, to, userId, funnelId })
 
     const { data } = await axiosInstance.get<AllResumeLeadsMetricsSchema>(
       `/admin/lead/analitycs/rates?${paramsUrl.toString()}`
@@ -87,14 +86,7 @@ export async function getFunnelMetrics({
   funnelId,
 }: TParamsMetrics) {
   try {
-    const paramsUrl = new URLSearchParams()
-    const entries = { from, to, userId, funnelId }
-    for (const key in entries) {
-      const value = entries[key as keyof typeof entries]
-      if (value) {
-        paramsUrl.set(key, value)
-      }
-    }
+    const paramsUrl = getParamsUrl({ from, to, userId, funnelId })
 
     const { data } = await axiosInstance.get<AllFunnelMetricsSchema>(
       `/admin/lead/analitycs/funnel?${paramsUrl.toString()}`
@@ -119,15 +111,7 @@ export async function getSellerMetrics({
   funnelId,
 }: TParamsMetrics) {
   try {
-    const paramsUrl = new URLSearchParams()
-    const entries = { from, to, userId, funnelId }
-    for (const key in entries) {
-      const value = entries[key as keyof typeof entries]
-      if (value) {
-        paramsUrl.set(key, value)
-      }
-    }
-
+    const paramsUrl = getParamsUrl({ from, to, userId, funnelId })
     const { data } = await axiosInstance.get<AllUserSellMetricsSchema>(
       `/admin/lead/analitycs/seller?${paramsUrl.toString()}`
     )

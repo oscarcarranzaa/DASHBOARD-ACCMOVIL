@@ -14,6 +14,8 @@ export async function loginUser(formData: LoginSchema) {
         ? error.response.data?.response?.msg
         : 'Error al soliciar acceso.'
       throw new Error(err)
+    } else {
+      throw new Error('Error al soliciar acceso.')
     }
   }
 }

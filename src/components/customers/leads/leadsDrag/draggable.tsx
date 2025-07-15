@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { allLeadsByPipelineSchema, leadSchema } from '@/types/crm/leads'
@@ -91,6 +92,7 @@ export default function LeadDraggable({ data }: TProps) {
       socket.off('lead:stageChanged', handleStageChanged)
     }
   }, [queryClient])
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   )
@@ -107,8 +109,8 @@ export default function LeadDraggable({ data }: TProps) {
     }
   }
   return (
-    <div className=" flex w-full h-full overflow-auto ">
-      <div className="flex w-full justify-between gap-1 h-full ">
+    <div className=" flex w-full relative min-h-[calc(100vh-200px-var(--header-height))] overflow-auto ">
+      <div className="flex w-full h-auto justify-between gap-1  ">
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
           {data.pipeline.stages.map((stage) => {
             const findLeads = data.data.filter(

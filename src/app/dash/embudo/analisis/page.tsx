@@ -20,10 +20,10 @@ export default function FunnelAnalitycs() {
       <LeadChart filters={filter} />
       <div className="grid lg:grid-cols-7 grid-cols-2 mt-5 gap-5">
         <div className="lg:col-span-4 col-span-2">
-          <UserSellChart filers={filter} />
+          <UserSellChart filters={filter} />
         </div>
         <div className="lg:col-span-3 col-span-2">
-          <FunnelChart filers={filter} />
+          <FunnelChart filters={filter} />
         </div>
       </div>
     </>

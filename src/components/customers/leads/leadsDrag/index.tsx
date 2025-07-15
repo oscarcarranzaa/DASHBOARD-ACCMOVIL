@@ -37,7 +37,7 @@ export default function LeadDrag({ pipelineId }: TProps) {
       <div className="mb-3">
         <LeadHeader isRequired valueKey={pipelineId} onChange={handleRouter} />
       </div>
-      <div className="h-full max-h-screen relative ">
+      <div className="h-full min-h-[calc(100vh-200px-var(--header-height))] relative ">
         {data && <LeadDraggable data={data} />}
         {isPending && (
           <div className="w-full flex  flex-col justify-center mt-40">

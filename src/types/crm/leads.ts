@@ -54,19 +54,36 @@ export const ZNewLead = ZLead.pick({
 }).merge(
   z.object({
     name: z.string().min(2, 'Nombre muy corto'),
-    email: z.string().optional(),
-    phone: z
+    email: z
       .string()
       .optional()
       .superRefine((val, ctx) => {
         if (val === '') return
         if (val) {
-          if (!/^\d+$/.test(val)) {
+          if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: 'El número de teléfono no es válido.',
+              message: 'El correo electrónico no es válido.',
             })
           }
+        }
+      })
+      .transform((val) => (val === '' ? undefined : val)),
+    phone: z
+      .string()
+      .optional()
+      .superRefine((val, ctx) => {
+        if (!val || val.trim() === '') return
+
+        const trimmed = val.trim()
+        const regex = /^\d{8,15}$/
+
+        if (!regex.test(trimmed)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              'El número de teléfono debe contener solo números (8 a 15 dígitos).',
+          })
         }
       })
       .transform((val) => (val === '' ? undefined : val)),

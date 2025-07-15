@@ -24,13 +24,13 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function UserSellChart({
-  filers,
+  filters,
 }: {
-  filers: FilterFunnelAnalitycs | null
+  filters?: FilterFunnelAnalitycs | null
 }) {
   const { data, isPending } = useQuery({
-    queryKey: ['userSellMetrics', filers],
-    queryFn: () => getSellerMetrics({ ...filers }),
+    queryKey: ['userSellMetrics', filters],
+    queryFn: () => getSellerMetrics({ ...filters }),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,

@@ -25,8 +25,8 @@ export default function DropLead({
       ref={setNodeRef}
       className={` flex flex-col h-full min-w-36 w-full rounded-t-lg ${isOver ? 'bg-zinc-200 dark:bg-zinc-900' : 'bg-zinc-100 dark:bg-zinc-800'} `}
     >
-      <div className="flex flex-col justify-center sticky top-0 bg-zinc-50 border border-zinc-300 rounded-t-lg dark:border-zinc-700  p-2 dark:bg-zinc-950">
-        <p className="text-center  line-clamp-1 text-base font-semibold">
+      <div className="flex flex-col justify-center shadow-md bg-zinc-50 border border-zinc-300 rounded-t-lg dark:border-zinc-700  p-2 dark:bg-zinc-950">
+        <p className="text-center line-clamp-1 text-base font-semibold">
           {stage.name}
         </p>
         <div className="flex items-center gap-2 mt-2">
@@ -50,7 +50,7 @@ export default function DropLead({
         </div>
       </div>
       <div
-        className={` ${isOver ? 'bg-zinc-200 dark:bg-zinc-900' : 'bg-zinc-100 dark:bg-zinc-800'}  flex-shrink-0 flex-grow-0`}
+        className={`pb-5 ${isOver ? 'bg-zinc-200 dark:bg-zinc-900' : 'bg-zinc-100 dark:bg-zinc-800'}  flex-shrink-0 flex-grow-0`}
       >
         <div className="px-1 py-2 flex flex-col gap-1 relative">
           {leads.map((lead) => {

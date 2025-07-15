@@ -3,12 +3,12 @@ import { ReactNode, useState } from 'react'
 import Header from './header'
 import SideMenuContent from './sideMenu'
 
-export default function NavegationLayout({
-  children,
-}: {
+type TProps = {
   children: ReactNode
-}) {
-  const [isOpen, setIsOpen] = useState(false)
+  isOpenMenu: boolean
+}
+export default function NavegationLayout({ children, isOpenMenu }: TProps) {
+  const [isOpen, setIsOpen] = useState(isOpenMenu)
   return (
     <>
       <Header />
@@ -18,7 +18,15 @@ export default function NavegationLayout({
       >
         <SideMenuContent isOpen={isOpen} onOpenChange={setIsOpen} />
 
-        {children}
+        <div className="mt-[calc(var(--header-height))]">
+          {children}
+          <footer className="mt-10 mb-1">
+            <p className="text-center text-xs dark:text-white opacity-50">
+              Versión Beta v0.0.1 - © 2025 Accmovil. Todos los derechos
+              reservados.
+            </p>
+          </footer>
+        </div>
       </div>
     </>
   )

@@ -1,27 +1,24 @@
-'use client'
-
-import { ThemeProvider } from 'next-themes'
-import { HeroUIProvider } from '@heroui/react'
 import NavegationLayout from '@/components/navegationLayout'
-import { ToastProvider } from '@heroui/react'
+import { Providers } from '@/providers'
+import { cookies } from 'next/headers'
 
-export default function DashLayout({
+export default async function DashLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
+  const cookieStore = await cookies()
+  const openMenu = cookieStore.get('openMenu')
+  const isOpenMenu = openMenu?.value === 'true'
   return (
-    <HeroUIProvider locale="es-ES">
-      <ThemeProvider attribute="class">
-        <NavegationLayout>
-          <main className="flex-none block ">
-            <div className="px-5 pt-5 max-w-[1700px] h-full w-full ">
-              {children}
-            </div>
-          </main>
-        </NavegationLayout>
-      </ThemeProvider>
-      <ToastProvider />
-    </HeroUIProvider>
+    <Providers>
+      <NavegationLayout isOpenMenu={isOpenMenu}>
+        <main className="flex-none block">
+          <div className="px-5 pt-5 max-w-[1700px] h-full w-full ">
+            {children}
+          </div>
+        </main>
+      </NavegationLayout>
+    </Providers>
   )
 }

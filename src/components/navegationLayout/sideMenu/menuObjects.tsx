@@ -8,7 +8,7 @@ import ProductSVG from '@/components/icons/product'
 import PublishSVG from '@/components/icons/publish'
 import TeamSVG from '@/components/icons/team'
 import WorldSVG from '@/components/icons/world'
-import { SquareUser } from 'lucide-react'
+import { Settings, SquareUser } from 'lucide-react'
 const iconSize = 20
 
 export const menuItems = [
@@ -145,5 +145,12 @@ export const menuItems = [
         permissionKeys: ['offers.points'],
       },
     ],
+  },
+  {
+    name: 'Configuración',
+    icon: <Settings size={iconSize} />,
+    urlKey: '/dash/configuracion',
+    href: '/dash/configuracion',
+    permissionKeys: [],
   },
 ]

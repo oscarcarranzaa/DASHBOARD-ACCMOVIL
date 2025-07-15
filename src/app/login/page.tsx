@@ -6,12 +6,11 @@ import { useForm } from 'react-hook-form'
 import Image from 'next/image'
 import { useMutation } from '@tanstack/react-query'
 import { loginUser } from '@/api/login'
-import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Login() {
-  const router = useRouter()
   const initialValues: LoginSchema = {
     email: '',
     password: '',
@@ -21,22 +20,20 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(login), defaultValues: initialValues })
-
-  const { mutate, isPending, error, data } = useMutation({
-    mutationFn: loginUser,
-    onSuccess: () => {
-      router.push('/dash/dashboard')
-    },
-  })
+  const router = useRouter()
 
   const setToken = useAuthStore((state) => state.setToken)
   const setUser = useAuthStore((state) => state.setUser)
-  useEffect(() => {
-    if (data) {
-      setToken(data.data.token)
-      setUser(data.data.user)
-    }
-  }, [data, setToken])
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (user) => {
+      if (user) {
+        setToken(user.data.token)
+        setUser(user.data.user)
+        router.push('/dash/dashboard')
+      }
+    },
+  })
 
   const handleForm = (formData: LoginSchema) => mutate(formData)
   return (

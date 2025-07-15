@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
+import { useLogout } from '@/hooks/useLogout'
 
 interface IProfileProps {
   image: string
@@ -14,21 +15,7 @@ interface IProfileProps {
 }
 
 export default function ProfileItems({ image, name, role }: IProfileProps) {
-  const { logoutUserToken } = useAuthStore()
-  const router = useRouter()
-  const queryClient = useQueryClient()
-
-  // cerrar sesion e invalidar todas las queries
-  const logoutUser = async () => {
-    try {
-      await queryClient.invalidateQueries()
-      await logout()
-      logoutUserToken()
-      router.refresh()
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error)
-    }
-  }
+  const { logout } = useLogout()
   return (
     <>
       <div>
@@ -66,7 +53,7 @@ export default function ProfileItems({ image, name, role }: IProfileProps) {
         })}
         <button
           className="flex mb-2 mt-1 items-center w-72 p-2 pl-3 pr-3 text-sm font-medium rounded-md text-red-500 hover:bg-red-100 dark:hover:text-white dark:hover:bg-red-700 stroke-red-500 dark:hover:stroke-white"
-          onClick={logoutUser}
+          onClick={logout}
         >
           <div className="mr-2">
             <OffSVG size={20} />

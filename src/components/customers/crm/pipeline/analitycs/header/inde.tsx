@@ -25,10 +25,7 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
   const [userId, setUserId] = useState<string | null>(null)
   const [funnelId, setFunnelId] = useState<string | null>(null)
 
-  const [value, setValue] = useState<RangeValue<DateValue> | null>({
-    start: today(getLocalTimeZone()).subtract({ days: 30 }),
-    end: today(getLocalTimeZone()),
-  })
+  const [value, setValue] = useState<RangeValue<DateValue> | null>(null)
   const isFirstRun = useRef(true)
   const relativeTimeSelect = [
     {
@@ -59,7 +56,7 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
 
     const end = today(getLocalTimeZone())
     const start = end.subtract({ days })
-
+    if (!start || !end) return
     setValue({ start, end })
   }
   const handleDate = (value: RangeValue<DateValue> | null) => {
@@ -72,6 +69,7 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
       isFirstRun.current = false
       return
     }
+
     if (onChangeFilters) {
       onChangeFilters({
         userId,

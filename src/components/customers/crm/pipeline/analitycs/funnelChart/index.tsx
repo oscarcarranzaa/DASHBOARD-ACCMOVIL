@@ -59,13 +59,13 @@ const currencyFormatter = new Intl.NumberFormat('es-HN', {
 })
 
 export default function FunnelChart({
-  filers,
+  filters,
 }: {
-  filers?: FilterFunnelAnalitycs | null
+  filters?: FilterFunnelAnalitycs | null
 }) {
   const { data, error } = useQuery({
-    queryKey: ['funnelMetrics', filers],
-    queryFn: () => getFunnelMetrics({ ...filers }),
+    queryKey: ['funnelMetrics', filters],
+    queryFn: () => getFunnelMetrics({ ...filters }),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,

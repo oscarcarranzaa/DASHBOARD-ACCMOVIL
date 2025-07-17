@@ -13,12 +13,12 @@ export async function middleware(request: NextRequest) {
 
   const isLoginPage = request.nextUrl.pathname === '/login'
   const isProtectedRoute = request.nextUrl.pathname.startsWith('/dash')
-
+  const isRecoveryPage = request.nextUrl.pathname === '/recovery'
   if (token) {
     try {
       await verifyToken(token)
       // Usuario autenticado intenta ir a login
-      if (isLoginPage) {
+      if (isLoginPage || isRecoveryPage) {
         return NextResponse.redirect(new URL('/dash/dashboard', request.url))
       }
 
@@ -45,5 +45,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dash/:path*', '/login'],
+  matcher: ['/dash/:path*', '/login', '/recovery'],
 }

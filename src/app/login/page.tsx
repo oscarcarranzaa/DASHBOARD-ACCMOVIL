@@ -1,69 +1,33 @@
 'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
 import LoginForm from '@/components/forms/login'
-import { LoginSchema, login } from '@/types'
-import { useForm } from 'react-hook-form'
 import Image from 'next/image'
-import { useMutation } from '@tanstack/react-query'
-import { loginUser } from '@/api/login'
-import { useAuthStore } from '@/store/auth'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { Link } from '@heroui/react'
 
 export default function Login() {
-  const initialValues: LoginSchema = {
-    email: '',
-    password: '',
-  }
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: zodResolver(login), defaultValues: initialValues })
-  const router = useRouter()
-
-  const setToken = useAuthStore((state) => state.setToken)
-  const setUser = useAuthStore((state) => state.setUser)
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: loginUser,
-    onSuccess: (user) => {
-      if (user) {
-        setToken(user.data.token)
-        setUser(user.data.user)
-        router.push('/dash/dashboard')
-      }
-    },
-  })
-
-  const handleForm = (formData: LoginSchema) => mutate(formData)
   return (
-    <main className="flex justify-center items-center min-h-screen  md:bg-slate-200">
-      <div className="z-10">
-        <div className="max-w-[600px] md:p-8 rounded-xl md:bg-slate-50">
-          <div className="p-3 pl-5 pr-5 w-full">
-            <div className="mb-8 flex justify-center">
-              <Image
-                src={'/static/logo.webp'}
-                width={300}
-                height={62}
-                alt="Accmovil Logo"
-                priority
-              />
-            </div>
-            <h2 className="text-3xl font-bold mb-4 text-center text-zinc-800">
-              Iniciar Sesión
+    <div className="flex flex-col gap-5 min-h-screen  bg-zinc-100 dark:bg-zinc-950">
+      <header className="flex justify-center p-3 bg-white dark:bg-zinc-900">
+        <Image
+          src="/static/logo.webp"
+          width={180}
+          height={30}
+          alt="Accmovil Logo"
+          priority
+        />
+      </header>
+      <main className=" min-h-screen bg-zinc-100 dark:bg-zinc-950">
+        <div className="max-w-[500px] m-auto p-2 md:p-8 rounded-xl md:bg-white md:dark:bg-zinc-900 md:shadow-lg">
+          <div className="p-3 w-full">
+            <h2 className="text-3xl font-bold mb-5 text-center text-zinc-800 dark:text-white">
+              Iniciar sesión
             </h2>
-            <form onSubmit={handleSubmit(handleForm)}>
-              <LoginForm
-                register={register}
-                errors={errors}
-                loading={isPending}
-                error={error?.message}
-              />
-            </form>
+            <LoginForm />
+            <div className="flex justify-center mt-5 text-sm">
+              <Link href={'/recovery'}>¿Olvidaste tu contraseña?</Link>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   )
 }

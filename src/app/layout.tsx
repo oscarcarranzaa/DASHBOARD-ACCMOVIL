@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ReactQueryClientProvider } from '@/lib/reactQuery'
+import { Providers } from '@/providers'
 
 const inter = Poppins({
   weight: ['300', '400', '500', '600', '700'],

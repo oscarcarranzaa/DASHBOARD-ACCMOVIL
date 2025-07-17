@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes'
 import MoonSVG from '@/components/icons/moon'
 import LightSVG from '@/components/icons/light'
 import { useEffect, useState } from 'react'
-import Spinner from '@/components/icons/spinner'
+import { Spinner } from '@heroui/react'
 
 export default function DarkModeButton() {
   const { theme, setTheme } = useTheme()
@@ -20,9 +20,7 @@ export default function DarkModeButton() {
   const setIcon = mounted ? (
     icon
   ) : (
-    <div className=" animate-spin">
-      <Spinner size={24} fill="#777" />
-    </div>
+    <Spinner size="sm" variant="simple" color="white" />
   )
   return (
     <>

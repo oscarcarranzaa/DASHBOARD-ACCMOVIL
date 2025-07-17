@@ -1,97 +1,130 @@
 'use client'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-import { LoginSchema } from '@/types'
-import { FieldErrors, UseFormRegister } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { loginUser } from '@/api/login'
+import { useAuthStore } from '@/store/auth'
+import { useRouter } from 'next/navigation'
+import { LoginSchema, login } from '@/types'
 import ErrorsMessage from './errorsMessage'
 import { useState } from 'react'
-import EyeSVG from '../icons/eye'
-import EyeInvisibleSVG from '../icons/eyeInvisible'
 import Spinner from '../icons/spinner'
+import { Button, Input } from '@heroui/react'
+import { Controller } from 'react-hook-form'
+import { Eye, EyeOff } from 'lucide-react'
 
-type LoginFormProps = {
-  register: UseFormRegister<LoginSchema>
-  errors: FieldErrors<LoginSchema>
-  loading: boolean
-  error: string | undefined
-}
-
-export default function LoginForm({
-  errors,
-  register,
-  loading,
-  error,
-}: LoginFormProps) {
+export default function LoginForm() {
   const [see, setSee] = useState(false)
+  const initialValues: LoginSchema = {
+    email: '',
+    password: '',
+  }
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(login), defaultValues: initialValues })
+  const router = useRouter()
+
+  const setToken = useAuthStore((state) => state.setToken)
+  const setUser = useAuthStore((state) => state.setUser)
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (user) => {
+      if (user) {
+        setToken(user.data.token)
+        setUser(user.data.user)
+        router.push('/dash/dashboard')
+      }
+    },
+  })
+
+  const handleForm = (formData: LoginSchema) => mutate(formData)
 
   return (
     <>
-      <div className="mb-5">
-        <label>
-          <p>
-            Email: <span className="text-red-600">*</span>
-          </p>
-          <input
-            type="email"
-            className={`${errors.email ? 'border-red-300' : ''} w-80 p-3 border  rounded-md`}
-            placeholder="Ingrese su correo"
-            autoComplete="email"
-            {...register('email', {
-              required: 'El email es obligatorio',
-            })}
+      <form onSubmit={handleSubmit(handleForm)}>
+        <p className="text-center text-lg font-semibold text-zinc-600 dark:text-zinc-300">
+          ¡Bienvenido de nuevo!
+        </p>
+        <p className="text-center text-sm mb-10 text-zinc-600 dark:text-zinc-300">
+          Inicie sesión con sus credenciales para continuar.
+        </p>
+        <div className="mb-5 flex flex-col gap-2">
+          <Controller
+            name="email"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                isRequired
+                errorMessage={errors.email?.message}
+                isInvalid={!!errors.email}
+                type="email"
+                placeholder="Ingrese su correo"
+                label="Correo electrónico"
+                size="lg"
+                labelPlacement="outside"
+                variant="bordered"
+              />
+            )}
           />
-        </label>
-        {errors.email && <ErrorsMessage>{errors.email.message}</ErrorsMessage>}
-      </div>
-
-      <div>
-        <label>
-          <p>
-            Contraseña: <span className="text-red-600">*</span>
-          </p>
-
-          <div
-            className={`${errors.password ? 'border-red-300' : ''} w-80 max-w-full border  rounded-md flex items-center overflow-hidden`}
-          >
-            <input
-              type={see ? 'text' : 'password'}
-              className="p-3 w-full"
-              placeholder="Ingrese su contraseña"
-              autoComplete="current-password"
-              {...register('password', {
-                required: 'Contraseña obligatoria',
-              })}
-            />
-            <button
-              className="bg-white p-3 hover:bg-slate-200 rounded-md"
-              type="button"
-              onClick={() => setSee(!see)}
-            >
-              {see ? <EyeInvisibleSVG size={24} /> : <EyeSVG size={24} />}
-            </button>
-          </div>
-        </label>
-        <div className=" max-w-80">
-          {errors.password && (
-            <ErrorsMessage>{errors.password.message}</ErrorsMessage>
-          )}
         </div>
-      </div>
-      <div className=" max-w-80 h-14">
-        {error && <ErrorsMessage>{error}</ErrorsMessage>}
-      </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className={`${loading ? 'cursor-not-allowed bg-blue-300 hover:bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} w-full  text-white font-semibold text-xl p-3 rounded-2xl mt-5  transition-colors flex justify-center`}
-      >
-        {loading ? (
-          <div className="animate-spin w-7 h-7 flex items-center justify-center">
-            <Spinner size={28} fill="#ffffff" />
+        <div className="mb-5 flex flex-col gap-2">
+          <Controller
+            name="password"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                endContent={
+                  <button
+                    onClick={() => setSee(!see)}
+                    aria-label="toggle password visibility"
+                    type="button"
+                    className="focus:outline-hidden"
+                  >
+                    {see ? <Eye /> : <EyeOff />}
+                  </button>
+                }
+                autoComplete="off"
+                isRequired
+                errorMessage={errors.password?.message}
+                isInvalid={!!errors.password}
+                type={see ? 'text' : 'password'}
+                placeholder="Ingrese su contraseña"
+                label="Contraseña"
+                size="lg"
+                labelPlacement="outside"
+                variant="bordered"
+              />
+            )}
+          />
+          <div className=" h-14">
+            {error && <ErrorsMessage>{error.message}</ErrorsMessage>}
           </div>
-        ) : (
-          'Iniciar sesión'
-        )}
-      </button>
+        </div>
+        <Button
+          type="submit"
+          disabled={isPending}
+          color="primary"
+          size="lg"
+          className="w-full"
+          radius="full"
+        >
+          {isPending ? (
+            <div className="animate-spin w-7 h-7 flex items-center justify-center">
+              <Spinner size={28} fill="#ffffff" />
+            </div>
+          ) : (
+            'Iniciar sesión'
+          )}
+        </Button>
+      </form>
     </>
   )
 }

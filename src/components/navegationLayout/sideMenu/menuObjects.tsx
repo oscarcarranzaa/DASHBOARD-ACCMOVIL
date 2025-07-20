@@ -112,19 +112,8 @@ export const menuItems = [
     name: 'Usuarios',
     icon: <ClientSVG size={iconSize} />,
     urlKey: '/dash/usuarios',
+    href: '/dash/usuarios',
     permissionKeys: [],
-    items: [
-      {
-        name: 'Usuarios',
-        href: '/dash/usuarios',
-        permissionKeys: ['team.view'],
-      },
-      {
-        name: 'Roles',
-        href: '/dash/usuarios/roles',
-        permissionKeys: ['admin'],
-      },
-    ],
   },
   {
     name: 'Ofertas',
@@ -149,8 +138,8 @@ export const menuItems = [
   {
     name: 'Configuración',
     icon: <Settings size={iconSize} />,
-    urlKey: '/dash/configuracion',
-    href: '/dash/configuracion',
+    urlKey: '/dash/settings',
+    href: '/dash/settings',
     permissionKeys: [],
   },
 ]

@@ -16,7 +16,7 @@ export default function Recovery() {
           />
         </header>
         <main>
-          <div className="flex justify-center max-w-[500px] mb-20 m-auto dark:bg-zinc-900 bg-white shadow-lg rounded-xl">
+          <div className="flex justify-center max-w-[500px] mb-20 m-auto dark:bg-zinc-900 rounded-xl md:bg-white md:dark:bg-zinc-900 md:shadow-lg">
             <div className="p-5 py-20 w-full">
               <h2 className="text-3xl font-bold mb-4 text-center text-zinc-800 dark:text-white">
                 Recuperar Contraseña

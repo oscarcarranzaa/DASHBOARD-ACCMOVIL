@@ -41,183 +41,185 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 p-2 col-span-1  border-r h-screen border-gray-200 dark:border-gray-600  ${style.menuContent}`}
-      >
-        <div className="mt-[calc(var(--header-height)+0.7rem)]">
-          <Tooltip
-            content="Abrir menú"
-            placement="right"
-            offset={8}
-            className="dark:bg-black"
-            isDisabled={!isOpen}
-          >
-            <button
-              className="p-2 w-full text-start flex items-center gap-2 mb-10 dark:bg-zinc-900 bg-zinc-200 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-300 rounded-md fill-black stroke-black"
-              onClick={() => {
-                onOpenChange(!isOpen)
-              }}
+      <div>
+        <nav
+          className={`fixed top-0 left-0 p-2  col-span-1  border-r h-screen border-gray-200 dark:border-gray-600  ${style.menuContent}`}
+        >
+          <div className="mt-[calc(var(--header-height)+0.7rem)]">
+            <Tooltip
+              content="Abrir menú"
+              placement="right"
+              offset={8}
+              className="dark:bg-black"
+              isDisabled={!isOpen}
             >
-              {isOpen ? (
-                <CollapseArrowRightSVG size={24} />
-              ) : (
-                <CollapseArrowLeftSVG size={24} />
-              )}
-              <p className={isOpen ? 'hidden' : 'block'}>Cerrar</p>
-            </button>
-          </Tooltip>
-        </div>
+              <button
+                className="p-2 w-full text-start flex items-center gap-2 mb-10 dark:bg-zinc-900 bg-zinc-200 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-300 rounded-md fill-black stroke-black"
+                onClick={() => {
+                  onOpenChange(!isOpen)
+                }}
+              >
+                {isOpen ? (
+                  <CollapseArrowRightSVG size={24} />
+                ) : (
+                  <CollapseArrowLeftSVG size={24} />
+                )}
+                <p className={isOpen ? 'hidden' : 'block'}>Cerrar</p>
+              </button>
+            </Tooltip>
+          </div>
 
-        {userData && (
-          <ul>
-            {menuItems.map((menu, index) => {
-              const userRoles = userData.role ? userData.role.keys : null
-              const isRouteActive = path.startsWith(menu.urlKey)
-              const menuKeys = menu.permissionKeys
-                ? [...menu.permissionKeys]
-                : []
+          {userData && (
+            <ul>
+              {menuItems.map((menu, index) => {
+                const userRoles = userData.role ? userData.role.keys : null
+                const isRouteActive = path.startsWith(menu.urlKey)
+                const menuKeys = menu.permissionKeys
+                  ? [...menu.permissionKeys]
+                  : []
 
-              const menuItemsKeys =
-                menu.items?.map((k) => k.permissionKeys).flat() ?? []
-              const allKeys = [menuKeys, menuItemsKeys].flat()
+                const menuItemsKeys =
+                  menu.items?.map((k) => k.permissionKeys).flat() ?? []
+                const allKeys = [menuKeys, menuItemsKeys].flat()
 
-              const isView = verifyAccess({
-                keys: allKeys,
-                userKeys: userRoles,
-              })
+                const isView = verifyAccess({
+                  keys: allKeys,
+                  userKeys: userRoles,
+                })
 
-              const isDisabled = menu.disabled || !isView
+                const isDisabled = menu.disabled || !isView
 
-              if (isDisabled) return null
-              if (menu.href) {
-                return (
-                  <li key={index} className=" list-none">
-                    <Tooltip
-                      content={menu.name}
-                      placement="right"
-                      offset={8}
-                      closeDelay={0}
-                      disableAnimation
-                      className="dark:bg-black"
-                      isDisabled={!isOpen}
-                    >
-                      <Link
-                        href={menu.href}
-                        className={`flex ${style.activeVibrate} flex-wrap mt-1 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-white dark:hover:bg-zinc-800'}`}
-                        onClick={() => toggleMenu(index)}
+                if (isDisabled) return null
+                if (menu.href) {
+                  return (
+                    <li key={index} className=" list-none">
+                      <Tooltip
+                        content={menu.name}
+                        placement="right"
+                        offset={8}
+                        closeDelay={0}
+                        disableAnimation
+                        className="dark:bg-black"
+                        isDisabled={!isOpen}
                       >
-                        <div
-                          className={`flex ${isOpen ? 'justify-center' : ''}`}
-                        >
-                          <div className={style.vibrate}>{menu.icon}</div>
-                          <p
-                            className={`ml-3 text-sm  ${isOpen ? 'hidden' : 'block'}`}
-                          >
-                            {menu.name}
-                          </p>
-                        </div>
-                      </Link>
-                    </Tooltip>
-                  </li>
-                )
-              } else {
-                return (
-                  <li key={index} className=" list-none">
-                    <Tooltip
-                      placement="right-start"
-                      offset={8}
-                      className="dark:bg-black p-0 rounded-lg border dark:border-zinc-600 "
-                      isDisabled={!isOpen}
-                      content={
-                        <>
-                          <div>
-                            <div className="text-sm font-semibold dark:bg-zinc-950 bg-zinc-50 border-b dark:border-zinc-600 rounded-tr-md rounded-tl-md px-3 py-2">
-                              <p>{menu.name}</p>
-                            </div>
-                            <div className="p-1">
-                              {menu.items && isOpen ? (
-                                <MenuItems
-                                  items={menu.items}
-                                  space={false}
-                                  userKeys={userRoles}
-                                />
-                              ) : null}
-                            </div>
-                          </div>
-                        </>
-                      }
-                    >
-                      <div>
-                        <button
-                          className={`${style.activeVibrate} flex w-full flex-wrap mt-2 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-white dark:hover:bg-zinc-800'}`}
+                        <Link
+                          href={menu.href}
+                          className={`flex ${style.activeVibrate} flex-wrap mt-1 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-white dark:hover:bg-zinc-800'}`}
                           onClick={() => toggleMenu(index)}
                         >
-                          <div className="flex">
-                            <div className={`  ${style.vibrate}`}>
-                              {menu.icon}
-                            </div>
+                          <div
+                            className={`flex ${isOpen ? 'justify-center' : ''}`}
+                          >
+                            <div className={style.vibrate}>{menu.icon}</div>
                             <p
                               className={`ml-3 text-sm  ${isOpen ? 'hidden' : 'block'}`}
                             >
                               {menu.name}
                             </p>
                           </div>
-                          <div
-                            className={`${openMenu === index ? ' rotate-180' : ''}  ${isRouteActive ? 'fill-white stroke-white' : ''} transition-transform stroke-black fill-black  dark:fill-zinc-300 dark:stroke-zinc-300 `}
+                        </Link>
+                      </Tooltip>
+                    </li>
+                  )
+                } else {
+                  return (
+                    <li key={index} className=" list-none">
+                      <Tooltip
+                        placement="right-start"
+                        offset={8}
+                        className="dark:bg-black p-0 rounded-lg border dark:border-zinc-600 "
+                        isDisabled={!isOpen}
+                        content={
+                          <>
+                            <div>
+                              <div className="text-sm font-semibold dark:bg-zinc-950 bg-zinc-50 border-b dark:border-zinc-600 rounded-tr-md rounded-tl-md px-3 py-2">
+                                <p>{menu.name}</p>
+                              </div>
+                              <div className="p-1">
+                                {menu.items && isOpen ? (
+                                  <MenuItems
+                                    items={menu.items}
+                                    space={false}
+                                    userKeys={userRoles}
+                                  />
+                                ) : null}
+                              </div>
+                            </div>
+                          </>
+                        }
+                      >
+                        <div>
+                          <button
+                            className={`${style.activeVibrate} flex w-full flex-wrap mt-2 p-3 ${isOpen ? 'justify-center' : 'justify-between px-4 '} rounded-md ${isRouteActive ? 'bg-zinc-950 dark:bg-zinc-700 text-white font-medium stroke-white fill-white' : 'dark:fill-white stroke-black dark:stroke-white fill-black text-gray-800 dark:text-white hover:bg-white dark:hover:bg-zinc-800'}`}
+                            onClick={() => toggleMenu(index)}
                           >
-                            {menu.items && !isOpen ? (
-                              <ArrowAngleSVG size={20} />
+                            <div className="flex">
+                              <div className={`  ${style.vibrate}`}>
+                                {menu.icon}
+                              </div>
+                              <p
+                                className={`ml-3 text-sm  ${isOpen ? 'hidden' : 'block'}`}
+                              >
+                                {menu.name}
+                              </p>
+                            </div>
+                            <div
+                              className={`${openMenu === index ? ' rotate-180' : ''}  ${isRouteActive ? 'fill-white stroke-white' : ''} transition-transform stroke-black fill-black  dark:fill-zinc-300 dark:stroke-zinc-300 `}
+                            >
+                              {menu.items && !isOpen ? (
+                                <ArrowAngleSVG size={20} />
+                              ) : null}
+                            </div>
+                          </button>
+                          <div
+                            className={`${
+                              openMenu === index && !isOpen
+                                ? ' max-h-60 mb-5'
+                                : ' max-h-0  '
+                            } overflow-hidden`}
+                            style={{ transition: 'max-height 0.5s' }}
+                          >
+                            {menu.items ? (
+                              <MenuItems
+                                userKeys={userRoles}
+                                items={menu.items}
+                                space
+                              />
                             ) : null}
                           </div>
-                        </button>
-                        <div
-                          className={`${
-                            openMenu === index && !isOpen
-                              ? ' max-h-60 mb-5'
-                              : ' max-h-0  '
-                          } overflow-hidden`}
-                          style={{ transition: 'max-height 0.5s' }}
-                        >
-                          {menu.items ? (
-                            <MenuItems
-                              userKeys={userRoles}
-                              items={menu.items}
-                              space
-                            />
-                          ) : null}
                         </div>
-                      </div>
-                    </Tooltip>
-                  </li>
-                )
-              }
-            })}
-          </ul>
-        )}
-        <div className="absolute p-2 left-0 right-0 bottom-8 ">
-          <Tooltip
-            content="Cerrar sesión"
-            placement="right"
-            offset={8}
-            className="dark:bg-black"
-            isDisabled={!isOpen}
-          >
-            <Button
-              className={`flex flex-wrap items-center mt-2 w-full bg-red-500/10 rounded-lg text-red-600 `}
-              isIconOnly={isOpen}
-              variant="flat"
-              onPress={logout}
+                      </Tooltip>
+                    </li>
+                  )
+                }
+              })}
+            </ul>
+          )}
+          <div className="absolute p-2 left-0 right-0 bottom-8 ">
+            <Tooltip
+              content="Cerrar sesión"
+              placement="right"
+              offset={8}
+              className="dark:bg-black"
+              isDisabled={!isOpen}
             >
-              {isPending ? (
-                <Spinner size="sm" variant="spinner" color="danger" />
-              ) : (
-                <Power size={20} />
-              )}
-              <p className={isOpen ? 'hidden' : 'block'}>Cerrar sesión</p>
-            </Button>
-          </Tooltip>
-        </div>
-      </nav>
+              <Button
+                className={`flex flex-wrap items-center mt-2 w-full bg-red-500/10 rounded-lg text-red-600 `}
+                isIconOnly={isOpen}
+                variant="flat"
+                onPress={logout}
+              >
+                {isPending ? (
+                  <Spinner size="sm" variant="spinner" color="danger" />
+                ) : (
+                  <Power size={20} />
+                )}
+                <p className={isOpen ? 'hidden' : 'block'}>Cerrar sesión</p>
+              </Button>
+            </Tooltip>
+          </div>
+        </nav>
+      </div>
     </>
   )
 }

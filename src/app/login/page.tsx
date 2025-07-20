@@ -1,7 +1,7 @@
 'use client'
 import LoginForm from '@/components/forms/login'
 import Image from 'next/image'
-import { Link } from '@heroui/react'
+import Link from 'next/link'
 
 export default function Login() {
   return (
@@ -23,7 +23,9 @@ export default function Login() {
             </h2>
             <LoginForm />
             <div className="flex justify-center mt-5 text-sm">
-              <Link href={'/recovery'}>¿Olvidaste tu contraseña?</Link>
+              <Link href={'/recovery'} className="text-primary hover:underline">
+                ¿Olvidaste tu contraseña?
+              </Link>
             </div>
           </div>
         </div>

@@ -40,7 +40,7 @@ export default function StatusBarRecovery({ step }: TPropsStatusBar) {
           <div
             className="flex flex-row w-full p-1 rounded-full"
             style={{
-              backgroundImage: 'linear-gradient(90deg, #006AFF, #ED53DE)',
+              backgroundImage: 'linear-gradient(90deg, #3D8EFF, #72F7F7)',
             }}
           >
             <div

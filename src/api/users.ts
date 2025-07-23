@@ -1,7 +1,9 @@
 import axiosInstance from '@/lib/axiosClient'
 import {
   AllUsersSchema,
+  CountUserActivities,
   CreateUserSchema,
+  DisableUserSchema,
   getAllRolesType,
   getPermissionsType,
   newRoleType,
@@ -10,6 +12,8 @@ import {
   UserSchema,
   ZAllRoles,
   ZAllUsers,
+  ZCountUserActivities,
+  ZDisableUser,
   ZGetPermissions,
   ZRole,
   ZRolePermissions,
@@ -17,10 +21,15 @@ import {
 } from '@/types/users'
 import { isAxiosError } from 'axios'
 
-export async function getAllUsers(page: string, limit: string, query?: string) {
+export async function getAllUsers(
+  page: string,
+  limit: string,
+  query?: string,
+  status?: string
+) {
   try {
     const { data } = await axiosInstance.get<AllUsersSchema>(
-      `/admin/users?page=${page}&limit=${limit}${query ? '&q=' + query : ''}`
+      `/admin/users?page=${page}&limit=${limit}${query ? '&q=' + query : ''}${status ? '&status=' + status : ''}`
     )
 
     const validClient = ZAllUsers.parse(data)
@@ -141,6 +150,63 @@ export async function createUser(userData: CreateUserSchema) {
       throw new Error(error.response.data.response.msg)
     } else {
       throw new Error('Ocurrió un error al obtener el cliente.')
+    }
+  }
+}
+
+export async function countUserActivities(userId: string) {
+  try {
+    const { data } = await axiosInstance.get<CountUserActivities>(
+      `/admin/users/${userId}/activities`
+    )
+    const validData = ZCountUserActivities.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error(
+        'Ocurrió un error al obtener las actividades del usuario.'
+      )
+    }
+  }
+}
+
+type TDesableUser = {
+  userId: string
+  assingToId?: string
+}
+export async function disabledUser({ userId, assingToId }: TDesableUser) {
+  try {
+    const { data } = await axiosInstance.put<DisableUserSchema>(
+      `/admin/user/${userId}/disable`,
+      { assingToId }
+    )
+    const validData = ZDisableUser.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg || 'Error inesperado.')
+    } else {
+      throw new Error('Ocurrió un error al desactivar el usuario.')
+    }
+  }
+}
+type TActiveUser = {
+  userId: string
+}
+export async function activeUser({ userId }: TActiveUser) {
+  try {
+    const { data } = await axiosInstance.put<DisableUserSchema>(
+      `/admin/user/${userId}/reactive`
+    )
+    const validData = ZDisableUser.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data?.response?.msg || 'Error inesperado.')
+    } else {
+      throw new Error('Ocurrió un error al activar el usuario.')
     }
   }
 }

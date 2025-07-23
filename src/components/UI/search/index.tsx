@@ -1,6 +1,6 @@
 'use client'
 import SearchSVG from '@/components/icons/search'
-import { Input } from "@heroui/react"
+import { Input } from '@heroui/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -40,7 +40,7 @@ export default function Search({
     params.delete(searchQueryName)
     params.delete(pageQueryName)
     const url = `${pathname}?${params.toString()}`
-    router.push(url)
+    router.replace(url)
   }
   const newSearch = (search: string) => {
     const page = params.get(pageQueryName)
@@ -49,7 +49,7 @@ export default function Search({
     }
     params.set(searchQueryName, search)
     const url = `${pathname}?${params.toString()}`
-    router.push(url)
+    router.replace(url)
     return
   }
   const debounce = useDebouncedCallback((value: string) => {

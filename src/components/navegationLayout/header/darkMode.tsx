@@ -20,7 +20,7 @@ export default function DarkModeButton() {
   const setIcon = mounted ? (
     icon
   ) : (
-    <Spinner size="sm" variant="simple" color="white" />
+    <Spinner className="w-4 h-4" size="sm" variant="simple" color="white" />
   )
   return (
     <>

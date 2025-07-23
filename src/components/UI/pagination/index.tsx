@@ -24,7 +24,7 @@ export default function PaginationPage({ totalPages, pageName }: TProps) {
 
   return (
     <>
-      <div>
+      <div className="pb-20">
         <Pagination
           showControls
           showShadow

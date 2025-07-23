@@ -56,10 +56,16 @@ export const ZUser = z.object({
   phone: z.string().nullable(),
   avatar: z.string().nullable(),
   birthDate: z.string().nullable(),
-  status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED', 'TERMINATED']),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'TERMINATED']),
   documentNumber: z.string().nullable(),
   createdAt: z.string(),
 })
+export const ZUserOwner = ZUser.merge(
+  z.object({
+    is_owner: z.boolean(),
+    lastLogin: z.string().nullable().optional(),
+  })
+)
 export const ZPreviewUser = ZUser.pick({
   id: true,
   firstName: true,
@@ -87,7 +93,15 @@ export const ZRolePermissions = ZRole.merge(
       .optional(),
   })
 )
-
+export const ZCountUserActivities = z.object({
+  userId: z.string(),
+  countLeads: z.number(),
+})
+export const ZDisableUser = z
+  .object({
+    userId: z.string(),
+  })
+  .merge(ZUser.pick({ status: true }))
 export const ZGetPermissions = z.array(ZPermissions)
 export const ZUserPermissions = z
   .array(
@@ -109,7 +123,7 @@ export const ZNewRole = z.object({
   keys: z.array(z.string()),
 })
 export const ZAllUsers = z.object({
-  data: z.array(ZUser),
+  data: z.array(ZUserOwner),
   totalPages: z.number(),
   total: z.number(),
   limit: z.number(),
@@ -205,3 +219,6 @@ export type CreateUserSchema = z.infer<typeof ZCreateUser>
 export type AllUsersSchema = z.infer<typeof ZAllUsers>
 export type UserSchema = z.infer<typeof ZUser>
 export type editProfileInfoSchema = z.infer<typeof ZEditProfileInfo>
+export type UserOwnerSchema = z.infer<typeof ZUserOwner>
+export type CountUserActivities = z.infer<typeof ZCountUserActivities>
+export type DisableUserSchema = z.infer<typeof ZDisableUser>

@@ -3,7 +3,7 @@
 import { Button, Select, SelectItem, Tooltip } from '@heroui/react'
 import NewLead from '../newLead'
 import Link from 'next/link'
-import { Bolt, ChartLine, List, Plus, Settings } from 'lucide-react'
+import { Bolt, ChartLine, List, Pencil, Plus, Settings } from 'lucide-react'
 import PipelineSVG from '@/components/icons/pipeline'
 import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
@@ -104,7 +104,7 @@ export default function LeadHeader({
         </Tooltip>
         <NewLead isDisabled={data && data.length === 0} />
       </div>
-      <div>
+      <div className="flex items-center gap-2">
         <Select
           label="Embudo"
           selectedKeys={[value]}
@@ -124,9 +124,9 @@ export default function LeadHeader({
             handleFunnelUrl(undefined)
           }}
           isRequired={isRequired}
-          labelPlacement="outside"
+          labelPlacement="inside"
           isLoading={isPending}
-          className="min-w-60"
+          className="min-w-60 "
           aria-label={'Embudo'}
           items={pipelines}
           listboxProps={{
@@ -160,10 +160,35 @@ export default function LeadHeader({
             <SelectItem key={item.id} textValue={item.name}>
               <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">{item.name}</div>
+                <Tooltip content="Editar embudo" placement="top">
+                  <Button
+                    isIconOnly
+                    variant="bordered"
+                    href={`/dash/embudo/${item.id}`}
+                    as={Link}
+                    size="sm"
+                    color="default"
+                    className="w-8 h-8"
+                  >
+                    <Pencil size={12} />
+                  </Button>
+                </Tooltip>
               </div>
             </SelectItem>
           ))}
         </Select>
+        <Tooltip content="Nuevo embudo" placement="top">
+          <Button
+            isDisabled={!funnelUrl}
+            isIconOnly
+            variant="bordered"
+            href="/dash/embudo/nuevo"
+            as={Link}
+            color="default"
+          >
+            <Plus size={18} />
+          </Button>
+        </Tooltip>
       </div>
     </div>
   )

@@ -4,19 +4,27 @@ export const userRows = [
     key: 'name',
   },
   {
-    name: 'Correo',
-    key: 'email',
+    name: 'Contacto',
+    key: 'contact',
   },
   {
     name: 'Puesto/Rol',
     key: 'job',
   },
   {
-    name: 'Teléfono',
-    key: 'phone',
+    name: 'Administrador',
+    key: 'admin',
   },
   {
     name: 'Estado',
     key: 'status',
+  },
+  {
+    name: 'Último inicio de sesión',
+    key: 'lastLogin',
+  },
+  {
+    name: 'Acciones',
+    key: 'actions',
   },
 ]

@@ -11,12 +11,13 @@ type TProps = {
   label?: string
   value?: string | null
   onChange?: (userID: string | null) => void
+  disabledUserId?: string[]
 }
 export default function SelectUser({
   placeholder = 'Usuarios',
   label,
   onChange,
-
+  disabledUserId,
   value,
 }: TProps) {
   const thisUser = useAuthStore((state) => state.user)?.id
@@ -27,6 +28,9 @@ export default function SelectUser({
     retry: false,
   })
   const users = data?.data ?? []
+  const filteredUsers = users.filter(
+    (user) => !disabledUserId?.includes(user.id)
+  )
 
   return (
     <>
@@ -44,7 +48,7 @@ export default function SelectUser({
         classNames={{
           selectorButton: 'text-default-500',
         }}
-        defaultItems={users}
+        defaultItems={filteredUsers}
         inputProps={{
           classNames: {
             input: 'ml-1',
@@ -84,7 +88,7 @@ export default function SelectUser({
         }
         variant="bordered"
       >
-        {users?.map((item) => (
+        {filteredUsers?.map((item) => (
           <AutocompleteItem
             key={item.id}
             textValue={`${item.firstName} ${item.lastName} ${item.id === thisUser ? '(Tú)' : ''}`}

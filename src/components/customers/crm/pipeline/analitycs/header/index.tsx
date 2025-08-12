@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Calendar } from 'lucide-react'
 import SelectUser from '@/components/users/selectUser'
 import SelectPipeline from '../../selectPipeline'
+import { useAuthStore } from '@/store/auth'
 
 export type FilterFunnelAnalitycs = {
   userId: string | null
@@ -24,6 +25,7 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
   const [selectValue, setSelectValue] = useState<Selection>(new Set(['30']))
   const [userId, setUserId] = useState<string | null>(null)
   const [funnelId, setFunnelId] = useState<string | null>(null)
+  const { user } = useAuthStore()
 
   const [value, setValue] = useState<RangeValue<DateValue> | null>(null)
   const isFirstRun = useRef(true)
@@ -83,19 +85,24 @@ export default function FunnelHeaderAnalytics({ onChangeFilters }: TProps) {
   return (
     <div className="flex flex-col lg:flex-row w-full  justify-between max-w-full gap-3 bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg mb-4">
       <div>
+        {' '}
         <p className="font-medium">Filtros:</p>
         <div className="flex gap-1">
-          <SelectUser
-            value={userId}
-            placeholder="Todos los usuarios"
-            onChange={setUserId}
-          />
           <SelectPipeline
             isRequired={false}
             value={funnelId}
             onChange={setFunnelId}
             placeholder="Todos los embudos"
           />
+          {user?.is_owner ? (
+            <>
+              <SelectUser
+                value={userId}
+                placeholder="Todos los usuarios"
+                onChange={setUserId}
+              />
+            </>
+          ) : null}
         </div>
       </div>
       <div>

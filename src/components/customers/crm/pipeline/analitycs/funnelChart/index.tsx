@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getFunnelMetrics } from '@/api/CRM/analitycs'
 import FunnelChartSkeleton from './skeleton'
 import FunnelChartError from './error'
-import { FilterFunnelAnalitycs } from '../header/inde'
+import { FilterFunnelAnalitycs } from '../header'
 
 type chartDataType = {
   funnel: string
@@ -63,7 +63,7 @@ export default function FunnelChart({
 }: {
   filters?: FilterFunnelAnalitycs | null
 }) {
-  const { data, error } = useQuery({
+  const { data, error, isPending } = useQuery({
     queryKey: ['funnelMetrics', filters],
     queryFn: () => getFunnelMetrics({ ...filters }),
     refetchOnWindowFocus: false,
@@ -76,7 +76,7 @@ export default function FunnelChart({
     <Card>
       <CardHeader>Ganancias por embudos (HNL)</CardHeader>
       <CardBody>
-        {chartConfig && data ? (
+        {chartConfig && data && data.length > 0 ? (
           <ChartContainer
             config={chartConfig}
             className="[&_.recharts-text]:dark:fill-white [&_.recharts-text]:fill-black "
@@ -103,9 +103,11 @@ export default function FunnelChart({
               />
             </PieChart>
           </ChartContainer>
-        ) : (
-          !error && <FunnelChartSkeleton />
-        )}
+        ) : null}
+        {data?.length === 0 ? (
+          <p className="text-center py-10">No hay datos</p>
+        ) : null}
+        {!error && isPending && <FunnelChartSkeleton />}
         {error && <FunnelChartError message={error.message} />}
       </CardBody>
     </Card>

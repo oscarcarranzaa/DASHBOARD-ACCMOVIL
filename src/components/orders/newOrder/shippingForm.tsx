@@ -20,16 +20,17 @@ import { Controller, useForm } from 'react-hook-form'
 export default function ShippingOrderForm() {
   const shippingInfo = createOrderState((state) => state.shippingInfo)
   const [stateSelect, setStateSelect] = useState<string>(
-    shippingInfo.state ?? ''
+    shippingInfo?.state ?? ''
   )
-  const [citySelect, setCitySelect] = useState<string>(shippingInfo.city ?? '')
-  const [zoneSelect, setZoneSelect] = useState<string>(shippingInfo.zone ?? '')
+  const [citySelect, setCitySelect] = useState<string>(shippingInfo?.city ?? '')
+  const [zoneSelect, setZoneSelect] = useState<string>(shippingInfo?.zone ?? '')
 
   const setOrderNavegation = createOrderState((state) => state.navegation)
   const orderNavegation = createOrderState((state) => state.orderNavegation)
   const setCompletedNavegation = createOrderState(
     (state) => state.setCompletedNavegation
   )
+  const { orderInfo, setOrderInfo } = createOrderState((state) => state)
 
   const {
     mutate,
@@ -38,6 +39,18 @@ export default function ShippingOrderForm() {
   } = useMutation({
     mutationFn: addShippingData,
     onSuccess: (d) => {
+      if (orderInfo) {
+        setOrderInfo({
+          ...orderInfo,
+          deliveryMethod: d.deliveryMethod,
+          subTotal: d.subTotal,
+          discountTotal: d.discountTotal,
+          couponDiscount: d.couponDiscount,
+          pointsDiscount: d.pointsDiscount,
+          totalAmount: d.totalAmount,
+          shippingCost: d.shippingCost,
+        })
+      }
       setCompletedNavegation(orderNavegation)
       setOrderNavegation('finish')
     },
@@ -52,21 +65,18 @@ export default function ShippingOrderForm() {
   const contactOrder = createOrderState((state) => state.contact)
   const setShippingInfo = createOrderState((state) => state.setShippingInfo)
 
-  const clientName = contactOrder.firstName
-    ? `${contactOrder.firstName} ${contactOrder.lastName}`
-    : ''
-
+  const clientName = contactOrder.name ?? ''
   const defaultValues = {
-    name: shippingInfo.name ?? clientName,
+    name: shippingInfo?.name ?? clientName,
     documentNumber:
-      shippingInfo.documentNumber ?? contactOrder.documentNumber ?? '',
-    phone: shippingInfo.phone ?? contactOrder.phone ?? '',
+      shippingInfo?.documentNumber ?? contactOrder.documentNumber ?? '',
+    phone: shippingInfo?.phone ?? contactOrder.phone ?? '',
     country: 'Honduras',
     state: '',
     city: '',
     zone: '',
-    street: shippingInfo.street ?? '',
-    reference: shippingInfo.reference ?? '',
+    street: shippingInfo?.street ?? '',
+    reference: shippingInfo?.reference ?? '',
   }
   const {
     handleSubmit,
@@ -83,22 +93,21 @@ export default function ShippingOrderForm() {
   const { states, cities, zones } = data
     ? getCountrySelect({ country: data, state: stateSelect, city: citySelect })
     : defaultCountry
-
+  const deliveryMethod = 'shipment' as const
   const submitShipping = (form: createShippingInfoSchema) => {
     const shippingData = {
       ...form,
+      deliveryMethod,
       state: stateSelect,
       city: citySelect,
       zone: zoneSelect,
     }
     setShippingInfo(shippingData)
-
     mutate({ form: shippingData })
   }
   return (
     <>
       <form onSubmit={handleSubmit(submitShipping)}>
-        <p className="font-semibold">Datos de envío</p>
         <div className="mt-5 flex gap-4 flex-wrap">
           <div>
             <Autocomplete

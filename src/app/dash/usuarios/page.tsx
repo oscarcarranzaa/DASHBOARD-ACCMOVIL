@@ -12,7 +12,8 @@ import {
   DropdownTrigger,
   Selection,
 } from '@heroui/react'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ShieldCheck } from 'lucide-react'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { useState } from 'react'
 
@@ -61,9 +62,19 @@ export default function ClientPage() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <AccessComponent keys={['admin']}>
-              <NewUserForm />
-            </AccessComponent>
+            <div className="ml-5 flex gap-2">
+              <Button
+                color="primary"
+                href="/dash/usuarios/roles"
+                startContent={<ShieldCheck size={18} />}
+                as={Link}
+              >
+                Roles
+              </Button>
+              <AccessComponent keys={['admin']}>
+                <NewUserForm />
+              </AccessComponent>
+            </div>
           </div>
         </div>
         <div className="mb-16">

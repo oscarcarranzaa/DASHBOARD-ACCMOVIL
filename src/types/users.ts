@@ -57,7 +57,7 @@ export const ZUser = z.object({
   avatar: z.string().nullable(),
   birthDate: z.string().nullable(),
   status: z.enum(['ACTIVE', 'INACTIVE', 'TERMINATED']),
-  documentNumber: z.string().nullable(),
+  documentNumber: z.string().nullable().optional(),
   createdAt: z.string(),
 })
 export const ZUserOwner = ZUser.merge(
@@ -208,6 +208,18 @@ export const ZChangePassword = z
       path: ['newPass'],
     }
   )
+
+export const ZUserToken = z.object({
+  response: z.object({
+    success: z.boolean(),
+    msg: z.string(),
+  }),
+  data: z.object({
+    user: ZUserOwner,
+    token: z.string(),
+    expireToken: z.number(),
+  }),
+})
 export type changePassSchema = z.infer<typeof ZChangePassword>
 export type getPermissionsType = z.infer<typeof ZGetPermissions>
 export type userPermissionsType = z.infer<typeof ZUserPermissions>
@@ -222,3 +234,4 @@ export type editProfileInfoSchema = z.infer<typeof ZEditProfileInfo>
 export type UserOwnerSchema = z.infer<typeof ZUserOwner>
 export type CountUserActivities = z.infer<typeof ZCountUserActivities>
 export type DisableUserSchema = z.infer<typeof ZDisableUser>
+export type UserTokenSchema = z.infer<typeof ZUserToken>

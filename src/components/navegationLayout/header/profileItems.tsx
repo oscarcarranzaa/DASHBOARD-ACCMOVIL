@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
 import { useLogout } from '@/hooks/useLogout'
+import { Avatar } from '@heroui/react'
 
 interface IProfileProps {
   image: string
@@ -20,13 +21,11 @@ export default function ProfileItems({ image, name, role }: IProfileProps) {
     <>
       <div>
         <div className="flex items-center mb-5 p-3">
-          <picture>
-            <img
-              src={image}
-              className="w-14 h-14 rounded-full"
-              alt={`Foto de perfil: ${name}`}
-            />
-          </picture>
+          <Avatar
+            src={image}
+            className="w-14 h-14 rounded-full object-cover overflow-hidden"
+            alt={`Foto de perfil: ${name}`}
+          />
           <div className="ml-2">
             <p className=" font-semibold">{name}</p>
             <p className="text-xs text-green-600 font-semibold inline-blockrounded-xl">

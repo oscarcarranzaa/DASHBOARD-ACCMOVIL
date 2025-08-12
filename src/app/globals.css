@@ -10,6 +10,8 @@
   --bg-color: #fff;
   --header-height: 4rem;
   --heading-color: #292922;
+  --close-menu-width: 64px;
+  --open-menu-width: 224px;
 }
 .light {
   --box-opacity: rgba(245, 245, 245, 0.5);

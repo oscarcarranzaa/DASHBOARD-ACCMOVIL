@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query'
 import { addProductOrder } from '@/api/order'
 import Spinner from '@/components/icons/spinner'
 import ProductSelect from '@/components/publish/selectProduct'
+import { Plus } from 'lucide-react'
 
 export default function AddProductOrder() {
   const [productId, setProductId] = useState('')
@@ -40,6 +41,7 @@ export default function AddProductOrder() {
       })
     },
   })
+  const productsId = productsInOrder.map((p) => p.id)
   return (
     <>
       <div className="w-full">
@@ -52,7 +54,7 @@ export default function AddProductOrder() {
               </div>
             )}
             <Button color="primary" onPress={() => setOpenSelect(!openSelect)}>
-              Agregar productos
+              <Plus size={20} /> Productos
             </Button>
           </div>
         </div>
@@ -82,6 +84,16 @@ export default function AddProductOrder() {
             openModal={openSelect}
             closeModal={() => setOpenSelect(false)}
             setValue={(p) => {
+              if (productsId.includes(p.id)) {
+                addToast({
+                  color: 'warning',
+                  variant: 'bordered',
+                  timeout: 5000,
+                  title: 'Producto ya agregado',
+                  description: 'El producto ya se encuentra en la lista',
+                })
+                return
+              }
               if (p) {
                 mutate(p.id)
                 setProductId(p.id)

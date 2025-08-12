@@ -26,9 +26,8 @@ export default function ContactOrderForm() {
     mutationFn: updateContactOrder,
     onSuccess: (success) => {
       setContactOrder({
-        firstName: success.firstName,
+        name: success.name,
         email: success.email,
-        lastName: success.lastName,
         documentNumber: success.documentNumber,
         phone: success.phone,
         rtn: success.rtn,
@@ -53,8 +52,7 @@ export default function ContactOrderForm() {
   })
 
   const defaultValues = {
-    firstName: contactOrder.firstName ?? '',
-    lastName: contactOrder.lastName ?? '',
+    name: contactOrder.name ?? '',
     email: contactOrder.email,
     phone: contactOrder.phone ?? '',
     documentNumber: contactOrder.documentNumber ?? '',
@@ -76,8 +74,7 @@ export default function ContactOrderForm() {
   const submitForm = (form: newBillingInfoSchema) => {
     const billingInfo = {
       customerId: contactOrder.customerId,
-      firstName: form.firstName ?? '',
-      lastName: form.lastName ?? '',
+      name: form.name,
       email: form.email,
       documentNumber: form.documentNumber ?? '',
       phone: form.phone ?? '',
@@ -92,58 +89,43 @@ export default function ContactOrderForm() {
   return (
     <>
       <form
-        className="flex flex-col gap-3 mt-5"
+        className="flex flex-col gap-5 mt-5"
         onSubmit={handleSubmit(submitForm)}
       >
-        <div>
-          <Controller
-            name="email"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Correo electronico"
-                label="Correo"
-                type="email"
-                readOnly={contactOrder.typeContact === 'customer'}
-                isDisabled={contactOrder.typeContact === 'customer'}
-                required
-                isRequired
-              />
-            )}
-          />
-        </div>
         <div className="flex gap-2">
           <Controller
-            name="firstName"
+            name="name"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
               <Input
                 {...field}
                 placeholder="Ej: Juan"
-                label="Nombres"
+                label="Nombre"
+                labelPlacement="outside"
                 required
+                variant="bordered"
                 isRequired
               />
             )}
           />
           <Controller
-            name="lastName"
+            name="email"
             control={control}
-            rules={{ required: true }}
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Ej: Cruz"
-                label="Apellidos"
-                required
-                isRequired
+                labelPlacement="outside"
+                label="Correo electrónico"
+                variant="bordered"
+                value={field.value ?? ''}
+                placeholder="Correo electronico"
+                type="email"
               />
             )}
           />
         </div>
+
         <div className="flex gap-2">
           <Controller
             name="documentNumber"
@@ -152,10 +134,10 @@ export default function ContactOrderForm() {
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Ej: 0609199900123"
+                labelPlacement="outside"
                 label="Cedula"
-                required
-                isRequired
+                variant="bordered"
+                placeholder="Ej: 0609199900123"
               />
             )}
           />
@@ -166,73 +148,85 @@ export default function ContactOrderForm() {
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Ej: 98158066"
+                labelPlacement="outside"
                 label="Telefono"
+                variant="bordered"
+                value={field.value ?? ''}
+                placeholder="Ej: 98158066"
                 errorMessage={errors.phone?.message}
                 isInvalid={!!errors.phone}
-                required
-                isRequired
               />
             )}
           />
         </div>
-        <div className="mt-5 ">
+        <div className="mt-10 ">
           <Switch isSelected={withRtn} onValueChange={setWithRtn}>
             <p className=" text-sm font-medium">Facturar con RTN</p>
           </Switch>
         </div>
-        <div className={`${!withRtn && 'hidden'} flex flex-col gap-3`}>
-          <div className="flex gap-2">
-            <Controller
-              name="company"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  label="Razon social"
-                  {...field}
-                  placeholder="Ej: Tecnología"
-                />
-              )}
-            />
-            <Controller
-              name="companyName"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  label="Nombre de la empresa"
-                  {...field}
-                  placeholder="Ej: ACME"
-                />
-              )}
-            />
+        {withRtn && (
+          <div className={`flex flex-col gap-3`}>
+            <div className="flex gap-2">
+              <Controller
+                name="rtn"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    isRequired
+                    variant="bordered"
+                    {...field}
+                    placeholder="Ej: 06091999001231"
+                    label="RTN"
+                    labelPlacement="outside"
+                  />
+                )}
+              />
+              <Controller
+                name="company"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Razon social"
+                    labelPlacement="outside"
+                    {...field}
+                    variant="bordered"
+                    placeholder="Ej: Tecnología"
+                  />
+                )}
+              />
+            </div>
+            <div className="flex gap-3">
+              <Controller
+                name="companyName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Nombre de la empresa"
+                    labelPlacement="outside"
+                    variant="bordered"
+                    {...field}
+                    placeholder="Ej: ACME"
+                  />
+                )}
+              />
+              <Controller
+                name="companyPhone"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Teléfono de la empresa"
+                    labelPlacement="outside"
+                    variant="bordered"
+                    {...field}
+                    errorMessage={errors.companyPhone?.message}
+                    isInvalid={!!errors.companyPhone}
+                    placeholder="Ej: 98158066"
+                  />
+                )}
+              />
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Controller
-              name="companyPhone"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  errorMessage={errors.companyPhone?.message}
-                  isInvalid={!!errors.companyPhone}
-                  placeholder="Ej: 98158066"
-                  label="Teléfono de la empresa"
-                />
-              )}
-            />
-            <Controller
-              name="rtn"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Ej: 06091999001231"
-                  label="RTN"
-                />
-              )}
-            />
-          </div>
-        </div>
+        )}
         <div className=" flex justify-end items-end flex-col  fill-white">
           <div>
             <Button onPress={() => resetContact()} className="mr-2">

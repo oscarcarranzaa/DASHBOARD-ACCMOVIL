@@ -5,6 +5,7 @@ import Spinner from '@/components/icons/spinner'
 import { createOrderState } from '@/store/order'
 import { Input, Button, addToast } from '@heroui/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { ArrowRight } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 
 type TCode = {
@@ -78,7 +79,6 @@ export default function RendeemCoupon() {
             render={({ field }) => (
               <Input
                 {...field}
-                isClearable
                 placeholder="Escribe tu cupón"
                 label="Cupón"
                 labelPlacement="outside"
@@ -89,7 +89,7 @@ export default function RendeemCoupon() {
                   <Button
                     isIconOnly
                     type="submit"
-                    className="  rounded-full w-8 h-8"
+                    className="  rounded-full w-8 h-8 "
                     variant="flat"
                     isDisabled={isPending}
                     disabled={isPending}
@@ -99,8 +99,8 @@ export default function RendeemCoupon() {
                         <Spinner size={18} fill="#777" />
                       </div>
                     ) : (
-                      <div className="rotate-180">
-                        <ArrowSVG size={20} />
+                      <div>
+                        <ArrowRight size={20} />
                       </div>
                     )}
                   </Button>

@@ -12,7 +12,7 @@ import { Card, CardBody, CardHeader } from '@heroui/react'
 import { useQuery } from '@tanstack/react-query'
 import { getSellerMetrics } from '@/api/CRM/analitycs'
 import UserSellChartSkeleton from './skeleton'
-import { FilterFunnelAnalitycs } from '../header/inde'
+import { FilterFunnelAnalitycs } from '../header'
 
 export const description = 'A stacked bar chart with a legend'
 
@@ -38,10 +38,11 @@ export default function UserSellChart({
   })
   return (
     <Card className="h-auto mb-20">
-      <CardHeader>Top 10 vendedores (Ganancias)</CardHeader>
+      <CardHeader>Top vendedores (Ganancias)</CardHeader>
       <CardBody className="color-white fill-white text-white">
         <div className="p-2">
-          {data ? (
+          {isPending && <UserSellChartSkeleton />}
+          {data && data.length > 0 ? (
             <ChartContainer config={chartConfig}>
               <BarChart
                 accessibilityLayer
@@ -91,9 +92,10 @@ export default function UserSellChart({
                 </Bar>
               </BarChart>
             </ChartContainer>
-          ) : (
-            <UserSellChartSkeleton />
-          )}
+          ) : null}
+          {data?.length === 0 ? (
+            <p className="text-center py-10">No hay datos</p>
+          ) : null}
         </div>
       </CardBody>
     </Card>

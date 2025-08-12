@@ -4,7 +4,7 @@ import FunnelConversionRates from '@/components/customers/crm/pipeline/analitycs
 import FunnelChart from '@/components/customers/crm/pipeline/analitycs/funnelChart'
 import FunnelHeaderAnalytics, {
   FilterFunnelAnalitycs,
-} from '@/components/customers/crm/pipeline/analitycs/header/inde'
+} from '@/components/customers/crm/pipeline/analitycs/header'
 import LeadChart from '@/components/customers/crm/pipeline/analitycs/leadChart'
 import UserSellChart from '@/components/customers/crm/pipeline/analitycs/userSellChart'
 import NavegationPages from '@/components/navegationPages'

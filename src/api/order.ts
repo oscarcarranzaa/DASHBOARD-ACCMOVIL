@@ -1,3 +1,4 @@
+import { createOrderState } from '@/store/order'
 import {
   addProductOrderSchema,
   billingInfoSchema,
@@ -7,6 +8,7 @@ import {
   orderDetailsRead,
   orderDetailsSchema,
   orderEditShema,
+  orderEditShipmentSchema,
   orderItemUpdatedSchema,
   orderListSchema,
   orderSchema,
@@ -18,6 +20,7 @@ import {
   ZOrder,
   ZOrderDetails,
   ZOrderDetailsRead,
+  ZOrderEditShipment,
   ZOrderItemUpdate,
 } from './../types/order'
 import axiosInstance from '@/lib/axiosClient'
@@ -60,9 +63,12 @@ export async function updateContactOrder(orderData: contactOrderSchema) {
     const validOrderData = ZBillingInfo.parse(data)
     return validOrderData
   } catch (error) {
-    console.log(error)
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg, {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {
@@ -97,15 +103,20 @@ export async function addShippingData({
   form: createShippingInfoSchema
 }) {
   try {
-    const { data } = await axiosInstance.put(
+    const { data } = await axiosInstance.put<orderEditShipmentSchema>(
       '/admin/order/~/shippingData',
       form
     )
-    return data
+    const validOrderData = ZOrderEditShipment.parse(data)
+    return validOrderData
   } catch (error) {
     console.log(error)
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg, {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {
@@ -130,6 +141,35 @@ export async function getCountry() {
     }
   }
 }
+type TAddPickupData = {
+  branchId: string
+}
+
+export async function addPickupData({ branchId }: TAddPickupData) {
+  try {
+    const { data } = await axiosInstance.put<orderEditShipmentSchema>(
+      '/admin/order/add/branch',
+      {
+        branchId,
+      }
+    )
+    const validOrderData = ZOrderEditShipment.parse(data)
+    return validOrderData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al agregar datos de envio al pedido.')
+    }
+  }
+}
+
 export async function finishOrder({ form }: { form: FormData }) {
   try {
     const { data } = await axiosInstance.put<resposeIdSchema>(
@@ -146,11 +186,15 @@ export async function finishOrder({ form }: { form: FormData }) {
     return validData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error('Error al finalizar pedido.', {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {
-      throw new Error('Error al crear una orden nueva')
+      throw new Error('Error al finalizar el pedido.')
     }
   }
 }
@@ -164,7 +208,11 @@ export async function persistOrderQuery() {
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg, {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {
@@ -187,7 +235,11 @@ export async function updateProductOrder(product: TUpdateQuantityProductOrder) {
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg, {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {
@@ -204,7 +256,11 @@ export async function deleteProductOrder(id: string) {
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg, {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {
@@ -221,7 +277,11 @@ export async function addProductOrder(id: string) {
     return validOrderData
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.response.msg, {
+      const resp = error.response?.data?.response
+      if (resp?.resetSession) {
+        createOrderState.getState().reset()
+      }
+      throw new Error(resp?.msg, {
         cause: error.response.status,
       })
     } else {

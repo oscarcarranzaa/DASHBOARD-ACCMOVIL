@@ -4,16 +4,27 @@ import ArrowAngleSVG from '@/components/icons/arrowAngle'
 import SuccessAnimation from '@/components/icons/successAnimation'
 import { createOrderState } from '@/store/order'
 import { Button, Skeleton } from '@heroui/react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 
 export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
+  const { reset, navegation } = createOrderState((state) => state)
+  const queryClient = useQueryClient()
   const { data, isPending, error } = useQuery({
     queryKey: ['order', id, 'success'],
     queryFn: () => getOrderSuccess(id ?? ''),
     refetchOnWindowFocus: false,
   })
-  const setNavegation = createOrderState((state) => state.navegation)
+
+  const handleReset = () => {
+    queryClient.invalidateQueries({ queryKey: ['order', 'persist'] })
+    reset()
+  }
+  const handleBack = () => {
+    navegation('details')
+    queryClient.invalidateQueries({ queryKey: ['order', 'persist'] })
+    reset()
+  }
   return (
     <>
       <div className=" w-full h-full flex  justify-center min-h-screen ">
@@ -25,7 +36,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
                 isIconOnly
                 variant="bordered"
                 title="Regresar"
-                onPress={() => setNavegation('details')}
+                onPress={handleBack}
               >
                 <div className=" rotate-90 dark:stroke-white">
                   <ArrowAngleSVG size={24} />
@@ -51,9 +62,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
                 </div>
                 <div className=" flex  gap-5 justify-between mt-1">
                   <p className=" font-medium">Nombre del cliente:</p>
-                  <p>
-                    {data.billingInfo?.firstName} {data.billingInfo?.lastName}
-                  </p>
+                  <p>{data.billingInfo?.name}</p>
                 </div>
                 <div className=" flex gap-5 justify-between mt-1">
                   <p className=" font-medium">Correo electrónico:</p>
@@ -117,7 +126,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
               color="success"
               href="/dash/pedidos"
               as={Link}
-              onPress={() => setNavegation('details')}
+              onPress={() => handleReset()}
             >
               Pedidos
             </Button>
@@ -129,7 +138,7 @@ export default function FinaliceOrderDetail({ id }: { id?: string | null }) {
                 isDisabled={!data}
                 href={data.id}
                 as={Link}
-                onPress={() => setNavegation('details')}
+                onPress={() => handleReset()}
               >
                 Detalles
               </Button>

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { ZProduct, ZProductInfo } from './products'
-import { ZCustomer } from './customer'
+import { ZContact, ZCustomer } from './customer'
 import { ZCoupon } from './offers'
 import { ZUser } from './users'
 
@@ -82,19 +82,42 @@ export const ZShippingInfo = z.object({
 export const ZBillingInfo = z.object({
   id: z.string(),
   orderId: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  email: z.string().email('Debe ser un correo electronico'),
+  name: z.string().trim(),
+  email: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => !val || val === '' || z.string().email().safeParse(val).success,
+      {
+        message: 'Debe ser un correo electrónico',
+      }
+    ),
   documentNumber: z.string(),
-  phone: z.string().max(8, 'Telefono no válido').min(8, 'Teléfono no válido'),
+  phone: z
+    .string()
+    .transform((val) => (val.trim() === '' ? null : val))
+    .nullable()
+    .optional()
+    .refine(
+      (val) => {
+        // Si es null o vacío, pasa
+        if (!val) return true
+        // Si tiene valor, validar formato (ejemplo básico, solo números y +, 7 a 15 caracteres)
+        const phoneRegex = /^\+?[0-9]{7,15}$/
+        return phoneRegex.test(val)
+      },
+      {
+        message: 'Número de teléfono inválido',
+      }
+    ),
   rtn: z.string().nullable().optional(),
   companyName: z.string().nullable().optional(),
   companyPhone: z.string().nullable().optional(),
   company: z.string().nullable().optional(),
 })
 export const ZNewBillingInfo = ZBillingInfo.pick({
-  firstName: true,
-  lastName: true,
+  name: true,
   email: true,
   documentNumber: true,
   phone: true,
@@ -109,7 +132,9 @@ export const ZNewBillingInfo = ZBillingInfo.pick({
 export const ZOrder = z.object({
   id: z.string(),
   orderId: z.string(),
+  contactId: z.string().nullable(),
   customerId: z.string().nullable(),
+  branchId: z.string().nullable(),
   totalAmount: z.number(),
   subTotal: z.number(),
   discountTotal: z.number(),
@@ -148,9 +173,8 @@ const ZProductsOrder = z.object({
 })
 const ZContactOrder = z.object({
   customerId: z.string().optional().nullable(),
-  firstName: z.string(),
-  lastName: z.string(),
-  email: z.string().email(),
+  name: z.string(),
+  email: z.string().email().optional().nullable(),
   documentNumber: z.string(),
   phone: z.string(),
   rtn: z.string().optional().nullable(),
@@ -191,6 +215,7 @@ export const ZOrderDetails = ZOrder.omit({ orderItems: true }).merge(
     orderItems: z.array(ZOrderItemsProduct),
     customer: ZCustomer.nullable(),
     coupon: ZCoupon.nullable().optional(),
+    contact: ZContact.nullable().optional(),
   })
 )
 
@@ -220,6 +245,18 @@ export const ZOrderEdit = z.object({
   shippingInfo: ZCreateShippingInfo,
   billingInfo: ZNewBillingInfo,
 })
+export const ZOrderEditShipment = ZOrder.pick({
+  shippingCost: true,
+  totalAmount: true,
+  contactId: true,
+  status: true,
+  deliveryMethod: true,
+  subTotal: true,
+  discountTotal: true,
+  couponDiscount: true,
+  pointsDiscount: true,
+  branchId: true,
+})
 export type orderSchema = z.infer<typeof ZOrder>
 export type orderItemsSchema = z.infer<typeof ZOrderItemsProduct>
 export type typeOrderItem = z.infer<typeof ZOrderItems>
@@ -239,3 +276,4 @@ export type orderSuccessSchema = z.infer<typeof ZGetOrderSuccess>
 export type orderDetailsRead = z.infer<typeof ZOrderDetailsRead>
 export type shippingInfoSchema = z.infer<typeof ZShippingInfo>
 export type orderEditShema = z.infer<typeof ZOrderEdit>
+export type orderEditShipmentSchema = z.infer<typeof ZOrderEditShipment>

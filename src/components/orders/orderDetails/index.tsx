@@ -44,15 +44,10 @@ export default function OrderDetails() {
             completedAt={data.completedAt}
             updatedAt={data.updatedAt}
             paymentAt={data.transaction?.paymentDate}
-            name={`${data.billingInfo?.firstName} ${data.billingInfo?.lastName}${!data.customerId ? ' (Invitado)' : ''}`}
+            name={`${data.billingInfo?.name}`}
             avatar={data.customer?.avatar}
             email={data.billingInfo?.email}
-          >
-            <OrderEdit
-              shippingInfo={data.shippingInfo}
-              billingInfo={data.billingInfo}
-            />
-          </OrderDetailsHeader>
+          ></OrderDetailsHeader>
 
           <div className="mt-5 grid grid-cols-12 gap-5">
             <div className=" col-span-8">

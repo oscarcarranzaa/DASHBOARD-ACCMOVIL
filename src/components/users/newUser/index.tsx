@@ -16,10 +16,13 @@ import {
   ModalFooter,
   Autocomplete,
   AutocompleteItem,
+  Alert,
 } from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { UserPlus } from 'lucide-react'
+import Link from 'next/link'
 
 export default function NewUserForm() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
@@ -69,8 +72,12 @@ export default function NewUserForm() {
   return (
     <>
       <div>
-        <Button color="primary" onPress={onOpen}>
-          Nuevo usuario
+        <Button
+          color="primary"
+          onPress={onOpen}
+          startContent={<UserPlus size={18} />}
+        >
+          Usuario
         </Button>
         <Modal
           backdrop="blur"
@@ -233,23 +240,46 @@ export default function NewUserForm() {
                     )}
                   </div>
                   <ModalFooter>
-                    <Button className=" min-w-32" onPress={onClose}>
-                      Cancelar
-                    </Button>
-                    <Button
-                      className=" min-w-32"
-                      color="primary"
-                      type="submit"
-                      disabled={isPending}
-                    >
-                      {isPending ? (
-                        <div className=" animate-spin">
-                          <Spinner size={24} fill="#fff" />
-                        </div>
-                      ) : (
-                        'Crear'
-                      )}
-                    </Button>
+                    <div className="w-full">
+                      <Alert
+                        variant="flat"
+                        title="Alerta de permisos y autorizaciones"
+                        color="warning"
+                        description={
+                          <p>
+                            Si el usuario no tiene un rol asignado, se le dará
+                            el rol de administrador por defecto, si quiere
+                            limitar algunas acciones seleccione un grupo de rol
+                            o si no vaya a{' '}
+                            <Link
+                              className="text-blue-500 underline"
+                              href="/dash/usuarios/roles"
+                            >
+                              crear un grupo de roles.
+                            </Link>
+                          </p>
+                        }
+                      ></Alert>
+                      <div className="flex gap-2 justify-end mt-2">
+                        <Button className=" min-w-32" onPress={onClose}>
+                          Cancelar
+                        </Button>
+                        <Button
+                          className=" min-w-32"
+                          color="primary"
+                          type="submit"
+                          disabled={isPending}
+                        >
+                          {isPending ? (
+                            <div className=" animate-spin">
+                              <Spinner size={24} fill="#fff" />
+                            </div>
+                          ) : (
+                            'Crear'
+                          )}
+                        </Button>
+                      </div>
+                    </div>
                   </ModalFooter>
                 </form>
               </>

@@ -2,14 +2,13 @@
 import Bank from '@/components/icons/bank'
 import ClockSVG from '@/components/icons/clock'
 import Money from '@/components/icons/money'
-import { Checkbox, cn, Button, addToast } from '@heroui/react'
+import { Checkbox, cn, Button, addToast, Alert } from '@heroui/react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import SquareImage from '@/components/squareImage'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { finishOrder } from '@/api/order'
 import { createOrderState } from '@/store/order'
-import { useRouter } from 'next/navigation'
 import Spinner from '@/components/icons/spinner'
 
 interface FormData {
@@ -25,30 +24,27 @@ export default function FinishOrder() {
     'BANK_TRANSFER' | 'CASH' | 'PENDING'
   >('PENDING')
 
-  const router = useRouter()
-  const queryClient = useQueryClient()
-
   const resetOrder = createOrderState((state) => state.reset)
   const orderInfo = createOrderState((state) => state.orderInfo)
   const setNavegation = createOrderState((state) => state.navegation)
   const setOrderSuccessId = createOrderState((state) => state.setOrderSuccessId)
+  const { products, navegation } = createOrderState((state) => state)
 
   const { mutate, isPending } = useMutation({
     mutationFn: finishOrder,
     onSuccess: (sc) => {
       setSuccessTransact(true)
       resetOrder()
-      queryClient.invalidateQueries({ queryKey: ['order', 'persist'] })
       setOrderSuccessId(sc.id)
       setNavegation('finalice')
     },
-    onError: () => {
+    onError: (err) => {
       addToast({
         color: 'danger',
         variant: 'bordered',
         timeout: 5000,
         title: 'Ocurrió un error',
-        description: 'Error al agregar pago a la orden',
+        description: err.message,
       })
     },
   })
@@ -108,17 +104,34 @@ export default function FinishOrder() {
 
   const checkClass = {
     base: cn(
-      'inline-flex max-w-md bg-content1 m-0',
+      'inline-flex max-w-md bg-zinc-100 dark:bg-zinc-900 m-0',
       'hover:bg-zinc-50 dark:hover:bg-zinc-800 items-center justify-start',
       'cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent',
       'data-[selected=true]:border-primary'
     ),
     label: 'w-full',
   }
-  const disabledButton = isPending || successTransact
+  const disabledButton = successTransact || products.length === 0
   return (
     <div>
-      <p className="font-semibold">Finalizar orden</p>
+      <p className="font-semibold mb-5">Finalizar orden</p>
+      {products.length === 0 && (
+        <Alert
+          color="warning"
+          variant="bordered"
+          title="Advertencia"
+          endContent={
+            <Button
+              color="warning"
+              onPress={() => navegation('details')}
+              variant="flat"
+            >
+              Ir a productos
+            </Button>
+          }
+          description="Para finalizar la orden, debes agregar al menos un producto"
+        />
+      )}
       <div className="flex gap-x-3 flex-wrap mt-5">
         {paymentMethods.map((method) => (
           <Checkbox
@@ -164,9 +177,9 @@ export default function FinishOrder() {
             color="danger"
             size="lg"
             type="submit"
-            disabled={disabledButton}
+            disabled={disabledButton || isPending}
           >
-            {disabledButton ? (
+            {isPending ? (
               <Spinner fill="#fff" size={26} />
             ) : (
               <ClockSVG size={26} />
@@ -179,10 +192,10 @@ export default function FinishOrder() {
             className="w-full stroke-black stroke-2"
             color="success"
             size="lg"
-            disabled={disabledButton}
+            disabled={disabledButton || isPending}
             type="submit"
           >
-            {disabledButton ? (
+            {isPending ? (
               <Spinner fill="#000" size={26} />
             ) : (
               <Money size={26} />
@@ -223,9 +236,9 @@ export default function FinishOrder() {
               color="success"
               size="lg"
               type="submit"
-              isDisabled={!preview || disabledButton}
+              isDisabled={!preview || disabledButton || isPending}
             >
-              {disabledButton ? (
+              {isPending ? (
                 <Spinner fill="#000" size={26} />
               ) : (
                 <Bank size={26} />

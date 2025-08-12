@@ -1,12 +1,12 @@
 'use client'
 import { useRef, useState } from 'react'
-import { UserSchema } from '@/types/schemas'
 import useOutsideClick from '@/hooks/useOutSideClick'
 import ProfileItems from './profileItems'
 import { Tooltip } from '@heroui/react'
+import { UserOwnerSchema } from '@/types/users'
 
 interface IProps {
-  data: UserSchema
+  data: UserOwnerSchema
 }
 
 export default function ProfileMenu({ data }: IProps) {

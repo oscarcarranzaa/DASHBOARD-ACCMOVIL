@@ -2,7 +2,7 @@
 
 import DisplayPrice from '@/components/displayPrice'
 import { createOrderState } from '@/store/order'
-import { Avatar, Badge, Spinner } from "@heroui/react"
+import { Avatar, Badge, Spinner } from '@heroui/react'
 import RendeemCoupon from '../coupon/rendeemCoupon'
 
 export default function OrderResume() {
@@ -16,7 +16,7 @@ export default function OrderResume() {
   const isCompletedContact = completedNavegation.find((n) => n === 'contact')
 
   const orderAmount = {
-    subTotal: orderInfo?.totalAmount ?? 0,
+    subTotal: orderInfo?.subTotal ?? 0,
     totalAmount: orderInfo?.totalAmount ?? 0,
     discountTotal: orderInfo?.discountTotal ? -orderInfo.discountTotal : 0,
     couponDiscount: orderInfo?.couponDiscount ? -orderInfo.couponDiscount : 0,
@@ -44,7 +44,7 @@ export default function OrderResume() {
                   ? p.media.qualities[0].src
                   : '/static/product.webp'
                 return (
-                  <li key={p.id} className=" relative">
+                  <li key={p.id} className=" relative list-none">
                     <div
                       className={` flex p-2${p.isSaved ? '' : ' select-none opacity-30 hover:cursor-not-allowed'}`}
                     >

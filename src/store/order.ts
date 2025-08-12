@@ -23,6 +23,8 @@ type ShippingAddress = {
   name: string | null
   phone: string | null
   country: string
+  deliveryMethod: 'shipment' | 'pickup'
+  branchId?: string | null
   state: string
   city: string
   zone: string
@@ -35,6 +37,7 @@ type OrderInfo = {
   subTotal: number
   discountTotal: number
   totalAmount: number
+  branchId?: string | null
   updatedAt: string
   createdAt: string
   status:
@@ -52,15 +55,15 @@ type OrderInfo = {
 }
 type contactOrder = {
   customerId?: string | null
-  firstName?: string | null
-  lastName?: string | null
-  email: string
+  name?: string | null
+  email?: string | null
   documentNumber?: string | null
   typeContact: 'customer' | 'guest' | 'empty'
   phone?: string | null
   rtn?: string | null
   withRtn: boolean
   companyPhone?: string | null
+  avatar?: string | null
   companyName?: string | null
   company?: string | null
 }
@@ -73,7 +76,7 @@ type couponCode = {
 type State = {
   products: productOrder[]
   contact: contactOrder
-  shippingInfo: ShippingAddress
+  shippingInfo: ShippingAddress | null
   orderInfo?: OrderInfo
   coupon?: couponCode
   orderNavegation: 'details' | 'contact' | 'shipping' | 'finish' | 'finalice'
@@ -91,8 +94,9 @@ type Action = {
   decrementalProduct: (id: string) => void
   deletedProduct: (id: string) => void
   setQuantity: (id: string, quantity: number) => void
+  onRemoveContact: () => void
   setContact: (contact: contactOrder) => void
-  setShippingInfo: (shpi: ShippingAddress) => void
+  setShippingInfo: (shpi: ShippingAddress | null) => void
   resetContact: () => void
   setCompletedNavegation: (nav: string) => void
   setOrderData: (data: orderDetailsSchema) => void
@@ -104,11 +108,11 @@ export const createOrderState = create<State & Action>((set) => ({
   products: [],
   completedNavegation: ['details'],
   contact: {
-    firstName: '',
+    name: '',
     email: '',
     typeContact: 'empty',
-    lastName: '',
     documentNumber: '',
+    avatar: null,
     withRtn: false,
   },
   shippingInfo: {
@@ -116,6 +120,7 @@ export const createOrderState = create<State & Action>((set) => ({
     documentNumber: null,
     phone: null,
     country: 'Honduras',
+    deliveryMethod: 'shipment',
     state: '',
     city: '',
     zone: '',
@@ -123,6 +128,20 @@ export const createOrderState = create<State & Action>((set) => ({
     reference: '',
   },
   orderNavegation: 'details',
+  onRemoveContact: () =>
+    set((state) => {
+      return {
+        ...state,
+        contact: {
+          name: '',
+          email: '',
+          typeContact: 'empty',
+          documentNumber: '',
+          avatar: null,
+          withRtn: false,
+        },
+      }
+    }),
   addProduct: (newProduct) =>
     set((state) => {
       const existingProduct = state.products.find(
@@ -353,6 +372,8 @@ export const createOrderState = create<State & Action>((set) => ({
         documentNumber: null,
         phone: null,
         country: 'Honduras',
+        deliveryMethod: 'shipment',
+        pickupPoint: null,
         state: '',
         city: '',
         zone: '',
@@ -410,9 +431,8 @@ export const createOrderState = create<State & Action>((set) => ({
       if (order.billingInfo) {
         completedNav = [...completedNav, 'contact']
         const {
-          firstName,
+          name,
           email,
-          lastName,
           documentNumber,
           phone,
           rtn,
@@ -420,17 +440,18 @@ export const createOrderState = create<State & Action>((set) => ({
           companyName,
           company,
         } = order.billingInfo
-        const customerId = order.customerId
+        const contactId = order.contact?.id
+        const avatar = order.contact?.avatar
         const withRtn = !!rtn
-        const typeContact: 'customer' | 'guest' | 'empty' = customerId
+        const typeContact: 'customer' | 'guest' | 'empty' = contactId
           ? 'customer'
           : 'guest'
         contact = {
-          customerId,
-          firstName,
+          customerId: contactId,
+          name,
           email,
-          lastName,
           documentNumber,
+          avatar,
           phone,
           rtn,
           companyPhone,
@@ -442,8 +463,10 @@ export const createOrderState = create<State & Action>((set) => ({
       }
       // Actualizamos los datos de envío si existen
       let shippingInfo = stateOrder.shippingInfo
-      if (order.shippingInfo) {
+      if (order.shippingInfo || order.branchId) {
         completedNav = [...completedNav, 'shipping']
+      }
+      if (order.shippingInfo) {
         const {
           name,
           phone,
@@ -461,6 +484,7 @@ export const createOrderState = create<State & Action>((set) => ({
           name,
           phone,
           country,
+          deliveryMethod: 'shipment',
           state,
           city,
           zone,
@@ -480,6 +504,7 @@ export const createOrderState = create<State & Action>((set) => ({
       const orderInfo = {
         id: order.id,
         subTotal: order.subTotal,
+        branchId: order.branchId,
         totalAmount: order.totalAmount,
         discountTotal: order.discountTotal,
         updatedAt: order.updatedAt,

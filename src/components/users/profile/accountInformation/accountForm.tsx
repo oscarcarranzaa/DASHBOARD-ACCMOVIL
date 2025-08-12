@@ -1,5 +1,9 @@
 'use client'
-import { editProfileInfoSchema, ZEditProfileInfo } from '@/types/users'
+import {
+  editProfileInfoSchema,
+  UserOwnerSchema,
+  ZEditProfileInfo,
+} from '@/types/users'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone, parseDate } from '@internationalized/date'
 import {
@@ -12,12 +16,11 @@ import {
 } from '@heroui/react'
 import { Controller, useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import { UserSchema } from '@/types/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateUserInfo } from '@/api/userData'
 
 type TProps = {
-  user: UserSchema
+  user: UserOwnerSchema
 }
 export default function AccountInformationForm({ user }: TProps) {
   const [dateValue, setDateValue] = useState<DateValue | null>()

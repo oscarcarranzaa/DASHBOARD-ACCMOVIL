@@ -43,7 +43,7 @@ export default function OrderStatusBar() {
   const orderNavegation = createOrderState((state) => state.orderNavegation)
   return (
     <>
-      <div className="relative  dark:bg-zinc-950 bg-white h-28 p-5 w-full rounded-2xl dark:border-zinc-700 border-zinc-300 border-2">
+      <div className="relative  dark:bg-zinc-950 bg-white h-28 p-5 w-full rounded-2xl dark:border-zinc-700 border-zinc-300 border">
         <div className="h-1 absolute dark:bg-zinc-600 bg-zinc-300 top-12 left-14 right-14 rounded-xl "></div>
         <div className="z-20  absolute right-0 left-0 px-5">
           <div className="flex justify-between">

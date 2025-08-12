@@ -1,5 +1,6 @@
 import NavegationLayout from '@/components/navegationLayout'
 import { Providers } from '@/providers'
+import UserProvider from '@/providers/userProvider'
 import { cookies } from 'next/headers'
 
 export default async function DashLayout({
@@ -13,11 +14,13 @@ export default async function DashLayout({
   return (
     <Providers>
       <NavegationLayout isOpenMenu={isOpenMenu}>
-        <main className="flex-none block">
-          <div className="px-5 pt-5 max-w-[1700px] h-full w-full ">
-            {children}
-          </div>
-        </main>
+        <UserProvider>
+          <main className="flex-none block">
+            <div className="px-5 pt-5 max-w-[1700px] h-full w-full ">
+              {children}
+            </div>
+          </main>
+        </UserProvider>
       </NavegationLayout>
     </Providers>
   )

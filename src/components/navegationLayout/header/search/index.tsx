@@ -62,7 +62,6 @@ export default function SearchAllHeader() {
     refetchOnWindowFocus: false,
     enabled: searchDebounced.length > 2,
   })
-  console.log(data)
   return (
     <>
       <div className={`w-full`} ref={ref as React.RefObject<HTMLDivElement>}>

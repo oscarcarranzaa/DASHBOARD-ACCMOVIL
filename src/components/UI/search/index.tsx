@@ -10,12 +10,16 @@ type Props = {
   pageName?: string
   placeHolder?: string
   styles?: string
+  isParamsUrl?: boolean
+  onSearch?: (search: string) => void
 }
 export default function Search({
   searchName,
   pageName,
   placeHolder,
   styles = 'sm:max-w-[35%]',
+  isParamsUrl = true,
+  onSearch,
 }: Props) {
   const searchParams = useSearchParams()
   const searchQueryName = searchName ?? 'search'
@@ -54,10 +58,15 @@ export default function Search({
   }
   const debounce = useDebouncedCallback((value: string) => {
     if (value.length > 1) {
-      newSearch(value)
+      if (isParamsUrl) {
+        newSearch(value)
+      } else {
+        onSearch?.(value)
+      }
     }
     if (value.length === 0) {
       clear()
+      onSearch?.('')
     }
   }, 500)
   return (

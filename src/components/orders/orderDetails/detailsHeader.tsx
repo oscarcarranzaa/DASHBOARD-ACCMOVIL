@@ -24,7 +24,7 @@ type TProps = {
   avatar?: string | null
   status: orderInfoSchema['status']
   name: string
-  email: string | undefined
+  email?: string | null
   children?: ReactNode
 }
 export const statusColorMap: Record<string, SelectProps['color']> = {

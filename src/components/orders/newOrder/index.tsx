@@ -11,6 +11,7 @@ import getCookie from '@/utils/cookiesOperator'
 import { useQuery } from '@tanstack/react-query'
 import { persistOrderQuery } from '@/api/order'
 import FinaliceOrderDetail from './finaliceOrderDetails'
+import ShippingOrder from './shipping'
 
 export default function NewOrder() {
   const [isOrderSession, setIsOrderSession] = useState<
@@ -43,7 +44,7 @@ export default function NewOrder() {
       case 'contact':
         return <ContactOrder />
       case 'shipping':
-        return <ShippingOrderForm />
+        return <ShippingOrder />
       case 'finish':
         return <FinishOrder />
     }

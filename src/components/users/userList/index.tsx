@@ -74,7 +74,9 @@ export default function UserList({ status }: TProps) {
   const getData = data ? data.data : []
   const renderCell = useCallback(
     (user: UserOwnerSchema, columnKey: React.Key) => {
-      const image = user.avatar || '/static/default-profile.png'
+      const image = user.avatar
+        ? user.avatar + '-thumb.webp'
+        : '/static/default-profile.png'
 
       switch (columnKey) {
         case 'name':
@@ -172,6 +174,8 @@ export default function UserList({ status }: TProps) {
                   <DropdownItem
                     key="edit"
                     description="Editar  usuario"
+                    as={Link}
+                    href={`/dash/usuarios/${user.username}`}
                     startContent={<Pencil size={18} />}
                   >
                     Editar

@@ -67,9 +67,8 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
       reference: shippingInfo?.reference ?? '',
     },
     billingInfo: {
-      firstName: billingInfo?.firstName ?? '',
-      lastName: billingInfo?.lastName ?? '',
-      email: billingInfo?.email,
+      name: billingInfo?.name ?? '',
+      email: billingInfo?.email ?? '',
       phone: billingInfo?.phone ?? '',
       documentNumber: billingInfo?.documentNumber ?? '',
       rtn: billingInfo?.rtn ?? '',
@@ -160,45 +159,26 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
                           <Controller
                             name="billingInfo.email"
                             control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => (
+                            render={({ field: { value, ...field } }) => (
                               <Input
                                 {...field}
+                                value={value ?? ''}
                                 placeholder="Correo electronico"
                                 label="Correo"
                                 type="email"
-                                readOnly
-                                isDisabled
-                                required
-                                isRequired
                               />
                             )}
                           />
                         </div>
                         <div className="flex gap-2">
                           <Controller
-                            name="billingInfo.firstName"
+                            name="billingInfo.name"
                             control={control}
-                            rules={{ required: true }}
                             render={({ field }) => (
                               <Input
                                 {...field}
                                 placeholder="Ej: Juan"
                                 label="Nombres"
-                                required
-                                isRequired
-                              />
-                            )}
-                          />
-                          <Controller
-                            name="billingInfo.lastName"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => (
-                              <Input
-                                {...field}
-                                placeholder="Ej: Cruz"
-                                label="Apellidos"
                                 required
                                 isRequired
                               />
@@ -223,12 +203,12 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
                           <Controller
                             name="billingInfo.phone"
                             control={control}
-                            rules={{ required: true }}
                             render={({ field }) => (
                               <Input
                                 {...field}
                                 placeholder="Ej: 98158066"
                                 label="Telefono"
+                                value={field.value ?? ''}
                                 errorMessage={
                                   errors.billingInfo?.phone?.message
                                 }
@@ -256,10 +236,11 @@ export default function OrderEdit({ shippingInfo, billingInfo }: TProps) {
                             <Controller
                               name="billingInfo.company"
                               control={control}
-                              render={({ field }) => (
+                              render={({ field: { value, ...field } }) => (
                                 <Input
                                   label="Razon social"
                                   {...field}
+                                  value={value ?? ''}
                                   placeholder="Ej: Tecnología"
                                 />
                               )}

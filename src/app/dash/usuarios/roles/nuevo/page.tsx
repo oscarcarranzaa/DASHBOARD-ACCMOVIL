@@ -20,7 +20,7 @@ export default function AdminRolPage() {
     mutationFn: createRol,
     onSuccess: (dat) => {
       queryClient.invalidateQueries({ queryKey: ['roles'] })
-      router.push(`/dash/usuarios/roles/${dat.id}`)
+      router.push('/dash/usuarios/roles')
 
       addToast({
         color: 'success',

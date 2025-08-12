@@ -2,15 +2,11 @@
 import CategoryEditor from '@/components/category/categoryEditor'
 import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
-import { verifyAccess } from '@/lib/verifyAccess'
-import { useAuthStore } from '@/store/auth'
+import { usePermit } from '@/hooks/usePermit'
 
 export default function Categories() {
-  const user = useAuthStore((state) => state.user)
-  const userRoles = user?.role ? user.role.keys : null
-  const verify = verifyAccess({
-    keys: ['posts.categoriesAllActions'],
-    userKeys: userRoles,
+  const verify = usePermit({
+    keys: ['product:categories'],
   })
   if (!verify)
     return (

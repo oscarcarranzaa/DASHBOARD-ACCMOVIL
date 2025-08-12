@@ -9,6 +9,7 @@ export async function loginUser(formData: LoginSchema) {
     const validLogin = ZLoginSchema.parse(data)
     return validLogin
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       const err = error.response.data?.response
         ? error.response.data?.response?.msg

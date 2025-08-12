@@ -70,6 +70,7 @@ export default function OrderTrackDetails({
 
   const sendUrl = ({ url }: TUrl) => {
     if (shippingInfo) {
+      console.log(url)
       mutate({ id: shippingInfo.orderId, url })
       setUpdatedUrl(url)
     }

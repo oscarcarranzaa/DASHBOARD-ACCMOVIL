@@ -14,7 +14,7 @@ export default function NavegationLayout({ children, isOpenMenu }: TProps) {
       <Header />
 
       <div
-        className={`bg-zinc-50 min-w-[700px] dark:bg-zinc-950 grid  ${!isOpen ? 'grid-cols-[var(--open-menu-width)_minmax(0,_1fr)]' : 'grid-cols-[var(--close-menu-width)_minmax(0,_1fr)]'} min-h-screen `}
+        className={`bg-zinc-50 min-w-[700px] dark:bg-zinc-950 grid  ${!isOpen ? 'grid-cols-[var(--open-menu-width)_minmax(0,1fr)]' : 'grid-cols-[var(--close-menu-width)_minmax(0,1fr)]'} min-h-screen `}
       >
         <SideMenuContent isOpen={isOpen} onOpenChange={setIsOpen} />
 

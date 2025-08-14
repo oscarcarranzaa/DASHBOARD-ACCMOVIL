@@ -62,7 +62,7 @@ export default function PostItem({
 
           {(outStock || isDraft) && (
             <div className="absolute inset-0 flex justify-center items-center">
-              <p className="bg-[var(--box-opacity)] text-red-500 dark:text-white px-5 py-1 rounded-lg font-semibold border dark:border-none border-zinc-300">
+              <p className="bg-(--box-opacity) text-red-500 dark:text-white px-5 py-1 rounded-lg font-semibold border dark:border-none border-zinc-300">
                 {isDraft ? 'Borrador' : 'Agotado'}
               </p>
             </div>

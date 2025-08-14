@@ -73,9 +73,9 @@ export default function DisableUser({ user, button, buttonProps }: TProps) {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         classNames={{
-          backdrop: 'z-[100000]',
-          header: 'border-b-[1px] border-[#292f46]',
-          wrapper: 'z-[100000]',
+          backdrop: 'z-100000',
+          header: 'border-b border-[#292f46]',
+          wrapper: 'z-100000',
         }}
       >
         <ModalContent>

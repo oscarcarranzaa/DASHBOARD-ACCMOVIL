@@ -3,7 +3,7 @@ import { CircularProgress, Skeleton } from "@heroui/react"
 export default function PublishEditorSkeleton() {
   return (
     <>
-      <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-[90rem] relative">
+      <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-360 relative">
         <div className=" col-span-7 mb-24">
           <div className="w-full h-14">
             <Skeleton className="w-full h-full rounded-lg" />

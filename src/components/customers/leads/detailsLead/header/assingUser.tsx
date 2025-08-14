@@ -140,7 +140,7 @@ export default function AssingUserLead({ leadId, assinedToId }: TProps) {
             <div className="flex gap-2 items-center">
               <Avatar
                 alt={shortName}
-                className="flex-shrink-0"
+                className="shrink-0"
                 size="sm"
                 src={user.avatar ? `${user.avatar}-thumb.webp` : undefined}
               />

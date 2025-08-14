@@ -2,7 +2,7 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TextAlign from '@tiptap/extension-text-align'
-import TextStyle from '@tiptap/extension-text-style'
+import { TextStyleKit } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import Placeholder from '@tiptap/extension-placeholder'
 import TipTapToolbar from './toolbar'
@@ -28,9 +28,8 @@ export default function RichTextEditor({
           levels: [1, 2, 3, 4, 5],
         },
       }),
-
+      TextStyleKit,
       Underline,
-      TextStyle.configure({ mergeNestedSpanStyles: true }),
       Color,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -118,8 +117,11 @@ export default function RichTextEditor({
           <TipTapToolbar editor={editor} />
         </div>
 
-        <div className="flex justify-center bg-white">
-          <EditorContent className="prose w-full" editor={editor} />
+        <div className="flex justify-center bg-white dark:bg-zinc-900">
+          <EditorContent
+            className="prose prose-md dark:prose-invert w-full"
+            editor={editor}
+          />
         </div>
       </div>
     </>

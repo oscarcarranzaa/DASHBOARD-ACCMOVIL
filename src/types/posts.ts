@@ -51,7 +51,7 @@ export const ZGetOneListPost = ZGetPost.pick({
   type: true,
   totalStock: true,
   youtubeVideoId: true,
-  Product: true,
+  product: true,
   createdAt: true,
 }).extend({
   gallery: z.array(string()),

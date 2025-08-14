@@ -42,12 +42,12 @@ import { useAuthStore } from '@/store/auth'
 import DisableUser from '../disable'
 import ActiveUser from '../active'
 
-const statusColorMap: Record<string, ChipProps['color']> = {
+export const statusColorMap: Record<string, ChipProps['color']> = {
   ACTIVE: 'success',
   INACTIVE: 'default',
   TERMINATED: 'warning',
 }
-const statusName: Record<string, string> = {
+export const statusName: Record<string, string> = {
   ACTIVE: 'Activo',
   INACTIVE: 'Inactivo',
   TERMINATED: 'Terminado',

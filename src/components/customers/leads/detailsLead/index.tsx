@@ -48,7 +48,7 @@ export default function DetailsLead({ leadId }: TProps) {
         </div>
       )}
       {data && (
-        <div className=" grid gap-2 grid-cols-6 overflow-auto  mt-8 flex-shrink flex-grow">
+        <div className=" grid gap-2 grid-cols-6 overflow-auto  mt-8 shrink grow">
           <div className=" col-span-2 overflow-auto">
             {data && <LeadSummary lead={data} />}
           </div>

@@ -126,7 +126,9 @@ export async function updateRol({
 }
 export async function getOneUser(params: string) {
   try {
-    const { data } = await axiosInstance.get<UserSchema>(`/user/${params}`)
+    const { data } = await axiosInstance.get<UserSchema>(
+      `/admin/user/${params}`
+    )
     const validClient = ZUser.parse(data)
     return validClient
   } catch (error) {

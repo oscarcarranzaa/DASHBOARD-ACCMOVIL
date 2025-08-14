@@ -50,7 +50,7 @@ export default function DropLead({
         </div>
       </div>
       <div
-        className={`pb-5 ${isOver ? 'bg-zinc-200 dark:bg-zinc-900' : 'bg-zinc-100 dark:bg-zinc-800'}  flex-shrink-0 flex-grow-0`}
+        className={`pb-5 ${isOver ? 'bg-zinc-200 dark:bg-zinc-900' : 'bg-zinc-100 dark:bg-zinc-800'}  shrink-0 grow-0`}
       >
         <div className="px-1 py-2 flex flex-col gap-1 relative">
           {leads.map((lead) => {

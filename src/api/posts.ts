@@ -22,6 +22,7 @@ export async function getLisPostsData(
       `/posts?page=${page}&limit=${limit}${query ? '&q=' + query : ''}${status ? '&status=' + status : ''}`
     )
     const validProduct = getLisPosts.parse(data)
+
     return validProduct
   } catch (error) {
     console.log(error)

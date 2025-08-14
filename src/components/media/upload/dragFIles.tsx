@@ -4,7 +4,7 @@ export default function DragFiles() {
   return (
     <>
       <div
-        className=" pointer-events-none w-full h-screen flex items-center justify-center flex-col dark:text-white bg-[var(--box-opacity)]"
+        className=" pointer-events-none w-full h-screen flex items-center justify-center flex-col dark:text-white bg-(--box-opacity)"
         style={{ backdropFilter: 'blur(10px)' }}
       >
         <div className=" dark:fill-zinc-200 -mt-10">

@@ -1,7 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 @plugin "@tailwindcss/typography";
+@plugin '../../hero.ts';
+/* Note: You may need to change the path to fit your project structure */
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
 
 :root {
   --primary-color: #302ae6;
@@ -42,34 +44,6 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
-.all-unset * {
-  all: unset;
-}
-
-body {
-  overflow-y: scroll;
-  min-height: 100vh;
-  width: 100%;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-button,
-select,
-input {
-  outline: none;
-}
-ul > li {
-  list-style: disc;
-}
-ol > li {
-  list-style: decimal;
 }
 
 @layer utilities {

@@ -1,10 +1,9 @@
 import type { Config } from 'tailwindcss'
-const { heroui } = require('@heroui/theme')
 
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
@@ -18,7 +17,7 @@ const config: Config = {
       transitionProperty: {
         height: 'height',
       },
-      typography: () => ({
+      typography: {
         DEFAULT: {
           css: {
             p: {
@@ -35,11 +34,11 @@ const config: Config = {
             },
           },
         },
-      }),
+      },
     },
   },
   darkMode: 'class',
-  plugins: [heroui(), require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography')],
 }
 
 export default config

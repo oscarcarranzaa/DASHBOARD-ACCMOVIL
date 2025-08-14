@@ -57,9 +57,9 @@ export default function ActiveUser({ user, button, buttonProps }: TProps) {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         classNames={{
-          backdrop: 'z-[100000]',
-          header: 'border-b-[1px] border-[#292f4666]',
-          wrapper: 'z-[100000]',
+          backdrop: 'z-100000',
+          header: 'border-b border-[#292f4666]',
+          wrapper: 'z-100000',
         }}
       >
         <ModalContent>

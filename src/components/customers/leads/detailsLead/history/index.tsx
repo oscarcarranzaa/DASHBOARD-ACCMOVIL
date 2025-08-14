@@ -108,7 +108,7 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
             return (
               <div className="flex gap-3" key={history.file.id}>
                 <LeadStatusBar color="warning" render={<File size={16} />} />
-                <div className="pb-6 flex-grow">
+                <div className="pb-6 grow">
                   <FileHistory
                     fileName={history.file.name}
                     fileSize={history.file.file_size}
@@ -161,7 +161,7 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
                   color="danger"
                   render={<Avatar src={avatar} className="w-8 h-8" />}
                 />
-                <div className="pb-6 flex-grow">
+                <div className="pb-6 grow">
                   <NotesHistory
                     key={history.notes.id}
                     user={history.notes.user.firstName}

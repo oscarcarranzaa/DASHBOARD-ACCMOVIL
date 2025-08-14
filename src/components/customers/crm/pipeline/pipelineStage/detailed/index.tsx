@@ -46,7 +46,7 @@ export default function DetailedPipelineStages({
 
   return (
     <>
-      <div className={`flex w-full max-w-full flex-grow`}>
+      <div className={`flex w-full max-w-full grow`}>
         {pipeline.stages.map((stage, index) => {
           const findTime = stageHistory?.find((id) => id.stageId === stage.id)
 
@@ -71,7 +71,7 @@ export default function DetailedPipelineStages({
           return (
             <div
               key={stage.id}
-              className={`flex flex-grow ${styles.box_content}`}
+              className={`flex grow ${styles.box_content}`}
             >
               <Button
                 onPress={() => {

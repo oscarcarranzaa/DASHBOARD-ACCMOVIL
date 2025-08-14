@@ -130,7 +130,7 @@ export default function PipelineEditor() {
           items={fields.map((field) => field.id)}
           strategy={horizontalListSortingStrategy}
         >
-          <div className="mt-10 h-full flex gap-2  overflow-x-auto flex-shrink-0 ">
+          <div className="mt-10 h-full flex gap-2  overflow-x-auto shrink-0 ">
             {fields.map((stageField, index) => {
               return (
                 <SlideCard key={stageField.id} id={stageField.id}>
@@ -233,7 +233,7 @@ export default function PipelineEditor() {
                     </div>
                     <div className="absolute left-2 right-2 bottom-5 ">
                       <Button
-                        className="w-full text-xs pointer-events-auto data-[disabled]:cursor-not-allowed"
+                        className="w-full text-xs pointer-events-auto data-disabled:cursor-not-allowed"
                         color="danger"
                         variant="flat"
                         isDisabled={fields.length <= 1}

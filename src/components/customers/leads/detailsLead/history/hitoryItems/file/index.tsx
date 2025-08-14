@@ -73,7 +73,7 @@ export default function FileHistory({
           >
             <PhotoView src={url}>
               <img
-                className=" w-32 aspect-[1/1] object-cover rounded-lg cursor-pointer"
+                className=" w-32 aspect-square object-cover rounded-lg cursor-pointer"
                 decoding="async"
                 loading="lazy"
                 src={`${url}&w=300`}

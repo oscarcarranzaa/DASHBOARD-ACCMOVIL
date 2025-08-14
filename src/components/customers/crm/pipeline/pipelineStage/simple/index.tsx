@@ -32,7 +32,7 @@ export default function SimplePipelineStages({
   }
   return (
     <>
-      <div className={`flex w-full max-w-full flex-grow`}>
+      <div className={`flex w-full max-w-full grow`}>
         {pipeline.stages.map((stage, index) => {
           const activeIndex = pipeline.stages.findIndex(
             (p) => p.id === currentStage
@@ -41,7 +41,7 @@ export default function SimplePipelineStages({
           return (
             <div
               key={stage.id}
-              className={`flex flex-grow ${styles.box_content}`}
+              className={`flex grow ${styles.box_content}`}
             >
               <Button
                 onPress={() => {

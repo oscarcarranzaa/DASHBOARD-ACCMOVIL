@@ -120,7 +120,7 @@ export default function DisplayCategory({
                             setOpenCategory(category.id)
                           }
                         }}
-                        className="flex-grow flex justify-end items-center p-1"
+                        className="grow flex justify-end items-center p-1"
                       >
                         {category.children ? (
                           <div className="-rotate-90 w-6 h-6">

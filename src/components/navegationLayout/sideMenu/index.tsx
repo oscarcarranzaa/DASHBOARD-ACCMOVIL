@@ -44,7 +44,7 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
     <>
       <div className="relative">
         <nav
-          className={`fixed top-0 left-0 p-2 ${isOpen ? 'w-[var(--close-menu-width)] right-[var(--close-menu-width)]' : 'w-[var(--open-menu-width)] right-[var(--open-menu-width)]'}   col-span-1  border-r h-screen border-gray-200 dark:border-gray-600  ${style.menuContent}`}
+          className={`fixed top-0 left-0 p-2 ${isOpen ? 'w-(--close-menu-width) right-(--close-menu-width)' : 'w-(--open-menu-width) right-(--open-menu-width)'}   col-span-1  border-r h-screen border-gray-200 dark:border-gray-600  ${style.menuContent}`}
         >
           <div className="mt-[calc(var(--header-height)+0.7rem)]">
             <Tooltip

@@ -65,8 +65,7 @@ export default function DeleteLeadModal({ leadId, title }: TProps) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ['leads', currentPage.toString()],
-        funnelId,
+        queryKey: ['leads', currentPage.toString(), funnelId],
       })
       onClose()
     },

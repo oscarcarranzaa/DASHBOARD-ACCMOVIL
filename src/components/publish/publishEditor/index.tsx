@@ -36,7 +36,7 @@ export default function PublishEditor({ data }: { data?: PostSchema }) {
 
   return (
     <>
-      <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-[90rem]">
+      <div className="grid grid-cols-12 mt-10 gap-8 m-auto max-w-360">
         <div className=" col-span-7 mb-24">
           <ProductTitleInput />
 

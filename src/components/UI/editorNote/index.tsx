@@ -2,7 +2,7 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TextAlign from '@tiptap/extension-text-align'
-import TextStyle from '@tiptap/extension-text-style'
+import { TextStyleKit } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import Placeholder from '@tiptap/extension-placeholder'
 import TipTapToolbar from './toolbar'
@@ -40,7 +40,7 @@ export default function NoteTextEditor({
     extensions: [
       StarterKit,
       Underline,
-      TextStyle.configure({ mergeNestedSpanStyles: true }),
+      TextStyleKit,
       Color,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -118,7 +118,7 @@ export default function NoteTextEditor({
     if (editor && value !== undefined && value !== null) {
       const currentContent = editor.getHTML()
       if (currentContent !== value) {
-        editor.commands.setContent(value, false)
+        editor.commands.setContent(value, { emitUpdate: false })
       }
     }
   }, [value, editor])

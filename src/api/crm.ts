@@ -7,6 +7,7 @@ import {
   historyLeadSchema,
   leadSchema,
   newLeadSchema,
+  newLeadSchemaInput,
   noteSchema,
   ZAllLeads,
   ZAllLeadsByPipeline,
@@ -23,7 +24,7 @@ import {
 } from '@/types/crm/pipeline'
 import { isAxiosError } from 'axios'
 
-export async function addLead(lead: newLeadSchema) {
+export async function addLead(lead: newLeadSchemaInput) {
   try {
     const { data } = await axiosInstance.post<leadSchema>(
       '/admin/leads/add',

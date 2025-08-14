@@ -63,39 +63,37 @@ export const ZContactStatus = ZContact.pick({ status: true })
 export const ZCreateContact = ZContact.pick({
   name: true,
   status: true,
-}).merge(
-  z.object({
-    phone: z
-      .string()
-      .optional()
-      .superRefine((val, ctx) => {
-        if (val === '') return
-        if (val) {
-          if (!/^\d+$/.test(val)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: 'El número de teléfono no es válido.',
-            })
-          }
-        }
-      })
-      .transform((val) => (val === '' ? undefined : val)),
-    email: z
-      .string()
-      .optional()
-      .superRefine((val, ctx) => {
-        if (val === '' || val === undefined) return
-        if (!z.string().email().safeParse(val).success) {
+}).extend({
+  phone: z
+    .string()
+    .optional()
+    .superRefine((val, ctx) => {
+      if (val === '') return
+      if (val) {
+        if (!/^\d+$/.test(val)) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Correo no es válido.',
+            code: 'custom',
+            message: 'El número de teléfono no es válido.',
           })
         }
-      })
-      .transform((val) => (val === '' ? undefined : val)),
-    address: z.string().optional(),
-  })
-)
+      }
+    })
+    .transform((val) => (val === '' ? undefined : val)),
+  email: z
+    .string()
+    .optional()
+    .superRefine((val, ctx) => {
+      if (val === '' || val === undefined) return
+      if (!z.string().email().safeParse(val).success) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Correo no es válido.',
+        })
+      }
+    })
+    .transform((val) => (val === '' ? undefined : val)),
+  address: z.string().optional(),
+})
 export const ZContactSummary = ZCreateContact.pick({
   email: true,
   phone: true,
@@ -103,7 +101,7 @@ export const ZContactSummary = ZCreateContact.pick({
 })
 export const ZContactDetails = ZCreateContact.pick({
   name: true,
-}).merge(
+}).and(
   z.object({
     dateOfBirth: z.string().optional(),
   })
@@ -128,8 +126,10 @@ export type contactStatusSchema = z.infer<typeof ZContactStatus>
 export type getAllCustomerSchema = z.infer<typeof ZAllCustomer>
 export type createCustomerSchema = z.infer<typeof ZCreateCustomer>
 export type createContactSchema = z.infer<typeof ZCreateContact>
+export type createContactSchemaInput = z.input<typeof ZCreateContact>
 export type contactSchema = z.infer<typeof ZContact>
 export type getAllContactSchema = z.infer<typeof ZAllContacts>
 export type contactSummarySchema = z.infer<typeof ZContactSummary>
+export type contactSummarySchemaInput = z.input<typeof ZContactSummary>
 export type contactDetailsSchema = z.infer<typeof ZContactDetails>
 export type updateDataContactSchema = z.infer<typeof ZUpdateDataContact>

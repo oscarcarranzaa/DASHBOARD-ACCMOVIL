@@ -1,7 +1,11 @@
 'use client'
 import { createCoupon } from '@/api/offerts'
 import Spinner from '@/components/icons/spinner'
-import { createCouponSchema, ZCreateCoupon } from '@/types/offers'
+import {
+  createCouponSchema,
+  createCouponSchemaInput,
+  ZCreateCoupon,
+} from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone } from '@internationalized/date'
 import {
@@ -16,7 +20,7 @@ import {
   Tabs,
   useDisclosure,
   DateValue,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -32,12 +36,12 @@ type createCouponFormSchema = {
 }
 const defaultValues = {
   code: '',
-  discount: '',
-  expiresAt: '',
-  minimumExpense: '',
-  maximumExpense: '',
-  usageLimit: '',
-  userLimit: '',
+  discount: 0, // number
+  expiresAt: null, // string | null
+  minimumExpense: null, // number | null
+  maximumExpense: null, // number | null
+  usageLimit: null, // number | null
+  userLimit: null, // number | null
 }
 export default function CouponEditor() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
@@ -49,8 +53,9 @@ export default function CouponEditor() {
     control,
     reset,
     setValue,
+    setError,
     formState: { errors },
-  } = useForm<createCouponFormSchema>({
+  } = useForm<createCouponSchemaInput>({
     resolver: zodResolver(ZCreateCoupon),
     defaultValues,
   })
@@ -67,20 +72,43 @@ export default function CouponEditor() {
     },
   })
 
-  const submitCoupon = (form: createCouponFormSchema) => {
-    const processedForm: createCouponSchema = {
+  const submitCoupon = (form: createCouponSchemaInput) => {
+    const processed = {
       ...form,
       discount: Number(form.discount),
-      minimumExpense: form.minimumExpense
-        ? Number(form.minimumExpense)
-        : undefined,
-      maximumExpense: form.maximumExpense
-        ? Number(form.maximumExpense)
-        : undefined,
-      usageLimit: form.usageLimit ? Number(form.usageLimit) : undefined,
-      userLimit: form.userLimit ? Number(form.userLimit) : undefined,
+      minimumExpense:
+        form.minimumExpense != null ? Number(form.minimumExpense) : null,
+      maximumExpense:
+        form.maximumExpense != null ? Number(form.maximumExpense) : null,
+      usageLimit: form.usageLimit != null ? Number(form.usageLimit) : null,
+      userLimit: form.userLimit != null ? Number(form.userLimit) : null,
     }
-    mutate(processedForm)
+    if (
+      processed.minimumExpense != null &&
+      processed.maximumExpense != null &&
+      processed.minimumExpense >= processed.maximumExpense
+    ) {
+      setError('minimumExpense', {
+        type: 'manual',
+        message: 'El gasto mínimo no puede ser mayor o igual que el máximo',
+      })
+      return
+    }
+
+    if (
+      processed.userLimit != null &&
+      processed.usageLimit != null &&
+      processed.userLimit >= processed.usageLimit
+    ) {
+      setError('userLimit', {
+        type: 'manual',
+        message:
+          'El límite por usuario no puede ser mayor o igual que el límite de uso',
+      })
+      return
+    }
+
+    mutate(processed)
   }
 
   return (
@@ -135,9 +163,10 @@ export default function CouponEditor() {
                             name="discount"
                             control={control}
                             rules={{ required: true }}
-                            render={({ field }) => (
+                            render={({ field: { value, ...field } }) => (
                               <Input
                                 {...field}
+                                value={value ? value.toString() : ''}
                                 errorMessage={errors.discount?.message}
                                 isInvalid={!!errors.discount?.message}
                                 placeholder="Ej: 20"
@@ -171,9 +200,10 @@ export default function CouponEditor() {
                         <Controller
                           name="minimumExpense"
                           control={control}
-                          render={({ field }) => (
+                          render={({ field: { value, ...field } }) => (
                             <Input
                               {...field}
+                              value={value ? value.toString() : ''}
                               placeholder="Ej: 399"
                               isInvalid={!!errors.minimumExpense?.message}
                               errorMessage={errors.minimumExpense?.message}
@@ -187,9 +217,10 @@ export default function CouponEditor() {
                         <Controller
                           name="maximumExpense"
                           control={control}
-                          render={({ field }) => (
+                          render={({ field: { value, ...field } }) => (
                             <Input
                               {...field}
+                              value={value ? value.toString() : ''}
                               placeholder="Ej: 10,000"
                               label="Gastos máximo (HNL)"
                               labelPlacement="outside"
@@ -203,9 +234,10 @@ export default function CouponEditor() {
                         <Controller
                           name="usageLimit"
                           control={control}
-                          render={({ field }) => (
+                          render={({ field: { value, ...field } }) => (
                             <Input
                               {...field}
+                              value={value ? value.toString() : ''}
                               placeholder="Ej: 50"
                               label="Cantidad a canjear (Veces)"
                               labelPlacement="outside"
@@ -217,9 +249,10 @@ export default function CouponEditor() {
                         <Controller
                           name="userLimit"
                           control={control}
-                          render={({ field }) => (
+                          render={({ field: { value, ...field } }) => (
                             <Input
                               {...field}
+                              value={value ? value.toString() : ''}
                               isInvalid={!!errors.userLimit?.message}
                               errorMessage={errors.userLimit?.message}
                               placeholder="1 vez por defecto"

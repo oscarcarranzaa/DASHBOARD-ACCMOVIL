@@ -6,6 +6,7 @@ import InputField from '@/components/UI/editableFields/input'
 import {
   contactSchema,
   contactSummarySchema,
+  contactSummarySchemaInput,
   ZContactSummary,
 } from '@/types/customer'
 import { addToast } from '@heroui/react'
@@ -34,7 +35,7 @@ export default function ContactSummary({
     clearErrors,
     formState: { errors, dirtyFields },
     getValues,
-  } = useForm<contactSummarySchema>({
+  } = useForm<contactSummarySchemaInput>({
     resolver: zodResolver(ZContactSummary),
     defaultValues,
   })

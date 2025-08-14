@@ -20,7 +20,7 @@ import SelectSourceLead from './selectSource'
 import ContactInput from '../../contacts/contactInput'
 import { useEffect } from 'react'
 import { contactSchema } from '@/types/customer'
-import { newLeadSchema, ZNewLead } from '@/types/crm/leads'
+import { newLeadSchema, newLeadSchemaInput, ZNewLead } from '@/types/crm/leads'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getLocalTimeZone, parseDate } from '@internationalized/date'
@@ -58,8 +58,8 @@ export default function NewLead({ button, isDisabled }: TProps) {
     getValues,
     reset,
     control,
-    formState: { isDirty, errors },
-  } = useForm<newLeadSchema>({
+    formState: { errors },
+  } = useForm<newLeadSchemaInput>({
     resolver: zodResolver(ZNewLead),
     defaultValues: initialValues,
   })
@@ -119,7 +119,7 @@ export default function NewLead({ button, isDisabled }: TProps) {
       isNewContact: true,
     })
   }
-  const submitLead = (lead: newLeadSchema) => {
+  const submitLead = (lead: newLeadSchemaInput) => {
     mutate(lead)
   }
 

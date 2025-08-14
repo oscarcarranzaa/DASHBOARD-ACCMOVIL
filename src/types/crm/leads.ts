@@ -51,7 +51,7 @@ export const ZNewLead = ZLead.pick({
   pipelineId: true,
   source: true,
   assignedToId: true,
-}).merge(
+}).and(
   z.object({
     name: z.string().min(2, 'Nombre muy corto'),
     email: z
@@ -62,7 +62,7 @@ export const ZNewLead = ZLead.pick({
         if (val) {
           if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val)) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: 'custom',
               message: 'El correo electrónico no es válido.',
             })
           }
@@ -80,7 +80,7 @@ export const ZNewLead = ZLead.pick({
 
         if (!regex.test(trimmed)) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message:
               'El número de teléfono debe contener solo números (8 a 15 dígitos).',
           })
@@ -198,6 +198,7 @@ export type noteSchema = z.infer<typeof ZNote>
 export type leadSummarySchema = z.infer<typeof ZLeadSummary>
 export type leadSchema = z.infer<typeof ZLead>
 export type newLeadSchema = z.infer<typeof ZNewLead>
+export type newLeadSchemaInput = z.input<typeof ZNewLead>
 export type allLeadShema = z.infer<typeof ZAllLeads>
 export type allLeadsByPipelineSchema = z.infer<typeof ZAllLeadsByPipeline>
 export type getOneLeadShema = z.infer<typeof ZOneLead>

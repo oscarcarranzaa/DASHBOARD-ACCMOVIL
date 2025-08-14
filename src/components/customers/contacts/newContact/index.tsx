@@ -1,6 +1,10 @@
 'use client'
 import Spinner from '@/components/icons/spinner'
-import { createContactSchema, ZCreateContact } from '@/types/customer'
+import {
+  createContactSchema,
+  createContactSchemaInput,
+  ZCreateContact,
+} from '@/types/customer'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -33,7 +37,7 @@ export default function CreateContact() {
     control,
     reset,
     formState: { errors },
-  } = useForm<createContactSchema>({
+  } = useForm<createContactSchemaInput>({
     resolver: zodResolver(ZCreateContact),
     defaultValues,
   })
@@ -47,7 +51,7 @@ export default function CreateContact() {
     },
   })
 
-  const handleSubmitNewContact = (form: createContactSchema) => {
+  const handleSubmitNewContact = (form: createContactSchemaInput) => {
     mutate(form)
   }
   return (

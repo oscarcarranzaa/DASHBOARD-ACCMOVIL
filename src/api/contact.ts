@@ -3,13 +3,14 @@ import {
   contactSchema,
   contactStatusSchema,
   createContactSchema,
+  createContactSchemaInput,
   getAllContactSchema,
   ZAllContacts,
   ZContact,
 } from '@/types/customer'
 import { isAxiosError } from 'axios'
 
-export async function createContact(contact: createContactSchema) {
+export async function createContact(contact: createContactSchemaInput) {
   try {
     const { data } = await axiosInstance.post<contactSchema>(
       '/admin/contact',

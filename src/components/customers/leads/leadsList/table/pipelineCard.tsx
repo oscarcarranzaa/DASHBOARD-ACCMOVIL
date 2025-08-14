@@ -78,8 +78,7 @@ export default function PipelineCard({
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ['leads', currentPage.toString()],
-        funnelId,
+        queryKey: ['leads', currentPage.toString(), funnelId],
       })
     },
   })

@@ -37,7 +37,7 @@ export const ZLead = z.object({
   products: z.array(ZProduct).nullable().optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
-  contact: ZContact,
+  contact: ZContact.optional().nullable(),
   assignedTo: ZPreviewUser.nullable().optional(),
   user: ZUser,
   label: ZLabel.nullable().optional(),
@@ -119,7 +119,7 @@ export const ZStageHistory = z.object({
 export const ZOneLead = ZLead.omit({
   products: true,
   label: true,
-}).merge(
+}).and(
   z.object({
     pipeline: ZPipeline,
     leadStageHistory: z.array(ZStageHistory).nullable(),

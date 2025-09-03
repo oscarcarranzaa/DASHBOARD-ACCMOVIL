@@ -83,7 +83,9 @@ export default function AllUserDetailsSearch({
         >
           <User
             avatarProps={{
-              src: user.avatar || '/static/default-profile.png',
+              src: user.avatar
+                ? `${user.avatar}-thumb.webp`
+                : '/static/default-profile.png',
             }}
             description={
               <div className="flex items-center gap-2">
@@ -113,10 +115,12 @@ export default function AllUserDetailsSearch({
   return (
     <Popover showArrow placement="bottom">
       <PopoverTrigger>
-        <div className="p-2 px-3 cursor-pointer flex items-center bg-white shadow-md gap-3 hover:bg-zinc-100 dark:bg-zinc-900 rounded-lg dark:hover:bg-zinc-900">
+        <div className="p-2 px-3 border border-zinc-300 dark:border-zinc-600 cursor-pointer flex items-center bg-white shadow-md gap-3 hover:bg-zinc-100 dark:bg-zinc-900 rounded-lg dark:hover:bg-zinc-900">
           <User
             avatarProps={{
-              src: avatar || '/static/default-profile.png',
+              src: avatar
+                ? `${avatar}-thumb.webp`
+                : '/static/default-profile.png',
             }}
             description={<p>{userName}</p>}
             name={name || ''}

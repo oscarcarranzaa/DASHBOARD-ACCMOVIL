@@ -88,6 +88,7 @@ export default function LeadTable({
             : ''
       switch (columnKey) {
         case 'person':
+          if (!lead.contact) return 'Contacto eliminado'
           const { id, name, email, phone } = lead.contact
           return (
             <div className={styles.box_content}>

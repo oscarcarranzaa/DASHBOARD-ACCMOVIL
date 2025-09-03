@@ -46,13 +46,27 @@ export const ZAllRoles = z.array(
 )
 export const ZUser = z.object({
   id: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  username: z.string(),
+  firstName: z
+    .string('El nombre es requerido')
+    .min(3, 'El nombre debe tener al menos 3 caracteres')
+    .max(100, 'El nombre debe tener menos de 100 caracteres'),
+  lastName: z
+    .string('El apellido es requerido')
+    .min(3, 'El apellido debe tener al menos 3 caracteres')
+    .max(100, 'El apellido debe tener menos de 100 caracteres'),
+  username: z
+    .string('El username es requerido')
+    .min(3, 'El username debe tener al menos 3 caracteres')
+    .max(30, 'El username debe tener menos de 30 caracteres'),
   gender: z.string().nullable(),
-  job: z.string(),
+  job: z
+    .string('El trabajo es requerido')
+    .min(3, 'El trabajo debe tener al menos 3 caracteres')
+    .max(100, 'El trabajo debe tener menos de 100 caracteres'),
   role: ZRole.optional().nullable(),
-  email: z.string().email(),
+  roleId: z.string().optional().nullable(),
+  email: z.email({ message: 'El email es requerido' }),
+  is_owner: z.boolean(),
   phone: z.string().nullable(),
   avatar: z.string().nullable(),
   birthDate: z.string().nullable(),
@@ -60,7 +74,18 @@ export const ZUser = z.object({
   documentNumber: z.string().nullable().optional(),
   createdAt: z.string(),
 })
-export const ZUserOwner = ZUser.merge(
+export const ZEditUser = ZUser.pick({
+  firstName: true,
+  lastName: true,
+  username: true,
+  is_owner: true,
+  job: true,
+  phone: true,
+  roleId: true,
+  birthDate: true,
+  documentNumber: true,
+})
+export const ZUserOwner = ZUser.and(
   z.object({
     is_owner: z.boolean(),
     lastLogin: z.string().nullable().optional(),

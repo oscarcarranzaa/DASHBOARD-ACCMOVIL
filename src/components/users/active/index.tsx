@@ -47,7 +47,7 @@ export default function ActiveUser({ user, button, buttonProps }: TProps) {
   })
 
   return (
-    <div>
+    <div className="w-full">
       <Button onPress={onOpen} {...buttonProps}>
         {button}
       </Button>

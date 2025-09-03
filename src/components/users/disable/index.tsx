@@ -63,7 +63,7 @@ export default function DisableUser({ user, button, buttonProps }: TProps) {
     mutate({ userId: user.id, assingToId: assignUser || undefined })
   }
   return (
-    <div>
+    <div className="w-full">
       <Button onPress={onOpen} {...buttonProps}>
         {button}
       </Button>

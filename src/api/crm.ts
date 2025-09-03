@@ -343,3 +343,33 @@ export async function changeLeadStatus({
     }
   }
 }
+type TSwichContactLead = {
+  leadId: string
+  isNewContact: boolean
+  contactName?: string
+  contactId?: string
+}
+export async function switchContactLead({
+  leadId,
+  contactId,
+  isNewContact,
+  contactName,
+}: TSwichContactLead) {
+  try {
+    const { data } = await axiosInstance.put<getOneLeadShema>(
+      `/admin/lead/${leadId}/swich-contact`,
+      { isNewContact, contactName, contactId }
+    )
+    const validData = ZOneLead.parse(data)
+    return validData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al cambiar de contacto.')
+    }
+  }
+}

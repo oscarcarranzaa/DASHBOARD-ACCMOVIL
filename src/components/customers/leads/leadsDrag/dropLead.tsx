@@ -61,7 +61,7 @@ export default function DropLead({
                 id={lead.id}
                 key={lead.id}
                 title={lead.title}
-                contactName={lead.contact.name}
+                contactName={lead.contact?.name ?? 'Contacto eliminado'}
                 value={lead.value}
                 user={lead.assignedTo?.firstName}
                 avatar={

@@ -25,7 +25,7 @@ export const ZGetPipelines = z.array(ZPipeline)
 
 export const ZNewPipeline = ZPipeline.pick({
   name: true,
-}).merge(
+}).and(
   z.object({
     stages: z
       .array(

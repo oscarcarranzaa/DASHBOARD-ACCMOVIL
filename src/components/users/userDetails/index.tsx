@@ -1,15 +1,10 @@
-import VerifiedSVG from '@/components/icons/verified'
 import { UserSchema } from '@/types/users'
-import { User, ChipProps } from "@heroui/react"
+import { User } from '@heroui/react'
 
 type IProps = {
   user: UserSchema
 }
-const statusColorMap: Record<string, ChipProps['color']> = {
-  active: 'success',
-  suspended: 'danger',
-  disabled: 'warning',
-}
+
 export default function UserDetails({ user }: IProps) {
   const image = user.avatar ? user.avatar : '/static/default-profile.png'
 

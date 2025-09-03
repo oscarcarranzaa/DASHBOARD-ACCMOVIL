@@ -14,12 +14,14 @@ import {
   ZAllUsers,
   ZCountUserActivities,
   ZDisableUser,
+  ZEditUser,
   ZGetPermissions,
   ZRole,
   ZRolePermissions,
   ZUser,
 } from '@/types/users'
 import { isAxiosError } from 'axios'
+import z from 'zod'
 
 export async function getAllUsers(
   page: string,
@@ -128,6 +130,26 @@ export async function getOneUser(params: string) {
   try {
     const { data } = await axiosInstance.get<UserSchema>(
       `/admin/user/${params}`
+    )
+    const validClient = ZUser.parse(data)
+    return validClient
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response.msg)
+    } else {
+      throw new Error('Ocurrió un error al obtener el cliente.')
+    }
+  }
+}
+type TEditUserProps = {
+  id: string
+  userData: z.input<typeof ZEditUser>
+}
+export async function editUser({ id, userData }: TEditUserProps) {
+  try {
+    const { data } = await axiosInstance.put<UserSchema>(
+      `/admin/user/${id}/update-info`,
+      userData
     )
     const validClient = ZUser.parse(data)
     return validClient

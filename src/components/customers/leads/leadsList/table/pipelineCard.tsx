@@ -18,7 +18,7 @@ type TProps = {
   stageId: string
   value?: number | null
   pipeline?: pipelineSchema
-  contact: contactSchema
+  contact?: contactSchema | null
   expectedClosed?: string | null
 }
 export default function PipelineCard({
@@ -102,7 +102,9 @@ export default function PipelineCard({
             <User size={18} />
           </div>
           <div>
-            <p className="text-sm line-clamp-1 opacity-90">{contact.name}</p>
+            <p className="text-sm line-clamp-1 opacity-90">
+              {contact ? contact.name : 'Contacto eliminado'}
+            </p>
           </div>
         </div>
         {expectedClosed && (

@@ -1,5 +1,4 @@
 import { changelogSchema } from '@/types/crm/leads'
-import { Avatar } from '@heroui/react'
 import { MoveRight } from 'lucide-react'
 
 type TProps = {
@@ -13,6 +12,7 @@ const logKey: Record<changelogSchema['field_key'], string> = {
   STAGE: 'Etapa',
   STATUS: 'Estado',
   USER: 'Propietario',
+  CONTACT: 'Contacto',
 }
 export default function StatusHistory({ oldValue, newValue, type }: TProps) {
   return (

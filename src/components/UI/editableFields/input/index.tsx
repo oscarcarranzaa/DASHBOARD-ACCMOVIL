@@ -1,6 +1,6 @@
 import Edit from '@/components/icons/edit'
 import { Input, Spinner } from '@heroui/react'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import style from './field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
 
@@ -30,8 +30,13 @@ export default function InputField({
   isRequired,
 }: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false)
-
   const [internalValue, setInternalValue] = useState<string | undefined>(value)
+
+  useEffect(() => {
+    setInternalValue(value)
+  }, [value])
+
+  const startEditing = useCallback(() => setIsEditing(true), [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInternalValue(e.target.value)
@@ -56,7 +61,7 @@ export default function InputField({
         className="flex items-center"
       >
         <button
-          onClick={() => setIsEditing(true)}
+          onClick={startEditing}
           className="dark:stroke-white stroke-black mr-2 flex-none"
         >
           {startContent}
@@ -88,7 +93,7 @@ export default function InputField({
               ) : (
                 <>
                   <span
-                    onClick={() => setIsEditing(true)}
+                    onClick={startEditing}
                     className={`border-b border-dashed ${error ? 'border-red-500' : 'border-zinc-500'}`}
                     style={{ cursor: 'pointer', padding: '0.6rem' }}
                   >
@@ -100,7 +105,7 @@ export default function InputField({
                   </span>
                   <button
                     className={`flex stroke-blue-500 ${!isPending ? style.edit_icon_field : ''}`}
-                    onClick={() => setIsEditing(true)}
+                    onClick={startEditing}
                   >
                     {isPending ? (
                       <Spinner variant="dots" size="sm" className="w-4 h-4" />

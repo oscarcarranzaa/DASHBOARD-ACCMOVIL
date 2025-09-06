@@ -1,7 +1,7 @@
 import Edit from '@/components/icons/edit'
-import { DatePicker, DateValue, Spinner } from '@heroui/react'
-import { parseDate, getLocalTimeZone } from '@internationalized/date'
-import { ReactNode, useRef, useState } from 'react'
+import { DateInput, DatePicker, DateValue, Spinner } from '@heroui/react'
+import { parseDate, getLocalTimeZone, today } from '@internationalized/date'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import style from '../input/field.module.css'
 import WarningInfo from '@/components/icons/warningInfo'
 import dayjs from 'dayjs'
@@ -32,6 +32,13 @@ export default function DatePickerField({
     value ? (parseDate(value) as unknown as DateValue) : null
   )
   const ref = useRef(null)
+
+  useEffect(() => {
+    setInternalValue(value ? (parseDate(value) as unknown as DateValue) : null)
+  }, [value])
+
+  const startEditing = useCallback(() => setIsEditing(true), [])
+
   const handleChange = (e: DateValue) => {
     setInternalValue(e)
     onValueChange(e?.toDate(getLocalTimeZone()).toISOString().split('T')[0])
@@ -58,7 +65,7 @@ export default function DatePickerField({
         className="flex items-center"
       >
         <button
-          onClick={() => setIsEditing(true)}
+          onClick={startEditing}
           className="dark:stroke-white stroke-black mr-2 flex-none"
         >
           {startContent}
@@ -68,16 +75,15 @@ export default function DatePickerField({
             <div className={`flex items-center ${style.fiel_contaier}`}>
               {isEditing ? (
                 <div>
-                  <DatePicker
+                  <DateInput
                     isDisabled={isPending}
                     ref={ref}
                     value={internalValue}
-                    showMonthAndYearPickers
                     onChange={(v) => {
                       if (!v) return
                       handleChange(v)
                     }}
-                    autoFocus
+                    onFocusChange={(w) => console.log(w)}
                     variant="bordered"
                     errorMessage={error}
                     aria-label={label}
@@ -88,7 +94,7 @@ export default function DatePickerField({
               ) : (
                 <>
                   <span
-                    onClick={() => setIsEditing(true)}
+                    onClick={startEditing}
                     className={`border-b border-dashed ${error ? 'border-red-500' : 'border-zinc-500'}`}
                     style={{ cursor: 'pointer', padding: '0.6rem' }}
                   >
@@ -106,7 +112,7 @@ export default function DatePickerField({
                   </span>
                   <button
                     className={`flex stroke-blue-500 ${!isPending ? style.edit_icon_field : ''}`}
-                    onClick={() => setIsEditing(true)}
+                    onClick={startEditing}
                   >
                     {isPending ? (
                       <Spinner variant="dots" size="sm" className="w-4 h-4" />

@@ -159,7 +159,7 @@ export const ZChangeLogs = z.object({
   id: z.string(),
   old_value: z.string().nullable(),
   new_value: z.string().nullable(),
-  field_key: z.enum(['STATUS', 'CREATED', 'USER', 'STAGE']),
+  field_key: z.enum(['STATUS', 'CREATED', 'USER', 'STAGE', 'CONTACT']),
   source: z.string().nullable(),
   userId: z.string().nullable(),
   leadId: z.string().nullable(),

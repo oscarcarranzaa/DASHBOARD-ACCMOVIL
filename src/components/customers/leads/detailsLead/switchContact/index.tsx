@@ -1,5 +1,6 @@
 import { switchContactLead } from '@/api/crm'
 import ContactInput from '@/components/customers/contacts/contactInput'
+import { cn } from '@/lib/utils'
 import { contactSchema } from '@/types/customer'
 import {
   Modal,
@@ -10,58 +11,119 @@ import {
   Button,
   useDisclosure,
   ButtonProps,
+  addToast,
+  Tooltip,
 } from '@heroui/react'
-import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import Link from 'next/link'
+import { useState, useMemo } from 'react'
 
 type TProps = {
   leadId: string
   button?: ButtonProps
+  buttonContent?: React.ReactNode
+  isOpen?: boolean
+  hideButton?: boolean
+  activeTooltip?: boolean
+  onClose: () => void
+  onOpenChange: () => void
+  onOpen: () => void
+  tooltipContent?: React.ReactNode
 }
-export default function SwitchContact({ leadId, button }: TProps) {
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+
+export default function SwitchContact({
+  leadId,
+  button,
+  buttonContent = 'Seleccionar contacto',
+  isOpen = false,
+  hideButton = false,
+  activeTooltip = false,
+  onClose,
+  onOpenChange,
+  onOpen,
+  tooltipContent = 'Seleccionar contacto',
+}: TProps) {
   const [contact, setContact] = useState<contactSchema | null>(null)
   const [newContact, setNewContact] = useState<string | null>(null)
-  const [isNewContact, setIsNewContact] = useState<boolean>(false)
+
+  const queryClient = useQueryClient()
+  const isNewContact = useMemo(
+    () => !!newContact && !contact,
+    [newContact, contact]
+  )
 
   const { mutate, isPending } = useMutation({
     mutationFn: switchContactLead,
-    onSuccess: () => {
+    onSuccess: (lead) => {
+      addToast({
+        color: 'success',
+        title: 'Contacto cambiado exitosamente',
+        variant: 'bordered',
+
+        endContent: (
+          <div className="ms-11 my-2 flex gap-x-2 float-end">
+            <Button
+              color={'success'}
+              size="sm"
+              variant="bordered"
+              as={Link}
+              href={`/dash/clientes/contactos/${lead.contactId}`}
+            >
+              Ver
+            </Button>
+          </div>
+        ),
+      })
       onClose()
     },
-    onError: () => {},
+    onError: (error) => {
+      addToast({ color: 'danger', title: error.message, variant: 'bordered' })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['oneLead', leadId] })
+      queryClient.invalidateQueries({ queryKey: [leadId, 'history'] })
+    },
   })
 
-  const handleClearContact = () => {
-    setContact(null)
-    setNewContact(null)
-  }
-  const handleSetContact = (contact: contactSchema) => {
-    ;(setContact(contact), setIsNewContact(false))
-  }
-  const handleSetNewContact = (name: string) => {
-    ;(setNewContact(name), setIsNewContact(true))
-  }
-
   const handleSelectContact = () => {
-    if (isNewContact) {
-      if (!newContact) return
-      mutate({ leadId, isNewContact, contactName: newContact })
-    } else {
-      if (!contact) return
-      mutate({ leadId, isNewContact, contactId: contact.id })
+    if (isNewContact && newContact) {
+      mutate({ leadId, isNewContact: true, contactName: newContact })
+    } else if (contact) {
+      mutate({ leadId, isNewContact: false, contactId: contact.id })
     }
   }
+
+  const infoMessage = useMemo(() => {
+    if (isNewContact)
+      return `Se creará un nuevo contacto (${newContact}) y se vinculará a este trato.`
+    if (contact?.name)
+      return `Se vinculará a este trato el contacto existente (${contact.name}).`
+    return 'Selecciona un contacto'
+  }, [isNewContact, newContact, contact])
+
   return (
     <>
-      <Button onPress={onOpen} {...button}>
-        Seleccionar contacto
-      </Button>
+      <Tooltip
+        content={tooltipContent}
+        placement="top"
+        offset={10}
+        isDisabled={!activeTooltip}
+      >
+        {!hideButton && (
+          <Button onPress={onOpen} {...button}>
+            {buttonContent}
+          </Button>
+        )}
+      </Tooltip>
       <Modal
         className="overflow-visible"
         isOpen={isOpen}
         size="lg"
         placement="top"
+        classNames={{
+          backdrop: 'z-100000',
+          wrapper: 'z-100000',
+        }}
         onOpenChange={onOpenChange}
       >
         <ModalContent>
@@ -69,22 +131,31 @@ export default function SwitchContact({ leadId, button }: TProps) {
           <ModalBody>
             <div className="mb-5">
               <ContactInput
-                onContactChange={(contact) => handleSetContact(contact)}
-                onNewContactChange={(name) => handleSetNewContact(name)}
-                onClear={() => handleClearContact()}
+                onContactChange={(c) => {
+                  setContact(c)
+                  setNewContact(null)
+                }}
+                onNewContactChange={(name) => {
+                  setNewContact(name)
+                  setContact(null)
+                }}
+                onClear={() => {
+                  setContact(null)
+                  setNewContact(null)
+                }}
               />
-              <p className="text-xs opacity-80 mt-3">
-                {isNewContact
-                  ? `Se creara un nuevo contacto (${newContact}) y se vinculará a este trato.`
-                  : `Se vinculará a este trato el contacto existente (${contact?.name}).`}
-              </p>
+              <p className="text-xs opacity-80 mt-3">{infoMessage}</p>
             </div>
           </ModalBody>
           <ModalFooter>
             <Button color="default" variant="bordered" onPress={onOpenChange}>
               Cancelar
             </Button>
-            <Button color="primary" onPress={handleSelectContact}>
+            <Button
+              color="primary"
+              isLoading={isPending}
+              onPress={handleSelectContact}
+            >
               Seleccionar
             </Button>
           </ModalFooter>

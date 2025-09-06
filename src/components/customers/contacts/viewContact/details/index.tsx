@@ -7,9 +7,9 @@ import {
   ZContactDetails,
 } from '@/types/customer'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { addToast, DateValue } from '@heroui/react'
+import { addToast } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 export default function ContactDetails({
@@ -22,7 +22,6 @@ export default function ContactDetails({
 
   const defaultValues = {
     name: contact.name ?? undefined,
-
     dateOfBirth: contact.dateOfBirth ?? undefined,
   }
   const {
@@ -31,6 +30,7 @@ export default function ContactDetails({
     formState: { errors, dirtyFields },
     getValues,
     resetField,
+    reset,
   } = useForm<contactDetailsSchema>({
     resolver: zodResolver(ZContactDetails),
     defaultValues,
@@ -58,19 +58,28 @@ export default function ContactDetails({
       })
     },
   })
+  useEffect(() => {
+    if (contact)
+      reset({
+        name: contact.name,
+        dateOfBirth: contact.dateOfBirth ?? undefined,
+      })
+  }, [contact])
 
   const handleAutoSubmit = async (fieldName: keyof contactDetailsSchema) => {
     if (!dirtyFields[fieldName]) return
     const isValid = await trigger(fieldName)
+
     if (!isValid) {
+      const getError = errors[fieldName]?.message
       addToast({
-        color: 'warning',
+        color: 'danger',
         variant: 'bordered',
         timeout: 5000,
-        title: 'Advertencia de error',
-        description: `Error en los datos [campo: ${fieldName}] `,
+        title: 'Error en el formulario',
+        description: getError,
       })
-
+      resetField(fieldName)
       return
     }
     const value = getValues(fieldName)

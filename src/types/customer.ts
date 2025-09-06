@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { z } from 'zod'
 
 export const ZCustomer = z.object({
@@ -103,7 +104,17 @@ export const ZContactDetails = ZCreateContact.pick({
   name: true,
 }).and(
   z.object({
-    dateOfBirth: z.string().optional(),
+    dateOfBirth: z
+      .string()
+      .optional()
+      .refine(
+        (date) => !date || dayjs(date).isBefore(dayjs(), 'day'), // no futura
+        { message: 'La fecha de nacimiento no puede ser en el futuro.' }
+      )
+      .refine(
+        (date) => !date || dayjs(date).isAfter(dayjs().subtract(120, 'year')), // no más de 120 años atrás
+        { message: 'La fecha de nacimiento es demasiado antigua.' }
+      ),
   })
 )
 export const ZUpdateDataContact = z.object({

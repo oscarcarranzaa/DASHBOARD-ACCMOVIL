@@ -71,14 +71,15 @@ export default function ContactSummary({
     }
     const isValid = await trigger(fieldName)
     if (!isValid) {
+      const getError = errors[fieldName]?.message
       addToast({
-        color: 'warning',
+        color: 'danger',
         variant: 'bordered',
         timeout: 5000,
-        title: 'Advertencia de error',
-        description: `Error en los datos [Entrada: ${fieldName}] `,
+        title: 'Error en el formulario',
+        description: getError,
       })
-
+      resetField(fieldName)
       return
     }
     const value = getValues(fieldName)

@@ -80,7 +80,9 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
+button {
+  cursor: pointer;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;

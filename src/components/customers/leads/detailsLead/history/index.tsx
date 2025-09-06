@@ -6,7 +6,7 @@ import NotesHistory from './hitoryItems/notes'
 import StatusHistory from './hitoryItems/status'
 import FileHistory from './hitoryItems/file'
 import HistoryTime from './hitoryItems/time'
-import { Activity, File, RefreshCcw, User } from 'lucide-react'
+import { Activity, Contact, File, RefreshCcw, User } from 'lucide-react'
 import LeadStatusBar from './statusBar'
 import { Avatar, Button } from '@heroui/react'
 import { useState } from 'react'
@@ -23,7 +23,7 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
 
   const include = (name: TFilter) => filter === name || filter === 'history'
 
-  const { data, isPending, refetch, isFetching, error } = useQuery({
+  const { data, isPending, refetch, isFetching } = useQuery({
     queryKey: [leadId, 'history', filter],
     queryFn: () =>
       getLeadHistory({
@@ -127,13 +127,18 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
           } else if ('changelogs' in history) {
             return (
               <div className="flex gap-3" key={history.changelogs.id}>
-                {history.changelogs.field_key !== 'USER' ? (
+                {history.changelogs.field_key === 'USER' ? (
+                  <LeadStatusBar color="primary" render={<User size={16} />} />
+                ) : history.changelogs.field_key === 'CONTACT' ? (
+                  <LeadStatusBar
+                    color="primary"
+                    render={<Contact size={16} />}
+                  />
+                ) : (
                   <LeadStatusBar
                     color="success"
                     render={<Activity size={16} />}
                   />
-                ) : (
-                  <LeadStatusBar color="primary" render={<User size={16} />} />
                 )}
                 <div className="pb-6">
                   <StatusHistory
@@ -158,7 +163,6 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
             return (
               <div className="flex gap-3" key={history.notes.id}>
                 <LeadStatusBar
-                  color="danger"
                   render={<Avatar src={avatar} className="w-8 h-8" />}
                 />
                 <div className="pb-6 grow">

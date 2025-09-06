@@ -357,7 +357,7 @@ export async function switchContactLead({
 }: TSwichContactLead) {
   try {
     const { data } = await axiosInstance.put<getOneLeadShema>(
-      `/admin/lead/${leadId}/swich-contact`,
+      `/admin/lead/${leadId}/switch-contact`,
       { isNewContact, contactName, contactId }
     )
     const validData = ZOneLead.parse(data)

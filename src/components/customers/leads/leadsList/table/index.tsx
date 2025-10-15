@@ -16,8 +16,12 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownTrigger,
 } from '@heroui/react'
-import { Copy, MoveRight } from 'lucide-react'
+import { Copy, Ellipsis, MoveRight, Trash } from 'lucide-react'
 import { columns } from './columns'
 import PaginationPage from '@/components/UI/pagination'
 import dayjs from 'dayjs'
@@ -111,12 +115,47 @@ export default function LeadTable({
         case 'actions':
           return (
             <div className="relative flex justify-end items-center gap-2">
-              <DropDown label="Acciones">
-                <Button className="w-full justify-start" variant="light">
-                  <Copy size={16} /> Copiar
-                </Button>
-                <DeleteLeadModal leadId={lead.id} title={lead.title} />
-              </DropDown>
+              <Dropdown shouldBlockScroll={false}>
+                <DropdownTrigger>
+                  <Button
+                    isIconOnly
+                    variant="flat"
+                    color="default"
+                    className="w-8 h-8"
+                    size="sm"
+                  >
+                    <Ellipsis size={12} />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu closeOnSelect={false} variant="faded">
+                  <DropdownItem key="copy" className="flex p-0">
+                    <Button
+                      className="flex justify-start w-full items-center gap-2"
+                      variant="flat"
+                    >
+                      <Copy size={18} /> Copiar
+                    </Button>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    className="text-danger p-0 "
+                    color="danger"
+                  >
+                    <DeleteLeadModal
+                      leadId={lead.id}
+                      title={lead.title}
+                      buttonProps={{
+                        variant: 'flat',
+                        className:
+                          'w-full flex justify-start items-center gap-2',
+                        color: 'danger',
+                        radius: 'sm',
+                        startContent: <Trash size={18} />,
+                      }}
+                    />
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           )
         case 'previusDate':

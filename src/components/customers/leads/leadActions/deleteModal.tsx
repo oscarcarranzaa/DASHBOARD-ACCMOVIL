@@ -12,6 +12,7 @@ import {
   Button,
   useDisclosure,
   addToast,
+  ButtonProps,
 } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trash } from 'lucide-react'
@@ -20,8 +21,13 @@ import { useSearchParams } from 'next/navigation'
 type TProps = {
   leadId: string
   title: string
+  buttonProps?: ButtonProps
 }
-export default function DeleteLeadModal({ leadId, title }: TProps) {
+export default function DeleteLeadModal({
+  leadId,
+  title,
+  buttonProps,
+}: TProps) {
   const queryClient = useQueryClient()
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('leadPage')) || 1
@@ -74,16 +80,19 @@ export default function DeleteLeadModal({ leadId, title }: TProps) {
     mutate(leadId)
   }
   return (
-    <>
-      <Button
-        variant="light"
-        className="w-full justify-start"
-        color="danger"
-        onPress={onOpen}
-      >
-        <Trash size={16} /> Eliminar
+    <div className="w-full">
+      <Button {...buttonProps} onPress={onOpen}>
+        Eliminar
       </Button>
-      <Modal isDismissable isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        classNames={{
+          backdrop: 'z-100000',
+          wrapper: 'z-100000',
+        }}
+        isDismissable
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
@@ -119,6 +128,6 @@ export default function DeleteLeadModal({ leadId, title }: TProps) {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   )
 }

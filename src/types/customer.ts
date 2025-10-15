@@ -44,7 +44,7 @@ export const ZCreateCustomer = z
     gender: z.string().optional(),
     phone: z.string().optional(),
   })
-  .merge(ZPassword)
+  .and(ZPassword)
 
 export const ZContact = z.object({
   id: z.string(),
@@ -69,14 +69,17 @@ export const ZCreateContact = ZContact.pick({
     .string()
     .optional()
     .superRefine((val, ctx) => {
-      if (val === '') return
-      if (val) {
-        if (!/^\d+$/.test(val)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'El número de teléfono no es válido.',
-          })
-        }
+      if (!val || val.trim() === '') return
+
+      const trimmed = val.trim()
+      const regex = /^\d{8,15}$/
+
+      if (!regex.test(trimmed)) {
+        ctx.addIssue({
+          code: 'custom',
+          message:
+            'El número de teléfono debe contener solo números (8 a 15 dígitos).',
+        })
       }
     })
     .transform((val) => (val === '' ? undefined : val)),

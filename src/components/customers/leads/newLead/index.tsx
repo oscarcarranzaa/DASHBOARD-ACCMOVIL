@@ -18,7 +18,7 @@ import {
 import { Plus } from 'lucide-react'
 import SelectSourceLead from './selectSource'
 import ContactInput from '../../contacts/contactInput'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { contactSchema } from '@/types/customer'
 import { newLeadSchema, newLeadSchemaInput, ZNewLead } from '@/types/crm/leads'
 import { useForm, Controller } from 'react-hook-form'
@@ -35,6 +35,7 @@ type TProps = {
   isDisabled?: boolean
 }
 export default function NewLead({ button, isDisabled }: TProps) {
+  const [dateValue, setDateValue] = useState<DateValue | null>(null)
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const thisUser = useAuthStore((state) => state.user)?.id
   const queryClient = useQueryClient()
@@ -126,7 +127,13 @@ export default function NewLead({ button, isDisabled }: TProps) {
   useEffect(() => {
     setValue('assignedToId', thisUser)
   }, [thisUser])
-
+  useEffect(() => {
+    if (dateValue) {
+      const jsDate = dateValue.toDate(getLocalTimeZone())
+      const dateOnly = jsDate.toISOString()
+      setValue('expectedCloseDate', dateOnly, { shouldDirty: true })
+    }
+  }, [dateValue])
   return (
     <>
       <div>
@@ -204,33 +211,16 @@ export default function NewLead({ button, isDisabled }: TProps) {
                         )}
                       />
 
-                      <Controller
-                        control={control}
-                        name="expectedCloseDate"
-                        render={({ field: { onChange, value } }) => {
-                          const date = value
-                            ? (parseDate(value) as unknown as DateValue)
-                            : null
-                          return (
-                            <DatePicker
-                              aria-label="Fecha"
-                              aria-labelledby="fecha"
-                              label="Fecha prevista de cierre"
-                              labelPlacement="outside"
-                              variant="bordered"
-                              value={date}
-                              onChange={(val) => {
-                                onChange(
-                                  val
-                                    ?.toDate(getLocalTimeZone())
-                                    .toISOString()
-                                    .split('T')[0]
-                                )
-                              }}
-                            />
-                          )
-                        }}
+                      <DatePicker
+                        aria-label="Fecha"
+                        aria-labelledby="fecha"
+                        label="Fecha prevista de cierre"
+                        labelPlacement="outside"
+                        variant="bordered"
+                        value={dateValue}
+                        onChange={setDateValue}
                       />
+
                       <Controller
                         control={control}
                         name="pipelineId"

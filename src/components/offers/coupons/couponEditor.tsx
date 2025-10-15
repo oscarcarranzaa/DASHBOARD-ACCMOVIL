@@ -7,7 +7,7 @@ import {
   ZCreateCoupon,
 } from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
+import { getLocalTimeZone } from '@internationalized/date'
 import {
   Button,
   DatePicker,
@@ -22,18 +22,9 @@ import {
   DateValue,
 } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
-type createCouponFormSchema = {
-  code: string
-  discount: string
-  minimumExpense?: string
-  maximumExpense?: string
-  usageLimit?: string
-  userLimit?: string
-  expiresAt?: string
-}
 const defaultValues = {
   code: '',
   discount: 0, // number
@@ -110,7 +101,11 @@ export default function CouponEditor() {
 
     mutate(processed)
   }
-
+  useEffect(() => {
+    if (expires) {
+      setValue('expiresAt', expires.toDate(getLocalTimeZone()).toISOString())
+    }
+  }, [expires])
   return (
     <div>
       <Button color="primary" onPress={onOpen}>
@@ -163,7 +158,9 @@ export default function CouponEditor() {
                             name="discount"
                             control={control}
                             rules={{ required: true }}
-                            render={({ field: { value, ...field } }) => (
+                            render={({
+                              field: { value, onChange, ...field },
+                            }) => (
                               <Input
                                 {...field}
                                 value={value ? value.toString() : ''}
@@ -176,21 +173,15 @@ export default function CouponEditor() {
                                 type="number"
                                 isRequired
                                 required
+                                onChange={(e) => {
+                                  onChange(Number(e.target.value))
+                                }}
                               />
                             )}
                           />
                           <DatePicker
                             value={expires}
-                            onChange={(val) => {
-                              if (val) {
-                                const date = val.toDate(getLocalTimeZone())
-                                setValue('expiresAt', date.toISOString())
-                                setExpires(val)
-                              } else {
-                                setValue('expiresAt', undefined)
-                                setExpires(null)
-                              }
-                            }}
+                            onChange={setExpires}
                             label="Fecha de expiración"
                             variant="bordered"
                             labelPlacement="outside"

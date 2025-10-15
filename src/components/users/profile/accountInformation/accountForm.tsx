@@ -82,6 +82,13 @@ export default function AccountInformationForm({ user }: TProps) {
   const submitUserInfo = (form: editProfileInfoSchema) => {
     mutate(form)
   }
+  useEffect(() => {
+    if (dateValue) {
+      const jsDate = dateValue.toDate(getLocalTimeZone())
+      const dateOnly = jsDate.toISOString()
+      setValue('birthDate', dateOnly, { shouldDirty: true })
+    }
+  }, [dateValue])
   return (
     <>
       <div>
@@ -183,16 +190,7 @@ export default function AccountInformationForm({ user }: TProps) {
               labelPlacement="outside"
               variant="bordered"
               value={dateValue}
-              onChange={(val) => {
-                setDateValue(val)
-                if (val) {
-                  const jsDate = val.toDate(getLocalTimeZone())
-                  const dateOnly = jsDate.toISOString().split('T')[0]
-                  setValue('birthDate', dateOnly, { shouldDirty: true })
-                  return
-                }
-                setValue('birthDate', null, { shouldDirty: true })
-              }}
+              onChange={setDateValue}
             />
           </div>
           <div className="mt-8 flex justify-end">

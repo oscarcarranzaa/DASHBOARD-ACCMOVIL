@@ -7,7 +7,7 @@ import {
   ZCreateCoupon,
 } from '@/types/offers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { getLocalTimeZone } from '@internationalized/date'
+import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
 import {
   Button,
   DatePicker,
@@ -182,11 +182,14 @@ export default function CouponEditor() {
                           <DatePicker
                             value={expires}
                             onChange={(val) => {
-                              setValue(
-                                'expiresAt',
-                                val?.toDate(getLocalTimeZone()).toISOString()
-                              )
-                              setExpires(val)
+                              if (val) {
+                                const date = val.toDate(getLocalTimeZone())
+                                setValue('expiresAt', date.toISOString())
+                                setExpires(val)
+                              } else {
+                                setValue('expiresAt', undefined)
+                                setExpires(null)
+                              }
                             }}
                             label="Fecha de expiración"
                             variant="bordered"

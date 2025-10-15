@@ -186,11 +186,9 @@ export default function AccountInformationForm({ user }: TProps) {
               onChange={(val) => {
                 setDateValue(val)
                 if (val) {
-                  setValue(
-                    'birthDate',
-                    val.toDate(getLocalTimeZone()).toISOString(),
-                    { shouldDirty: true }
-                  )
+                  const jsDate = val.toDate(getLocalTimeZone())
+                  const dateOnly = jsDate.toISOString().split('T')[0]
+                  setValue('birthDate', dateOnly, { shouldDirty: true })
                   return
                 }
                 setValue('birthDate', null, { shouldDirty: true })

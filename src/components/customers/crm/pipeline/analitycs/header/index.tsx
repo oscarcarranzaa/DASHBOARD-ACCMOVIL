@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import type { RangeValue } from '@react-types/shared'
-import type { DateValue } from '@react-types/datepicker'
+import type { DateValue } from '@heroui/react'
 
 import { DateRangePicker, Select, SelectItem, Selection } from '@heroui/react'
 import { getLocalTimeZone, today } from '@internationalized/date'

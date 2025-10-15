@@ -54,6 +54,8 @@
     "zustand": "5.0.7"
   },
   "devDependencies": {
+    "@react-types/datepicker": "^3.13.2",
+    "@react-types/shared": "^3.32.1",
     "@tailwindcss/typography": "^0.5.16",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^24.2.1",

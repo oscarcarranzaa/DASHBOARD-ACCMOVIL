@@ -14,6 +14,7 @@ export const useLogout = () => {
   const [isPending, setIsPending] = useState(false)
 
   const logout = async () => {
+    if (isPending) return
     setIsPending(true)
     try {
       // Llama al backend para cerrar sesión
@@ -26,7 +27,7 @@ export const useLogout = () => {
       logoutUserToken()
 
       // Redirige
-      router.push('/login')
+      router.replace('/login')
     } catch (error) {
       console.error('Error al cerrar sesión:', error)
     } finally {

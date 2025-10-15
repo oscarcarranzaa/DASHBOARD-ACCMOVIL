@@ -67,6 +67,7 @@ export const ZUser = z.object({
   roleId: z.string().optional().nullable(),
   email: z.email({ message: 'El email es requerido' }),
   is_owner: z.boolean(),
+  is_user_root: z.boolean(),
   phone: z.string().nullable(),
   avatar: z.string().nullable(),
   birthDate: z.string().nullable(),

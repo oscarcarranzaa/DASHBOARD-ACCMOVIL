@@ -24,14 +24,8 @@ import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import {
-  DateFormatter,
-  getLocalTimeZone,
-  parseDate,
-  parseZonedDateTime,
-  today,
-} from '@internationalized/date'
-import { useDateFormatter } from '@react-aria/i18n'
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date'
+
 import Spinner from '@/components/icons/spinner'
 
 type TProps = {
@@ -88,15 +82,18 @@ export default function EditUser({ user }: TProps) {
         timeout: 3000,
       })
     },
-    onError: (_err, _newData, context) => {
+    onError: (err, _newData, context) => {
       addToast({
-        title: 'Error',
-        description: 'Hubo un error al editar el usuario',
+        title: 'Error al editar el usuario',
+        description: err.message,
         color: 'danger',
         timeout: 3000,
         variant: 'bordered',
       })
       queryClient.setQueryData(['user', user.username], context?.previousUser)
+      if (context?.previousUser) {
+        reset(context.previousUser)
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['user', user.username] })

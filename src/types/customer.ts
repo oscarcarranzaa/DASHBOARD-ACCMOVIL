@@ -3,8 +3,7 @@ import { z } from 'zod'
 
 export const ZCustomer = z.object({
   id: z.string(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
+  name: z.string().min(3, 'Nombre muy corto'),
   email: z.string().email(),
   emailVerified: z.string().optional().nullable(),
   status: z.enum(['active', 'suspended', 'disabled']),

@@ -54,7 +54,6 @@ export default function CustomerList() {
       const image = customer.avatar || '/static/default-profile.png'
       switch (columnKey) {
         case 'name':
-          const name = `${customer.firstName?.split(' ')[0]} ${customer.lastName?.split(' ')[0]}`
           return (
             <Link
               className="hover:underline"
@@ -65,7 +64,7 @@ export default function CustomerList() {
                 description={customer.email}
                 name={
                   <div className="flex gap-x-2 line-clamp-1">
-                    <p>{name}</p>
+                    <p>{customer.name}</p>
                     <VerifiedSVG
                       size={18}
                       color={customer.emailVerified ? '#09f' : '#777'}

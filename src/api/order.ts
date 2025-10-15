@@ -313,6 +313,7 @@ export async function getAllsOrder({
     const validOrders = ZGetOrderList.parse(data)
     return validOrders
   } catch (error) {
+    console.log(error)
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.response.msg, {
         cause: error.response.status,

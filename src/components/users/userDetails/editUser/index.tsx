@@ -27,26 +27,36 @@ import { z } from 'zod'
 import { getLocalTimeZone, parseDate, today } from '@internationalized/date'
 
 import Spinner from '@/components/icons/spinner'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type TProps = {
   user: UserSchema
 }
 export default function EditUser({ user }: TProps) {
+  const router = useRouter()
   const queryClient = useQueryClient()
+  const [previousUser, setPreviousUser] = useState<UserSchema | null>(user)
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['roles'],
     queryFn: () => getAllRoles(),
     refetchOnWindowFocus: false,
   })
+
   const {
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty },
     control,
     reset,
   } = useForm<z.input<typeof ZEditUser>>({
     resolver: zodResolver(ZEditUser),
     defaultValues: user,
   })
+
+  useEffect(() => {
+    reset(user)
+  }, [user, reset])
+
   const { mutate, isPending } = useMutation({
     mutationFn: editUser,
     onMutate: async (newData) => {
@@ -73,7 +83,10 @@ export default function EditUser({ user }: TProps) {
           return success
         }
       )
-
+      if (success.username !== previousUser?.username) {
+        router.replace(`/dash/usuarios/${success.username}`)
+      }
+      setPreviousUser(success)
       addToast({
         title: 'Usuario editado',
         description: 'El usuario se edito correctamente',
@@ -160,6 +173,7 @@ export default function EditUser({ user }: TProps) {
             isLoading={isLoading}
             items={data}
             {...field}
+            isDisabled={user?.is_user_root}
             aria-label="Selecciona un rol"
             placeholder="Selecciona un rol"
             selectionMode="single"
@@ -204,6 +218,7 @@ export default function EditUser({ user }: TProps) {
                   onChange={onChange}
                   color="success"
                   aria-label="Configuraciones de la cuenta"
+                  isDisabled={user?.is_user_root}
                   classNames={{
                     base: cn(
                       'inline-flex  m-0 bg-content1 p-3',

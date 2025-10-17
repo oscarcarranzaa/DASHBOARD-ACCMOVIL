@@ -1,6 +1,7 @@
 'use client'
 import { getOneUser } from '@/api/users'
 import { Container3D } from '@/components/UI/container3D'
+import ErrorsPages from '@/components/errorsPages'
 import NavegationPages from '@/components/navegationPages'
 import UserDetails from '@/components/users/userDetails'
 import AllUserDetailsSearch from '@/components/users/userDetails/allUserDetailSearch'
@@ -18,16 +19,19 @@ export default function UserDetailsPage() {
   const router = useRouter()
   const params: paramsID = useParams()
   const ID = params.userID
-  const { data, isPending } = useQuery({
+  const { data, isPending, error } = useQuery({
     queryKey: ['user', ID],
     queryFn: () => getOneUser(ID),
     refetchOnWindowFocus: false,
+    retry: 2,
   })
 
   const name = data && `${data?.firstName} ${data?.lastName}`
   const avatar = data?.avatar
   const userName = data?.username
-
+  if (error) {
+    return <ErrorsPages message={error.message} errorRef={error.cause} />
+  }
   return (
     <>
       <div className="flex items-center gap-2">

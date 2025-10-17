@@ -29,6 +29,7 @@ export default function DisableUser({ user, button, buttonProps }: TProps) {
   const [assignUser, setAssignUser] = useState<string | null>(null)
   const queryClient = useQueryClient()
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+
   const { data } = useQuery({
     queryKey: ['countUserActivities', user.id],
     queryFn: () => countUserActivities(user.id),
@@ -39,6 +40,7 @@ export default function DisableUser({ user, button, buttonProps }: TProps) {
     mutationFn: disabledUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['user', user.username] })
       onClose()
       addToast({
         title: 'Usuario desactivado',
@@ -64,7 +66,7 @@ export default function DisableUser({ user, button, buttonProps }: TProps) {
   }
   return (
     <div className="w-full">
-      <Button onPress={onOpen} {...buttonProps}>
+      <Button onPress={onOpen} {...buttonProps} isDisabled={user.is_user_root}>
         {button}
       </Button>
       <Modal

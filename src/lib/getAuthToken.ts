@@ -27,7 +27,6 @@ export const getAuthToken = async (): Promise<string> => {
 
   // Si no hay una petición activa, lánzala
   refreshing = (async () => {
-    console.log('run')
     try {
       const { data } = await api.get('/admin/auth/update-token')
       const newToken = data.data.token
@@ -36,7 +35,6 @@ export const getAuthToken = async (): Promise<string> => {
       refreshing = null
       return newToken
     } catch (error) {
-      console.log(error)
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           setError('Token expirado')

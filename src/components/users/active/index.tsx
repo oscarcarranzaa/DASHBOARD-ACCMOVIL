@@ -28,6 +28,7 @@ export default function ActiveUser({ user, button, buttonProps }: TProps) {
     mutationFn: activeUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
+      queryClient.invalidateQueries({ queryKey: ['user', user.username] })
       onClose()
       addToast({
         title: 'Usuario activado',

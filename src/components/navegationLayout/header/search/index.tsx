@@ -70,7 +70,6 @@ export default function SearchAllHeader() {
           className="rounded-full"
           radius="full"
           autoComplete="off"
-          autoCapitalize="off"
           startContent={<Search size={20} />}
           placeholder={'Buscar...'}
           variant="bordered"

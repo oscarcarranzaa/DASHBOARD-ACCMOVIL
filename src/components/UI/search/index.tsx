@@ -80,7 +80,6 @@ export default function Search({
           }}
           value={value}
           autoComplete="off"
-          autoCapitalize="off"
           startContent={<SearchSVG size={24} />}
           placeholder={placeHolder ?? 'Buscar producto...'}
           isClearable

@@ -6,7 +6,6 @@ import {
   getOneLeadShema,
   historyLeadSchema,
   leadSchema,
-  newLeadSchema,
   newLeadSchemaInput,
   noteSchema,
   ZAllLeads,
@@ -232,6 +231,22 @@ export async function deleteOneLead(id: string) {
     }
   }
 }
+export async function restoreOneLead(id: string) {
+  try {
+    const { data } = await axiosInstance.put(`/admin/lead/${id}/restore`)
+
+    return data
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Error al restaurar este cliente potencial.')
+    }
+  }
+}
 type TLeadAddNote = {
   leadId: string
   note: string
@@ -370,6 +385,25 @@ export async function switchContactLead({
       })
     } else {
       throw new Error('Ocurrió un error al cambiar de contacto.')
+    }
+  }
+}
+export async function duplicateLead({ id }: { id: string }) {
+  try {
+    const { data } = await axiosInstance.post<leadSchema>(
+      '/admin/lead/duplicate',
+      { id }
+    )
+    const validData = ZLead.parse(data)
+    return validData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al duplicar el lead.')
     }
   }
 }

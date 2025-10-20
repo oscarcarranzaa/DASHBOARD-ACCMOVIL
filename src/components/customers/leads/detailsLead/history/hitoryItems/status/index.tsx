@@ -7,12 +7,15 @@ type TProps = {
   avatar?: string | null
   type: changelogSchema['field_key']
 }
-const logKey: Record<changelogSchema['field_key'], string> = {
+export const logKey: Record<changelogSchema['field_key'], string> = {
   CREATED: 'Cliente creado',
   STAGE: 'Etapa',
   STATUS: 'Estado',
   USER: 'Propietario',
   CONTACT: 'Contacto',
+  DELETED: 'Eliminado',
+  RESTORE: 'Restaurado',
+  SYSTEM: 'Sistema',
 }
 export default function StatusHistory({ oldValue, newValue, type }: TProps) {
   return (

@@ -18,6 +18,7 @@ type TProps = {
   leadStatus: getOneLeadShema['status']
   isLoading?: boolean
   stageHistory: stageHistorySchema[] | null
+  leadVisibility: getOneLeadShema['visibility']
 }
 
 export default function DetailedPipelineStages({
@@ -26,6 +27,7 @@ export default function DetailedPipelineStages({
   stageHistory,
   isLoading,
   onChange,
+  leadVisibility,
   leadStatus,
 }: TProps) {
   const [savingStageId, setSavingStageId] = useState('')
@@ -43,6 +45,8 @@ export default function DetailedPipelineStages({
   )
 
   const activeIndex = pipeline.stages.findIndex((p) => p.id === currentStage)
+
+  const isDisabled = isLoading || leadVisibility !== 'ACTIVE'
 
   return (
     <>
@@ -69,16 +73,13 @@ export default function DetailedPipelineStages({
           const dur = dayjs.duration(totalTimeFromNow, 'seconds')
 
           return (
-            <div
-              key={stage.id}
-              className={`flex grow ${styles.box_content}`}
-            >
+            <div key={stage.id} className={`flex grow ${styles.box_content}`}>
               <Button
                 onPress={() => {
                   if (stage.id === currentStage) return
                   handleChange(stage.id)
                 }}
-                isDisabled={isLoading}
+                isDisabled={isDisabled}
                 className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${leadStatus !== 'ACTIVE' ? 'opacity-30' : ''} ${index <= activeIndex ? (leadStatus === 'LOST' ? 'bg-danger-600' : 'bg-green-600') : ''}`}
               >
                 <div className="absolute">

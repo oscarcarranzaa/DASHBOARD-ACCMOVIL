@@ -31,7 +31,7 @@ export default function LeadList() {
     queryFn: () =>
       getAllsLeads({
         page: currentPage.toString(),
-        limit: '50',
+        limit: '20',
         pipelineId: seletedFunnel,
       }),
     refetchOnWindowFocus: true,

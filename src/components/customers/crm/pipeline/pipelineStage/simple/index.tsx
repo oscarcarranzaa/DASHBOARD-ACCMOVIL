@@ -11,6 +11,7 @@ type TProps = {
   currentStage: string
   onChange?: (id: string) => void
   leadStatus: getOneLeadShema['status']
+  leadVisibility: getOneLeadShema['visibility']
   isLoading?: boolean
 }
 
@@ -19,6 +20,7 @@ export default function SimplePipelineStages({
   currentStage,
   isLoading,
   leadStatus,
+  leadVisibility,
   onChange,
 }: TProps) {
   const [savingStageId, setSavingStageId] = useState('')
@@ -30,6 +32,7 @@ export default function SimplePipelineStages({
       setSavingStageId(id)
     }
   }
+  const isDisabled = isLoading || leadVisibility !== 'ACTIVE'
   return (
     <>
       <div className={`flex w-full max-w-full grow`}>
@@ -39,16 +42,13 @@ export default function SimplePipelineStages({
           )
 
           return (
-            <div
-              key={stage.id}
-              className={`flex grow ${styles.box_content}`}
-            >
+            <div key={stage.id} className={`flex grow ${styles.box_content}`}>
               <Button
                 onPress={() => {
                   if (stage.id === currentStage) return
                   handleChange(stage.id)
                 }}
-                isDisabled={isLoading}
+                isDisabled={isDisabled}
                 color={index <= activeIndex ? 'success' : 'default'}
                 className={`${index === 0 ? styles.first_stage_selector : styles.stage_selector} ${styles.box_content} ${leadStatus !== 'ACTIVE' ? 'opacity-30' : ''} ${index <= activeIndex ? (leadStatus === 'LOST' ? 'bg-danger-600' : 'bg-green-600') : ''}`}
               >

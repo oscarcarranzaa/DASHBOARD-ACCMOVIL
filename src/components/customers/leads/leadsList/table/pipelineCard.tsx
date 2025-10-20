@@ -19,6 +19,7 @@ type TProps = {
   value?: number | null
   pipeline?: pipelineSchema
   contact?: contactSchema | null
+  leadVisibility: getOneLeadShema['visibility']
   expectedClosed?: string | null
 }
 export default function PipelineCard({
@@ -29,6 +30,7 @@ export default function PipelineCard({
   stageId,
   pipeline,
   contact,
+  leadVisibility,
   expectedClosed,
 }: TProps) {
   const searchParams = useSearchParams()
@@ -130,6 +132,7 @@ export default function PipelineCard({
             <SimplePipelineStages
               leadStatus={leadStatus}
               isLoading={isPending}
+              leadVisibility={leadVisibility}
               currentStage={stageId}
               pipeline={pipeline}
               onChange={(newStageId) => {

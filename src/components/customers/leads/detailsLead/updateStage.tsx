@@ -87,6 +87,7 @@ export default function UpdateStage({ lead }: TProps) {
     <>
       <DetailedPipelineStages
         leadStatus={lead.status}
+        leadVisibility={lead.visibility}
         stageHistory={lead.leadStageHistory}
         isLoading={pendingSetStage}
         pipeline={lead.pipeline}

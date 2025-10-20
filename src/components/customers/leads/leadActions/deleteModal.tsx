@@ -17,6 +17,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Trash } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useRef } from 'react'
 
 type TProps = {
   leadId: string
@@ -32,6 +33,7 @@ export default function DeleteLeadModal({
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('leadPage')) || 1
   const funnelId = searchParams.get('id')
+  const confirmButtonRef = useRef<HTMLButtonElement>(null)
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
   const { mutate, isPending } = useMutation({
@@ -79,6 +81,13 @@ export default function DeleteLeadModal({
   const handleDeleteLead = () => {
     mutate(leadId)
   }
+  useEffect(() => {
+    if (isOpen) {
+      requestAnimationFrame(() => {
+        confirmButtonRef.current?.focus()
+      })
+    }
+  }, [isOpen])
   return (
     <div className="w-full">
       <Button {...buttonProps} onPress={onOpen}>
@@ -92,6 +101,7 @@ export default function DeleteLeadModal({
         isDismissable
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        shouldBlockScroll
       >
         <ModalContent>
           {(onClose) => (
@@ -119,6 +129,12 @@ export default function DeleteLeadModal({
                 <Button
                   isDisabled={isPending}
                   color="danger"
+                  autoFocus
+                  tabIndex={0}
+                  ref={confirmButtonRef}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleDeleteLead()
+                  }}
                   onPress={handleDeleteLead}
                 >
                   {!isPending ? 'Eliminar' : <Spinner size={18} fill="#fff" />}

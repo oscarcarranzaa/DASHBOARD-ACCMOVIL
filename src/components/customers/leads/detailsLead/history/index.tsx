@@ -6,24 +6,47 @@ import NotesHistory from './hitoryItems/notes'
 import StatusHistory from './hitoryItems/status'
 import FileHistory from './hitoryItems/file'
 import HistoryTime from './hitoryItems/time'
-import { Activity, Contact, File, RefreshCcw, User } from 'lucide-react'
+import {
+  Activity,
+  Bot,
+  Contact,
+  File,
+  Recycle,
+  RefreshCcw,
+  Trash,
+  User,
+} from 'lucide-react'
 import LeadStatusBar from './statusBar'
 import { Avatar, Button } from '@heroui/react'
-import { useState } from 'react'
+import { JSX, useState } from 'react'
 import SkeletonHistory from './skeleton'
+import { changelogSchema } from '@/types/crm/leads'
+import Image from 'next/image'
 
 type TProps = {
   leadId: string
   hiddenButtons?: boolean
 }
 type TFilter = 'history' | 'logs' | 'files' | 'notes'
+const fieldKeyMap: Record<
+  changelogSchema['field_key'],
+  { color: 'danger' | 'success' | 'warning' | 'primary'; icon: JSX.Element }
+> = {
+  USER: { color: 'primary', icon: <User size={16} /> },
+  CONTACT: { color: 'primary', icon: <Contact size={16} /> },
+  STATUS: { color: 'success', icon: <Activity size={16} /> },
+  CREATED: { color: 'primary', icon: <User size={16} /> },
+  STAGE: { color: 'success', icon: <Activity size={16} /> },
+  DELETED: { color: 'danger', icon: <Trash size={16} /> },
+  RESTORE: { color: 'primary', icon: <Recycle size={16} /> },
+  SYSTEM: { color: 'primary', icon: <Bot size={16} /> },
+}
 
 export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
   const [filter, setFilter] = useState<TFilter>('history')
-
   const include = (name: TFilter) => filter === name || filter === 'history'
 
-  const { data, isPending, refetch, isFetching } = useQuery({
+  const { data, isPending, refetch, isFetching, isError } = useQuery({
     queryKey: [leadId, 'history', filter],
     queryFn: () =>
       getLeadHistory({
@@ -32,6 +55,7 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
         changeLogs: include('logs'),
         notes: include('notes'),
       }),
+    retry: 1,
     refetchOnWindowFocus: false,
   })
   const files =
@@ -47,6 +71,7 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
   const sorted = histories.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
+  console.log(sorted)
   const ButtonsNav: { name: string; key: TFilter }[] = [
     {
       name: 'Historial',
@@ -103,6 +128,27 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
       </div>
       <div className="mt-5 flex flex-col  mb-10">
         {isPending && <SkeletonHistory />}
+        {sorted.length === 0 && isError && (
+          <div className="flex flex-col items-center justify-center h-full mt-10">
+            <Image
+              src="/static/history_not_found.webp"
+              alt="empty"
+              width={100}
+              height={100}
+            />
+            <p className="text-center text-gray-500 mt-5 mb-5">
+              Ocurrió un error al obtener el historial.
+            </p>
+            <Button
+              variant="flat"
+              color="primary"
+              size="sm"
+              onPress={() => refetch()}
+            >
+              Intentar de nuevo
+            </Button>
+          </div>
+        )}
         {sorted.map((history) => {
           if ('file' in history) {
             return (
@@ -127,19 +173,10 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
           } else if ('changelogs' in history) {
             return (
               <div className="flex gap-3" key={history.changelogs.id}>
-                {history.changelogs.field_key === 'USER' ? (
-                  <LeadStatusBar color="primary" render={<User size={16} />} />
-                ) : history.changelogs.field_key === 'CONTACT' ? (
-                  <LeadStatusBar
-                    color="primary"
-                    render={<Contact size={16} />}
-                  />
-                ) : (
-                  <LeadStatusBar
-                    color="success"
-                    render={<Activity size={16} />}
-                  />
-                )}
+                <LeadStatusBar
+                  color={fieldKeyMap[history.changelogs.field_key].color}
+                  render={fieldKeyMap[history.changelogs.field_key].icon}
+                />
                 <div className="pb-6">
                   <StatusHistory
                     avatar={history.changelogs.user.avatar}

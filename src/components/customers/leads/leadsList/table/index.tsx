@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { allLeadShema, leadSchema } from '@/types/crm/leads'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Table,
@@ -20,6 +20,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownTrigger,
+  addToast,
 } from '@heroui/react'
 import { Copy, Ellipsis, MoveRight, Trash } from 'lucide-react'
 import { columns } from './columns'
@@ -35,7 +36,9 @@ import DeleteLeadModal from '../../leadActions/deleteModal'
 import DropDown from '@/components/UI/dropDown/dropDown'
 import { socket } from '@/lib/socket'
 import { useSearchParams } from 'next/navigation'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { duplicateLead } from '@/api/crm'
+import ActionCellLeadList from './actionsCell'
 
 type TProps = {
   leadsData?: allLeadShema
@@ -52,9 +55,41 @@ export default function LeadTable({
 
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('leadPage')) || 1
-  const funnelId = searchParams.get('id')
+  const funnelId = searchParams.get('id') || undefined
   const queryClient = useQueryClient()
   const queryKey = ['leads', currentPage.toString(), funnelId]
+
+  const [isDuplicatePending, setIsDuplicatePending] = useState<string | null>(
+    null
+  )
+
+  const { mutate } = useMutation({
+    mutationFn: duplicateLead,
+    onSuccess: () => {
+      addToast({
+        title: 'Éxito',
+        description: 'Se creó el cliente potencial duplicado exitosamente.',
+        variant: 'bordered',
+        color: 'success',
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['leads', currentPage.toString(), funnelId],
+      })
+      console.log('Lead duplicado exitosamente', queryKey)
+    },
+    onError: (error) => {
+      console.log(error)
+      addToast({
+        title: 'Error al duplicar el cliente potencial',
+        description: error.message,
+        variant: 'bordered',
+        color: 'danger',
+      })
+    },
+    onSettled: () => {
+      setIsDuplicatePending(null)
+    },
+  })
 
   useEffect(() => {
     const handleStageChanged = (data: {
@@ -81,6 +116,11 @@ export default function LeadTable({
       socket.off('lead:stageChanged', handleStageChanged)
     }
   }, [queryClient])
+
+  const handleDuplicate = (leadId: string) => {
+    setIsDuplicatePending(leadId)
+    mutate({ id: leadId })
+  }
 
   const renderLeadCell = useCallback(
     (lead: leadSchema, columnKey: React.Key) => {
@@ -114,49 +154,12 @@ export default function LeadTable({
           )
         case 'actions':
           return (
-            <div className="relative flex justify-end items-center gap-2">
-              <Dropdown shouldBlockScroll={false}>
-                <DropdownTrigger>
-                  <Button
-                    isIconOnly
-                    variant="flat"
-                    color="default"
-                    className="w-8 h-8"
-                    size="sm"
-                  >
-                    <Ellipsis size={12} />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu closeOnSelect={false} variant="faded">
-                  <DropdownItem key="copy" className="flex p-0">
-                    <Button
-                      className="flex justify-start w-full items-center gap-2"
-                      variant="flat"
-                    >
-                      <Copy size={18} /> Copiar
-                    </Button>
-                  </DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    className="text-danger p-0 "
-                    color="danger"
-                  >
-                    <DeleteLeadModal
-                      leadId={lead.id}
-                      title={lead.title}
-                      buttonProps={{
-                        variant: 'flat',
-                        className:
-                          'w-full flex justify-start items-center gap-2',
-                        color: 'danger',
-                        radius: 'sm',
-                        startContent: <Trash size={18} />,
-                      }}
-                    />
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
+            <ActionCellLeadList
+              leadId={lead.id}
+              title={lead.title}
+              funnelId={funnelId}
+              currentPage={currentPage}
+            />
           )
         case 'previusDate':
           return (
@@ -249,6 +252,7 @@ export default function LeadTable({
               </PopoverTrigger>
               <PopoverContent>
                 <PipelineCard
+                  leadVisibility={lead.visibility}
                   leadStatus={lead.status}
                   leadId={lead.id}
                   pipeline={findPipeline}
@@ -267,8 +271,9 @@ export default function LeadTable({
           return 'holz'
       }
     },
-    [leadsData]
+    [leadsData, isDuplicatePending]
   )
+
   const classNames = useMemo(
     () => ({
       wrapper: ['max-h-[382px]', 'max-w-3xl'],

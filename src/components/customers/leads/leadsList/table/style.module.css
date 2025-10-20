@@ -1,7 +1,7 @@
 .box_content {
   position: relative;
   display: inline-block;
-  z-index: 999;
+  z-index: 48;
 }
 
 .card_tooltip {

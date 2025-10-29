@@ -13,7 +13,7 @@ dayjs.extend(duration)
 
 type TProps = {
   pipeline?: pipelineSchema
-  currentStage: string
+  currentStage?: string | null
   onChange?: (id: string) => void
   leadStatus: getOneLeadShema['status']
   isLoading?: boolean

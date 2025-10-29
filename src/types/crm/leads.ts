@@ -18,7 +18,7 @@ export const ZLead = z.object({
   contactId: z.string().nullable().optional(),
   labelId: z.string().nullable().optional(),
   pipelineId: z.string(),
-  stageId: z.string(),
+  stageId: z.string().nullable().optional(),
   status: z.enum(['ACTIVE', 'LOST', 'WON']),
   source: z
     .enum([
@@ -180,7 +180,7 @@ export const ZChangeLogs = z.object({
 export const ZUserInfoLead = z.object({
   user: ZUserNameData,
 })
-export const ZChageLogFormatted = ZChangeLogs.merge(
+export const ZChageLogFormatted = ZChangeLogs.and(
   z.object({
     old_value_formatted: z.string().nullable().optional(),
     new_value_formatted: z.string().nullable().optional(),
@@ -188,9 +188,9 @@ export const ZChageLogFormatted = ZChangeLogs.merge(
 )
 export const ZHistoryLeads = z.object({
   id: z.string(),
-  notes: z.array(ZNote.merge(ZUserInfoLead)).optional(),
-  file: z.array(ZFile.merge(ZUserInfoLead)).optional(),
-  changeLogs: z.array(ZChageLogFormatted.merge(ZUserInfoLead)).optional(),
+  notes: z.array(ZNote.and(ZUserInfoLead)).optional(),
+  file: z.array(ZFile.and(ZUserInfoLead)).optional(),
+  changeLogs: z.array(ZChageLogFormatted.and(ZUserInfoLead)).optional(),
 })
 export const ZAssingUser = z.object({
   id: z.string(),

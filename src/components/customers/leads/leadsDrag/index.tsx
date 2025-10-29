@@ -7,6 +7,7 @@ import { getAllsLeadsByPipeline } from '@/api/crm'
 import LeadDraggable from './draggable'
 import EmptyPipeline from '../../crm/pipeline/emptyPipeline'
 import { Spinner } from '@heroui/react'
+import { useMemo } from 'react'
 
 type TProps = {
   pipelineId: string
@@ -35,7 +36,12 @@ export default function LeadDrag({ pipelineId }: TProps) {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-3">
-        <LeadHeader isRequired valueKey={pipelineId} onChange={handleRouter} />
+        <LeadHeader
+          isRequired
+          type="pipeline"
+          onChange={handleRouter}
+          value={pipelineId}
+        />
       </div>
       <div className="h-full min-h-[calc(100vh-200px-var(--header-height))] relative ">
         {data && <LeadDraggable data={data} />}

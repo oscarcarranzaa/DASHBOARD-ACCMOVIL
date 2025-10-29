@@ -15,7 +15,7 @@ type TProps = {
   leadId: string
   leadStatus: getOneLeadShema['status']
   description: string
-  stageId: string
+  stageId?: string | null
   value?: number | null
   pipeline?: pipelineSchema
   contact?: contactSchema | null

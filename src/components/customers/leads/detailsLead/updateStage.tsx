@@ -75,7 +75,7 @@ export default function UpdateStage({ lead }: TProps) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [leadId, 'history', leadId],
+        queryKey: [leadId, 'history'],
       })
     },
   })

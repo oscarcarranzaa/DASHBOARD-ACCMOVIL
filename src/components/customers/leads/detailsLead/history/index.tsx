@@ -27,6 +27,10 @@ type TProps = {
   leadId: string
   hiddenButtons?: boolean
 }
+const logType: Record<string, string> = {
+  APP: 'App web',
+  GROUP_EDITION: 'Edición en grupo',
+}
 type TFilter = 'history' | 'logs' | 'files' | 'notes'
 const fieldKeyMap: Record<
   changelogSchema['field_key'],
@@ -186,7 +190,11 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
                   />
                   <HistoryTime
                     name={history.changelogs.user.firstName}
-                    source="App web"
+                    source={
+                      history.changelogs.source
+                        ? logType[history.changelogs.source]
+                        : 'Desconocido'
+                    }
                     date={history.changelogs.createdAt}
                   />
                 </div>

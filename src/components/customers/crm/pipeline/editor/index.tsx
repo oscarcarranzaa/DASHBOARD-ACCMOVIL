@@ -1,13 +1,6 @@
 'use client'
 import { newPipelineSchema, ZNewPipeline } from '@/types/crm/pipeline'
-import {
-  addToast,
-  Button,
-  Input,
-  NumberInput,
-  Textarea,
-  toast,
-} from '@heroui/react'
+import { Button, Input, NumberInput, Textarea } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { pipelineDefaultValues } from './defaultValues'
@@ -20,66 +13,91 @@ import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { GripVertical, Plus, Scale, Trash } from 'lucide-react'
 import RottenDays from './rottenDays'
 import { useId } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addPipeline } from '@/api/crm'
 import Spinner from '@/components/icons/spinner'
 import { useRouter } from 'next/navigation'
+import PipelineStages from './stages'
 
-export default function PipelineEditor() {
+type TProps = {
+  defaultValues?: newPipelineSchema
+  isPending: boolean
+  onSendData?: (data: newPipelineSchema) => void
+}
+type THandleDeleteStage = {
+  stageId: string
+  isNew: boolean
+  type?: 'move' | 'delete'
+  moveStageId?: string
+}
+export default function PipelineEditor({
+  defaultValues,
+  isPending,
+  onSendData,
+}: TProps) {
   const id = useId()
   const router = useRouter()
-  const queryClient = useQueryClient()
+
   const {
     control,
     formState: { errors },
+    setValue,
     handleSubmit,
+    getValues,
   } = useForm<newPipelineSchema>({
     resolver: zodResolver(ZNewPipeline),
-    defaultValues: pipelineDefaultValues,
+    defaultValues: defaultValues || pipelineDefaultValues,
   })
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: addPipeline,
-    onSuccess: (succ) => {
-      queryClient.invalidateQueries({ queryKey: ['pipelines'] })
-      addToast({
-        title: 'Nuevo embudo creado',
-        color: 'success',
-        timeout: 5000,
-        variant: 'bordered',
-      })
-      router.push('/dash/embudo')
-    },
-    onError: (err) => {
-      addToast({
-        title: 'Ocurrió un error',
-        color: 'danger',
-        description: err.message,
-        timeout: 5000,
-        variant: 'bordered',
-      })
-    },
-  })
-
-  const { fields, append, remove, move } = useFieldArray({
+  const { fields, append, move, remove } = useFieldArray({
     control,
     name: 'stages',
   })
 
-  const handleDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e
+  const findStageIndex = (stageId: string) =>
+    fields.findIndex((field) => field.id === stageId)
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return
 
-    const oldIndex = fields.findIndex((field) => field.id === active.id)
-    const newIndex = fields.findIndex((field) => field.id === over.id)
+    const oldIndex = findStageIndex(active.id as string)
+    const newIndex = findStageIndex(over.id as string)
     if (oldIndex !== newIndex) {
       move(oldIndex, newIndex)
     }
   }
 
   const submitData = (e: newPipelineSchema) => {
-    mutate(e)
+    onSendData?.({
+      ...e,
+      stages: e.stages.map((st) => ({ ...st, id: st.stage_id ?? st.id })),
+    })
   }
+
+  const handleDeleteStage = (options: THandleDeleteStage) => {
+    const index = findStageIndex(options.stageId)
+    if (index === -1) return
+
+    if (options.isNew) {
+      remove(index)
+      return
+    }
+    const isDeleteLeads = options.type !== 'move'
+    const currentStages = getValues('stages')
+    const updatedStages = currentStages.map((stage, i) => {
+      if (i !== index) return stage
+
+      return {
+        ...stage,
+        active: false,
+        move_leads_to_stage_id: !isDeleteLeads
+          ? options.moveStageId
+          : undefined,
+        delete_leads: isDeleteLeads,
+      }
+    })
+
+    setValue('stages', updatedStages)
+  }
+
   return (
     <form onSubmit={handleSubmit(submitData)}>
       <div className="flex  justify-between ">
@@ -130,125 +148,27 @@ export default function PipelineEditor() {
           items={fields.map((field) => field.id)}
           strategy={horizontalListSortingStrategy}
         >
-          <div className="mt-10 h-full flex gap-2  overflow-x-auto shrink-0 ">
+          <div className="mt-10 h-full flex gap-2  overflow-x-auto shrink-0 mb-10 ">
             {fields.map((stageField, index) => {
+              const { active } = stageField
+              if (active === false) return null
               return (
-                <SlideCard key={stageField.id} id={stageField.id}>
-                  <div className=" h-[650px] relative max-w-60  bg-gray-100 border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-900 px-2 py-4 rounded-md">
-                    <SortableItem id={stageField.id}>
-                      <div className="flex  justify-between items-center border-b border-zinc-300 pb-5 dark:border-zinc-600    ">
-                        <div className="flex-none">
-                          <Controller
-                            control={control}
-                            name={`stages.${index}.name`}
-                            render={({ field }) => (
-                              <p className=" h-6 line-clamp-2 break-words whitespace-normal max-w-52">
-                                {field.value}
-                              </p>
-                            )}
-                          />
-                          <div className="flex gap-1">
-                            <Scale size={18} stroke="#666" />
-                            <Controller
-                              control={control}
-                              name={`stages.${index}.dealProbability`}
-                              render={({ field }) => (
-                                <p className="text-zinc-500 text-sm">
-                                  {field.value}%
-                                </p>
-                              )}
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <GripVertical />
-                        </div>
-                      </div>
-                    </SortableItem>
-                    <div className="mt-10 flex flex-col gap-y-5 ">
-                      <Controller
-                        control={control}
-                        name={`stages.${index}.name`}
-                        render={({
-                          field: { value, onChange },
-                          fieldState: { error },
-                        }) => (
-                          <Input
-                            value={value ?? undefined}
-                            onChange={onChange}
-                            variant="faded"
-                            label="Nombre"
-                            autoComplete="off"
-                            isInvalid={!!error}
-                            errorMessage={error?.message}
-                            labelPlacement="outside"
-                            isRequired
-                            placeholder="Nombre de etapa"
-                            maxLength={50}
-                          />
-                        )}
-                      />
-                      <Controller
-                        control={control}
-                        name={`stages.${index}.dealProbability`}
-                        render={({ field: { value, onChange } }) => (
-                          <NumberInput
-                            value={value}
-                            onChange={onChange}
-                            variant="faded"
-                            label="Probabilidad"
-                            maxValue={100}
-                            isRequired
-                            labelPlacement="outside"
-                            placeholder="50% en porcentage"
-                            maxLength={50}
-                          />
-                        )}
-                      />
-
-                      <div>
-                        <Controller
-                          control={control}
-                          name={`stages.${index}.rottenDays`}
-                          render={({ field: { value, onChange } }) => (
-                            <RottenDays value={value} onChange={onChange} />
-                          )}
-                        />
-                      </div>
-                      <Controller
-                        control={control}
-                        name={`stages.${index}.description`}
-                        render={({ field: { value, onChange } }) => (
-                          <Textarea
-                            value={value ?? undefined}
-                            onChange={onChange}
-                            variant="faded"
-                            label="Descripción"
-                            labelPlacement="outside"
-                            placeholder="Pequeña descripción de la etapa."
-                            maxLength={50}
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="absolute left-2 right-2 bottom-5 ">
-                      <Button
-                        className="w-full text-xs pointer-events-auto data-disabled:cursor-not-allowed"
-                        color="danger"
-                        variant="flat"
-                        isDisabled={fields.length <= 1}
-                        onPress={() => {
-                          if (fields.length >= 1) {
-                            remove(index)
-                          }
-                        }}
-                      >
-                        <Trash size={14} />
-                        Eliminar etapa
-                      </Button>
-                    </div>
-                  </div>
-                </SlideCard>
+                <PipelineStages
+                  key={stageField.id}
+                  stageField={stageField}
+                  count={stageField._count.leads}
+                  index={index}
+                  control={control}
+                  onRemove={(options) => {
+                    handleDeleteStage({
+                      stageId: stageField.id,
+                      isNew: stageField.is_new === true,
+                      type: options.type,
+                      moveStageId: options.moveStageId,
+                    })
+                  }}
+                  isDisabled={fields.length <= 1}
+                />
               )
             })}
 
@@ -271,6 +191,13 @@ export default function PipelineEditor() {
                     dealProbability: 100,
                     rottenDays: undefined,
                     description: undefined,
+                    stage_id: crypto.randomUUID(),
+                    delete_leads: false,
+                    move_leads_to_stage_id: undefined,
+                    active: true,
+                    _count: {
+                      leads: 0,
+                    },
                   })
                 }
               >
@@ -281,46 +208,5 @@ export default function PipelineEditor() {
         </SortableContext>
       </DndContext>
     </form>
-  )
-}
-
-function SortableItem({
-  id,
-  children,
-}: {
-  id: string
-  children: React.ReactNode
-}) {
-  const { attributes, listeners, isDragging } = useSortable({ id })
-
-  return (
-    <div
-      {...attributes}
-      {...listeners}
-      className={isDragging ? 'cursor-grabbing' : 'cursor-grab'}
-    >
-      {children}
-    </div>
-  )
-}
-
-function SlideCard({
-  id,
-  children,
-}: {
-  id: string
-  children: React.ReactNode
-}) {
-  const { setNodeRef, transform, transition } = useSortable({ id })
-
-  const style = {
-    transform: transform ? `translateX(${transform.x}px) ` : undefined,
-    transition,
-  }
-
-  return (
-    <div ref={setNodeRef} style={style}>
-      {children}
-    </div>
   )
 }

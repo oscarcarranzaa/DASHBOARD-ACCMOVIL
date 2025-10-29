@@ -8,7 +8,7 @@ import { getOneLeadShema } from '@/types/crm/leads'
 
 type TProps = {
   pipeline?: pipelineSchema
-  currentStage: string
+  currentStage?: string | null
   onChange?: (id: string) => void
   leadStatus: getOneLeadShema['status']
   leadVisibility: getOneLeadShema['visibility']

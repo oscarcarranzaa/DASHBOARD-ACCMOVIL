@@ -35,11 +35,16 @@ export const ZNewPipeline = ZPipeline.pick({
           dealProbability: true,
           rottenDays: true,
           description: true,
-        }).merge(
+        }).and(
           z.object({
-            delete_deals: z.boolean().optional(),
-            is_new: z.boolean().optional(),
+            stage_id: z.string().nullable().optional(),
+            active: z.boolean(),
+            delete_leads: z.boolean(),
+            is_new: z.boolean(),
             move_leads_to_stage_id: z.string().optional(),
+            _count: z.object({
+              leads: z.number(),
+            }),
           })
         )
       )
@@ -47,7 +52,28 @@ export const ZNewPipeline = ZPipeline.pick({
   })
 )
 
+export const ZStageAndCountLeads = ZStage.and(
+  z.object({
+    _count: z.object({
+      leads: z.number(),
+    }),
+  })
+)
+
+export const ZGetOnePipelineAndCountLeads = ZPipeline.omit({
+  stages: true,
+}).and(
+  z.object({
+    stages: z.array(ZStageAndCountLeads),
+  })
+)
+export const ZGetStageLeadCount = z.object({
+  id: z.string(),
+  leads_count: z.number(),
+})
 export type newPipelineSchema = z.infer<typeof ZNewPipeline>
 export type pipelineSchema = z.infer<typeof ZPipeline>
 export type getAllPipelineSchema = z.infer<typeof ZGetPipelines>
 export type stageSchema = z.infer<typeof ZStage>
+export type getOnePipelineSchema = z.infer<typeof ZGetOnePipelineAndCountLeads>
+export type getStageLeadCountSchema = z.infer<typeof ZGetStageLeadCount>

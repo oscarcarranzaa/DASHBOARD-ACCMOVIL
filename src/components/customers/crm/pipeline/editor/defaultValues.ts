@@ -1,5 +1,5 @@
 export const pipelineDefaultValues = {
-  name: '',
+  name: 'Nuevo embudo',
   stages: [
     {
       id: crypto.randomUUID(),
@@ -7,7 +7,12 @@ export const pipelineDefaultValues = {
       dealProbability: 100,
       is_new: true,
       rottenDays: undefined,
+      delete_leads: false,
+      active: true,
       description: undefined,
+      _count: {
+        leads: 0,
+      },
     },
     {
       id: crypto.randomUUID(),
@@ -15,31 +20,51 @@ export const pipelineDefaultValues = {
       dealProbability: 100,
       is_new: true,
       rottenDays: undefined,
+      delete_leads: false,
+      active: true,
       description: undefined,
+      _count: {
+        leads: 0,
+      },
     },
     {
       id: crypto.randomUUID(),
       name: 'Cierre de ventas',
       dealProbability: 100,
       is_new: true,
+      delete_leads: false,
       rottenDays: undefined,
       description: undefined,
+      active: true,
+      _count: {
+        leads: 0,
+      },
     },
     {
       id: crypto.randomUUID(),
       name: 'Seguimiento',
       dealProbability: 100,
       is_new: true,
+      delete_leads: false,
       rottenDays: undefined,
       description: undefined,
+      active: true,
+      _count: {
+        leads: 0,
+      },
     },
     {
       id: crypto.randomUUID(),
       name: 'Reseña',
       dealProbability: 100,
       is_new: true,
+      delete_leads: false,
       rottenDays: undefined,
+      active: true,
       description: undefined,
+      _count: {
+        leads: 0,
+      },
     },
   ],
 }

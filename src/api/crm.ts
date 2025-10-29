@@ -18,8 +18,12 @@ import {
 } from '@/types/crm/leads'
 import {
   getAllPipelineSchema,
+  getOnePipelineSchema,
+  getStageLeadCountSchema,
   newPipelineSchema,
+  ZGetOnePipelineAndCountLeads,
   ZGetPipelines,
+  ZGetStageLeadCount,
 } from '@/types/crm/pipeline'
 import { isAxiosError } from 'axios'
 
@@ -91,6 +95,65 @@ export async function addPipeline(lead: newPipelineSchema) {
       })
     } else {
       throw new Error('An unexpected error occurred while add new pipeline.')
+    }
+  }
+}
+export async function getOnePipeline({ id }: { id: string }) {
+  try {
+    const { data } = await axiosInstance.get<getOnePipelineSchema>(
+      `/admin/pipeline/${id}`
+    )
+    const validData = ZGetOnePipelineAndCountLeads.parse(data)
+    return validData
+  } catch (error) {
+    console.log(error)
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al obtener el embudo.')
+    }
+  }
+}
+export async function updateOnePipeline({
+  id,
+  pipeline,
+}: {
+  id: string
+  pipeline: newPipelineSchema
+}) {
+  try {
+    const { data } = await axiosInstance.put<getOnePipelineSchema>(
+      `/admin/pipeline/${id}`,
+      pipeline
+    )
+    const validData = ZGetOnePipelineAndCountLeads.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al actualizar el embudo.')
+    }
+  }
+}
+export async function getLeadCountStage({ id }: { id: string }) {
+  try {
+    const { data } = await axiosInstance.get<getStageLeadCountSchema>(
+      `/admin/pipeline/${id}/leads/count`
+    )
+    const validData = ZGetStageLeadCount.parse(data)
+    return validData
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.response?.msg, {
+        cause: error.response.status,
+      })
+    } else {
+      throw new Error('Ocurrió un error al obtener el conteo de leads.')
     }
   }
 }

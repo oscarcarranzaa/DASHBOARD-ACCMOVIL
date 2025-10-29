@@ -19,7 +19,6 @@ export default function DetailsLead({ leadId }: TProps) {
   const { data, isPending, error } = useQuery({
     queryKey: leadQueryKey,
     queryFn: () => getOneLead(leadId),
-    refetchOnWindowFocus: false,
     retry: 1,
   })
   if (error?.cause === 404) {

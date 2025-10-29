@@ -7,7 +7,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { Button } from '@heroui/react'
 import Link from 'next/link'
 import LeadHeader from '../leadHeader'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import StartPipeline from '../../crm/pipeline/startPipeline'
 
@@ -20,7 +20,6 @@ export default function LeadList() {
       setSelectedFunnel(undefined)
     }
   }
-
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get('leadPage')) || 1
   const pathname = usePathname()
@@ -47,14 +46,18 @@ export default function LeadList() {
     router.push(url)
     return
   }
-
+  useEffect(() => {
+    if (searchParams.get('id')) {
+      setSelectedFunnel(searchParams.get('id') ?? undefined)
+    }
+  }, [searchParams])
   const handleFunnel = (url: string | undefined) => {
     setSelectedFunnel(url)
     createPageUrl(url)
   }
   return (
     <>
-      <LeadHeader onChange={handleFunnel} onEmpty={handleEmpty} />
+      <LeadHeader type="list" value={seletedFunnel} onChange={handleFunnel} />
       <div className="mt-4">
         {isEmpty ? (
           <StartPipeline />

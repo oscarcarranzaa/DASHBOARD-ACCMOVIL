@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import type { RangeValue } from '@react-types/shared'
 import type { DateValue } from '@heroui/react'

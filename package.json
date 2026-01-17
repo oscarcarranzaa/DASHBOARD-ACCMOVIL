@@ -18,7 +18,7 @@
     "@heroui/system": "2.4.25",
     "@heroui/theme": "2.4.25",
     "@hookform/resolvers": "5.2.1",
-    "@internationalized/date": "3.8.2",
+    "@internationalized/date": "3.10.1",
     "@tailwindcss/postcss": "4.1.11",
     "@tanstack/react-query": "5.85.0",
     "@tiptap/extension-color": "3.15.3",
@@ -45,7 +45,7 @@
     "react-dom": "19.2.3",
     "react-hook-form": "7.62.0",
     "react-photo-view": "1.2.7",
-    "recharts": "3.6.0",
+    "recharts": "2.15.3",
     "sanitize-html": "2.15.0",
     "socket.io-client": "4.8.3",
     "tailwind-merge": "3.3.1",
@@ -70,6 +70,7 @@
   },
   "overrides": {
     "@types/react": "19.2.8",
-    "@types/react-dom": "19.2.3"
+    "@types/react-dom": "19.2.3",
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
   }
 }

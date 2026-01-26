@@ -84,6 +84,7 @@ export const menuItems = [
   },
   {
     name: 'Contactos',
+    disabled: true,
     icon: <SquareUser size={iconSize} />,
     urlKey: '/dash/clientes/contactos',
     href: '/dash/clientes/contactos',
@@ -91,25 +92,25 @@ export const menuItems = [
   },
   {
     name: 'Clientes',
-    disabled: true,
+
     icon: <TeamSVG size={iconSize} />,
     urlKey: '/dash/clientes',
     permissionKeys: ['users.view'],
     items: [
       {
-        name: 'Contactos',
-        href: '/dash/clientes/contactos',
-        permissionKeys: [],
-      },
-      {
         name: 'Clientes',
         href: '/dash/clientes',
         permissionKeys: ['team.view'],
       },
+      {
+        name: 'Contactos',
+        href: '/dash/clientes/contactos',
+        permissionKeys: [],
+      },
     ],
   },
   {
-    name: 'Usuarios',
+    name: 'Colaboradores',
     icon: <ClientSVG size={iconSize} />,
     urlKey: '/dash/usuarios',
     href: '/dash/usuarios',
@@ -140,8 +141,59 @@ export const menuItems = [
     name: 'Configuración',
     icon: <Settings size={iconSize} />,
     urlKey: '/dash/settings',
-    href: '/dash/settings',
     isOwner: true,
+    items: [
+      {
+        name: 'General',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Tienda en línea',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Sucursales',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Pagos',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Integraciones',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Envíos',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Clientes potenciales',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Impuestos y facturación',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Seguridad y sistema',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+      {
+        name: 'Notificaciones',
+        href: '/dash/settings',
+        permissionKeys: [],
+      },
+    ],
     permissionKeys: [],
   },
 ]

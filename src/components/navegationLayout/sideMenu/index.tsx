@@ -71,7 +71,7 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
           </div>
 
           {user && (
-            <ul>
+            <ul className="mb-60">
               {menuItems.map((menu, index) => {
                 return (
                   <MenuModules
@@ -86,30 +86,32 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
               })}
             </ul>
           )}
-          <div className="absolute p-2 left-0 right-0 bottom-8 ">
-            <Tooltip
-              content="Cerrar sesión"
-              placement="right"
-              offset={8}
-              className="dark:bg-black"
-              isDisabled={!isOpen}
-            >
-              <Button
-                className={`flex flex-wrap items-center mt-2 w-full bg-red-500/10 rounded-lg text-red-600 `}
-                isIconOnly={isOpen}
-                variant="flat"
-                onPress={logout}
-              >
-                {isPending ? (
-                  <Spinner size="sm" variant="spinner" color="danger" />
-                ) : (
-                  <Power size={20} />
-                )}
-                <p className={isOpen ? 'hidden' : 'block'}>Cerrar sesión</p>
-              </Button>
-            </Tooltip>
-          </div>
         </nav>
+        {/* 
+        <div className="absolute p-2 left-0 right-0 bottom-8 ">
+          <Tooltip
+            content="Cerrar sesión"
+            placement="right"
+            offset={8}
+            className="dark:bg-black"
+            isDisabled={!isOpen}
+          >
+            <Button
+              className={`flex flex-wrap items-center mt-2 w-full bg-red-500/10 rounded-lg text-red-600 `}
+              isIconOnly={isOpen}
+              variant="flat"
+              onPress={logout}
+            >
+              {isPending ? (
+                <Spinner size="sm" variant="spinner" color="danger" />
+              ) : (
+                <Power size={20} />
+              )}
+              <p className={isOpen ? 'hidden' : 'block'}>Cerrar sesión</p>
+            </Button>
+          </Tooltip>
+        </div>
+        */}
       </div>
     </>
   )

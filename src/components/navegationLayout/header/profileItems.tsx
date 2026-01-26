@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
 import { useLogout } from '@/hooks/useLogout'
-import { Avatar } from '@heroui/react'
+import { Avatar, Spinner } from '@heroui/react'
 
 interface IProfileProps {
   image: string
@@ -16,7 +16,7 @@ interface IProfileProps {
 }
 
 export default function ProfileItems({ image, name, role }: IProfileProps) {
-  const { logout } = useLogout()
+  const { logout, isPending } = useLogout()
   return (
     <>
       <div>
@@ -55,7 +55,11 @@ export default function ProfileItems({ image, name, role }: IProfileProps) {
           onClick={logout}
         >
           <div className="mr-2">
-            <OffSVG size={20} />
+            {isPending ? (
+              <Spinner size="sm" variant="spinner" color="danger" />
+            ) : (
+              <OffSVG size={20} />
+            )}
           </div>
           <p className=" text-sm">Cerrar sesión</p>
         </button>

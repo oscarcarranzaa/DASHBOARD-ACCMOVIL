@@ -129,7 +129,7 @@ export default function MenuModules({
           </button>
           <div
             className={`${
-              openMenu === index && !isOpen ? ' max-h-60 mb-5' : ' max-h-0  '
+              openMenu === index && !isOpen ? ' max-h-96 mb-5' : ' max-h-0  '
             } overflow-hidden`}
             style={{ transition: 'max-height 0.5s' }}
           >

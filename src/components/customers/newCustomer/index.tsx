@@ -16,7 +16,7 @@ import {
   ModalFooter,
   SelectItem,
   Select,
-} from "@heroui/react"
+} from '@heroui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -127,30 +127,16 @@ export default function NewCustomerForm() {
                     </div>
                     <div className="mt-5 flex gap-2">
                       <Controller
-                        name="firstName"
+                        name="name"
                         control={control}
                         render={({ field }) => (
                           <Input
                             {...field}
                             type="text"
-                            errorMessage={errors.firstName?.message}
-                            isInvalid={!!errors.firstName}
-                            placeholder="Ejem: (Juan Fernando)"
-                            label="Nombres"
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="lastName"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            {...field}
-                            errorMessage={errors.lastName?.message}
-                            isInvalid={!!errors.lastName}
-                            type="text"
-                            placeholder="Ejem: (Martínez García)"
-                            label="Apellidos"
+                            errorMessage={errors.name?.message}
+                            isInvalid={!!errors.name}
+                            placeholder="Ejem: (Juan Jose Perez)"
+                            label="Nombre completo"
                           />
                         )}
                       />

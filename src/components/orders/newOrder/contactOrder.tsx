@@ -1,11 +1,8 @@
-import UserCirclePluskSVG from '@/components/icons/userCirclePlus'
 import SelectUser from '@/components/customers/selectCustomer'
 import { createOrderState } from '@/store/order'
-import { Avatar, Button, Input } from '@heroui/react'
-import { useState } from 'react'
+import { Button } from '@heroui/react'
 import ContactOrderForm from './contactOrderForm'
 import { UserPlus } from 'lucide-react'
-import SelectContact from '@/components/customers/selectCustomer'
 import ContactInfoCard from './contactInfoCard'
 
 export default function ContactOrder() {
@@ -20,7 +17,7 @@ export default function ContactOrder() {
           <p className="font-semibold">Datos de contacto</p>
           <div>
             {contactOrder.typeContact === 'empty' ? (
-              <SelectContact
+              <SelectUser
                 buttonProps={{ color: 'primary', variant: 'flat' }}
                 setValue={(customer) => {
                   setContactOrder({
@@ -58,7 +55,7 @@ export default function ContactOrder() {
                 Seleccionar un contacto o continue como invitado.
               </p>
               <div className=" flex justify-center gap-4 mt-3 mb-5">
-                <SelectContact
+                <SelectUser
                   buttonProps={{ color: 'primary' }}
                   setValue={(customer) => {
                     setContactOrder({

@@ -37,8 +37,7 @@ export const ZPassword = z.object({
 
 export const ZCreateCustomer = z
   .object({
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
+    name: z.string().optional(),
     email: z.string().email(),
     gender: z.string().optional(),
     phone: z.string().optional(),

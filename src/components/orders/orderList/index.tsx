@@ -92,7 +92,8 @@ export default function OrderList() {
                 />
                 <div className=" ml-2">
                   <p className="font-medium">
-                    {order.billingInfo?.name} {!order.contactId && '(Invitado)'}
+                    {order.billingInfo?.name}{' '}
+                    {!order.customerId && '(Invitado)'}
                   </p>
                   <p className=" text-sm opacity-70">
                     {order.billingInfo?.email}

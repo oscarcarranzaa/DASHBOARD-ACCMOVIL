@@ -1,7 +1,8 @@
 import { getAllsContacts } from '@/api/contact'
+import { getAllCustomer } from '@/api/customer'
 import { CustomerProfileSVG } from '@/components/icons/customerProfile'
 import Search from '@/components/UI/search'
-import { contactSchema } from '@/types/customer'
+import { contactSchema, customerSchema } from '@/types/customer'
 import {
   Drawer,
   DrawerContent,
@@ -19,12 +20,12 @@ import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 interface IProps {
-  setValue?: (contact: contactSchema) => void
+  setValue?: (customer: customerSchema) => void
   buttonProps?: ButtonProps
   buttonName?: string
 }
 
-export default function SelectContact({
+export default function SelectCustomer({
   setValue,
   buttonProps,
   buttonName = 'Seleccionar',
@@ -33,13 +34,8 @@ export default function SelectContact({
   const [searchData, setSearchData] = useState('')
 
   const { data, isPending, error } = useQuery({
-    queryKey: ['contacts', '1', searchData],
-    queryFn: () =>
-      getAllsContacts({
-        page: '1',
-        limit: '10',
-        query: searchData,
-      }),
+    queryKey: ['customer', '1', searchData],
+    queryFn: () => getAllCustomer('1', '10', searchData),
     refetchOnWindowFocus: false,
     retry: false,
   })

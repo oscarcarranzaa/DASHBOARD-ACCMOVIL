@@ -150,16 +150,11 @@ export const menuItems = [
       },
       {
         name: 'Tienda en línea',
-        href: '/dash/settings',
+        href: '/dash/settings/ecommerce',
         permissionKeys: [],
       },
       {
         name: 'Sucursales',
-        href: '/dash/settings',
-        permissionKeys: [],
-      },
-      {
-        name: 'Pagos',
         href: '/dash/settings',
         permissionKeys: [],
       },
@@ -169,17 +164,7 @@ export const menuItems = [
         permissionKeys: [],
       },
       {
-        name: 'Envíos',
-        href: '/dash/settings',
-        permissionKeys: [],
-      },
-      {
         name: 'Clientes potenciales',
-        href: '/dash/settings',
-        permissionKeys: [],
-      },
-      {
-        name: 'Impuestos y facturación',
         href: '/dash/settings',
         permissionKeys: [],
       },

@@ -21,6 +21,7 @@ import {
   DropdownItem,
   DropdownTrigger,
   addToast,
+  ScrollShadow,
 } from '@heroui/react'
 import { Copy, Ellipsis, MoveRight, Trash } from 'lucide-react'
 import { columns } from './columns'
@@ -291,54 +292,58 @@ export default function LeadTable({
   const loadingState = isPending ? 'loading' : 'idle'
   return (
     <>
-      <Table
-        isCompact
-        removeWrapper
-        classNames={classNames}
-        aria-label="Mostrar leads"
-        bottomContent={
-          totalPages && totalPages > 0 ? (
-            <div className="flex w-full justify-center">
-              <PaginationPage totalPages={totalPages} pageName="leadPage" />
-            </div>
-          ) : null
-        }
+      <ScrollShadow
+        orientation="horizontal"
+        className="overflow-y-hidden"
+        offset={10}
       >
-        <TableHeader>
-          {columns.map((r) => {
-            return <TableColumn key={r.uid}>{r.name}</TableColumn>
-          })}
-        </TableHeader>
-        <TableBody
-          emptyContent={
-            <div>
-              <p className="mb-10">
-                No se encontraron resultados, comienza agregando nuevos clientes
-                potenciales.
-              </p>
-              <NewLead button={{ variant: 'faded' }} />
-            </div>
-          }
-          items={data ?? []}
-          loadingState={loadingState}
-          loadingContent={
-            <Spinner variant="spinner" label="Obteniendo datos..." />
-          }
+        <Table
+          isCompact
+          removeWrapper
+          classNames={classNames}
+          aria-label="Mostrar leads"
         >
-          {(item) => (
-            <TableRow
-              key={item.id}
-              className="hover:bg-zinc-100 dark:hover:bg-zinc-800"
-            >
-              {(columnKey) => (
-                <TableCell align="center">
-                  {renderLeadCell(item, columnKey)}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          <TableHeader>
+            {columns.map((r) => {
+              return <TableColumn key={r.uid}>{r.name}</TableColumn>
+            })}
+          </TableHeader>
+          <TableBody
+            emptyContent={
+              <div>
+                <p className="mb-10">
+                  No se encontraron resultados, comienza agregando nuevos
+                  clientes potenciales.
+                </p>
+                <NewLead button={{ variant: 'faded' }} />
+              </div>
+            }
+            items={data ?? []}
+            loadingState={loadingState}
+            loadingContent={
+              <Spinner variant="spinner" label="Obteniendo datos..." />
+            }
+          >
+            {(item) => (
+              <TableRow
+                key={item.id}
+                className="hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              >
+                {(columnKey) => (
+                  <TableCell align="center">
+                    {renderLeadCell(item, columnKey)}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </ScrollShadow>
+      {totalPages && totalPages > 0 ? (
+        <div className="flex w-full justify-center mt-10">
+          <PaginationPage totalPages={totalPages} pageName="leadPage" />
+        </div>
+      ) : null}
     </>
   )
 }

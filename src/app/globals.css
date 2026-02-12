@@ -21,6 +21,12 @@
 .dark {
   --box-opacity: rgba(20, 20, 20, 0.6);
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 @layer base {
   :root {
     --chart-1: oklch(0.646 0.222 41.116);

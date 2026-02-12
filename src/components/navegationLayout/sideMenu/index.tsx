@@ -23,7 +23,7 @@ type TProps = {
 }
 
 export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
-  const path = usePathname()
+  //const path = usePathname()
   const [openMenu, setOpenMenu] = useState<number | null>(null)
   const { user } = useAuthStore()
   const toggleMenu = useCallback((index: number) => {
@@ -44,74 +44,74 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
     <>
       <div className="relative">
         <nav
-          className={`fixed top-0 left-0 p-2 ${isOpen ? 'w-(--close-menu-width) right-(--close-menu-width)' : 'w-(--open-menu-width) right-(--open-menu-width)'}   col-span-1  border-r h-screen border-gray-200 dark:border-gray-600  ${style.menuContent}`}
+          className={`fixed flex flex-col justify-between top-0 z-50 left-0 p-2 dark:bg-zinc-950 bg-zinc-50 ${isOpen ? 'w-(--close-menu-width) right-(--close-menu-width)' : 'w-(--open-menu-width) right-(--open-menu-width)'}   col-span-1  border-r h-[calc(100vh-var(--header-height)-0.7rem)] mt-[calc(var(--header-height)+9px)] border-gray-200 dark:border-gray-600  ${style.menuContent}`}
         >
-          <div className="mt-[calc(var(--header-height)+0.7rem)]">
+          <div>
+            <div className="">
+              <Tooltip
+                content="Abrir menú"
+                placement="right"
+                offset={8}
+                className="dark:bg-black"
+                isDisabled={!isOpen}
+              >
+                <button
+                  className="p-2 w-full text-start flex items-center gap-2 mb-10 dark:bg-zinc-900 bg-zinc-200 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-300 rounded-md fill-black stroke-black"
+                  onClick={() => {
+                    onOpenChange(!isOpen)
+                  }}
+                >
+                  {isOpen ? (
+                    <CollapseArrowRightSVG size={24} />
+                  ) : (
+                    <CollapseArrowLeftSVG size={24} />
+                  )}
+                  <p className={isOpen ? 'hidden' : 'block'}>Cerrar</p>
+                </button>
+              </Tooltip>
+            </div>
+
+            {user && (
+              <ul className="mb-60">
+                {menuItems.map((menu, index) => {
+                  return (
+                    <MenuModules
+                      key={index}
+                      menu={menu}
+                      index={index}
+                      openMenu={openMenu}
+                      isOpen={isOpen}
+                      toggleMenu={toggleMenu}
+                    />
+                  )
+                })}
+              </ul>
+            )}
+          </div>
+          <div className=" pb-10 ">
             <Tooltip
-              content="Abrir menú"
+              content="Cerrar sesión"
               placement="right"
               offset={8}
               className="dark:bg-black"
               isDisabled={!isOpen}
             >
-              <button
-                className="p-2 w-full text-start flex items-center gap-2 mb-10 dark:bg-zinc-900 bg-zinc-200 dark:hover:bg-zinc-800 dark:stroke-white  hover:bg-zinc-300 rounded-md fill-black stroke-black"
-                onClick={() => {
-                  onOpenChange(!isOpen)
-                }}
+              <Button
+                className={`flex flex-wrap items-center mt-2 w-full bg-red-500/10 rounded-lg text-red-600 `}
+                isIconOnly={isOpen}
+                variant="flat"
+                onPress={logout}
               >
-                {isOpen ? (
-                  <CollapseArrowRightSVG size={24} />
+                {isPending ? (
+                  <Spinner size="sm" variant="spinner" color="danger" />
                 ) : (
-                  <CollapseArrowLeftSVG size={24} />
+                  <Power size={20} />
                 )}
-                <p className={isOpen ? 'hidden' : 'block'}>Cerrar</p>
-              </button>
+                <p className={isOpen ? 'hidden' : 'block'}>Cerrar sesión</p>
+              </Button>
             </Tooltip>
           </div>
-
-          {user && (
-            <ul className="mb-60">
-              {menuItems.map((menu, index) => {
-                return (
-                  <MenuModules
-                    key={index}
-                    menu={menu}
-                    index={index}
-                    openMenu={openMenu}
-                    isOpen={isOpen}
-                    toggleMenu={toggleMenu}
-                  />
-                )
-              })}
-            </ul>
-          )}
         </nav>
-        {/* 
-        <div className="absolute p-2 left-0 right-0 bottom-8 ">
-          <Tooltip
-            content="Cerrar sesión"
-            placement="right"
-            offset={8}
-            className="dark:bg-black"
-            isDisabled={!isOpen}
-          >
-            <Button
-              className={`flex flex-wrap items-center mt-2 w-full bg-red-500/10 rounded-lg text-red-600 `}
-              isIconOnly={isOpen}
-              variant="flat"
-              onPress={logout}
-            >
-              {isPending ? (
-                <Spinner size="sm" variant="spinner" color="danger" />
-              ) : (
-                <Power size={20} />
-              )}
-              <p className={isOpen ? 'hidden' : 'block'}>Cerrar sesión</p>
-            </Button>
-          </Tooltip>
-        </div>
-        */}
       </div>
     </>
   )

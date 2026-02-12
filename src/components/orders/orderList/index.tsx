@@ -15,6 +15,7 @@ import {
   Avatar,
   AvatarGroup,
   Badge,
+  ScrollShadow,
 } from '@heroui/react'
 import { orderRows } from './rows'
 import { useSearchParams } from 'next/navigation'
@@ -200,43 +201,43 @@ export default function OrderList() {
           ''
         )}
       </p>
-      <Table
-        isHeaderSticky
-        removeWrapper
-        aria-label="Mostrar ordenes"
-        bottomContent={
-          totalPages > 0 && (
-            <div className="flex w-full justify-center">
-              <PaginationPage totalPages={totalPages} />
-            </div>
-          )
-        }
+      <ScrollShadow
+        orientation="horizontal"
+        className="overflow-y-hidden"
+        offset={10}
       >
-        <TableHeader>
-          {orderRows.map((r) => {
-            return <TableColumn key={r.key}>{r.name}</TableColumn>
-          })}
-        </TableHeader>
-        <TableBody
-          emptyContent={emptyData}
-          items={getData}
-          loadingState={loadingState}
-          loadingContent={<Spinner label="Cargando..." />}
-        >
-          {(item) => (
-            <TableRow
-              key={item.id}
-              className="hover:bg-zinc-100 dark:hover:bg-zinc-800 py-1"
-            >
-              {(columnKey) => (
-                <TableCell align="center">
-                  {renderCell(item, columnKey)}
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+        <Table isHeaderSticky removeWrapper aria-label="Mostrar ordenes">
+          <TableHeader>
+            {orderRows.map((r) => {
+              return <TableColumn key={r.key}>{r.name}</TableColumn>
+            })}
+          </TableHeader>
+          <TableBody
+            emptyContent={emptyData}
+            items={getData}
+            loadingState={loadingState}
+            loadingContent={<Spinner label="Cargando..." />}
+          >
+            {(item) => (
+              <TableRow
+                key={item.id}
+                className="hover:bg-zinc-100 dark:hover:bg-zinc-800 py-1"
+              >
+                {(columnKey) => (
+                  <TableCell align="center">
+                    {renderCell(item, columnKey)}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </ScrollShadow>
+      {totalPages > 0 && (
+        <div className="flex w-full justify-center mt-4">
+          <PaginationPage totalPages={totalPages} />
+        </div>
+      )}
     </>
   )
 }

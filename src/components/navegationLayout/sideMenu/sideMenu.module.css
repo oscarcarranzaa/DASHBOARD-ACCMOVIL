@@ -1,10 +1,8 @@
 .menuContent {
-  min-height: 100vh;
   top: 0;
   font-weight: 600;
   overflow: hidden auto;
-  background: rgb(8, 0, 213);
-  background: linear-gradient(
+  background-image: linear-gradient(
     0deg,
     rgba(8, 0, 213, 0.09771831095719541) 0%,
     rgba(96, 9, 121, 0.12292839499080888) 45%,

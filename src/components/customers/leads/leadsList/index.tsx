@@ -58,7 +58,7 @@ export default function LeadList() {
   return (
     <>
       <LeadHeader type="list" value={seletedFunnel} onChange={handleFunnel} />
-      <div className="mt-4">
+      <div className="mt-4 ">
         {isEmpty ? (
           <StartPipeline />
         ) : (

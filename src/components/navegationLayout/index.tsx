@@ -14,11 +14,11 @@ export default function NavegationLayout({ children, isOpenMenu }: TProps) {
       <Header />
 
       <div
-        className={`bg-zinc-50 min-w-[700px] dark:bg-zinc-950 grid  ${!isOpen ? 'grid-cols-[var(--open-menu-width)_minmax(0,1fr)]' : 'grid-cols-[var(--close-menu-width)_minmax(0,1fr)]'} min-h-screen `}
+        className={`bg-zinc-50 min-w-[700px] dark:bg-zinc-950 grid  ${!isOpen ? 'grid-cols-[var(--open-menu-width)_minmax(0,1fr)]' : 'grid-cols-[var(--close-menu-width)_minmax(0,1fr)]'} min-h-screen w-[100%]`}
       >
         <SideMenuContent isOpen={isOpen} onOpenChange={setIsOpen} />
 
-        <div className="mt-[calc(var(--header-height))] relative min-h-[calc(100vh_var(--header-height))]">
+        <div className="mt-[calc(var(--header-height))] relative min-h-[calc(100vh_var(--header-height))] w-full">
           {children}
           <footer className="mt-10 mb-1 absolute bottom-0 w-full text-center">
             <p className="text-center text-xs dark:text-white opacity-50">

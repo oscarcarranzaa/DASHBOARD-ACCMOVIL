@@ -15,10 +15,8 @@ export default async function DashLayout({
     <Providers>
       <NavegationLayout isOpenMenu={isOpenMenu}>
         <UserProvider>
-          <main className="flex-none block">
-            <div className="px-5 pt-5 max-w-[1700px] h-full w-full ">
-              {children}
-            </div>
+          <main className="flex-none block px-5 pt-5 max-w-[1700px] h-full w-[100%] ">
+            {children}
           </main>
         </UserProvider>
       </NavegationLayout>

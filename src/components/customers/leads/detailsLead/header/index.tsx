@@ -23,6 +23,7 @@ import { useRouter } from 'next/navigation'
 import AlertRestoreLead from './alertRestoreLead'
 import AlertDeleteLead from './alertDeleteLead'
 import RestoreLeadAction from './restore'
+import { useLeadSocket } from '@/hooks/socket'
 
 type TProps = {
   lead: leadSchema
@@ -31,6 +32,10 @@ export default function LeadDetailsHeader({ lead }: TProps) {
   const disclosure = useDisclosure()
   const restoreDisclosure = useDisclosure()
   const router = useRouter()
+
+  // llamar a useLeadSocket para que escuche los cambios del lead
+  useLeadSocket(lead.id)
+
   const { mutate, isPending } = useMutation({
     mutationFn: duplicateLead,
     onSuccess: (success) => {

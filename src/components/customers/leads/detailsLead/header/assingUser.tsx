@@ -52,6 +52,7 @@ export default function AssingUserLead({ leadId, assinedToId }: TProps) {
       queryClient.invalidateQueries({ queryKey: [leadId, 'history'] })
     },
   })
+
   const handleUserChange = (userId: string | undefined) => {
     mutate({
       leadId: leadId,

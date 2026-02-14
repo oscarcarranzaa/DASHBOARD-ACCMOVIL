@@ -5,10 +5,6 @@ import { changeStage } from '@/api/crm'
 import { addToast } from '@heroui/react'
 import { getOneLeadShema } from '@/types/crm/leads'
 import DetailedPipelineStages from '../../crm/pipeline/pipelineStage/detailed'
-import { useSocket } from '@/hooks/useSocket'
-import { useEffect } from 'react'
-import { socket } from '@/lib/socket'
-
 type TProps = {
   lead: getOneLeadShema
 }
@@ -16,28 +12,6 @@ type TProps = {
 export default function UpdateStage({ lead }: TProps) {
   const leadId = lead.id
   const leadQueryKey = ['oneLead', lead.id]
-  useSocket()
-
-  useEffect(() => {
-    socket.on('lead:stageChanged', (data) => {
-      if (data.lead.id === leadId) {
-        // Si es el lead correcto, actualiza el estado del lead con el nuevo stageId
-        queryClient.setQueryData(leadQueryKey, (oldLead: getOneLeadShema) => {
-          if (!oldLead) return oldLead
-
-          return {
-            ...oldLead,
-            stageId: data.newStageId,
-            leadStageHistory: data.lead?.leadStageHistory,
-          }
-        })
-      }
-    })
-
-    return () => {
-      socket.off('lead:stageChanged')
-    }
-  }, [leadId])
 
   const queryClient = useQueryClient()
 

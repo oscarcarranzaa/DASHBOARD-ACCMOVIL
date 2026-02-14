@@ -72,7 +72,7 @@ export default function SideMenuContent({ isOpen, onOpenChange }: TProps) {
             </div>
 
             {user && (
-              <ul className="mb-60">
+              <ul className="mb-10">
                 {menuItems.map((menu, index) => {
                   return (
                     <MenuModules

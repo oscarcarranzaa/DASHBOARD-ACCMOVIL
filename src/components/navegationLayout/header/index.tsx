@@ -15,7 +15,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-3 bg-white fixed z-[51] w-full dark:bg-[#131315] flex justify-between border-b flex-nowrap border-gray-300 dark:border-zinc-600">
+      <header className="p-3 bg-white fixed z-50 w-full dark:bg-[#131315] flex justify-between border-b flex-nowrap border-gray-300 dark:border-zinc-600">
         <div className="ml-5 flex items-center">
           <div className="min-w-[200px]">
             <Link href={'/dash/dashboard'}>

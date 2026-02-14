@@ -17,12 +17,13 @@ export default function WonLeadAction({ leadId }: TProps) {
   const { mutate, isPending } = useMutation({
     mutationFn: changeLeadStatus,
     onSuccess: async (success) => {
+      launchConfetti()
       await queryClient.cancelQueries({ queryKey: ['oneLead'] })
       queryClient.setQueryData(leadQueryKey, (oldLead: getOneLeadShema) => {
         if (!oldLead) return oldLead
         return success
       })
-      launchConfetti()
+
       addToast({
         title: '¡Buen trabajo!',
         variant: 'flat',
@@ -50,6 +51,7 @@ export default function WonLeadAction({ leadId }: TProps) {
   const handleWon = () => {
     mutate({ leadId, status: 'WON' })
   }
+
   return (
     <Button
       className="bg-primary text-white rounded-md w-20"

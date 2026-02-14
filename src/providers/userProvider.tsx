@@ -10,7 +10,6 @@ export default function UserProvider({
   const { user, error } = useAuthStore()
 
   if (error) {
-    console.log(error)
     return (
       <div className="h-screen w-full flex flex-col justify-center items-center text-center p-5">
         <p className="text-red-500 text-lg mb-4">

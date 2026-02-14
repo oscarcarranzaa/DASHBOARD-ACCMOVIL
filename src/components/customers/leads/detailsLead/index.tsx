@@ -10,7 +10,6 @@ import LeadTasksInput from './tasks'
 import LeadDetailsSkeleton from './skeleton'
 import EmptyPipeline from '../../crm/pipeline/emptyPipeline'
 import NavegationPages from '@/components/navegationPages'
-
 type TProps = {
   leadId: string
 }
@@ -20,7 +19,9 @@ export default function DetailsLead({ leadId }: TProps) {
     queryKey: leadQueryKey,
     queryFn: () => getOneLead(leadId),
     retry: 1,
+    refetchOnWindowFocus: false,
   })
+
   if (error?.cause === 404) {
     return (
       <>

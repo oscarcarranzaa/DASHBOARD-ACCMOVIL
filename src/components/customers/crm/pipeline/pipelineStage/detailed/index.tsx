@@ -5,9 +5,9 @@ import { MoveRight } from 'lucide-react'
 import Spinner from '@/components/icons/spinner'
 import { useState } from 'react'
 import { getOneLeadShema, stageHistorySchema } from '@/types/crm/leads'
-import TimerStage from './timerStage'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import timerCountStage from '@/utils/crm/timerCountStage'
 
 dayjs.extend(duration)
 
@@ -21,6 +21,31 @@ type TProps = {
   leadVisibility: getOneLeadShema['visibility']
 }
 
+// Función helper para calcular el tiempo total de una etapa
+const calculateStageTime = (
+  stageHistory: stageHistorySchema | undefined,
+  isCurrentStage: boolean,
+  leadStatus: getOneLeadShema['status']
+): number => {
+  if (!stageHistory) return 0
+
+  const totalTimeSpent = stageHistory.totalTimeSpent || 0
+
+  // Si la etapa ya fue cerrada (tiene exitedAt), retornar el tiempo guardado
+  if (stageHistory.exitedAt) {
+    return totalTimeSpent
+  }
+
+  // Si es la etapa actual y el lead está activo, sumar el tiempo transcurrido
+  if (isCurrentStage && leadStatus === 'ACTIVE' && stageHistory.enteredAt) {
+    const secondsSinceEntered = dayjs().diff(stageHistory.enteredAt, 'seconds')
+    return totalTimeSpent + secondsSinceEntered
+  }
+
+  // En cualquier otro caso, retornar el tiempo congelado
+  return totalTimeSpent
+}
+
 export default function DetailedPipelineStages({
   pipeline,
   currentStage,
@@ -31,8 +56,11 @@ export default function DetailedPipelineStages({
   leadStatus,
 }: TProps) {
   const [savingStageId, setSavingStageId] = useState('')
+
   if (!pipeline) return null
+
   const findCurrentStage = pipeline.stages.find((p) => p.id === currentStage)
+
   const handleChange = (id: string) => {
     if (onChange) {
       onChange(id)
@@ -44,33 +72,36 @@ export default function DetailedPipelineStages({
     (idx) => idx.stageId === findCurrentStage?.id
   )
 
-  const activeIndex = pipeline.stages.findIndex((p) => p.id === currentStage)
+  const { days, hours, minutes, seconds } = timerCountStage({
+    initDate: findHistoryStage?.enteredAt,
+    totalTimeSpent: findHistoryStage?.totalTimeSpent,
+    interval: 1000,
+  })
 
+  const activeIndex = pipeline.stages.findIndex((p) => p.id === currentStage)
   const isDisabled = isLoading || leadVisibility !== 'ACTIVE'
 
   return (
     <>
       <div className={`flex w-full max-w-full grow`}>
         {pipeline.stages.map((stage, index) => {
-          const findTime = stageHistory?.find((id) => id.stageId === stage.id)
+          const stageHistoryItem = stageHistory?.find(
+            (h) => h.stageId === stage.id
+          )
+          const isCurrentStage = currentStage === stage.id
 
-          const totalTime = findTime ? findTime.totalTimeSpent : 0
+          // Calcular el tiempo total para esta etapa
+          const totalTimeInSeconds = calculateStageTime(
+            stageHistoryItem,
+            isCurrentStage,
+            leadStatus
+          )
 
-          // Se obtiene el tiempo total desde que el lead entró al stage
-          const secondsSinceEntered = findTime?.enteredAt
-            ? dayjs().diff(findTime.enteredAt, 'seconds')
-            : 0
-
-          // Si el stage es el actual y el lead está activo, se calcula el tiempo desde que entró
-          const isSecondEntered =
-            currentStage === stage.id && leadStatus === 'ACTIVE'
-              ? secondsSinceEntered
-              : 0
-
-          // Si el stage es el actual y el lead está activo, se suma el tiempo actual
-          const totalTimeFromNow = isSecondEntered + totalTime
-
-          const dur = dayjs.duration(totalTimeFromNow, 'seconds')
+          const dur = dayjs.duration(totalTimeInSeconds, 'seconds')
+          const stageDays = Math.floor(dur.asDays())
+          const stageHours = dur.hours()
+          const stageMinutes = dur.minutes()
+          const stageSeconds = dur.seconds()
 
           return (
             <div key={stage.id} className={`flex grow ${styles.box_content}`}>
@@ -86,7 +117,7 @@ export default function DetailedPipelineStages({
                   {isLoading && stage.id === savingStageId ? (
                     <Spinner size={18} fill="#fff" />
                   ) : (
-                    <p className="text-tiny">{`${dur.days()} días`}</p>
+                    <p className="text-tiny">{`${stageDays} días`}</p>
                   )}
                 </div>
               </Button>
@@ -95,6 +126,20 @@ export default function DetailedPipelineStages({
                   <p className="text-xs min-w-full text-center whitespace-nowrap">
                     {stage.name}
                   </p>
+                  {/* Mostrar tiempo detallado en el tooltip */}
+                  {totalTimeInSeconds > 0 ? (
+                    <p className="text-[10px] text-center text-gray-600 dark:text-gray-400 mt-1">
+                      He estado aquí por{' '}
+                      {stageDays > 0 && <span>{stageDays}d </span>}
+                      <span>{String(stageHours).padStart(2, '0')}:</span>
+                      <span>{String(stageMinutes).padStart(2, '0')} min </span>
+                      <span> {String(stageSeconds).padStart(2, '0')} seg</span>
+                    </p>
+                  ) : (
+                    <p className="text-[10px] text-center text-gray-600 dark:text-gray-400 mt-1">
+                      Este negocio no ha pasado por esta etapa
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -110,10 +155,12 @@ export default function DetailedPipelineStages({
             <>
               <p>•</p>
               <p>Tiempo: </p>
-              <TimerStage
-                initDate={findHistoryStage.enteredAt}
-                totalTimeSpent={findHistoryStage.totalTimeSpent}
-              />
+              <div>
+                {days > 0 && <span>{days}d </span>}
+                <span>{String(hours).padStart(2, '0')}:</span>
+                <span>{String(minutes).padStart(2, '0')} min</span>
+                <span> {String(seconds).padStart(2, '0')} seg</span>
+              </div>
             </>
           )}
         </div>

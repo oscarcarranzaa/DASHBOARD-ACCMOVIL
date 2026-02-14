@@ -75,7 +75,6 @@ export default function LeadHistory({ leadId, hiddenButtons }: TProps) {
   const sorted = histories.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
-  console.log(sorted)
   const ButtonsNav: { name: string; key: TFilter }[] = [
     {
       name: 'Historial',

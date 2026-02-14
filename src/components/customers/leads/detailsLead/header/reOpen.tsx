@@ -5,6 +5,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { changeLeadStatus } from '@/api/crm'
 import Spinner from '@/components/icons/spinner'
 import { getOneLeadShema } from '@/types/crm/leads'
+import { launchConfetti } from '@/utils/fireConfetti'
+import { useEffect } from 'react'
 
 type TProps = {
   leadId: string
@@ -50,6 +52,7 @@ export default function ReOpenLeadAction({ leadId, status }: TProps) {
   const handleReOpen = () => {
     mutate({ leadId, status: 'ACTIVE' })
   }
+
   return (
     <div className="flex gap-2 items-center">
       <Chip color={status === 'LOST' ? 'danger' : 'success'}>

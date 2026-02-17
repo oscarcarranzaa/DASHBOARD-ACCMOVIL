@@ -169,9 +169,11 @@ export default function NewLead({ button, isDisabled }: TProps) {
                       <Controller
                         control={control}
                         name="title"
+                        rules={{ required: 'La descripción es requerida' }}
                         render={({ field }) => (
                           <Input
                             {...field}
+                            isRequired
                             placeholder="Descripción"
                             labelPlacement="outside"
                             variant="bordered"

@@ -90,6 +90,7 @@ export default function LeadSummaryValues({ lead }: { lead: leadSchema }) {
               value={field.value}
               type="text"
               label="Agregar descripcion"
+              isRequired
               onBlur={() => handleAutoSubmit(field.name)}
               onValueChange={(v) => field.onChange(v)}
               error={errors.title?.message}

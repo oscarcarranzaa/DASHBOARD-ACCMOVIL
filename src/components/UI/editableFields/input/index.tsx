@@ -43,12 +43,18 @@ export default function InputField({
     onValueChange(e.target.value)
   }
   const handleBlur = () => {
+    if (!internalValue && isRequired) {
+      return
+    }
     setIsEditing(false)
     if (onBlur) {
       onBlur(internalValue)
     }
   }
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!internalValue && isRequired) {
+      return
+    }
     if (e.key === 'Enter') {
       handleBlur()
     }

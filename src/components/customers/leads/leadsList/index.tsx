@@ -33,7 +33,7 @@ export default function LeadList() {
         limit: '20',
         pipelineId: seletedFunnel,
       }),
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   })
   const createPageUrl = (funnelId: string | undefined) => {
     if (!funnelId) {

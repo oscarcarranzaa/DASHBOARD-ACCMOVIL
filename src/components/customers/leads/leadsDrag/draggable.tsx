@@ -13,8 +13,9 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { changeStage } from '@/api/crm'
 import { addToast } from '@heroui/react'
-import { useEffect, useState } from 'react'
-import { socket } from '@/lib/socket'
+import { useState } from 'react'
+import { useLeadDragSocket } from '@/hooks/socket'
+import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 
 type TProps = {
   data: allLeadsByPipelineSchema
@@ -22,7 +23,10 @@ type TProps = {
 export default function LeadDraggable({ data }: TProps) {
   const [pendingLeadId, setPendingLeadId] = useState<string | null>(null)
   const queryClient = useQueryClient()
+
   const queryKey = ['leadsFunnel', data.pipeline.id]
+  useLeadDragSocket(queryKey)
+
   const { mutate } = useMutation({
     mutationFn: changeStage,
     onMutate: async (newData) => {
@@ -64,34 +68,6 @@ export default function LeadDraggable({ data }: TProps) {
       })
     },
   })
-  useEffect(() => {
-    const handleStageChanged = (data: {
-      lead: leadSchema
-      newStageId: string
-    }) => {
-      queryClient.setQueryData(
-        queryKey,
-        (oldData: allLeadsByPipelineSchema) => {
-          if (!oldData) return oldData
-
-          return {
-            ...oldData,
-            data: oldData.data.map((lead) =>
-              lead.id === data.lead.id
-                ? { ...lead, stageId: data.newStageId }
-                : lead
-            ),
-          }
-        }
-      )
-    }
-
-    socket.on('lead:stageChanged', handleStageChanged)
-
-    return () => {
-      socket.off('lead:stageChanged', handleStageChanged)
-    }
-  }, [queryClient])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -109,9 +85,13 @@ export default function LeadDraggable({ data }: TProps) {
     }
   }
   return (
-    <div className=" flex w-full relative min-h-[calc(100vh-200px-var(--header-height))] overflow-auto ">
+    <div className=" flex w-full relative min-h-[calc(100vh-200px-var(--header-height))] ">
       <div className="flex w-full h-auto justify-between gap-1  ">
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToWindowEdges]}
+        >
           {data.pipeline.stages.map((stage) => {
             const findLeads = data.data.filter(
               (lead) => lead.stageId === stage.id
@@ -124,6 +104,7 @@ export default function LeadDraggable({ data }: TProps) {
               <DropLead
                 key={stage.id}
                 stage={stage}
+                rottenDays={stage.rottenDays}
                 leads={findLeads}
                 pendingLeadId={pendingLeadId}
                 totalValue={totalValue}

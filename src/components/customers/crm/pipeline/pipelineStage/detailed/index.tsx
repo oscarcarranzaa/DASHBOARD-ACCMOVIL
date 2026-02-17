@@ -8,6 +8,7 @@ import { getOneLeadShema, stageHistorySchema } from '@/types/crm/leads'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import timerCountStage from '@/utils/crm/timerCountStage'
+import { useTimerCountStage } from '@/hooks/useTimerCountStage'
 
 dayjs.extend(duration)
 
@@ -72,10 +73,9 @@ export default function DetailedPipelineStages({
     (idx) => idx.stageId === findCurrentStage?.id
   )
 
-  const { days, hours, minutes, seconds } = timerCountStage({
+  const { days, hours, minutes, seconds } = useTimerCountStage({
     initDate: findHistoryStage?.enteredAt,
     totalTimeSpent: findHistoryStage?.totalTimeSpent,
-    interval: 1000,
   })
 
   const activeIndex = pipeline.stages.findIndex((p) => p.id === currentStage)
@@ -97,11 +97,10 @@ export default function DetailedPipelineStages({
             leadStatus
           )
 
-          const dur = dayjs.duration(totalTimeInSeconds, 'seconds')
-          const stageDays = Math.floor(dur.asDays())
-          const stageHours = dur.hours()
-          const stageMinutes = dur.minutes()
-          const stageSeconds = dur.seconds()
+          const stageDays = Math.floor(totalTimeInSeconds / 86400)
+          const stageHours = Math.floor((totalTimeInSeconds % 86400) / 3600)
+          const stageMinutes = Math.floor((totalTimeInSeconds % 3600) / 60)
+          const stageSeconds = totalTimeInSeconds % 60
 
           return (
             <div key={stage.id} className={`flex grow ${styles.box_content}`}>

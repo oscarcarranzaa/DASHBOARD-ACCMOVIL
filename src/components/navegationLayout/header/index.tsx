@@ -8,7 +8,6 @@ import Link from 'next/link'
 import SearchAllHeader from './search'
 import { cn } from '@/lib/utils'
 import { AnimatedGradientText } from '@/components/UI/effects/animateGradientText'
-import { ChevronRight } from 'lucide-react'
 
 export default function Header() {
   const { userData } = useUserInfo()

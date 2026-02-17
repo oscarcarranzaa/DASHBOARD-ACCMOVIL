@@ -24,7 +24,7 @@ export default function LeadDrag({ pipelineId }: TProps) {
         pipelineId,
       }),
     retry: 2,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   })
 
   const handleRouter = (url: string | undefined) => {

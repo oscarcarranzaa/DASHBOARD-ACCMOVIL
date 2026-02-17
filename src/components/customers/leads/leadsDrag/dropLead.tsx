@@ -1,15 +1,17 @@
 'use client'
 
-import { leadSchema } from '@/types/crm/leads'
+import { allLeadsByPipelineSchema, leadSchema } from '@/types/crm/leads'
 import { stageSchema } from '@/types/crm/pipeline'
 import { DollarSign, User } from 'lucide-react'
 import LeadCard from './leadCard'
 import { useDroppable } from '@dnd-kit/core'
+import { useGlobalNow } from '@/hooks/useGlobalNow'
 
 type TProps = {
   stage: stageSchema
   totalValue: number
-  leads: leadSchema[]
+  leads: allLeadsByPipelineSchema['data']
+  rottenDays?: number | null
   pendingLeadId?: string | null
 }
 export default function DropLead({
@@ -17,8 +19,10 @@ export default function DropLead({
   leads,
   totalValue,
   pendingLeadId,
+  rottenDays,
 }: TProps) {
   const { isOver, setNodeRef } = useDroppable({ id: stage.id })
+  const now = useGlobalNow(60 * 1000)
   return (
     <div
       key={stage.id}
@@ -54,8 +58,13 @@ export default function DropLead({
       >
         <div className="px-1 py-2 flex flex-col gap-1 relative">
           {leads.map((lead) => {
+            const timeHistory = lead.leadStageHistory?.find(
+              (history) => history.stageId === stage.id
+            )
+
             return (
               <LeadCard
+                now={now}
                 isPending={pendingLeadId === lead.id}
                 pipelineId={lead.pipelineId}
                 id={lead.id}
@@ -63,6 +72,13 @@ export default function DropLead({
                 title={lead.title}
                 contactName={lead.contact?.name ?? 'Contacto eliminado'}
                 value={lead.value}
+                rottenDays={rottenDays}
+                totalTimeSpent={timeHistory?.totalTimeSpent ?? 0}
+                initDate={
+                  timeHistory?.enteredAt
+                    ? new Date(timeHistory.enteredAt).toISOString()
+                    : new Date().toISOString()
+                }
                 user={lead.assignedTo?.firstName}
                 avatar={
                   lead.assignedTo?.avatar

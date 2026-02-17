@@ -102,21 +102,23 @@ export const ZAllLeads = z.object({
   pipelines: z.array(ZPipeline),
   pageNumber: z.number(),
 })
-export const ZAllLeadsByPipeline = z.object({
-  data: z.array(ZLead),
-  totalPages: z.number(),
-  total: z.number(),
-  limit: z.number(),
-  results: z.number(),
-  pipeline: ZPipeline,
-  pageNumber: z.number(),
-})
 
 export const ZStageHistory = z.object({
   stageId: z.string(),
   totalTimeSpent: z.number(),
   exitedAt: z.string().optional().nullable(),
   enteredAt: z.string(),
+})
+export const ZAllLeadsByPipeline = z.object({
+  data: z.array(
+    ZLead.and(z.object({ leadStageHistory: z.array(ZStageHistory).nullable() }))
+  ),
+  totalPages: z.number(),
+  total: z.number(),
+  limit: z.number(),
+  results: z.number(),
+  pipeline: ZPipeline,
+  pageNumber: z.number(),
 })
 export const ZOneLead = ZLead.omit({
   products: true,
@@ -202,6 +204,7 @@ export const ZAssingUser = z.object({
     job: true,
   }).nullable(),
 })
+
 export type stageHistorySchema = z.infer<typeof ZStageHistory>
 export type changelogSchema = z.infer<typeof ZChangeLogs>
 export type historyLeadSchema = z.infer<typeof ZHistoryLeads>

@@ -94,6 +94,34 @@ button {
     text-wrap: balance;
   }
 }
+.cont_tooltip {
+  position: relative;
+}
+.tooltip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 9999;
+  padding: 6px 10px;
+  color: white;
+  font-size: 12px;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
+  pointer-events: none;
+}
+
+.cont_tooltip:hover > .tooltip {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 300ms;
+}
+
 .menu-content {
   overflow-y: scroll;
 }

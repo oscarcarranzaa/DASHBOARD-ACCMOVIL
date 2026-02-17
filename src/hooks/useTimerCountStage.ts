@@ -11,17 +11,20 @@ type TProps = {
   totalTimeSpent?: number
   interval?: number
 }
+
 type TCountTimer = {
   days: number
   hours: number
   minutes: number
   seconds: number
 }
-const timerCount = (init: string | undefined, total: number | undefined) => {
+
+// Función pura para calcular el tiempo
+const getTimerCount = (initDate?: string, totalTimeSpent?: number) => {
   const now = dayjs()
   const totalSeconds = Math.max(
     0,
-    now.diff(dayjs(init), 'seconds') + (total ?? 0)
+    now.diff(dayjs(initDate), 'seconds') + (totalTimeSpent ?? 0)
   )
 
   const days = Math.floor(totalSeconds / 86400)
@@ -32,22 +35,22 @@ const timerCount = (init: string | undefined, total: number | undefined) => {
   return { days, hours, minutes, seconds }
 }
 
-export default function timerCountStage({
+export function useTimerCountStage({
   initDate,
   totalTimeSpent,
   interval = 1000,
 }: TProps) {
   const [time, setTime] = useState<TCountTimer>(
-    timerCount(initDate, totalTimeSpent)
+    getTimerCount(initDate, totalTimeSpent)
   )
-  
+
   useEffect(() => {
-    const intervalTimer = setInterval(() => {
-      setTime(timerCount(initDate, totalTimeSpent))
+    const timer = setInterval(() => {
+      setTime(getTimerCount(initDate, totalTimeSpent))
     }, interval)
 
-    return () => clearInterval(intervalTimer)
-  }, [initDate, totalTimeSpent])
+    return () => clearInterval(timer)
+  }, [initDate, totalTimeSpent, interval])
 
   return time
 }

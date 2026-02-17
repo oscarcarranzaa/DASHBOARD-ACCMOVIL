@@ -16,10 +16,6 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownTrigger,
   addToast,
   ScrollShadow,
 } from '@heroui/react'
@@ -40,6 +36,7 @@ import { useSearchParams } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { duplicateLead } from '@/api/crm'
 import ActionCellLeadList from './actionsCell'
+import { useLeadListSocket } from '@/hooks/socket/useLeadsListSocket'
 
 type TProps = {
   leadsData?: allLeadShema
@@ -64,6 +61,8 @@ export default function LeadTable({
     null
   )
 
+  useLeadListSocket(queryKey)
+
   const { mutate } = useMutation({
     mutationFn: duplicateLead,
     onSuccess: () => {
@@ -76,10 +75,8 @@ export default function LeadTable({
       queryClient.invalidateQueries({
         queryKey: ['leads', currentPage.toString(), funnelId],
       })
-      console.log('Lead duplicado exitosamente', queryKey)
     },
     onError: (error) => {
-      console.log(error)
       addToast({
         title: 'Error al duplicar el cliente potencial',
         description: error.message,
@@ -92,32 +89,6 @@ export default function LeadTable({
     },
   })
 
-  useEffect(() => {
-    const handleStageChanged = (data: {
-      lead: leadSchema
-      newStageId: string
-    }) => {
-      queryClient.setQueryData(queryKey, (oldData: allLeadShema) => {
-        if (!oldData) return oldData
-
-        return {
-          ...oldData,
-          data: oldData.data.map((lead) =>
-            lead.id === data.lead.id
-              ? { ...lead, stageId: data.newStageId }
-              : lead
-          ),
-        }
-      })
-    }
-
-    socket.on('lead:stageChanged', handleStageChanged)
-
-    return () => {
-      socket.off('lead:stageChanged', handleStageChanged)
-    }
-  }, [queryClient])
-
   const handleDuplicate = (leadId: string) => {
     setIsDuplicatePending(leadId)
     mutate({ id: leadId })
@@ -125,6 +96,8 @@ export default function LeadTable({
 
   const renderLeadCell = useCallback(
     (lead: leadSchema, columnKey: React.Key) => {
+      if (!lead) return null
+      if (lead.visibility === 'DELETED') return null
       const isStatusClass =
         lead.status === 'WON'
           ? 'text-success-500'
